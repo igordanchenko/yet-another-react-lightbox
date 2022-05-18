@@ -1,0 +1,16 @@
+{
+    "testEnvironment": "jsdom",
+    "preset": "ts-jest/presets/default-esm",
+    "setupFilesAfterEnv": ["<rootDir>/test/jest-setup.ts"],
+    "moduleNameMapper": {
+        "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": ["src/**/*.{ts,tsx}"],
+    "coverageThreshold": {
+        "global": {
+            "lines": 75,
+            "statements": 75
+        }
+    }
+}

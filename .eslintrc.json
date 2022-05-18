@@ -1,0 +1,33 @@
+{
+    "root": true,
+    "extends": ["airbnb", "airbnb/hooks", "airbnb-typescript", "plugin:prettier/recommended"],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "ignorePatterns": ["dist/*", "coverage/*"],
+    "rules": {
+        "import/extensions": ["error", "always"],
+        "import/prefer-default-export": "off",
+        "import/no-default-export": "error",
+        "react/prop-types": [
+            "error",
+            {
+                "skipUndeclared": true
+            }
+        ],
+        "react/jsx-props-no-spreading": "off",
+        "react/jsx-no-useless-fragment": [
+            "error",
+            {
+                "allowExpressions": true
+            }
+        ],
+        "react/function-component-definition": [
+            "warn",
+            {
+                "namedComponents": "arrow-function",
+                "unnamedComponents": "arrow-function"
+            }
+        ]
+    }
+}

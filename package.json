@@ -1,0 +1,103 @@
+{
+    "name": "yet-another-react-lightbox",
+    "version": "0.0.0-semantic-release",
+    "description": "Modern lightbox component for React",
+    "author": "Igor Danchenko",
+    "license": "MIT",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": "./dist/index.js",
+        "./styles.css": "./dist/styles.css",
+        "./core": "./dist/core/index.js",
+        "./plugins": "./dist/plugins/index.js"
+    },
+    "typesVersions": {
+        "*": {
+            "*": [
+                "dist/index.d.ts"
+            ],
+            "core": [
+                "dist/core/index.d.ts"
+            ],
+            "plugins": [
+                "dist/plugins/index.d.ts"
+            ]
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": false,
+    "homepage": "https://github.com/igordanchenko/yet-another-react-lightbox#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/igordanchenko/yet-another-react-lightbox.git"
+    },
+    "bugs": {
+        "url": "https://github.com/igordanchenko/yet-another-react-lightbox/issues"
+    },
+    "engines": {
+        "node": ">=14"
+    },
+    "scripts": {
+        "prepare": "husky install",
+        "clean": "rimraf dist",
+        "build": "npm-run-all clean build:scss build:css build:js",
+        "build:js": "tsc -p tsconfig.build.json",
+        "build:css": "postcss src/styles.css -u autoprefixer --no-map -d dist",
+        "build:scss": "sass src/styles.scss src/styles.css --no-source-map ",
+        "start": "npm-run-all clean --parallel \"build:* -- -w\"",
+        "lint": "eslint .",
+        "test": "jest"
+    },
+    "dependencies": {
+        "prop-types": "^15.8.1"
+    },
+    "peerDependencies": {
+        "react": ">=16.14.0",
+        "react-dom": ">=16.14.0"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^17.0.0",
+        "@commitlint/config-conventional": "^17.0.0",
+        "@testing-library/jest-dom": "^5.16.4",
+        "@testing-library/react": "^13.2.0",
+        "@testing-library/user-event": "^14.2.0",
+        "@types/jest": "^27.5.1",
+        "@types/react": "^18.0.9",
+        "@types/react-dom": "^18.0.4",
+        "@typescript-eslint/eslint-plugin": "^5.25.0",
+        "@typescript-eslint/parser": "^5.25.0",
+        "autoprefixer": "^10.4.7",
+        "eslint": "^8.15.0",
+        "eslint-config-airbnb": "^19.0.4",
+        "eslint-config-airbnb-typescript": "^17.0.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-jsx-a11y": "^6.5.1",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react": "^7.29.4",
+        "eslint-plugin-react-hooks": "^4.5.0",
+        "husky": "^8.0.1",
+        "jest": "^28.1.0",
+        "jest-environment-jsdom": "^28.1.0",
+        "lint-staged": "^12.4.1",
+        "npm-run-all": "^4.1.5",
+        "postcss": "^8.4.14",
+        "postcss-cli": "^9.1.0",
+        "prettier": "^2.6.2",
+        "react": "^18.1.0",
+        "react-dom": "^18.1.0",
+        "rimraf": "^3.0.2",
+        "sass": "^1.51.0",
+        "ts-jest": "^28.0.2",
+        "typescript": "^4.6.4"
+    },
+    "keywords": [
+        "react",
+        "lightbox",
+        "react lightbox"
+    ]
+}
