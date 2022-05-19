@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
         "strict": true,
-        "target": "es2020",
-        "module": "es2020",
+        "target": "ES2018",
+        "module": "ES2015",
         "jsx": "react",
-        "lib": ["es2020", "dom"],
+        "lib": ["ES2018", "dom"],
         "esModuleInterop": true,
         "moduleResolution": "node",
         "isolatedModules": true,
