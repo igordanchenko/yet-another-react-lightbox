@@ -5,9 +5,11 @@ import { Labels } from "../types.js";
 export const clsx = (...classes: (string | boolean | undefined)[]) =>
     [...classes].filter((cls) => Boolean(cls)).join(" ");
 
-export const cssClass = (name: string) => `yarl__${name}`;
+const cssPrefix = "yarl__";
 
-export const cssVar = (name: string) => `--yarl__${name}`;
+export const cssClass = (name: string) => `${cssPrefix}${name}`;
+
+export const cssVar = (name: string) => `--${cssPrefix}${name}`;
 
 export const label = (labels: Labels | undefined, lbl: string) => (labels && labels[lbl] ? labels[lbl] : lbl);
 
