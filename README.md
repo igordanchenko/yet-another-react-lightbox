@@ -26,7 +26,7 @@ or
 yarn add yet-another-react-lightbox
 ```
 
-### Minimal Setup Example
+## Minimal Setup Example
 
 ```javascript
 import * as React from "react";
