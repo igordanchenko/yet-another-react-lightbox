@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { LightboxProps, Plugin } from "../types.js";
-import { createIcon, IconButton, label, useController } from "../core/index.js";
+import { createIcon, IconButton, label, useController, useLatest } from "../core/index.js";
 
 declare module "../types.js" {
     interface LightboxProps {
@@ -47,18 +47,16 @@ export type FullscreenButtonProps = Pick<LightboxProps, "labels"> & { auto: bool
 
 export const FullscreenButton = ({ auto, labels }: FullscreenButtonProps) => {
     const [fullscreen, setFullscreen] = React.useState(false);
+    const latestAuto = useLatest(auto);
 
     const { containerRef } = useController();
 
-    const isFullscreenEnabled = () => {
-        return (
-            document.fullscreenEnabled ??
-            document.webkitFullscreenEnabled ??
-            document.mozFullScreenEnabled ??
-            document.msFullscreenEnabled ??
-            false
-        );
-    };
+    const isFullscreenEnabled = () =>
+        document.fullscreenEnabled ??
+        document.webkitFullscreenEnabled ??
+        document.mozFullScreenEnabled ??
+        document.msFullscreenEnabled ??
+        false;
 
     const getFullscreenElement = React.useCallback(
         () =>
@@ -139,10 +137,10 @@ export const FullscreenButton = ({ auto, labels }: FullscreenButtonProps) => {
     React.useEffect(() => () => exitFullscreen(), [exitFullscreen]);
 
     React.useEffect(() => {
-        if (auto) {
+        if (latestAuto.current) {
             requestFullscreen();
         }
-    }, [auto, requestFullscreen]);
+    }, [latestAuto, requestFullscreen]);
 
     if (!isFullscreenEnabled()) return null;
 
