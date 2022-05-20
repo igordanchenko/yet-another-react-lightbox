@@ -1,11 +1,23 @@
 import * as React from "react";
 
-import { LightboxProps, Plugin } from "../types.js";
+import { LightboxProps, Plugin, Render } from "../types.js";
 import { createIcon, IconButton, label, useController, useLatest } from "../core/index.js";
 
 declare module "../types.js" {
     interface LightboxProps {
         fullscreen?: boolean;
+    }
+
+    interface Render {
+        buttonFullscreen?: ({
+            fullscreen,
+            toggleFullscreen,
+        }: {
+            fullscreen: boolean;
+            toggleFullscreen: () => void;
+        }) => React.ReactNode;
+        iconEnterFullscreen?: () => React.ReactNode;
+        iconExitFullscreen?: () => React.ReactNode;
     }
 }
 
@@ -43,9 +55,12 @@ const ExitFullscreenIcon = createIcon(
     <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 );
 
-export type FullscreenButtonProps = Pick<LightboxProps, "labels"> & { auto: boolean };
+export type FullscreenButtonProps = Pick<LightboxProps, "labels"> & {
+    auto: boolean;
+    render: Render;
+};
 
-export const FullscreenButton = ({ auto, labels }: FullscreenButtonProps) => {
+export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps) => {
     const [fullscreen, setFullscreen] = React.useState(false);
     const latestAuto = useLatest(auto);
 
@@ -144,10 +159,13 @@ export const FullscreenButton = ({ auto, labels }: FullscreenButtonProps) => {
 
     if (!isFullscreenEnabled()) return null;
 
-    return (
+    return render.buttonFullscreen ? (
+        <>{render.buttonFullscreen({ fullscreen, toggleFullscreen })}</>
+    ) : (
         <IconButton
             label={fullscreen ? label(labels, "Exit Fullscreen") : label(labels, "Enter Fullscreen")}
             icon={fullscreen ? ExitFullscreenIcon : EnterFullscreenIcon}
+            renderIcon={fullscreen ? render.iconExitFullscreen : render.iconEnterFullscreen}
             onClick={toggleFullscreen}
         />
     );
@@ -157,7 +175,12 @@ export const Fullscreen: Plugin = ({ augment }) => {
     augment(({ toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
         toolbar: {
             buttons: [
-                <FullscreenButton key="fullscreen" auto={Boolean(restProps.fullscreen)} labels={restProps.labels} />,
+                <FullscreenButton
+                    key="fullscreen"
+                    auto={Boolean(restProps.fullscreen)}
+                    labels={restProps.labels}
+                    render={restProps.render}
+                />,
                 ...buttons,
             ],
             ...restToolbar,

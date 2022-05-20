@@ -1,12 +1,17 @@
 import * as React from "react";
 
-import { SlideImage } from "../../types.js";
+import { Render, SlideImage } from "../../types.js";
 import { clsx, cssClass } from "../utils.js";
 import { useLatest } from "../hooks/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
 import { useController } from "../modules/Controller.js";
 
-export const ImageSlide = ({ slide: image }: { slide: SlideImage }) => {
+export type ImageSlideProps = {
+    slide: SlideImage;
+    render: Render;
+};
+
+export const ImageSlide = ({ slide: image, render }: ImageSlideProps) => {
     const [state, setState] = React.useState<"loading" | "error" | "complete">("loading");
     const latestState = useLatest(state);
 
@@ -96,10 +101,18 @@ export const ImageSlide = ({ slide: image }: { slide: SlideImage }) => {
 
             {state !== "complete" && (
                 <div className={cssClass("slide_placeholder")}>
-                    {state === "loading" && (
-                        <LoadingIcon className={clsx(cssClass("icon"), cssClass("slide_loading"))} />
-                    )}
-                    {state === "error" && <ErrorIcon className={clsx(cssClass("icon"), cssClass("slide_error"))} />}
+                    {state === "loading" &&
+                        (render.iconLoading ? (
+                            render.iconLoading()
+                        ) : (
+                            <LoadingIcon className={clsx(cssClass("icon"), cssClass("slide_loading"))} />
+                        ))}
+                    {state === "error" &&
+                        (render.iconError ? (
+                            render.iconError()
+                        ) : (
+                            <ErrorIcon className={clsx(cssClass("icon"), cssClass("slide_error"))} />
+                        ))}
                 </div>
             )}
         </>

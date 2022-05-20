@@ -9,12 +9,12 @@ import { useController } from "./Controller.js";
 type CarouselSlideProps = {
     slide: Slide;
     offset: number;
-    renderSlide: Render["slide"];
+    render: Render;
 };
 
-const CarouselSlide = ({ slide, offset, renderSlide }: CarouselSlideProps) => (
+const CarouselSlide = ({ slide, offset, render }: CarouselSlideProps) => (
     <div className={clsx(cssClass("slide"), cssClass("flex_center"))} style={{ [cssVar("slide_offset")]: offset }}>
-        {renderSlide?.(slide) || ("src" in slide && <ImageSlide slide={slide} />)}
+        {render.slide?.(slide) || ("src" in slide && <ImageSlide slide={slide} render={render} />)}
     </div>
 );
 
@@ -22,7 +22,7 @@ export const Carousel: Component = (props) => {
     const {
         slides,
         carousel: { finite, preload, padding, spacing },
-        render: { slide: renderSlide },
+        render,
     } = props;
 
     const { currentIndex, globalIndex } = useController();
@@ -37,15 +37,13 @@ export const Carousel: Component = (props) => {
                         key={globalIndex + i - currentIndex}
                         slide={slides[(i + preload * slides.length) % slides.length]}
                         offset={i - currentIndex}
-                        renderSlide={renderSlide}
+                        render={render}
                     />
                 );
             }
         }
 
-        items.push(
-            <CarouselSlide key={globalIndex} slide={slides[currentIndex]} offset={0} renderSlide={renderSlide} />
-        );
+        items.push(<CarouselSlide key={globalIndex} slide={slides[currentIndex]} offset={0} render={render} />);
 
         for (let i = currentIndex + 1; i <= currentIndex + preload; i += 1) {
             if (!finite || i <= slides.length - 1) {
@@ -54,7 +52,7 @@ export const Carousel: Component = (props) => {
                         key={globalIndex + i - currentIndex}
                         slide={slides[i % slides.length]}
                         offset={i - currentIndex}
-                        renderSlide={renderSlide}
+                        render={render}
                     />
                 );
             }

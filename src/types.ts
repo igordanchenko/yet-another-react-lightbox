@@ -31,6 +31,8 @@ export interface Render {
     iconPrev?: () => React.ReactNode;
     iconNext?: () => React.ReactNode;
     iconClose?: () => React.ReactNode;
+    iconLoading?: () => React.ReactNode;
+    iconError?: () => React.ReactNode;
     buttonPrev?: () => React.ReactNode;
     buttonNext?: () => React.ReactNode;
     buttonClose?: () => React.ReactNode;
