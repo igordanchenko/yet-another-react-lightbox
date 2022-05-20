@@ -87,13 +87,9 @@ export const Controller: Component = ({ children, ...props }) => {
         containerRef.current?.focus();
     }, [containerRef]);
 
-    React.useEffect(
-        () =>
-            subscribe("close", () => {
-                setTimeout(refs.current.props.close, refs.current.props.animation.fade);
-            }),
-        [subscribe, setTimeout]
-    );
+    React.useEffect(() => {
+        refs.current.props.on.view?.(state.currentIndex);
+    }, [state.currentIndex]);
 
     const updateSwipeOffset = React.useCallback(() => {
         const offsetVar = cssVar("swipe_offset");

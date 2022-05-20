@@ -36,6 +36,14 @@ export interface Render {
     buttonClose?: () => React.ReactNode;
 }
 
+export interface Callbacks {
+    view?: (index: number) => void;
+    entering?: () => void;
+    entered?: () => void;
+    exiting?: () => void;
+    exited?: () => void;
+}
+
 export interface LightboxProps {
     open: boolean;
     close: () => void;
@@ -47,6 +55,7 @@ export interface LightboxProps {
     toolbar: Toolbar;
     carousel: Carousel;
     animation: Animation;
+    on: Callbacks;
 }
 
 export const SlideTypesPropTypes: PropTypes.Validator<any>[] = [
@@ -87,6 +96,7 @@ export const LightboxPropTypes = {
         fade: PropTypes.number.isRequired,
         swipe: PropTypes.number.isRequired,
     }).isRequired,
+    on: PropTypes.shape({}).isRequired,
 };
 
 export const LightboxDefaultProps = {
@@ -108,6 +118,7 @@ export const LightboxDefaultProps = {
         padding: "16px",
         spacing: "30%",
     } as Carousel,
+    on: {} as Callbacks,
 };
 
 export type Labels = { [key: string]: string };
