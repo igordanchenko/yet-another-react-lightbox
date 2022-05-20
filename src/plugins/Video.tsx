@@ -79,7 +79,7 @@ export const Video: Plugin = ({ augment }) => {
                 if ("type" in slide && slide.type === "video") {
                     return <VideoSlide slide={slide} />;
                 }
-                return renderSlide(slide);
+                return renderSlide?.(slide);
             },
             ...restRender,
         },

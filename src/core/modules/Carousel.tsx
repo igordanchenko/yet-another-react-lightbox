@@ -14,7 +14,7 @@ type CarouselSlideProps = {
 
 const CarouselSlide = ({ slide, offset, renderSlide }: CarouselSlideProps) => (
     <div className={clsx(cssClass("slide"), cssClass("flex_center"))} style={{ [cssVar("slide_offset")]: offset }}>
-        {renderSlide(slide) || ("src" in slide && <ImageSlide slide={slide} />)}
+        {renderSlide?.(slide) || ("src" in slide && <ImageSlide slide={slide} />)}
     </div>
 );
 

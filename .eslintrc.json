@@ -9,12 +9,8 @@
         "import/extensions": ["error", "always"],
         "import/prefer-default-export": "off",
         "import/no-default-export": "error",
-        "react/prop-types": [
-            "error",
-            {
-                "skipUndeclared": true
-            }
-        ],
+        "react/prop-types": "off",
+        "react/require-default-props": "off",
         "react/jsx-props-no-spreading": "off",
         "react/jsx-no-useless-fragment": [
             "error",

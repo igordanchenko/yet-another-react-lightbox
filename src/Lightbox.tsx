@@ -60,22 +60,14 @@ type NestedPartial<T extends object> = {
 
 type NestedOptional<T, K extends keyof T> = Omit<T, K> & NestedPartial<Pick<T, K>>;
 
-export const Lightbox = (
-    props: NestedOptional<ComponentProps<typeof LightboxComponent>, "carousel" | "animation" | "render">
-) => {
-    const { carousel, animation, render, ...restProps } = props;
-    const {
-        carousel: defaultCarousel,
-        animation: defaultAnimation,
-        render: defaultRender,
-        ...restDefaultProps
-    } = LightboxDefaultProps;
+export const Lightbox = (props: NestedOptional<ComponentProps<typeof LightboxComponent>, "carousel" | "animation">) => {
+    const { carousel, animation, ...restProps } = props;
+    const { carousel: defaultCarousel, animation: defaultAnimation, ...restDefaultProps } = LightboxDefaultProps;
 
     return (
         <LightboxComponent
             carousel={{ ...defaultCarousel, ...carousel }}
             animation={{ ...defaultAnimation, ...animation }}
-            render={{ ...defaultRender, ...render }}
             {...restDefaultProps}
             {...restProps}
         />

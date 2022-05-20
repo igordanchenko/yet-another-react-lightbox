@@ -8,16 +8,24 @@ export type IconButtonProps = Omit<
 > & {
     label: string;
     icon: React.ElementType;
+    renderIcon?: () => React.ReactNode;
 };
 
-export const IconButton = ({ label, className, icon: Icon, onClick, ...rest }: IconButtonProps) => (
+export const IconButton: React.FC<IconButtonProps> = ({
+    label,
+    className,
+    icon: Icon,
+    renderIcon,
+    onClick,
+    ...rest
+}) => (
     <button
         type="button"
         aria-label={label}
         className={clsx(cssClass("button"), className)}
-        onClick={onClick || undefined}
+        onClick={onClick}
         {...rest}
     >
-        <Icon className={cssClass("icon")} />
+        {renderIcon ? renderIcon() : <Icon className={cssClass("icon")} />}
     </button>
 );

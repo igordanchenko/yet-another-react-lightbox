@@ -27,7 +27,13 @@ export interface Animation {
 }
 
 export interface Render {
-    slide: (slide: Slide) => React.ReactNode;
+    slide?: (slide: Slide) => React.ReactNode;
+    iconPrev?: () => React.ReactNode;
+    iconNext?: () => React.ReactNode;
+    iconClose?: () => React.ReactNode;
+    buttonPrev?: () => React.ReactNode;
+    buttonNext?: () => React.ReactNode;
+    buttonClose?: () => React.ReactNode;
 }
 
 export interface LightboxProps {
@@ -65,9 +71,7 @@ export const LightboxPropTypes = {
     close: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,
     slides: PropTypes.arrayOf(PropTypes.oneOfType(SlideTypesPropTypes).isRequired).isRequired,
-    render: PropTypes.shape({
-        slide: PropTypes.func.isRequired,
-    }).isRequired,
+    render: PropTypes.shape({}).isRequired,
     plugins: PropTypes.arrayOf(PropTypes.func.isRequired).isRequired,
     toolbar: PropTypes.shape({
         buttons: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.oneOf(["close"]), PropTypes.node])).isRequired,
@@ -90,12 +94,10 @@ export const LightboxDefaultProps = {
     close: () => {},
     index: 0,
     slides: [] as Slide[],
-    render: {
-        slide: () => null,
-    } as Render,
+    render: {} as Render,
     plugins: [] as Plugin[],
     toolbar: { buttons: ["close"] } as Toolbar,
-    labels: {},
+    labels: {} as Labels,
     animation: {
         fade: 330,
         swipe: 500,
