@@ -21,6 +21,7 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
             buttons: buttons.filter((button) => button !== "close"),
             ...restToolbar,
         },
+        inline: { style: { width: "100%", height: "100%" } },
         ...restProps,
     }));
 
