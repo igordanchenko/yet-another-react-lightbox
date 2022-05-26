@@ -6,7 +6,7 @@ export type KeyboardEventType = "onKeyDown" | "onKeyUp";
 export type WheelEventType = "onWheel";
 export type SupportedEventType = PointerEventType | TouchEventType | KeyboardEventType | WheelEventType;
 
-export type ReactEventType<T, K extends SupportedEventType> = K extends TouchEventType
+export type ReactEventType<T, K> = K extends TouchEventType
     ? React.TouchEvent<T>
     : K extends KeyboardEventType
     ? React.KeyboardEvent<T>
@@ -41,7 +41,7 @@ export const useSensors = <T extends Element>(): UseSensors<T> => {
 
     return React.useMemo(() => {
         const notifySubscribers = <ET extends SupportedEventType>(type: ET, event: ReactEventType<T, ET>) => {
-            subscribers[type]?.forEach((listener) => listener(event));
+            (subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[])?.forEach((listener) => listener(event));
         };
 
         return {
@@ -66,10 +66,10 @@ export const useSensors = <T extends Element>(): UseSensors<T> => {
                 if (!subscribers[type]) {
                     subscribers[type] = [];
                 }
-                subscribers[type]?.push(callback);
+                (subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[]).push(callback);
 
                 return () => {
-                    const listeners = subscribers[type];
+                    const listeners = subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[];
                     if (listeners) {
                         listeners.splice(0, listeners.length, ...listeners.filter((el) => el !== callback));
                     }
