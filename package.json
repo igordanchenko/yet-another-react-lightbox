@@ -64,7 +64,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "prop-types": "^15.8.1"
+        "prop-types": "^15.5.7"
     },
     "peerDependencies": {
         "react": ">=16.8.0",
