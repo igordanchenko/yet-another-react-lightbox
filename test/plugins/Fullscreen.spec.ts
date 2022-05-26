@@ -1,3 +1,4 @@
+import * as React from "react";
 import { act, render, screen } from "@testing-library/react";
 
 import { lightbox } from "../utils.js";
@@ -193,5 +194,16 @@ describe("Fullscreen", () => {
 
         getExitFullscreenButton().click();
         expectToBeFullscreen();
+    });
+
+    it("supports custom button rendering", () => {
+        render(
+            lightbox({
+                plugins: [Fullscreen],
+                render: { buttonFullscreen: () => React.createElement("button", { type: "button" }, "Custom button") },
+            })
+        );
+
+        expect(screen.queryByRole("button", { name: "Custom button" })).toBeInTheDocument();
     });
 });
