@@ -48,7 +48,7 @@ const LightboxComponent = (props: LightboxProps & typeof LightboxDefaultProps) =
 LightboxComponent.propTypes = LightboxPropTypes;
 LightboxComponent.defaultProps = LightboxDefaultProps;
 
-type ComponentProps<T> = T extends React.ComponentType<infer P> | React.Component<infer P>
+type LightboxComponentProps<T> = T extends React.ComponentType<infer P> | React.Component<infer P>
     ? JSX.LibraryManagedAttributes<T, P>
     : never;
 
@@ -60,7 +60,9 @@ type NestedPartial<T extends object> = {
 
 type NestedOptional<T, K extends keyof T> = Omit<T, K> & NestedPartial<Pick<T, K>>;
 
-export const Lightbox = (props: NestedOptional<ComponentProps<typeof LightboxComponent>, "carousel" | "animation">) => {
+export const Lightbox = (
+    props: NestedOptional<LightboxComponentProps<typeof LightboxComponent>, "carousel" | "animation">
+) => {
     const { carousel, animation, ...restProps } = props;
     const { carousel: defaultCarousel, animation: defaultAnimation, ...restDefaultProps } = LightboxDefaultProps;
 
