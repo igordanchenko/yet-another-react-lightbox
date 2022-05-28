@@ -5,6 +5,7 @@
     "author": "Igor Danchenko",
     "license": "MIT",
     "type": "module",
+    "main": "dist/index.js",
     "exports": {
         ".": "./dist/index.js",
         "./core": "./dist/core/index.js",
