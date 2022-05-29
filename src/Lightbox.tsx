@@ -20,7 +20,7 @@ const renderNode = (node: Node, props: LightboxProps): React.ReactElement =>
         node.children?.map((child) => renderNode(child, props))
     );
 
-const LightboxComponent = (props: LightboxProps & typeof LightboxDefaultProps) => {
+const LightboxComponent = (props: LightboxProps) => {
     const { plugins } = props;
 
     const { config, augmentation } = withPlugins(
@@ -44,13 +44,7 @@ const LightboxComponent = (props: LightboxProps & typeof LightboxDefaultProps) =
 
     return <>{renderNode(createNode(CoreModule, config), augmentedProps)}</>;
 };
-
 LightboxComponent.propTypes = LightboxPropTypes;
-LightboxComponent.defaultProps = LightboxDefaultProps;
-
-type LightboxComponentProps<T> = T extends React.ComponentType<infer P> | React.Component<infer P>
-    ? JSX.LibraryManagedAttributes<T, P>
-    : never;
 
 type MakePartial<T> = T extends object ? Partial<T> : T;
 
@@ -61,15 +55,25 @@ type NestedPartial<T extends object> = {
 type NestedOptional<T, K extends keyof T> = Omit<T, K> & NestedPartial<Pick<T, K>>;
 
 export const Lightbox = (
-    props: NestedOptional<LightboxComponentProps<typeof LightboxComponent>, "carousel" | "animation">
+    props: NestedOptional<Partial<LightboxProps>, "carousel" | "animation" | "render" | "toolbar" | "on">
 ) => {
-    const { carousel, animation, ...restProps } = props;
-    const { carousel: defaultCarousel, animation: defaultAnimation, ...restDefaultProps } = LightboxDefaultProps;
+    const { carousel, animation, render, toolbar, on, ...restProps } = props;
+    const {
+        carousel: defaultCarousel,
+        animation: defaultAnimation,
+        render: defaultRender,
+        toolbar: defaultToolbar,
+        on: defaultOn,
+        ...restDefaultProps
+    } = LightboxDefaultProps;
 
     return (
         <LightboxComponent
             carousel={{ ...defaultCarousel, ...carousel }}
             animation={{ ...defaultAnimation, ...animation }}
+            render={{ ...defaultRender, ...render }}
+            toolbar={{ ...defaultToolbar, ...toolbar }}
+            on={{ ...defaultOn, ...on }}
             {...restDefaultProps}
             {...restProps}
         />

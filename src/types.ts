@@ -82,7 +82,17 @@ export const LightboxPropTypes = {
     close: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,
     slides: PropTypes.arrayOf(PropTypes.oneOfType(SlideTypesPropTypes).isRequired).isRequired,
-    render: PropTypes.shape({}).isRequired,
+    render: PropTypes.shape({
+        slide: PropTypes.func,
+        iconPrev: PropTypes.func,
+        iconNext: PropTypes.func,
+        iconClose: PropTypes.func,
+        iconLoading: PropTypes.func,
+        iconError: PropTypes.func,
+        buttonPrev: PropTypes.func,
+        buttonNext: PropTypes.func,
+        buttonClose: PropTypes.func,
+    }).isRequired,
     plugins: PropTypes.arrayOf(PropTypes.func.isRequired).isRequired,
     toolbar: PropTypes.shape({
         buttons: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.oneOf(["close"]), PropTypes.node])).isRequired,
@@ -98,7 +108,13 @@ export const LightboxPropTypes = {
         fade: PropTypes.number.isRequired,
         swipe: PropTypes.number.isRequired,
     }).isRequired,
-    on: PropTypes.shape({}).isRequired,
+    on: PropTypes.shape({
+        view: PropTypes.func,
+        entering: PropTypes.func,
+        entered: PropTypes.func,
+        exiting: PropTypes.func,
+        exited: PropTypes.func,
+    }).isRequired,
 };
 
 export const LightboxDefaultProps = {

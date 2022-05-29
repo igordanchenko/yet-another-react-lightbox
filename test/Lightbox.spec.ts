@@ -1,6 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 
-import { findCurrentImage, lightbox } from "../utils.js";
+import { findCurrentImage, lightbox } from "./utils.js";
 
 describe("Lightbox", () => {
     it("respects open prop", () => {
