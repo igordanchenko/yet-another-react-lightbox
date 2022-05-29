@@ -46,16 +46,12 @@ const LightboxComponent = (props: LightboxProps) => {
 };
 LightboxComponent.propTypes = LightboxPropTypes;
 
-type MakePartial<T> = T extends object ? Partial<T> : T;
-
-type NestedPartial<T extends object> = {
-    [P in keyof T]?: MakePartial<T[P]>;
+type DeepPartial<T, K extends keyof T> = Omit<T, K> & {
+    [P in keyof Pick<T, K>]?: Partial<Pick<T, K>[P]>;
 };
 
-type NestedOptional<T, K extends keyof T> = Omit<T, K> & NestedPartial<Pick<T, K>>;
-
 export const Lightbox = (
-    props: NestedOptional<Partial<LightboxProps>, "carousel" | "animation" | "render" | "toolbar" | "on">
+    props: DeepPartial<Partial<LightboxProps>, "carousel" | "animation" | "render" | "toolbar" | "on">
 ) => {
     const { carousel, animation, render, toolbar, on, ...restProps } = props;
     const {
