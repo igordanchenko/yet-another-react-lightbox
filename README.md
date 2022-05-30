@@ -1,6 +1,6 @@
 # Yet Another React Lightbox
 
-Modern lightbox component for React.
+Modern React lightbox component.
 
 ## Overview
 
