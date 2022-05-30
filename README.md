@@ -30,7 +30,7 @@ yarn add yet-another-react-lightbox
 
 ```javascript
 import * as React from "react";
-import { Lightbox } from "yet-another-react-lightbox";
+import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
 const App = () => {
