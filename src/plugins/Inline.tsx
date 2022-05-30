@@ -9,11 +9,11 @@ declare module "../types.js" {
     }
 }
 
-export const InlineContainer: Component = ({ inline, children }) => <div {...inline}>{children}</div>;
+const InlineContainer: Component = ({ inline, children }) => <div {...inline}>{children}</div>;
 
-export const InlineModule = createModule("inline", InlineContainer);
+const InlineModule = createModule("inline", InlineContainer);
 
-export const Inline: Plugin = ({ augment, replace, remove }) => {
+const Inline: Plugin = ({ augment, replace, remove }) => {
     augment(({ toolbar: { buttons, ...restToolbar }, open, close, ...restProps }) => ({
         open: true,
         close: () => {},
@@ -28,3 +28,6 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
     remove("no-scroll");
     replace("portal", InlineModule);
 };
+
+export { Inline, InlineModule, InlineContainer };
+export default Inline;

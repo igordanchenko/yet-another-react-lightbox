@@ -33,7 +33,7 @@ SlideTypesPropTypes.push(
     })
 );
 
-export const VideoSlide = ({ slide: { sources, poster, width, height } }: { slide: SlideVideo }) => {
+const VideoSlide = ({ slide: { sources, poster, width, height } }: { slide: SlideVideo }) => {
     const { setContainerRef, containerRect } = useContainerRect();
 
     const scaleWidthAndHeight = () => {
@@ -72,7 +72,7 @@ export const VideoSlide = ({ slide: { sources, poster, width, height } }: { slid
     );
 };
 
-export const Video: Plugin = ({ augment }) => {
+const Video: Plugin = ({ augment }) => {
     augment(({ render: { slide: renderSlide, ...restRender }, ...restProps }) => ({
         render: {
             slide: (slide) => {
@@ -86,3 +86,6 @@ export const Video: Plugin = ({ augment }) => {
         ...restProps,
     }));
 };
+
+export { Video, VideoSlide };
+export default Video;

@@ -55,12 +55,12 @@ const ExitFullscreenIcon = createIcon(
     <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 );
 
-export type FullscreenButtonProps = Pick<LightboxProps, "labels"> & {
+type FullscreenButtonProps = Pick<LightboxProps, "labels"> & {
     auto: boolean;
     render: Render;
 };
 
-export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps) => {
+const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps) => {
     const [fullscreen, setFullscreen] = React.useState(false);
     const latestAuto = useLatest(auto);
 
@@ -171,7 +171,7 @@ export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps
     );
 };
 
-export const Fullscreen: Plugin = ({ augment }) => {
+const Fullscreen: Plugin = ({ augment }) => {
     augment(({ toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
         toolbar: {
             buttons: [
@@ -188,3 +188,7 @@ export const Fullscreen: Plugin = ({ augment }) => {
         ...restProps,
     }));
 };
+
+export type { FullscreenButtonProps };
+export { Fullscreen, FullscreenButton };
+export default Fullscreen;
