@@ -8,11 +8,9 @@ Modern lightbox component for React.
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/yet-another-react-lightbox?color=blue)](https://bundlephobia.com/package/yet-another-react-lightbox)
 [![License MIT](https://img.shields.io/npm/l/yet-another-react-lightbox?color=blue)](LICENSE)
 
-Coming soon...
-
 ## Documentation
 
-Coming soon...
+[https://yet-another-react-lightbox.vercel.app/](https://yet-another-react-lightbox.vercel.app/)
 
 ## Installation
 
