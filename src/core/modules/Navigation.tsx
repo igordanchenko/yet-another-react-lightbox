@@ -66,7 +66,7 @@ export const Navigation: Component = ({
                 buttonPrev()
             ) : (
                 <NavigationButton
-                    label="Previous Image"
+                    label="Previous"
                     action="prev"
                     icon={PreviousIcon}
                     renderIcon={iconPrev}
@@ -80,7 +80,7 @@ export const Navigation: Component = ({
                 buttonNext()
             ) : (
                 <NavigationButton
-                    label="Next Image"
+                    label="Next"
                     action="next"
                     icon={NextIcon}
                     renderIcon={iconNext}

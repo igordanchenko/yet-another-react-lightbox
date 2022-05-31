@@ -16,8 +16,8 @@ describe("Lightbox", () => {
 
         expect(screen.queryByRole("presentation")).toBeInTheDocument();
         expect(screen.queryByLabelText("Close")).toBeInTheDocument();
-        expect(screen.queryByLabelText("Previous Image")).toBeInTheDocument();
-        expect(screen.queryByLabelText("Next Image")).toBeInTheDocument();
+        expect(screen.queryByLabelText("Previous")).toBeInTheDocument();
+        expect(screen.queryByLabelText("Next")).toBeInTheDocument();
     });
 
     it("respects index prop", () => {
@@ -40,16 +40,16 @@ describe("Lightbox", () => {
         expect(findCurrentImage()).toContain("image1");
 
         act(() => {
-            screen.getByLabelText("Next Image").click();
+            screen.getByLabelText("Next").click();
         });
 
         expect(findCurrentImage()).toContain("image2");
 
         act(() => {
-            screen.getByLabelText("Previous Image").click();
+            screen.getByLabelText("Previous").click();
         });
         act(() => {
-            screen.getByLabelText("Previous Image").click();
+            screen.getByLabelText("Previous").click();
         });
 
         expect(findCurrentImage()).toContain("image3");

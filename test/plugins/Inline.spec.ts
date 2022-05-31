@@ -8,8 +8,8 @@ describe("Inline", () => {
     const testMainScenario = () => {
         expect(screen.queryByRole("presentation")).toBeInTheDocument();
         expect(screen.queryByLabelText("Close")).not.toBeInTheDocument();
-        expect(screen.queryByLabelText("Previous Image")).toBeInTheDocument();
-        expect(screen.queryByLabelText("Next Image")).toBeInTheDocument();
+        expect(screen.queryByLabelText("Previous")).toBeInTheDocument();
+        expect(screen.queryByLabelText("Next")).toBeInTheDocument();
     };
 
     it("renders inline lightbox", () => {
