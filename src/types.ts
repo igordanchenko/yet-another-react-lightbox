@@ -14,14 +14,14 @@ export interface SlideTypes {
 
 export type Slide = SlideTypes[keyof SlideTypes];
 
-export interface Carousel {
+export interface CarouselSettings {
     finite: boolean;
     preload: number;
     padding: string | number;
     spacing: string | number;
 }
 
-export interface Animation {
+export interface AnimationSettings {
     fade: number;
     swipe: number;
 }
@@ -54,9 +54,9 @@ export interface LightboxProps {
     render: Render;
     labels: Labels;
     plugins: Plugin[];
-    toolbar: Toolbar;
-    carousel: Carousel;
-    animation: Animation;
+    toolbar: ToolbarSettings;
+    carousel: CarouselSettings;
+    animation: AnimationSettings;
     on: Callbacks;
 }
 
@@ -124,24 +124,24 @@ export const LightboxDefaultProps = {
     slides: [] as Slide[],
     render: {} as Render,
     plugins: [] as Plugin[],
-    toolbar: { buttons: ["close"] } as Toolbar,
+    toolbar: { buttons: ["close"] } as ToolbarSettings,
     labels: {} as Labels,
     animation: {
         fade: 330,
         swipe: 500,
-    } as Animation,
+    } as AnimationSettings,
     carousel: {
         finite: false,
         preload: 2,
         padding: "16px",
         spacing: "30%",
-    } as Carousel,
+    } as CarouselSettings,
     on: {} as Callbacks,
 };
 
 export type Labels = { [key: string]: string };
 
-export interface Toolbar {
+export interface ToolbarSettings {
     buttons: ("close" | React.ReactNode)[];
 }
 
