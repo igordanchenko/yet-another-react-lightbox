@@ -84,8 +84,10 @@ export const Controller: Component = ({ children, ...props }) => {
     }, [containerRef]);
 
     React.useEffect(() => {
-        containerRef.current?.focus();
-    }, [containerRef]);
+        if (refs.current.props.controller.focus) {
+            containerRef.current?.focus();
+        }
+    }, [containerRef, refs]);
 
     React.useEffect(() => {
         refs.current.props.on.view?.(state.currentIndex);

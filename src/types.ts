@@ -26,6 +26,10 @@ export interface AnimationSettings {
     swipe: number;
 }
 
+export interface ControllerSettings {
+    focus: boolean;
+}
+
 export interface Render {
     slide?: (slide: Slide) => React.ReactNode;
     iconPrev?: () => React.ReactNode;
@@ -57,6 +61,7 @@ export interface LightboxProps {
     toolbar: ToolbarSettings;
     carousel: CarouselSettings;
     animation: AnimationSettings;
+    controller: ControllerSettings;
     on: Callbacks;
 }
 
@@ -108,6 +113,9 @@ export const LightboxPropTypes = {
         fade: PropTypes.number.isRequired,
         swipe: PropTypes.number.isRequired,
     }).isRequired,
+    controller: PropTypes.shape({
+        focus: PropTypes.bool.isRequired,
+    }).isRequired,
     on: PropTypes.shape({
         view: PropTypes.func,
         entering: PropTypes.func,
@@ -136,6 +144,9 @@ export const LightboxDefaultProps = {
         padding: "16px",
         spacing: "30%",
     } as CarouselSettings,
+    controller: {
+        focus: true,
+    } as ControllerSettings,
     on: {} as Callbacks,
 };
 

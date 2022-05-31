@@ -53,12 +53,13 @@ type DeepPartial<T, K extends keyof T> = Omit<T, K> & {
 export const Lightbox = (
     props: DeepPartial<Partial<LightboxProps>, "carousel" | "animation" | "render" | "toolbar" | "on">
 ) => {
-    const { carousel, animation, render, toolbar, on, ...restProps } = props;
+    const { carousel, animation, render, toolbar, controller, on, ...restProps } = props;
     const {
         carousel: defaultCarousel,
         animation: defaultAnimation,
         render: defaultRender,
         toolbar: defaultToolbar,
+        controller: defaultController,
         on: defaultOn,
         ...restDefaultProps
     } = LightboxDefaultProps;
@@ -69,6 +70,7 @@ export const Lightbox = (
             animation={{ ...defaultAnimation, ...animation }}
             render={{ ...defaultRender, ...render }}
             toolbar={{ ...defaultToolbar, ...toolbar }}
+            controller={{ ...defaultController, ...controller }}
             on={{ ...defaultOn, ...on }}
             {...restDefaultProps}
             {...restProps}
