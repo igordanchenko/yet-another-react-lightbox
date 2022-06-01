@@ -12,11 +12,23 @@ type CarouselSlideProps = {
     render: Render;
 };
 
-const CarouselSlide = ({ slide, offset, render }: CarouselSlideProps) => (
-    <div className={clsx(cssClass("slide"), cssClass("flex_center"))} style={{ [cssVar("slide_offset")]: offset }}>
-        {render.slide?.(slide) || ("src" in slide && <ImageSlide slide={slide} render={render} />)}
-    </div>
-);
+const CarouselSlide = ({ slide, offset, render }: CarouselSlideProps) => {
+    const renderSlide = () => {
+        if (render.slide) {
+            const rendered = render.slide(slide);
+            if (rendered) {
+                return rendered;
+            }
+        }
+        return "src" in slide ? <ImageSlide slide={slide} render={render} /> : null;
+    };
+
+    return (
+        <div className={clsx(cssClass("slide"), cssClass("flex_center"))} style={{ [cssVar("slide_offset")]: offset }}>
+            {renderSlide()}
+        </div>
+    );
+};
 
 export const Carousel: Component = (props) => {
     const {
