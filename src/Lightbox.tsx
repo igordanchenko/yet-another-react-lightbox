@@ -51,7 +51,7 @@ type DeepPartial<T, K extends keyof T> = Omit<T, K> & {
 };
 
 export const Lightbox = (
-    props: DeepPartial<Partial<LightboxProps>, "carousel" | "animation" | "render" | "toolbar" | "on">
+    props: DeepPartial<Partial<LightboxProps>, "carousel" | "animation" | "render" | "toolbar" | "controller" | "on">
 ) => {
     const { carousel, animation, render, toolbar, controller, on, ...restProps } = props;
     const {
