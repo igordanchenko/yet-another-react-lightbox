@@ -56,8 +56,9 @@
     "scripts": {
         "prepare": "husky install",
         "clean": "rimraf dist",
-        "build": "npm-run-all clean build:scss build:css build:js",
-        "build:js": "tsc -p tsconfig.build.json",
+        "build": "npm-run-all clean build:scss build:css build:js build:dts",
+        "build:js": "tsc -p tsconfig.build.js.json",
+        "build:dts": "tsc -p tsconfig.build.dts.json",
         "build:css": "postcss src/styles.css -u autoprefixer --no-map -d dist",
         "build:scss": "sass src/styles.scss src/styles.css --no-source-map ",
         "start": "npm-run-all clean --parallel \"build:* -- -w\"",
