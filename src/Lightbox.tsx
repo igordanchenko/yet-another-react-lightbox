@@ -50,6 +50,7 @@ type DeepPartial<T, K extends keyof T> = Omit<T, K> & {
     [P in keyof Pick<T, K>]?: Partial<Pick<T, K>[P]>;
 };
 
+/** Modern React lightbox component */
 export const Lightbox = (
     props: DeepPartial<Partial<LightboxProps>, "carousel" | "animation" | "render" | "toolbar" | "controller" | "on">
 ) => {

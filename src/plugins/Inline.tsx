@@ -5,15 +5,19 @@ import { createModule } from "../core/index.js";
 
 declare module "../types.js" {
     interface LightboxProps {
+        /** HTML div element attributes to be passed to inline plugin container */
         inline?: React.HTMLAttributes<HTMLDivElement>;
     }
 }
 
-const InlineContainer: Component = ({ inline, children }) => <div {...inline}>{children}</div>;
+/** Inline plugin container */
+export const InlineContainer: Component = ({ inline, children }) => <div {...inline}>{children}</div>;
 
-const InlineModule = createModule("inline", InlineContainer);
+/** Inline plugin module */
+export const InlineModule = createModule("inline", InlineContainer);
 
-const Inline: Plugin = ({ augment, replace, remove }) => {
+/** Inline plugin */
+export const Inline: Plugin = ({ augment, replace, remove }) => {
     augment(
         ({
             toolbar: { buttons, ...restToolbar },
@@ -38,5 +42,4 @@ const Inline: Plugin = ({ augment, replace, remove }) => {
     replace("portal", InlineModule);
 };
 
-export { Inline, InlineModule, InlineContainer };
 export default Inline;

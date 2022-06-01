@@ -5,10 +5,12 @@ import { createIcon, IconButton, label, useController, useLatest } from "../core
 
 declare module "../types.js" {
     interface LightboxProps {
+        /** enter fullscreen mode automatically when the lightbox opens */
         fullscreen?: boolean;
     }
 
     interface Render {
+        /** render custom Enter/Exit Fullscreen button */
         buttonFullscreen?: ({
             fullscreen,
             toggleFullscreen,
@@ -16,7 +18,9 @@ declare module "../types.js" {
             fullscreen: boolean;
             toggleFullscreen: () => void;
         }) => React.ReactNode;
+        /** render custom Enter Fullscreen icon */
         iconEnterFullscreen?: () => React.ReactNode;
+        /** render custom Exit Fullscreen icon */
         iconExitFullscreen?: () => React.ReactNode;
     }
 }
@@ -55,12 +59,14 @@ const ExitFullscreenIcon = createIcon(
     <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
 );
 
-type FullscreenButtonProps = Pick<LightboxProps, "labels"> & {
+/** Fullscreen button props */
+export type FullscreenButtonProps = Pick<LightboxProps, "labels"> & {
     auto: boolean;
     render: Render;
 };
 
-const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps) => {
+/** Fullscreen button */
+export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps) => {
     const [fullscreen, setFullscreen] = React.useState(false);
     const latestAuto = useLatest(auto);
 
@@ -171,7 +177,8 @@ const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps) => {
     );
 };
 
-const Fullscreen: Plugin = ({ augment }) => {
+/** Fullscreen plugin */
+export const Fullscreen: Plugin = ({ augment }) => {
     augment(({ toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
         toolbar: {
             buttons: [
@@ -189,6 +196,4 @@ const Fullscreen: Plugin = ({ augment }) => {
     }));
 };
 
-export type { FullscreenButtonProps };
-export { Fullscreen, FullscreenButton };
 export default Fullscreen;

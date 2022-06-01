@@ -4,16 +4,28 @@ import PropTypes from "prop-types";
 import { Plugin, SlideTypesPropTypes } from "../types.js";
 import { clsx, cssClass, useContainerRect } from "../core/index.js";
 
+/** Video slide attributes */
 export interface SlideVideo {
+    /** video slide type marker */
     type: "video";
+    /** video placeholder image */
     poster?: string;
+    /** video width */
     width?: number;
+    /** video height */
     height?: number;
-    sources?: { src: string; type: string }[];
+    /** vide source files */
+    sources?: {
+        /** video source URL */
+        src: string;
+        /** video source type (e.g., `video/mp4`) */
+        type: string;
+    }[];
 }
 
 declare module "../types.js" {
     interface SlideTypes {
+        /** video slide type */
         SlideVideo: SlideVideo;
     }
 }
@@ -33,7 +45,8 @@ SlideTypesPropTypes.push(
     })
 );
 
-const VideoSlide = ({ slide: { sources, poster, width, height } }: { slide: SlideVideo }) => {
+/** Video slide */
+export const VideoSlide = ({ slide: { sources, poster, width, height } }: { slide: SlideVideo }) => {
     const { setContainerRef, containerRect } = useContainerRect();
 
     const scaleWidthAndHeight = () => {
@@ -72,7 +85,8 @@ const VideoSlide = ({ slide: { sources, poster, width, height } }: { slide: Slid
     );
 };
 
-const Video: Plugin = ({ augment }) => {
+/** Video plugin */
+export const Video: Plugin = ({ augment }) => {
     augment(({ render: { slide: renderSlide, ...restRender }, ...restProps }) => ({
         render: {
             slide: (slide) => {
@@ -87,5 +101,4 @@ const Video: Plugin = ({ augment }) => {
     }));
 };
 
-export { Video, VideoSlide };
 export default Video;
