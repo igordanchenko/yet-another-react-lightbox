@@ -5,7 +5,7 @@ import { createIcon, IconButton, label, useController, useLatest } from "../core
 
 declare module "../types.js" {
     interface LightboxProps {
-        /** enter fullscreen mode automatically when the lightbox opens */
+        /** if `true`, enter fullscreen mode automatically when the lightbox opens */
         fullscreen?: boolean;
     }
 

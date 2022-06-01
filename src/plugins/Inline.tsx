@@ -5,7 +5,7 @@ import { createModule } from "../core/index.js";
 
 declare module "../types.js" {
     interface LightboxProps {
-        /** HTML div element attributes to be passed to inline plugin container */
+        /** HTML div element attributes to be passed to the inline plugin container */
         inline?: React.HTMLAttributes<HTMLDivElement>;
     }
 }

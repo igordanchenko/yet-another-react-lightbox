@@ -10,11 +10,11 @@ export interface SlideVideo {
     type: "video";
     /** video placeholder image */
     poster?: string;
-    /** video width */
+    /** video width in pixels */
     width?: number;
-    /** video height */
+    /** video height in pixels */
     height?: number;
-    /** vide source files */
+    /** an array of video files */
     sources?: {
         /** video source URL */
         src: string;
