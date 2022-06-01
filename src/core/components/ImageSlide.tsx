@@ -67,7 +67,7 @@ export const ImageSlide = ({ slide: image, render }: ImageSlideProps) => {
                 onError={onError}
                 className={clsx(cssClass("slide_image"), state !== "complete" && cssClass("slide_image_loading"))}
                 draggable={false}
-                alt={image.title}
+                alt={image.alt}
                 {...(image.srcSet
                     ? {
                           // this approach does not account for carousel padding,

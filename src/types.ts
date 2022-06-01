@@ -3,23 +3,24 @@ import PropTypes from "prop-types";
 
 /** Image slide properties */
 export interface SlideImage {
-    /** Image URL */
+    /** image URL */
     src?: string;
-    title?: string;
-    /** Image aspect ratio */
+    /** image 'alt' attribute */
+    alt?: string;
+    /** image aspect ratio */
     aspectRatio?: number;
-    /** Alternative images to be passed to 'srcSet' */
+    /** alternative images to be passed to 'srcSet' */
     srcSet?: {
-        /** Image URL */
+        /** image URL */
         src: string;
-        /** Image width in pixels */
+        /** image width in pixels */
         width: number;
     }[];
 }
 
 /** Supported slide types */
 export interface SlideTypes {
-    /** Image slide type */
+    /** image slide type */
     SlideImage: SlideImage;
 }
 
@@ -90,7 +91,7 @@ export interface Callbacks {
 
 /** Lightbox properties */
 export interface LightboxProps {
-    /** Open flag. If true, the lightbox is open. */
+    /** if `true`, the lightbox is open */
     open: boolean;
     /** a callback to close the lightbox */
     close: () => void;
