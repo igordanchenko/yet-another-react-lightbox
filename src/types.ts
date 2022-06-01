@@ -9,7 +9,7 @@ export interface SlideImage {
     alt?: string;
     /** image aspect ratio */
     aspectRatio?: number;
-    /** alternative images to be passed to 'srcSet' */
+    /** alternative images to be passed to the 'srcSet' */
     srcSet?: {
         /** image URL */
         src: string;
