@@ -120,22 +120,19 @@ export interface LightboxProps {
     on: Callbacks;
 }
 
-export const SlideTypesPropTypes: PropTypes.Validator<any>[] = [
-    PropTypes.shape({
-        src: PropTypes.string.isRequired,
-        title: PropTypes.string,
-        aspectRatio: PropTypes.number,
-        srcSet: PropTypes.oneOfType([
-            PropTypes.string.isRequired,
-            PropTypes.arrayOf(
-                PropTypes.shape({
-                    src: PropTypes.string.isRequired,
-                    width: PropTypes.number.isRequired,
-                }).isRequired
-            ).isRequired,
-        ]),
-    }),
-];
+export const ImageSlidePropTypes = PropTypes.shape({
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string,
+    aspectRatio: PropTypes.number,
+    srcSet: PropTypes.arrayOf(
+        PropTypes.shape({
+            src: PropTypes.string.isRequired,
+            width: PropTypes.number.isRequired,
+        }).isRequired
+    ),
+});
+
+export const SlideTypesPropTypes: PropTypes.Validator<any>[] = [ImageSlidePropTypes];
 
 export const LightboxPropTypes = {
     open: PropTypes.bool.isRequired,
