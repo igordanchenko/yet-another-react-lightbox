@@ -121,7 +121,7 @@ export interface LightboxProps {
 }
 
 export const ImageSlidePropTypes = PropTypes.shape({
-    src: PropTypes.string.isRequired,
+    src: PropTypes.string,
     alt: PropTypes.string,
     aspectRatio: PropTypes.number,
     srcSet: PropTypes.arrayOf(
