@@ -72,4 +72,4 @@ export default App;
 
 ## License
 
-MIT © [Igor Danchenko](https://github.com/igordanchenko)
+MIT © 2022 [Igor Danchenko](https://github.com/igordanchenko)
