@@ -83,13 +83,13 @@
         "@testing-library/jest-dom": "^5.16.4",
         "@testing-library/react": "^13.3.0",
         "@testing-library/user-event": "^14.2.0",
-        "@types/jest": "^27.5.2",
+        "@types/jest": "^28.1.0",
         "@types/react": "^18.0.10",
         "@types/react-dom": "^18.0.5",
         "@typescript-eslint/eslint-plugin": "^5.27.0",
         "@typescript-eslint/parser": "^5.27.0",
         "autoprefixer": "^10.4.7",
-        "eslint": "^8.16.0",
+        "eslint": "^8.17.0",
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-airbnb-typescript": "^17.0.0",
         "eslint-config-prettier": "^8.5.0",
@@ -109,9 +109,9 @@
         "react": "^18.1.0",
         "react-dom": "^18.1.0",
         "rimraf": "^3.0.2",
-        "sass": "^1.52.1",
-        "ts-jest": "^28.0.3",
-        "typescript": "^4.7.2"
+        "sass": "^1.52.2",
+        "ts-jest": "^28.0.4",
+        "typescript": "^4.7.3"
     },
     "keywords": [
         "react",
