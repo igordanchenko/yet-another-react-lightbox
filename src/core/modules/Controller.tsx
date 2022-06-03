@@ -3,14 +3,14 @@ import * as React from "react";
 import { Component, ComponentProps, LightboxDefaultProps } from "../../types.js";
 import { cleanup, clsx, cssClass, cssVar, makeUseContext } from "../utils.js";
 import { createModule } from "../config.js";
-import { ContainerRect, SubscribeSensors, useContainerRect, useEnhancedEffect, useSensors } from "../hooks/index.js";
+import { SubscribeSensors, useContainerRect, useEnhancedEffect, useLatest, useSensors } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 
 const SWIPE_OFFSET_THRESHOLD = 30;
 
 export type ControllerContextType = {
+    latestProps: React.MutableRefObject<ComponentProps>;
     containerRef: React.RefObject<HTMLDivElement>;
-    containerRect: ContainerRect;
     currentIndex: number;
     globalIndex: number;
     subscribeSensors: SubscribeSensors<HTMLDivElement>;
@@ -28,7 +28,6 @@ type ControllerState = {
 type ControllerRefs = {
     state: ControllerState;
     props: ComponentProps;
-    containerRect?: ContainerRect;
     swipeState?: "swipe" | "swipe-animation";
     swipeAnimationDuration: number;
     swipeOffset: number;
@@ -42,7 +41,7 @@ type ControllerRefs = {
 };
 
 export const Controller: Component = ({ children, ...props }) => {
-    const { containerRef, setContainerRef, containerRect } = useContainerRect<HTMLDivElement>();
+    const { containerRef, setContainerRef } = useContainerRect<HTMLDivElement>();
     const { registerSensors, subscribeSensors } = useSensors<HTMLDivElement>();
     const { subscribe, publish } = useEvents();
     const { setTimeout, clearTimeout } = useTimeouts();
@@ -51,6 +50,8 @@ export const Controller: Component = ({ children, ...props }) => {
         currentIndex: props.index,
         globalIndex: props.index,
     });
+
+    const latestProps = useLatest(props);
 
     const refs = React.useRef<ControllerRefs>({
         state,
@@ -64,7 +65,6 @@ export const Controller: Component = ({ children, ...props }) => {
 
     refs.current.state = state;
     refs.current.props = props;
-    refs.current.containerRect = containerRect;
 
     // prevent browser back/forward navigation on touchpad left/right swipe
     // this has to be done via non-passive native event handler
@@ -148,7 +148,7 @@ export const Controller: Component = ({ children, ...props }) => {
             let newSwipeAnimationDuration = swipeAnimationDuration;
 
             if (!direction) {
-                const containerWidth = current.containerRect?.width;
+                const containerWidth = containerRef.current?.clientWidth;
 
                 const elapsedTime = current.swipeStartTime ? Date.now() - current.swipeStartTime : 0;
                 const expectedTime = containerWidth
@@ -210,7 +210,7 @@ export const Controller: Component = ({ children, ...props }) => {
 
             setState((prev) => ({ ...prev, ...newState }));
         },
-        [setTimeout, resetSwipe, isSwipeValid, rerender]
+        [setTimeout, resetSwipe, isSwipeValid, rerender, containerRef]
     );
 
     React.useEffect(
@@ -366,7 +366,7 @@ export const Controller: Component = ({ children, ...props }) => {
                     }, current.props.animation.swipe);
                 }
             } else if (current.swipeState === "swipe") {
-                const containerWidth = current.containerRect?.width;
+                const containerWidth = containerRef.current?.clientWidth;
 
                 if (containerWidth) {
                     current.swipeOffset -= event.deltaX;
@@ -399,20 +399,20 @@ export const Controller: Component = ({ children, ...props }) => {
                 current.wheelResidualMomentum = event.deltaX;
             }
         },
-        [updateSwipeOffset, setTimeout, clearTimeout, swipe, resetSwipe, rerender, isSwipeValid]
+        [updateSwipeOffset, setTimeout, clearTimeout, swipe, resetSwipe, rerender, isSwipeValid, containerRef]
     );
 
     React.useEffect(() => subscribeSensors("onWheel", onWheel), [subscribeSensors, onWheel]);
 
     const context = React.useMemo(
         () => ({
+            latestProps,
             containerRef,
-            containerRect,
             currentIndex: state.currentIndex,
             globalIndex: state.globalIndex,
             subscribeSensors,
         }),
-        [containerRef, containerRect, state.currentIndex, state.globalIndex, subscribeSensors]
+        [latestProps, containerRef, state.currentIndex, state.globalIndex, subscribeSensors]
     );
 
     return (
@@ -431,11 +431,7 @@ export const Controller: Component = ({ children, ...props }) => {
             tabIndex={-1}
             {...registerSensors}
         >
-            {containerRect && (
-                <ControllerContext.Provider value={context as ControllerContextType}>
-                    {children}
-                </ControllerContext.Provider>
-            )}
+            <ControllerContext.Provider value={context}>{children}</ControllerContext.Provider>
         </div>
     );
 };

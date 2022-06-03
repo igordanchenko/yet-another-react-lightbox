@@ -89,11 +89,11 @@ export const VideoSlide = ({ slide: { sources, poster, width, height } }: { slid
 export const Video: Plugin = ({ augment }) => {
     augment(({ render: { slide: renderSlide, ...restRender }, ...restProps }) => ({
         render: {
-            slide: (slide) => {
+            slide: (slide, offset, rect) => {
                 if ("type" in slide && slide.type === "video") {
                     return <VideoSlide slide={slide} />;
                 }
-                return renderSlide?.(slide);
+                return renderSlide?.(slide, offset, rect);
             },
             ...restRender,
         },

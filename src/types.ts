@@ -1,6 +1,8 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 
+import { ContainerRect } from "./core/hooks/useContainerRect.js";
+
 /** Image slide properties */
 export interface SlideImage {
     /** image URL */
@@ -56,7 +58,14 @@ export interface ControllerSettings {
 /** Custom render functions. */
 export interface Render {
     /** render custom slide type, or override the default image slide */
-    slide?: (slide: Slide) => React.ReactNode;
+    slide?: (
+        /** slide */
+        slide: Slide,
+        /** slide offset (`0` - current slide, `1` - next slide, `-1` - previous slide, etc.) */
+        offset: number,
+        /** container rect */
+        rect: ContainerRect
+    ) => React.ReactNode;
     /** render custom slide header */
     slideHeader?: (slide: Slide) => React.ReactNode;
     /** render custom slide footer */

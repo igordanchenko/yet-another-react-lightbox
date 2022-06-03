@@ -2,22 +2,20 @@ import * as React from "react";
 
 import { Render, SlideImage } from "../../types.js";
 import { clsx, cssClass } from "../utils.js";
-import { useLatest } from "../hooks/index.js";
+import { ContainerRect, useLatest } from "../hooks/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
-import { useController } from "../modules/Controller.js";
 
 export type ImageSlideProps = {
     slide: SlideImage;
-    render: Render;
+    render?: Render;
+    rect?: ContainerRect;
 };
 
-export const ImageSlide = ({ slide: image, render }: ImageSlideProps) => {
+export const ImageSlide = ({ slide: image, render, rect }: ImageSlideProps) => {
     const [state, setState] = React.useState<"loading" | "error" | "complete">("loading");
     const latestState = useLatest(state);
 
     const imageRef = React.useRef<HTMLImageElement | null>(null);
-
-    const { containerRect } = useController();
 
     const handleLoading = React.useCallback(
         (img: HTMLImageElement) => {
@@ -70,16 +68,18 @@ export const ImageSlide = ({ slide: image, render }: ImageSlideProps) => {
                 alt={image.alt}
                 {...(image.srcSet
                     ? {
-                          // this approach does not account for carousel padding,
-                          // but the margin of error should be negligible in most cases
-                          sizes: `${Math.ceil(
-                              (Math.min(
-                                  image.aspectRatio ? containerRect.height * image.aspectRatio : Number.MAX_VALUE,
-                                  containerRect.width
-                              ) /
-                                  window.innerWidth) *
-                                  100
-                          )}vw`,
+                          ...(rect && typeof window !== "undefined"
+                              ? {
+                                    sizes: `${Math.ceil(
+                                        (Math.min(
+                                            image.aspectRatio ? rect.height * image.aspectRatio : Number.MAX_VALUE,
+                                            rect.width
+                                        ) /
+                                            window.innerWidth) *
+                                            100
+                                    )}vw`,
+                                }
+                              : null),
                           srcSet: image.srcSet
                               .sort((a, b) => a.width - b.width)
                               .map((item) => `${item.src} ${item.width}w`)
@@ -102,13 +102,13 @@ export const ImageSlide = ({ slide: image, render }: ImageSlideProps) => {
             {state !== "complete" && (
                 <div className={cssClass("slide_placeholder")}>
                     {state === "loading" &&
-                        (render.iconLoading ? (
+                        (render?.iconLoading ? (
                             render.iconLoading()
                         ) : (
                             <LoadingIcon className={clsx(cssClass("icon"), cssClass("slide_loading"))} />
                         ))}
                     {state === "error" &&
-                        (render.iconError ? (
+                        (render?.iconError ? (
                             render.iconError()
                         ) : (
                             <ErrorIcon className={clsx(cssClass("icon"), cssClass("slide_error"))} />
