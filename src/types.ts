@@ -57,6 +57,12 @@ export interface ControllerSettings {
 export interface Render {
     /** render custom slide type, or override the default image slide */
     slide?: (slide: Slide) => React.ReactNode;
+    /** render custom slide header */
+    slideHeader?: (slide: Slide) => React.ReactNode;
+    /** render custom slide footer */
+    slideFooter?: (slide: Slide) => React.ReactNode;
+    /** render custom slide container */
+    slideContainer?: (slide: Slide, children: React.ReactNode) => React.ReactNode;
     /** render custom Prev icon */
     iconPrev?: () => React.ReactNode;
     /** render custom Next icon */
@@ -141,6 +147,9 @@ export const LightboxPropTypes = {
     slides: PropTypes.arrayOf(PropTypes.oneOfType(SlideTypesPropTypes).isRequired).isRequired,
     render: PropTypes.shape({
         slide: PropTypes.func,
+        slideHeader: PropTypes.func,
+        slideFooter: PropTypes.func,
+        slideContainer: PropTypes.func,
         iconPrev: PropTypes.func,
         iconNext: PropTypes.func,
         iconClose: PropTypes.func,

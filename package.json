@@ -10,6 +10,8 @@
         ".": "./dist/index.js",
         "./core": "./dist/core/index.js",
         "./plugins": "./dist/plugins/index.js",
+        "./plugins/captions": "./dist/plugins/Captions.js",
+        "./plugins/captions.css": "./dist/plugins/captions.css",
         "./plugins/fullscreen": "./dist/plugins/Fullscreen.js",
         "./plugins/inline": "./dist/plugins/Inline.js",
         "./plugins/video": "./dist/plugins/Video.js",
@@ -26,6 +28,9 @@
             ],
             "plugins": [
                 "dist/plugins/index.d.ts"
+            ],
+            "plugins/captions": [
+                "dist/plugins/Captions.d.ts"
             ],
             "plugins/fullscreen": [
                 "dist/plugins/Fullscreen.d.ts"
@@ -59,8 +64,8 @@
         "build": "npm-run-all clean build:scss build:css build:js build:dts",
         "build:js": "tsc -p tsconfig.build.js.json",
         "build:dts": "tsc -p tsconfig.build.dts.json",
-        "build:css": "postcss src/styles.css -u autoprefixer --no-map -d dist",
-        "build:scss": "sass src/styles.scss src/styles.css --no-source-map ",
+        "build:css": "postcss src/*.css src/**/*.css --base src -d dist -u autoprefixer --no-map",
+        "build:scss": "sass src --no-source-map",
         "start": "npm-run-all clean --parallel \"build:* -- -w\"",
         "lint": "eslint .",
         "test": "jest"

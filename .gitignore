@@ -106,4 +106,4 @@ dist
 # WebStorm project files
 .idea
 
-src/styles.css
+src/**/*.css

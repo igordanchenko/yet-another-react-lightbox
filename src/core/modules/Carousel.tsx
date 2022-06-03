@@ -12,15 +12,21 @@ type CarouselSlideProps = {
     render: Render;
 };
 
-const CarouselSlide = ({ slide, offset, render }: CarouselSlideProps) => {
+const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset, render }) => {
     const renderSlide = () => {
-        if (render.slide) {
-            const rendered = render.slide(slide);
-            if (rendered) {
-                return rendered;
-            }
+        let rendered = render.slide?.(slide);
+
+        if (!rendered && "src" in slide) {
+            rendered = <ImageSlide slide={slide} render={render} />;
         }
-        return "src" in slide ? <ImageSlide slide={slide} render={render} /> : null;
+
+        return rendered ? (
+            <>
+                {render.slideHeader?.(slide)}
+                {(render.slideContainer ?? ((_, x) => x))(slide, rendered)}
+                {render.slideFooter?.(slide)}
+            </>
+        ) : null;
     };
 
     return (
