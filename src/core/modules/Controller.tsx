@@ -177,7 +177,7 @@ export const Controller: Component = ({ children, ...props }) => {
 
             const newState: Partial<ControllerState> = {};
             if (direction === "prev") {
-                if (isSwipeValid(swipeOffset)) {
+                if (isSwipeValid(1)) {
                     newState.currentIndex = (currentIndex - 1 + slidesCount) % slidesCount;
                     newState.globalIndex = globalIndex - 1;
                 } else {
@@ -185,7 +185,7 @@ export const Controller: Component = ({ children, ...props }) => {
                     newSwipeAnimationDuration = swipeAnimationDuration;
                 }
             } else if (direction === "next") {
-                if (isSwipeValid(swipeOffset)) {
+                if (isSwipeValid(-1)) {
                     newState.currentIndex = (currentIndex + 1) % slidesCount;
                     newState.globalIndex = globalIndex + 1;
                 } else {
@@ -344,6 +344,10 @@ export const Controller: Component = ({ children, ...props }) => {
                     return;
                 }
 
+                if (!isSwipeValid(-event.deltaX)) {
+                    return;
+                }
+
                 current.swipeIntent += event.deltaX;
                 clearTimeout(current.swipeIntentCleanup);
 
@@ -395,7 +399,7 @@ export const Controller: Component = ({ children, ...props }) => {
                 current.wheelResidualMomentum = event.deltaX;
             }
         },
-        [updateSwipeOffset, setTimeout, clearTimeout, swipe, resetSwipe, rerender]
+        [updateSwipeOffset, setTimeout, clearTimeout, swipe, resetSwipe, rerender, isSwipeValid]
     );
 
     React.useEffect(() => subscribeSensors("onWheel", onWheel), [subscribeSensors, onWheel]);
