@@ -67,6 +67,9 @@ export const VideoSlide = ({ slide: { sources, poster, width, height } }: { slid
                     style={{
                         width: "100%",
                         height: "100%",
+                        // not adjusting for devicePixelRatio for now since videos do not look that pixelated
+                        // even without devicePixelRatio adjustment
+                        ...(width ? { maxWidth: `${width}px` } : null),
                     }}
                     className={clsx(cssClass("video_container"), cssClass("flex_center"))}
                 >

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Render, SlideImage } from "../../types.js";
-import { clsx, cssClass } from "../utils.js";
+import { adjustDevicePixelRatio, clsx, cssClass, hasWindow } from "../utils.js";
 import { ContainerRect, useLatest } from "../hooks/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
 
@@ -68,7 +68,7 @@ export const ImageSlide = ({ slide: image, render, rect }: ImageSlideProps) => {
                 alt={image.alt}
                 {...(image.srcSet
                     ? {
-                          ...(rect && typeof window !== "undefined"
+                          ...(rect && hasWindow()
                               ? {
                                     sizes: `${Math.ceil(
                                         (Math.min(
@@ -85,14 +85,14 @@ export const ImageSlide = ({ slide: image, render, rect }: ImageSlideProps) => {
                               .map((item) => `${item.src} ${item.width}w`)
                               .join(", "),
                           style: {
-                              maxWidth: `${Math.max(...image.srcSet.map((x) => x.width))}px`,
+                              maxWidth: `${adjustDevicePixelRatio(Math.max(...image.srcSet.map((x) => x.width)))}px`,
                           },
                       }
                     : {
                           style:
-                              (imageRef.current?.naturalWidth ?? 0) > 0
+                              imageRef.current && imageRef.current?.naturalWidth > 0
                                   ? {
-                                        maxWidth: `${imageRef.current?.naturalWidth}px`,
+                                        maxWidth: `${adjustDevicePixelRatio(imageRef.current.naturalWidth)}px`,
                                     }
                                   : undefined,
                       })}

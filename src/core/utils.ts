@@ -30,3 +30,8 @@ export const makeUseContext =
         }
         return ctx;
     };
+
+export const hasWindow = () => typeof window !== "undefined";
+
+export const adjustDevicePixelRatio = (value: number) =>
+    hasWindow() ? Math.round(value / (window.devicePixelRatio || 1)) : value;

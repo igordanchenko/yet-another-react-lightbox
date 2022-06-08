@@ -1,3 +1,5 @@
 import * as React from "react";
 
-export const useEnhancedEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+import { hasWindow } from "../utils.js";
+
+export const useEnhancedEffect = hasWindow() ? React.useLayoutEffect : React.useEffect;
