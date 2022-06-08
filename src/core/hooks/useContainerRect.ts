@@ -19,17 +19,18 @@ export const useContainerRect = <T extends HTMLElement = HTMLElement>() => {
         }
 
         const updateContainerRect = () => {
-            const width = node?.clientWidth;
-            const height = node?.clientHeight;
+            if (node) {
+                const styles = window.getComputedStyle(node);
 
-            setContainerRect(
-                width !== undefined && height !== undefined
-                    ? {
-                          width,
-                          height,
-                      }
-                    : undefined
-            );
+                const parse = (value: string) => parseFloat(value) || 0;
+
+                setContainerRect({
+                    width: Math.round(node.clientWidth - parse(styles.paddingLeft) - parse(styles.paddingRight)),
+                    height: Math.round(node.clientHeight - parse(styles.paddingTop) - parse(styles.paddingBottom)),
+                });
+            } else {
+                setContainerRect(undefined);
+            }
         };
 
         updateContainerRect();
