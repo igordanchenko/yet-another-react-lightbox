@@ -67,6 +67,7 @@ export type FullscreenButtonProps = Pick<LightboxProps, "labels"> & {
 
 /** Fullscreen button */
 export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps) => {
+    const [mounted, setMounted] = React.useState(false);
     const [fullscreen, setFullscreen] = React.useState(false);
     const latestAuto = useLatest(auto);
 
@@ -141,6 +142,8 @@ export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps
         }
     }, [containerRef, getFullscreenElement]);
 
+    React.useEffect(() => setMounted(true), []);
+
     React.useEffect(() => {
         const events = ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"];
 
@@ -163,7 +166,7 @@ export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps
         }
     }, [latestAuto, requestFullscreen]);
 
-    if (!isFullscreenEnabled()) return null;
+    if (!mounted || !isFullscreenEnabled()) return null;
 
     return render.buttonFullscreen ? (
         <>{render.buttonFullscreen({ fullscreen, toggleFullscreen })}</>
