@@ -7,7 +7,7 @@ $captions-padding: 16px;
         font-family: $captions-font-family;
         font-size: 1.25rem;
         font-weight: 700;
-        max-width: calc(100% - 2 * 48px - 8px);
+        max-width: calc(100% - var(--yarl__toolbar_width, 0px));
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

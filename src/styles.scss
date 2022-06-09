@@ -126,7 +126,7 @@ $swipe-animation-timing-function: ease-out;
 
     &_toolbar {
         position: absolute;
-        inset: 0 0 auto 0;
+        inset: 0 0 auto auto;
         display: flex;
         justify-content: flex-end;
         padding: $toolbar-padding;

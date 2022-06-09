@@ -1,7 +1,9 @@
 import * as React from "react";
 
-import { Plugin, Slide } from "../types.js";
-import { cssClass, cssVar } from "../core/utils.js";
+import { Component, Plugin, Slide } from "../types.js";
+import { cssClass, cssVar, makeUseContext } from "../core/utils.js";
+import { useEvents } from "../core/contexts/Events.js";
+import { createModule } from "../core/index.js";
 
 type TextAlignment = "start" | "end" | "center";
 
@@ -35,15 +37,32 @@ const hasTitle = (slide: Slide): slide is Slide & { title: string } =>
 const hasDescription = (slide: Slide): slide is Slide & { description: string } =>
     "description" in slide ? typeof (slide as unknown as { description: unknown }).description === "string" : false;
 
+type CaptionsContextType = {
+    toolbarWidth?: number;
+};
+
+const CaptionsContext = React.createContext<CaptionsContextType | null>(null);
+
+const useCaptions = makeUseContext("useCaptions", "CaptionsContext", CaptionsContext);
+
 type TitleProps = {
     title: string;
 };
 
-const Title: React.FC<TitleProps> = ({ title }) => (
-    <div className={cls(`title_container`)}>
-        <div className={cls("title")}>{title}</div>
-    </div>
-);
+const Title: React.FC<TitleProps> = ({ title }) => {
+    const { toolbarWidth } = useCaptions();
+
+    return (
+        <div className={cls(`title_container`)}>
+            <div
+                className={cls("title")}
+                {...(toolbarWidth ? { style: { [cssVar("toolbar_width")]: `${toolbarWidth}px` } } : null)}
+            >
+                {title}
+            </div>
+        </div>
+    );
+};
 
 type DescriptionProps = {
     description: string;
@@ -69,8 +88,34 @@ const Description: React.FC<DescriptionProps> = ({ description, align, maxLines 
     </div>
 );
 
+/** Captions plugin context holder */
+export const CaptionsComponent: Component = ({ children }) => {
+    const { subscribe } = useEvents();
+
+    const [toolbarWidth, setToolbarWidth] = React.useState<number>();
+
+    React.useEffect(
+        () =>
+            subscribe("toolbar-width", (topic, event) => {
+                if (typeof event === "undefined" || typeof event === "number") {
+                    setToolbarWidth(event);
+                }
+            }),
+        [subscribe]
+    );
+
+    const context = React.useMemo(() => ({ toolbarWidth }), [toolbarWidth]);
+
+    return <CaptionsContext.Provider value={context}>{children}</CaptionsContext.Provider>;
+};
+
+/** Captions plugin module */
+export const CaptionsModule = createModule("captions", CaptionsComponent);
+
 /** Captions plugin */
-export const Captions: Plugin = ({ augment }) => {
+export const Captions: Plugin = ({ augment, addParent }) => {
+    addParent("controller", CaptionsModule);
+
     augment(({ render: { slideFooter: renderFooter, ...restRender }, captions, ...restProps }) => ({
         render: {
             slideFooter: (slide) => (
