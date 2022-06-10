@@ -28,7 +28,7 @@ export interface SlideVideo {
     loop?: boolean;
     /** the default setting of the audio contained in the video */
     muted?: boolean;
-    /** if `true`, the video is to be played "inline", that is within the element's playback area. */
+    /** if `true`, the video is to be played "inline", that is within the element's playback area */
     playsInline?: boolean;
     /** prevents the browser from suggesting a Picture-in-Picture context menu */
     disablePictureInPicture?: boolean;
