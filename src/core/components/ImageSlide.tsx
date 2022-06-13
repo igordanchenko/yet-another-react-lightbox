@@ -3,23 +3,35 @@ import * as React from "react";
 import { Render, SlideImage } from "../../types.js";
 import { adjustDevicePixelRatio, clsx, cssClass, hasWindow } from "../utils.js";
 import { ContainerRect, useLatest } from "../hooks/index.js";
+import { useEvents } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
+import type { SlideStatus } from "../consts.js";
+import { activeSlideStatus, SLIDE_STATUS_COMPLETE, SLIDE_STATUS_ERROR, SLIDE_STATUS_LOADING } from "../consts.js";
 
 export type ImageSlideProps = {
     slide: SlideImage;
+    offset: number;
     render?: Render;
     rect?: ContainerRect;
 };
 
-export const ImageSlide = ({ slide: image, render, rect }: ImageSlideProps) => {
-    const [state, setState] = React.useState<"loading" | "error" | "complete">("loading");
-    const latestState = useLatest(state);
+export const ImageSlide = ({ slide: image, offset, render, rect }: ImageSlideProps) => {
+    const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
+    const latestStatus = useLatest(status);
+
+    const { publish } = useEvents();
 
     const imageRef = React.useRef<HTMLImageElement | null>(null);
 
+    React.useEffect(() => {
+        if (offset === 0) {
+            publish(activeSlideStatus(status));
+        }
+    }, [offset, status, publish]);
+
     const handleLoading = React.useCallback(
         (img: HTMLImageElement) => {
-            if (latestState.current === "complete") {
+            if (latestStatus.current === SLIDE_STATUS_COMPLETE) {
                 return;
             }
 
@@ -29,10 +41,10 @@ export const ImageSlide = ({ slide: image, render, rect }: ImageSlideProps) => {
                     if (!img.parentNode) {
                         return;
                     }
-                    setState("complete");
+                    setStatus(SLIDE_STATUS_COMPLETE);
                 });
         },
-        [latestState]
+        [latestStatus]
     );
 
     const setImageRef = React.useCallback(
@@ -54,7 +66,7 @@ export const ImageSlide = ({ slide: image, render, rect }: ImageSlideProps) => {
     );
 
     const onError = React.useCallback(() => {
-        setState("error");
+        setStatus(SLIDE_STATUS_ERROR);
     }, []);
 
     return (
@@ -63,7 +75,10 @@ export const ImageSlide = ({ slide: image, render, rect }: ImageSlideProps) => {
                 ref={setImageRef}
                 onLoad={onLoad}
                 onError={onError}
-                className={clsx(cssClass("slide_image"), state !== "complete" && cssClass("slide_image_loading"))}
+                className={clsx(
+                    cssClass("slide_image"),
+                    status !== SLIDE_STATUS_COMPLETE && cssClass("slide_image_loading")
+                )}
                 draggable={false}
                 alt={image.alt}
                 {...(image.srcSet
@@ -99,15 +114,15 @@ export const ImageSlide = ({ slide: image, render, rect }: ImageSlideProps) => {
                 src={image.src}
             />
 
-            {state !== "complete" && (
+            {status !== SLIDE_STATUS_COMPLETE && (
                 <div className={cssClass("slide_placeholder")}>
-                    {state === "loading" &&
+                    {status === SLIDE_STATUS_LOADING &&
                         (render?.iconLoading ? (
                             render.iconLoading()
                         ) : (
                             <LoadingIcon className={clsx(cssClass("icon"), cssClass("slide_loading"))} />
                         ))}
-                    {state === "error" &&
+                    {status === SLIDE_STATUS_ERROR &&
                         (render?.iconError ? (
                             render.iconError()
                         ) : (

@@ -2,7 +2,17 @@ import * as React from "react";
 import PropTypes from "prop-types";
 
 import { LightboxProps, Plugin, SlideTypesPropTypes } from "../types.js";
-import { clsx, cssClass, useContainerRect, useLatest } from "../core/index.js";
+import {
+    ACTIVE_SLIDE_COMPLETE,
+    ACTIVE_SLIDE_LOADING,
+    ACTIVE_SLIDE_PLAYING,
+    clsx,
+    cssClass,
+    useContainerRect,
+    useController,
+    useEvents,
+    useLatest,
+} from "../core/index.js";
 
 /** Video slide attributes */
 export interface SlideVideo {
@@ -92,15 +102,24 @@ SlideTypesPropTypes.push(
     })
 );
 
-type VideoSlideProps = Required<Pick<LightboxProps, "video">> & {
+const defaultVideoProps: LightboxProps["video"] = {
+    controls: true,
+    playsInline: true,
+};
+
+type VideoSlideProps = {
     slide: SlideVideo;
     offset: number;
 };
 
 /** Video slide */
-export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, video, offset }) => {
+export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
+    const { latestProps } = useController();
+    const { publish } = useEvents();
     const { setContainerRef, containerRect } = useContainerRect();
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
+
+    const video = latestProps.current.video ?? defaultVideoProps;
 
     React.useEffect(() => {
         if (offset !== 0 && videoRef.current && !videoRef.current.paused) {
@@ -110,9 +129,11 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, video, offset }) 
 
     React.useEffect(() => {
         if (offset === 0 && videoRef.current && (slide.autoPlay || video.autoPlay)) {
+            publish(ACTIVE_SLIDE_LOADING);
+
             videoRef.current.play().catch(() => {});
         }
-    }, [offset, video.autoPlay, slide.autoPlay]);
+    }, [offset, video.autoPlay, slide.autoPlay, publish]);
 
     const latestOffset = useLatest(offset);
     const latestVideoAutoPlay = useLatest(video.autoPlay);
@@ -146,7 +167,7 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, video, offset }) 
         };
     };
 
-    const resolveBoolean = (attr: keyof VideoSlideProps["video"]) => {
+    const resolveBoolean = (attr: keyof Required<Pick<LightboxProps, "video">>["video"]) => {
         if (slide[attr] === false) return null;
         if (slide[attr] === true) return { [attr]: true };
         if (video[attr] === false) return null;
@@ -154,7 +175,7 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, video, offset }) 
         return null;
     };
 
-    const resolveString = (attr: keyof VideoSlideProps["video"]) => {
+    const resolveString = (attr: keyof Required<Pick<LightboxProps, "video">>["video"]) => {
         if (video[attr] || slide[attr]) {
             return { [attr]: slide[attr] || video[attr] };
         }
@@ -191,6 +212,12 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, video, offset }) 
                             {...resolveString("controlsList")}
                             {...resolveString("crossOrigin")}
                             {...resolveString("preload")}
+                            onPlay={() => {
+                                publish(ACTIVE_SLIDE_PLAYING);
+                            }}
+                            onEnded={() => {
+                                publish(ACTIVE_SLIDE_COMPLETE);
+                            }}
                         >
                             {sources.map(({ src, type }, index) => (
                                 // eslint-disable-next-line react/no-array-index-key
@@ -206,27 +233,22 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, video, offset }) 
 
 /** Video plugin */
 export const Video: Plugin = ({ augment }) => {
-    augment(({ render: { slide: renderSlide, ...restRender }, video: originalVideo, ...restProps }) => {
-        const video = {
-            controls: true,
-            playsInline: true,
-            ...originalVideo,
-        };
-
-        return {
-            render: {
-                slide: (slide, offset, rect) => {
-                    if ("type" in slide && slide.type === "video") {
-                        return <VideoSlide slide={slide} video={video} offset={offset} />;
-                    }
-                    return renderSlide?.(slide, offset, rect);
-                },
-                ...restRender,
+    augment(({ render: { slide: renderSlide, ...restRender }, video: originalVideo, ...restProps }) => ({
+        render: {
+            slide: (slide, offset, rect) => {
+                if ("type" in slide && slide.type === "video") {
+                    return <VideoSlide slide={slide} offset={offset} />;
+                }
+                return renderSlide?.(slide, offset, rect);
             },
-            video,
-            ...restProps,
-        };
-    });
+            ...restRender,
+        },
+        video: {
+            ...defaultVideoProps,
+            ...originalVideo,
+        },
+        ...restProps,
+    }));
 };
 
 export default Video;
