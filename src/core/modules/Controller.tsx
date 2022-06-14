@@ -69,7 +69,11 @@ export const Controller: Component = ({ children, ...props }) => {
     // prevent browser back/forward navigation on touchpad left/right swipe
     // this has to be done via non-passive native event handler
     useEnhancedEffect(() => {
-        const preventDefault = (event: Event) => event.preventDefault();
+        const preventDefault = (event: WheelEvent) => {
+            if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+                event.preventDefault();
+            }
+        };
 
         const node = containerRef.current;
         if (node) {
