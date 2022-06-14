@@ -50,7 +50,7 @@ export interface AnimationSettings {
 
 /** Controller settings */
 export interface ControllerSettings {
-    /** if true, the lightbox captures focus when it opens v     */
+    /** if true, the lightbox captures focus when it opens */
     focus: boolean;
 }
 
