@@ -8,22 +8,21 @@ import { useEvents, useTimeouts } from "../contexts/index.js";
 
 const SWIPE_OFFSET_THRESHOLD = 30;
 
-export type ControllerContextType = {
-    latestProps: React.MutableRefObject<ComponentProps>;
-    containerRef: React.RefObject<HTMLDivElement>;
+type ControllerState = {
     currentIndex: number;
     globalIndex: number;
+    isRTL: boolean;
+};
+
+export type ControllerContextType = ControllerState & {
+    latestProps: React.MutableRefObject<ComponentProps>;
+    containerRef: React.RefObject<HTMLDivElement>;
     subscribeSensors: SubscribeSensors<HTMLDivElement>;
 };
 
 const ControllerContext = React.createContext<ControllerContextType | null>(null);
 
 export const useController = makeUseContext("useController", "ControllerContext", ControllerContext);
-
-type ControllerState = {
-    currentIndex: number;
-    globalIndex: number;
-};
 
 type ControllerRefs = {
     state: ControllerState;
@@ -49,6 +48,7 @@ export const Controller: Component = ({ children, ...props }) => {
     const [state, setState] = React.useState<ControllerState>({
         currentIndex: props.index,
         globalIndex: props.index,
+        isRTL: false,
     });
 
     const latestProps = useLatest(props);
@@ -81,6 +81,13 @@ export const Controller: Component = ({ children, ...props }) => {
                 node.removeEventListener("wheel", preventDefault);
             }
         };
+    }, [containerRef]);
+
+    useEnhancedEffect(() => {
+        const node = containerRef.current;
+        if (node) {
+            setState((prev) => ({ ...prev, isRTL: window.getComputedStyle(node).direction === "rtl" }));
+        }
     }, [containerRef]);
 
     React.useEffect(() => {
@@ -124,17 +131,25 @@ export const Controller: Component = ({ children, ...props }) => {
         current.swipeIntentCleanup = undefined;
     }, [clearTimeout]);
 
-    const isSwipeValid = React.useCallback((offset: number) => {
-        const {
-            state: { currentIndex },
-            props: { carousel, slides },
-        } = refs.current;
+    const rtl = React.useCallback(
+        (value?: number) => (refs.current.state.isRTL ? -1 : 1) * (typeof value === "number" ? value : 1),
+        [refs]
+    );
 
-        return !(
-            carousel.finite &&
-            ((offset > 0 && currentIndex === 0) || (offset < 0 && currentIndex === slides.length - 1))
-        );
-    }, []);
+    const isSwipeValid = React.useCallback(
+        (offset: number) => {
+            const {
+                state: { currentIndex },
+                props: { carousel, slides },
+            } = refs.current;
+
+            return !(
+                carousel.finite &&
+                ((rtl(offset) > 0 && currentIndex === 0) || (rtl(offset) < 0 && currentIndex === slides.length - 1))
+            );
+        },
+        [rtl]
+    );
 
     const swipe = React.useCallback(
         (direction?: "prev" | "next") => {
@@ -169,7 +184,7 @@ export const Controller: Component = ({ children, ...props }) => {
                     }
 
                     // eslint-disable-next-line no-param-reassign
-                    direction = swipeOffset > 0 ? "prev" : "next";
+                    direction = rtl(swipeOffset) > 0 ? "prev" : "next";
                 } else {
                     newSwipeAnimationDuration = swipeAnimationDuration / 2;
                 }
@@ -177,7 +192,7 @@ export const Controller: Component = ({ children, ...props }) => {
 
             const newState: Partial<ControllerState> = {};
             if (direction === "prev") {
-                if (isSwipeValid(1)) {
+                if (isSwipeValid(rtl(1))) {
                     newState.currentIndex = (currentIndex - 1 + slidesCount) % slidesCount;
                     newState.globalIndex = globalIndex - 1;
                 } else {
@@ -185,7 +200,7 @@ export const Controller: Component = ({ children, ...props }) => {
                     newSwipeAnimationDuration = swipeAnimationDuration;
                 }
             } else if (direction === "next") {
-                if (isSwipeValid(-1)) {
+                if (isSwipeValid(rtl(-1))) {
                     newState.currentIndex = (currentIndex + 1) % slidesCount;
                     newState.globalIndex = globalIndex + 1;
                 } else {
@@ -210,7 +225,7 @@ export const Controller: Component = ({ children, ...props }) => {
 
             setState((prev) => ({ ...prev, ...newState }));
         },
-        [setTimeout, resetSwipe, isSwipeValid, rerender, containerRef]
+        [setTimeout, resetSwipe, isSwipeValid, rerender, containerRef, rtl]
     );
 
     React.useEffect(
@@ -410,9 +425,10 @@ export const Controller: Component = ({ children, ...props }) => {
             containerRef,
             currentIndex: state.currentIndex,
             globalIndex: state.globalIndex,
+            isRTL: state.isRTL,
             subscribeSensors,
         }),
-        [latestProps, containerRef, state.currentIndex, state.globalIndex, subscribeSensors]
+        [latestProps, containerRef, state.currentIndex, state.globalIndex, state.isRTL, subscribeSensors]
     );
 
     return (

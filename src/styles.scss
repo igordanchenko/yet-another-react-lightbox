@@ -63,11 +63,15 @@ $swipe-animation-timing-function: ease-out;
 
         padding: var(--yarl__carousel_padding, $carousel-padding);
 
-        transform: translate3d(calc(var(--yarl__slide_offset, 0) * (100% + var(--yarl__carousel_spacing, $carousel-spacing))), 0, 0);
+        [dir="rtl"] & {
+            --yarl__direction: -1;
+        }
+
+        transform: translate3d(calc(var(--yarl__slide_offset, 0) * (100% + var(--yarl__carousel_spacing, $carousel-spacing)) * var(--yarl__direction, 1)), 0, 0);
         transition: transform var(--yarl__swipe_animation_duration, $swipe-animation-duration) $swipe-animation-timing-function;
 
         .yarl__container_swipe & {
-            transform: translate3d(calc(var(--yarl__slide_offset, 0) * (100% + var(--yarl__carousel_spacing, $carousel-spacing))), 0, 0) translate3d(var(--yarl__swipe_offset, 0px), 0, 0);
+            transform: translate3d(calc(var(--yarl__slide_offset, 0) * (100% + var(--yarl__carousel_spacing, $carousel-spacing)) * var(--yarl__direction, 1)), 0, 0) translate3d(var(--yarl__swipe_offset, 0px), 0, 0);
             transition: unset;
         }
 
@@ -131,6 +135,10 @@ $swipe-animation-timing-function: ease-out;
         justify-content: flex-end;
         padding: $toolbar-padding;
         gap: $toolbar-padding;
+
+        [dir="rtl"] & {
+            inset: 0 auto auto 0;
+        }
     }
 
     &_icon {
@@ -187,8 +195,20 @@ $swipe-animation-timing-function: ease-out;
             left: 0;
         }
 
+        [dir="rtl"] &_prev {
+            left: unset;
+            right: 0;
+            transform: translateY(-50%) rotate(180deg);
+        }
+
         &_next {
             right: 0;
+        }
+
+        [dir="rtl"] &_next {
+            left: 0;
+            right: unset;
+            transform: translateY(-50%) rotate(180deg);
         }
     }
 
@@ -199,6 +219,11 @@ $swipe-animation-timing-function: ease-out;
 
     &_pad_scrollbar {
         padding-right: var(--yarl__scrollbar_padding, 17px);
+    }
+
+    [dir="rtl"] &_pad_scrollbar {
+        padding-right: unset;
+        padding-left: var(--yarl__scrollbar_padding, 17px);
     }
 }
 

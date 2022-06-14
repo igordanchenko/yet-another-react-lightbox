@@ -16,6 +16,7 @@ Modern React lightbox component. Performant, easy to use, customizable and exten
 - **Video:** video slides are supported via an optional plugin
 - **Customization:** customize any UI element or add your own custom slides
 - **No bloat:** never bundle rarely used features; add optional features via plugins
+- **RTL:** compatible with RTL layout
 - **TypeScript:** type definitions come built-in in the package
 
 ## Documentation

@@ -45,19 +45,19 @@ export const Navigation: Component = ({
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }) => {
-    const { currentIndex, subscribeSensors } = useController();
+    const { currentIndex, subscribeSensors, isRTL } = useController();
     const { publish } = useEvents();
 
     React.useEffect(
         () =>
             subscribeSensors("onKeyUp", (event) => {
                 if (event.code === "ArrowLeft") {
-                    publish("prev");
+                    publish(isRTL ? "next" : "prev");
                 } else if (event.code === "ArrowRight") {
-                    publish("next");
+                    publish(isRTL ? "prev" : "next");
                 }
             }),
-        [subscribeSensors, publish]
+        [subscribeSensors, publish, isRTL]
     );
 
     return (
