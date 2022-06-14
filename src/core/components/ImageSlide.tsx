@@ -7,6 +7,7 @@ import { useEvents } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
 import type { SlideStatus } from "../consts.js";
 import { activeSlideStatus, SLIDE_STATUS_COMPLETE, SLIDE_STATUS_ERROR, SLIDE_STATUS_LOADING } from "../consts.js";
+import { useController } from "../modules/Controller.js";
 
 export type ImageSlideProps = {
     slide: SlideImage;
@@ -18,6 +19,8 @@ export type ImageSlideProps = {
 export const ImageSlide = ({ slide: image, offset, render, rect }: ImageSlideProps) => {
     const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
     const latestStatus = useLatest(status);
+
+    const { latestProps } = useController();
 
     const { publish } = useEvents();
 
@@ -77,6 +80,9 @@ export const ImageSlide = ({ slide: image, offset, render, rect }: ImageSlidePro
                 onError={onError}
                 className={clsx(
                     cssClass("slide_image"),
+                    (image.imageFit === "cover" ||
+                        (image.imageFit !== "contain" && latestProps.current.carousel.imageFit === "cover")) &&
+                        cssClass("slide_image_cover"),
                     status !== SLIDE_STATUS_COMPLETE && cssClass("slide_image_loading")
                 )}
                 draggable={false}

@@ -83,6 +83,10 @@ $swipe-animation-timing-function: ease-out;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
 
+            &_cover {
+                object-fit: cover;
+            }
+
             &_loading {
                 opacity: 0;
             }

@@ -2,6 +2,9 @@ import * as React from "react";
 
 import { ContainerRect } from "./core/hooks/useContainerRect.js";
 
+/** Image fit setting */
+export type ImageFit = "contain" | "cover";
+
 /** Image slide properties */
 export interface SlideImage {
     /** image URL */
@@ -10,6 +13,8 @@ export interface SlideImage {
     alt?: string;
     /** image aspect ratio */
     aspectRatio?: number;
+    /** `object-fit` setting */
+    imageFit?: ImageFit;
     /** alternative images to be passed to the 'srcSet' */
     srcSet?: {
         /** image URL */
@@ -38,6 +43,8 @@ export interface CarouselSettings {
     padding: string | number;
     /** spacing between slides (e.g., "100px", "50%" or 0) */
     spacing: string | number;
+    /** `object-fit` setting for image slides */
+    imageFit: ImageFit;
 }
 
 /** Animation settings */
@@ -152,6 +159,7 @@ export const LightboxDefaultProps = {
         preload: 2,
         padding: "16px",
         spacing: "30%",
+        imageFit: "contain",
     } as CarouselSettings,
     controller: {
         focus: true,
