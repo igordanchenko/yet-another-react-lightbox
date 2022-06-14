@@ -1,5 +1,4 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 
 import { ContainerRect } from "./core/hooks/useContainerRect.js";
 
@@ -135,66 +134,6 @@ export interface LightboxProps {
     on: Callbacks;
 }
 
-export const ImageSlidePropTypes = PropTypes.shape({
-    src: PropTypes.string,
-    alt: PropTypes.string,
-    aspectRatio: PropTypes.number,
-    srcSet: PropTypes.arrayOf(
-        PropTypes.shape({
-            src: PropTypes.string.isRequired,
-            width: PropTypes.number.isRequired,
-        }).isRequired
-    ),
-});
-
-export const SlideTypesPropTypes: PropTypes.Validator<any>[] = [ImageSlidePropTypes];
-
-export const LightboxPropTypes = {
-    open: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired,
-    index: PropTypes.number.isRequired,
-    slides: PropTypes.arrayOf(PropTypes.oneOfType(SlideTypesPropTypes).isRequired).isRequired,
-    render: PropTypes.shape({
-        slide: PropTypes.func,
-        slideHeader: PropTypes.func,
-        slideFooter: PropTypes.func,
-        slideContainer: PropTypes.func,
-        iconPrev: PropTypes.func,
-        iconNext: PropTypes.func,
-        iconClose: PropTypes.func,
-        iconLoading: PropTypes.func,
-        iconError: PropTypes.func,
-        buttonPrev: PropTypes.func,
-        buttonNext: PropTypes.func,
-        buttonClose: PropTypes.func,
-    }).isRequired,
-    plugins: PropTypes.arrayOf(PropTypes.func.isRequired).isRequired,
-    toolbar: PropTypes.shape({
-        buttons: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.oneOf(["close"]), PropTypes.node])).isRequired,
-    }).isRequired,
-    labels: PropTypes.shape({}).isRequired,
-    carousel: PropTypes.shape({
-        finite: PropTypes.bool.isRequired,
-        preload: PropTypes.number.isRequired,
-        padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        spacing: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    }).isRequired,
-    animation: PropTypes.shape({
-        fade: PropTypes.number.isRequired,
-        swipe: PropTypes.number.isRequired,
-    }).isRequired,
-    controller: PropTypes.shape({
-        focus: PropTypes.bool.isRequired,
-    }).isRequired,
-    on: PropTypes.shape({
-        view: PropTypes.func,
-        entering: PropTypes.func,
-        entered: PropTypes.func,
-        exiting: PropTypes.func,
-        exited: PropTypes.func,
-    }).isRequired,
-};
-
 export const LightboxDefaultProps = {
     open: false,
     close: () => {},
@@ -272,3 +211,14 @@ export type PluginMethods = {
 
 /** Lightbox plugin */
 export type Plugin = ({ addParent, addChild, addSibling, replace, remove, augment }: PluginMethods) => void;
+
+/** Deep partial utility type */
+export type DeepPartial<T, K extends keyof T> = Omit<T, K> & {
+    [P in keyof Pick<T, K>]?: Partial<Pick<T, K>[P]>;
+};
+
+/** Lightbox external props */
+export type LightboxExternalProps = DeepPartial<
+    Partial<LightboxProps>,
+    "carousel" | "animation" | "render" | "toolbar" | "controller" | "on"
+>;

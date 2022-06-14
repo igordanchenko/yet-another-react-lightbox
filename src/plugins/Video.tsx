@@ -1,7 +1,6 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 
-import { LightboxProps, Plugin, SlideTypesPropTypes } from "../types.js";
+import { LightboxProps, Plugin } from "../types.js";
 import {
     ACTIVE_SLIDE_COMPLETE,
     ACTIVE_SLIDE_LOADING,
@@ -76,31 +75,6 @@ declare module "../types.js" {
         >;
     }
 }
-
-SlideTypesPropTypes.push(
-    PropTypes.shape({
-        type: PropTypes.oneOf(["video" as const]).isRequired,
-        poster: PropTypes.string,
-        width: PropTypes.number,
-        height: PropTypes.number,
-        autoPlay: PropTypes.bool,
-        controls: PropTypes.bool,
-        controlsList: PropTypes.string,
-        crossOrigin: PropTypes.string,
-        preload: PropTypes.string,
-        loop: PropTypes.bool,
-        muted: PropTypes.bool,
-        playsInline: PropTypes.bool,
-        disablePictureInPicture: PropTypes.bool,
-        disableRemotePlayback: PropTypes.bool,
-        sources: PropTypes.arrayOf(
-            PropTypes.shape({
-                src: PropTypes.string.isRequired,
-                type: PropTypes.string.isRequired,
-            }).isRequired
-        ),
-    })
-);
 
 const defaultVideoProps: LightboxProps["video"] = {
     controls: true,

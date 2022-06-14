@@ -74,9 +74,6 @@
         "lint": "eslint .",
         "test": "jest"
     },
-    "dependencies": {
-        "prop-types": "^15.5.7"
-    },
     "peerDependencies": {
         "react": ">=16.8.0",
         "react-dom": ">=16.8.0"
