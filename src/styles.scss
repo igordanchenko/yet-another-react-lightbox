@@ -30,7 +30,7 @@ $swipe-animation-timing-function: ease-out;
 
     &_container, &_carousel, &_slide {
         user-select: none;
-        touch-action: none;
+        touch-action: pan-y;
     }
 
     &_container {
