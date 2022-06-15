@@ -78,15 +78,18 @@ export const Carousel: Component = ({ slides, carousel: { finite, preload, paddi
         }
     }
 
+    const sanitize = (value: string | 0) =>
+        value === 0 || value.trim() === "" || value.trim() === "0" ? "0px" : value;
+
     return (
         <div
             className={cssClass("carousel")}
             style={{
                 ...(padding !== LightboxDefaultProps.carousel.padding
-                    ? { [cssVar("carousel_padding")]: padding }
+                    ? { [cssVar("carousel_padding")]: sanitize(padding) }
                     : null),
                 ...(spacing !== LightboxDefaultProps.carousel.spacing
-                    ? { [cssVar("carousel_spacing")]: spacing !== 0 ? spacing : "0px" }
+                    ? { [cssVar("carousel_spacing")]: sanitize(spacing) }
                     : null),
             }}
         >

@@ -39,10 +39,10 @@ export interface CarouselSettings {
     finite: boolean;
     /** the lightbox preloads (2 * preload + 1) slides */
     preload: number;
-    /** padding around each slide */
-    padding: string | number;
+    /** padding around each slide (e.g., "16px", "10px 20px" or 0) */
+    padding: string | 0;
     /** spacing between slides (e.g., "100px", "50%" or 0) */
-    spacing: string | number;
+    spacing: string | 0;
     /** `object-fit` setting for image slides */
     imageFit: ImageFit;
 }
