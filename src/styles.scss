@@ -83,6 +83,9 @@ $swipe-animation-timing-function: ease-out;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
 
+            // workaround occasional image flickering in desktop Safari
+            transform: translate3d(0, 0, 0);
+
             &_cover {
                 object-fit: cover;
             }
