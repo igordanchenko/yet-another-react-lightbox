@@ -28,9 +28,9 @@ $swipe-animation-timing-function: ease-out;
         }
     }
 
-    &_container, &_carousel, &_slide {
+    &_container {
         user-select: none;
-        touch-action: pan-y;
+        touch-action: var(--yarl__controller_touch_action, none);
     }
 
     &_container {

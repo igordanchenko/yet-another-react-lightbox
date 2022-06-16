@@ -59,6 +59,8 @@ export interface AnimationSettings {
 export interface ControllerSettings {
     /** if true, the lightbox captures focus when it opens */
     focus: boolean;
+    /** controller `touch-action` */
+    touchAction: "none" | "pan-y";
 }
 
 /** Custom render functions. */
@@ -163,6 +165,7 @@ export const LightboxDefaultProps = {
     } as CarouselSettings,
     controller: {
         focus: true,
+        touchAction: "none",
     } as ControllerSettings,
     on: {} as Callbacks,
 };

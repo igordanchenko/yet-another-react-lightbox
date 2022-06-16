@@ -439,13 +439,18 @@ export const Controller: Component = ({ children, ...props }) => {
         <div
             ref={setContainerRef}
             className={clsx(cssClass("container"), refs.current.swipeState === "swipe" && cssClass("container_swipe"))}
-            style={
-                refs.current.swipeAnimationDuration !== LightboxDefaultProps.animation.swipe
-                    ? ({
+            style={{
+                ...(refs.current.swipeAnimationDuration !== LightboxDefaultProps.animation.swipe
+                    ? {
                           [cssVar("swipe_animation_duration")]: `${Math.round(refs.current.swipeAnimationDuration)}ms`,
-                      } as React.CSSProperties)
-                    : undefined
-            }
+                      }
+                    : null),
+                ...(props.controller.touchAction !== "none"
+                    ? {
+                          [cssVar("controller_touch_action")]: props.controller.touchAction,
+                      }
+                    : null),
+            }}
             role="presentation"
             aria-live="polite"
             tabIndex={-1}
