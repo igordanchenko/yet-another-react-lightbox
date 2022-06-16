@@ -20,8 +20,18 @@ const renderNode = (node: Node, props: LightboxProps): React.ReactElement =>
         node.children?.map((child) => renderNode(child, props))
     );
 
-const LightboxComponent: React.FC<LightboxProps> = (props) => {
-    const { plugins } = props;
+/** Lightbox component */
+export const Lightbox: React.FC<LightboxExternalProps> = (props) => {
+    const { carousel, animation, render, toolbar, controller, on, plugins, ...restProps } = props;
+    const {
+        carousel: defaultCarousel,
+        animation: defaultAnimation,
+        render: defaultRender,
+        toolbar: defaultToolbar,
+        controller: defaultController,
+        on: defaultOn,
+        ...restDefaultProps
+    } = LightboxDefaultProps;
 
     const { config, augmentation } = withPlugins(
         [
@@ -38,36 +48,18 @@ const LightboxComponent: React.FC<LightboxProps> = (props) => {
         plugins
     );
 
-    const augmentedProps = augmentation(props);
+    const augmentedProps = augmentation({
+        carousel: { ...defaultCarousel, ...carousel },
+        animation: { ...defaultAnimation, ...animation },
+        render: { ...defaultRender, ...render },
+        toolbar: { ...defaultToolbar, ...toolbar },
+        controller: { ...defaultController, ...controller },
+        on: { ...defaultOn, ...on },
+        ...restDefaultProps,
+        ...restProps,
+    });
 
     if (!augmentedProps.open) return null;
 
     return <>{renderNode(createNode(CoreModule, config), augmentedProps)}</>;
-};
-
-/** Lightbox component */
-export const Lightbox: React.FC<LightboxExternalProps> = (props) => {
-    const { carousel, animation, render, toolbar, controller, on, ...restProps } = props;
-    const {
-        carousel: defaultCarousel,
-        animation: defaultAnimation,
-        render: defaultRender,
-        toolbar: defaultToolbar,
-        controller: defaultController,
-        on: defaultOn,
-        ...restDefaultProps
-    } = LightboxDefaultProps;
-
-    return (
-        <LightboxComponent
-            carousel={{ ...defaultCarousel, ...carousel }}
-            animation={{ ...defaultAnimation, ...animation }}
-            render={{ ...defaultRender, ...render }}
-            toolbar={{ ...defaultToolbar, ...toolbar }}
-            controller={{ ...defaultController, ...controller }}
-            on={{ ...defaultOn, ...on }}
-            {...restDefaultProps}
-            {...restProps}
-        />
-    );
 };
