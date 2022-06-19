@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Plugin } from "../types.js";
-import type { SlideStatus } from "../core/index.js";
 import {
     ACTIVE_SLIDE_COMPLETE,
     ACTIVE_SLIDE_ERROR,
@@ -15,6 +14,7 @@ import {
     SLIDE_STATUS_ERROR,
     SLIDE_STATUS_LOADING,
     SLIDE_STATUS_PLAYING,
+    SlideStatus,
     useController,
     useEvents,
     useLatest,

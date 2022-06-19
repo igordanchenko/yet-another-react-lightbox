@@ -5,8 +5,13 @@ import { adjustDevicePixelRatio, clsx, cssClass, hasWindow } from "../utils.js";
 import { ContainerRect, useLatest } from "../hooks/index.js";
 import { useEvents } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
-import type { SlideStatus } from "../consts.js";
-import { activeSlideStatus, SLIDE_STATUS_COMPLETE, SLIDE_STATUS_ERROR, SLIDE_STATUS_LOADING } from "../consts.js";
+import {
+    activeSlideStatus,
+    SLIDE_STATUS_COMPLETE,
+    SLIDE_STATUS_ERROR,
+    SLIDE_STATUS_LOADING,
+    SlideStatus,
+} from "../consts.js";
 
 export type ImageSlideProps = {
     slide: SlideImage;
