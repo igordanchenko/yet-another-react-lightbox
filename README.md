@@ -132,6 +132,7 @@ The following plugins come bundled in the package:
 - [Fullscreen](https://yet-another-react-lightbox.vercel.app/plugins/fullscreen) - adds support for fullscreen mode
 - [Inline](https://yet-another-react-lightbox.vercel.app/plugins/inline) - adds support for inline rendering mode
 - [Slideshow](https://yet-another-react-lightbox.vercel.app/plugins/slideshow) - adds slideshow autoplay feature
+- [Thumbnails](https://yet-another-react-lightbox.vercel.app/plugins/thumbnails) - adds thumbnails track
 - [Video](https://yet-another-react-lightbox.vercel.app/plugins/video) - adds support for video slides
 
 ## License

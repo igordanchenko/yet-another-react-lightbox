@@ -15,6 +15,8 @@
         "./plugins/fullscreen": "./dist/plugins/Fullscreen.js",
         "./plugins/inline": "./dist/plugins/Inline.js",
         "./plugins/slideshow": "./dist/plugins/Slideshow.js",
+        "./plugins/thumbnails": "./dist/plugins/Thumbnails.js",
+        "./plugins/thumbnails.css": "./dist/plugins/thumbnails.css",
         "./plugins/video": "./dist/plugins/Video.js",
         "./styles.css": "./dist/styles.css"
     },
@@ -41,6 +43,9 @@
             ],
             "plugins/slideshow": [
                 "dist/plugins/Slideshow.d.ts"
+            ],
+            "plugins/thumbnails": [
+                "dist/plugins/Thumbnails.d.ts"
             ],
             "plugins/video": [
                 "dist/plugins/Video.d.ts"

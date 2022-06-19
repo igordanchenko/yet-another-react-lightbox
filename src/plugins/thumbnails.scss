@@ -1,0 +1,166 @@
+$color-main: #fff;
+$color-controls: rgba($color-main, .8);
+$color-shadow: rgba(#000, .8);
+$color-background: #000;
+
+$icons-size: 32px;
+
+$thumbnail-width: var(--yarl__thumbnails_thumbnail_width, 120px);
+$thumbnail-height: var(--yarl__thumbnails_thumbnail_height, 80px);
+$thumbnail-padding: var(--yarl__thumbnails_thumbnail_padding, 4px);
+$thumbnail-gap: var(--yarl__thumbnails_thumbnail_gap, 16px);
+$thumbnail-border: var(--yarl__thumbnails_thumbnail_border, 1px);
+$thumbnail-border-radius: var(--yarl__thumbnails_thumbnail_border_radius, 4px);
+
+$fadein-duration: var(--yarl__thumbnails_thumbnail_fadein_duration, .5s);
+$fadein-delay: var(--yarl__thumbnails_thumbnail_fadein_delay, 0s);
+$fadeout-duration: var(--yarl__thumbnails_thumbnail_fadeout_duration, .5s);
+$fadeout-delay: var(--yarl__thumbnails_thumbnail_fadeout_delay, 0s);
+
+.yarl__thumbnails {
+    display: flex;
+
+    &_top, &_bottom {
+        flex-flow: column nowrap;
+    }
+
+    &_top &_track, &_bottom &_track {
+        flex-flow: row nowrap;
+    }
+
+    &_start, &_end {
+        flex-flow: row nowrap;
+    }
+
+    &_start &_track, &_end &_track {
+        flex-flow: column nowrap;
+    }
+
+    &_wrapper {
+        flex-grow: 1;
+        position: relative;
+    }
+
+    &_container {
+        color: $color-main;
+        background-color: $color-background;
+        overflow: hidden;
+        padding: 16px;
+        position: relative;
+        z-index: 0;
+        user-select: none;
+        -webkit-touch-callout: none;
+
+        &::before, &::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+        }
+    }
+
+    &_top &_container::before, &_bottom &_container::before {
+        left: 0;
+        background: linear-gradient(to left, transparent, $color-background);
+    }
+
+    &_top &_container::after, &_bottom &_container::after {
+        right: 0;
+        background: linear-gradient(to right, transparent, $color-background);
+    }
+
+    &_top &_container::before, &_top &_container::after, &_bottom &_container::before, &_bottom &_container::after {
+        top: 0;
+        bottom: 0;
+        width: 60px;
+    }
+
+    &_start &_container::before, &_end &_container::before {
+        top: 0;
+        background: linear-gradient(to top, transparent, $color-background);
+    }
+
+    &_start &_container::after, &_end &_container::after {
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent, $color-background);
+    }
+
+    &_start &_container::before, &_start &_container::after, &_end &_container::before, &_end &_container::after {
+        left: 0;
+        right: 0;
+        height: 60px;
+    }
+
+    &_track {
+        display: flex;
+        gap: $thumbnail-gap;
+    }
+
+    &_thumbnail {
+        cursor: pointer;
+        appearance: none;
+        background: transparent;
+        border: $thumbnail-border solid $color-controls;
+        border-radius: $thumbnail-border-radius;
+        -webkit-tap-highlight-color: transparent;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+        padding: $thumbnail-padding;
+
+        width: $thumbnail-width;
+        height: $thumbnail-height;
+        box-sizing: content-box;
+
+        &_active {
+            border-color: $color-main;
+        }
+
+        &_fadein {
+            opacity: 0;
+            animation: yarl__thumbnails_thumbnail_fadein $fadein-duration ease-in-out $fadein-delay forwards;
+        }
+
+        &_fadeout {
+            animation: yarl__thumbnails_thumbnail_fadeout $fadeout-duration ease-in-out $fadeout-delay forwards;
+            cursor: unset;
+        }
+
+        &_placeholder {
+            visibility: hidden;
+            cursor: unset;
+        }
+    }
+
+    &_thumbnail_icon {
+        color: $color-controls;
+        filter: drop-shadow(2px 2px 2px $color-shadow);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0);
+        width: $icons-size;
+        height: $icons-size;
+    }
+
+    &_contain_image {
+        object-fit: contain;
+    }
+}
+
+@keyframes yarl__thumbnails_thumbnail_fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes yarl__thumbnails_thumbnail_fadeout {
+    from {
+        opacity: 1
+    }
+    to {
+        opacity: 0;
+    }
+}

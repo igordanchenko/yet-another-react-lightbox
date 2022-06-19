@@ -1,26 +1,24 @@
 import * as React from "react";
 
-import { Render, SlideImage } from "../../types.js";
+import { ImageFit, Render, SlideImage } from "../../types.js";
 import { adjustDevicePixelRatio, clsx, cssClass, hasWindow } from "../utils.js";
 import { ContainerRect, useLatest } from "../hooks/index.js";
 import { useEvents } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
 import type { SlideStatus } from "../consts.js";
 import { activeSlideStatus, SLIDE_STATUS_COMPLETE, SLIDE_STATUS_ERROR, SLIDE_STATUS_LOADING } from "../consts.js";
-import { useController } from "../modules/Controller.js";
 
 export type ImageSlideProps = {
     slide: SlideImage;
-    offset: number;
+    offset?: number;
     render?: Render;
     rect?: ContainerRect;
+    imageFit?: ImageFit;
 };
 
-export const ImageSlide = ({ slide: image, offset, render, rect }: ImageSlideProps) => {
+export const ImageSlide = ({ slide: image, offset, render, rect, imageFit }: ImageSlideProps) => {
     const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
     const latestStatus = useLatest(status);
-
-    const { latestProps } = useController();
 
     const { publish } = useEvents();
 
@@ -80,8 +78,8 @@ export const ImageSlide = ({ slide: image, offset, render, rect }: ImageSlidePro
                 onError={onError}
                 className={clsx(
                     cssClass("slide_image"),
-                    (image.imageFit === "cover" ||
-                        (image.imageFit !== "contain" && latestProps.current.carousel.imageFit === "cover")) &&
+                    cssClass("fullsize"),
+                    (image.imageFit === "cover" || (image.imageFit !== "contain" && imageFit === "cover")) &&
                         cssClass("slide_image_cover"),
                     status !== SLIDE_STATUS_COMPLETE && cssClass("slide_image_loading")
                 )}

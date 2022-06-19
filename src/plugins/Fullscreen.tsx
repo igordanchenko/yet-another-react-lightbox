@@ -1,7 +1,16 @@
 import * as React from "react";
 
-import { LightboxProps, Plugin, Render } from "../types.js";
-import { createIcon, IconButton, label, useController, useLatest } from "../core/index.js";
+import { Component, LightboxProps, Plugin, Render } from "../types.js";
+import {
+    clsx,
+    createIcon,
+    createModule,
+    cssClass,
+    IconButton,
+    label,
+    makeUseContext,
+    useLatest,
+} from "../core/index.js";
 
 declare module "../types.js" {
     interface LightboxProps {
@@ -49,6 +58,26 @@ declare global {
     }
 }
 
+type FullscreenContextType = {
+    containerRef: React.RefObject<HTMLDivElement>;
+};
+
+const FullscreenContext = React.createContext<FullscreenContextType | null>(null);
+
+const useFullscreen = makeUseContext("useFullscreen", "FullscreenContext", FullscreenContext);
+
+export const FullscreenContainer: Component = ({ children }) => {
+    const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+    const context = React.useMemo(() => ({ containerRef }), []);
+
+    return (
+        <div ref={containerRef} className={clsx(cssClass("fullscreen"), cssClass("fullsize"))}>
+            <FullscreenContext.Provider value={context}>{children}</FullscreenContext.Provider>
+        </div>
+    );
+};
+
 const EnterFullscreenIcon = createIcon(
     "EnterFullscreen",
     <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
@@ -66,12 +95,12 @@ export type FullscreenButtonProps = Pick<LightboxProps, "labels"> & {
 };
 
 /** Fullscreen button */
-export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps) => {
+export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels, render }) => {
     const [mounted, setMounted] = React.useState(false);
     const [fullscreen, setFullscreen] = React.useState(false);
     const latestAuto = useLatest(auto);
 
-    const { containerRef } = useController();
+    const { containerRef } = useFullscreen();
 
     const isFullscreenEnabled = () =>
         document.fullscreenEnabled ??
@@ -181,7 +210,7 @@ export const FullscreenButton = ({ auto, labels, render }: FullscreenButtonProps
 };
 
 /** Fullscreen plugin */
-export const Fullscreen: Plugin = ({ augment }) => {
+export const Fullscreen: Plugin = ({ augment, contains, addParent }) => {
     augment(({ toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
         toolbar: {
             buttons: [
@@ -197,6 +226,8 @@ export const Fullscreen: Plugin = ({ augment }) => {
         },
         ...restProps,
     }));
+
+    addParent(contains("thumbnails") ? "thumbnails" : "controller", createModule("fullscreen", FullscreenContainer));
 };
 
 export default Fullscreen;

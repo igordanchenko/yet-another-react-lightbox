@@ -32,12 +32,26 @@ export const withPlugins = (root: Node[], plugins?: Plugin[]): { config: Node[];
     let config = root;
     const augmentations: Augmentation[] = [];
 
+    const contains = (target: string) => {
+        const nodes = [...config];
+        while (nodes.length > 0) {
+            const node = nodes.pop();
+            if (node?.module.name === target) return true;
+            if (node?.children) nodes.push(...node.children);
+        }
+        return false;
+    };
+
     const addParent = (target: string, module: Module) => {
         if (target === "") {
             config = [createNode(module, config)];
             return;
         }
         config = traverse(config, target, (node) => [createNode(module, [node])]);
+    };
+
+    const append = (target: string, module: Module) => {
+        config = traverse(config, target, (node) => [createNode(node.module, [createNode(module, node.children)])]);
     };
 
     const addChild = (target: string, module: Module, precede?: boolean) => {
@@ -72,7 +86,9 @@ export const withPlugins = (root: Node[], plugins?: Plugin[]): { config: Node[];
 
     plugins?.forEach((plugin) => {
         plugin({
+            contains,
             addParent,
+            append,
             addChild,
             addSibling,
             replace,

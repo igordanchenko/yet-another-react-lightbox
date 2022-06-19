@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Component, ComponentProps, LightboxDefaultProps } from "../../types.js";
-import { cleanup, clsx, cssClass, cssVar, makeUseContext } from "../utils.js";
+import { cleanup, clsx, cssClass, cssVar, isRTL, makeUseContext } from "../utils.js";
 import { createModule } from "../config.js";
 import { SubscribeSensors, useContainerRect, useEnhancedEffect, useLatest, useSensors } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
@@ -16,7 +16,6 @@ type ControllerState = {
 
 export type ControllerContextType = ControllerState & {
     latestProps: React.MutableRefObject<ComponentProps>;
-    containerRef: React.RefObject<HTMLDivElement>;
     subscribeSensors: SubscribeSensors<HTMLDivElement>;
 };
 
@@ -90,7 +89,7 @@ export const Controller: Component = ({ children, ...props }) => {
     useEnhancedEffect(() => {
         const node = containerRef.current;
         if (node) {
-            setState((prev) => ({ ...prev, isRTL: window.getComputedStyle(node).direction === "rtl" }));
+            setState((prev) => ({ ...prev, isRTL: isRTL(node) }));
         }
     }, [containerRef]);
 
@@ -156,7 +155,7 @@ export const Controller: Component = ({ children, ...props }) => {
     );
 
     const swipe = React.useCallback(
-        (direction?: "prev" | "next") => {
+        (direction?: "prev" | "next", count = 1) => {
             const { current } = refs;
             const slidesCount = current.props.slides.length;
             const swipeAnimationDuration = current.props.animation.swipe;
@@ -164,7 +163,7 @@ export const Controller: Component = ({ children, ...props }) => {
             const { swipeOffset } = current;
 
             let newSwipeState: ControllerRefs["swipeState"] = "swipe-animation";
-            let newSwipeAnimationDuration = swipeAnimationDuration;
+            let newSwipeAnimationDuration = swipeAnimationDuration * count;
 
             if (!direction) {
                 const containerWidth = containerRef.current?.clientWidth;
@@ -197,21 +196,23 @@ export const Controller: Component = ({ children, ...props }) => {
             const newState: Partial<ControllerState> = {};
             if (direction === "prev") {
                 if (isSwipeValid(rtl(1))) {
-                    newState.currentIndex = (currentIndex - 1 + slidesCount) % slidesCount;
-                    newState.globalIndex = globalIndex - 1;
+                    newState.currentIndex = (currentIndex - count + slidesCount) % slidesCount;
+                    newState.globalIndex = globalIndex - count;
                 } else {
                     newSwipeState = undefined;
                     newSwipeAnimationDuration = swipeAnimationDuration;
                 }
             } else if (direction === "next") {
                 if (isSwipeValid(rtl(-1))) {
-                    newState.currentIndex = (currentIndex + 1) % slidesCount;
-                    newState.globalIndex = globalIndex + 1;
+                    newState.currentIndex = (currentIndex + count) % slidesCount;
+                    newState.globalIndex = globalIndex + count;
                 } else {
                     newSwipeState = undefined;
                     newSwipeAnimationDuration = swipeAnimationDuration;
                 }
             }
+
+            newSwipeAnimationDuration = Math.round(newSwipeAnimationDuration);
 
             resetSwipe();
 
@@ -227,16 +228,18 @@ export const Controller: Component = ({ children, ...props }) => {
                 }, newSwipeAnimationDuration);
             }
 
+            publish("controller-swipe", { ...newState, animationDuration: current.swipeAnimationDuration });
+
             setState((prev) => ({ ...prev, ...newState }));
         },
-        [setTimeout, resetSwipe, isSwipeValid, rerender, containerRef, rtl]
+        [setTimeout, resetSwipe, isSwipeValid, rerender, containerRef, rtl, publish]
     );
 
     React.useEffect(
         () =>
             cleanup(
-                subscribe("prev", () => swipe("prev")),
-                subscribe("next", () => swipe("next"))
+                subscribe("prev", (_, count) => swipe("prev", typeof count === "number" ? count : undefined)),
+                subscribe("next", (_, count) => swipe("next", typeof count === "number" ? count : undefined))
             ),
         [subscribe, swipe]
     );
@@ -426,19 +429,22 @@ export const Controller: Component = ({ children, ...props }) => {
     const context = React.useMemo(
         () => ({
             latestProps,
-            containerRef,
             currentIndex: state.currentIndex,
             globalIndex: state.globalIndex,
             isRTL: state.isRTL,
             subscribeSensors,
         }),
-        [latestProps, containerRef, state.currentIndex, state.globalIndex, state.isRTL, subscribeSensors]
+        [latestProps, state.currentIndex, state.globalIndex, state.isRTL, subscribeSensors]
     );
 
     return (
         <div
             ref={setContainerRef}
-            className={clsx(cssClass("container"), refs.current.swipeState === "swipe" && cssClass("container_swipe"))}
+            className={clsx(
+                cssClass("container"),
+                cssClass("fullsize"),
+                refs.current.swipeState === "swipe" && cssClass("container_swipe")
+            )}
             style={{
                 ...(refs.current.swipeAnimationDuration !== LightboxDefaultProps.animation.swipe
                     ? {

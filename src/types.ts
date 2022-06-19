@@ -206,14 +206,18 @@ export type Augmentation = (props: LightboxProps) => LightboxProps;
 
 /** Plugin methods */
 export type PluginMethods = {
-    /** add module as parent */
+    /** test if a target module is present */
+    contains: (target: string) => boolean;
+    /** add module as a parent */
     addParent: (target: string, module: Module) => void;
-    /** add module as child */
+    /** add module as a child */
     addChild: (target: string, module: Module, precede?: boolean) => void;
-    /** add module as sibling */
+    /** add module as a sibling */
     addSibling: (target: string, module: Module, precede?: boolean) => void;
     /** replace module */
     replace: (target: string, module: Module) => void;
+    /** add module as a child and inherit all existing children */
+    append: (target: string, module: Module) => void;
     /** remove module */
     remove: (target: string) => void;
     /** augment lightbox props */
@@ -221,7 +225,7 @@ export type PluginMethods = {
 };
 
 /** Lightbox plugin */
-export type Plugin = ({ addParent, addChild, addSibling, replace, remove, augment }: PluginMethods) => void;
+export type Plugin = ({ addParent, addChild, addSibling, replace, remove, append, augment }: PluginMethods) => void;
 
 /** Deep partial utility type */
 export type DeepPartial<T, K extends keyof T> = Omit<T, K> & {

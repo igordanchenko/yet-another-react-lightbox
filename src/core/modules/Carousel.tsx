@@ -22,7 +22,15 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
         let rendered = render.slide?.(slide, offset, rect);
 
         if (!rendered && "src" in slide) {
-            rendered = <ImageSlide slide={slide} offset={offset} render={render} rect={rect} />;
+            rendered = (
+                <ImageSlide
+                    slide={slide}
+                    offset={offset}
+                    render={render}
+                    rect={rect}
+                    imageFit={latestProps.current.carousel.imageFit}
+                />
+            );
         }
 
         return rendered ? (
