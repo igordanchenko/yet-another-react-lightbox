@@ -142,7 +142,6 @@ $swipe-animation-timing-function: ease-out;
         display: flex;
         justify-content: flex-end;
         padding: $toolbar-padding;
-        gap: $toolbar-padding;
 
         [dir="rtl"] & {
             inset: 0 auto auto 0;
