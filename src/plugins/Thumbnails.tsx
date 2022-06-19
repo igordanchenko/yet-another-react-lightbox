@@ -14,7 +14,7 @@ import {
     useEvents,
 } from "../core/index.js";
 
-type Position = "top" | "bottom" | "start" | "end";
+export type Position = "top" | "bottom" | "start" | "end";
 
 declare module "../types.js" {
     interface LightboxProps {
@@ -38,7 +38,7 @@ declare module "../types.js" {
     }
 
     interface Render {
-        thumbnail: ({ slide, rect }: { slide: Slide; rect: ContainerRect }) => React.ReactNode;
+        thumbnail?: ({ slide, rect }: { slide: Slide; rect: ContainerRect }) => React.ReactNode;
     }
 }
 
