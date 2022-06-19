@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component, LightboxProps, Plugin, Slide } from "../types.js";
+import { Component, ImageFit, LightboxProps, Plugin, Render, Slide } from "../types.js";
 import {
     clsx,
     ContainerRect,
@@ -35,11 +35,23 @@ declare module "../types.js" {
             padding?: number;
             /** gap between thumbnails */
             gap?: number;
+            /** `object-fit` setting */
+            imageFit?: ImageFit;
         };
     }
 
     interface Render {
-        thumbnail?: ({ slide, rect }: { slide: Slide; rect: ContainerRect }) => React.ReactNode;
+        thumbnail?: ({
+            slide,
+            rect,
+            render,
+            imageFit,
+        }: {
+            slide: Slide;
+            rect: ContainerRect;
+            render: Render;
+            imageFit: ImageFit;
+        }) => React.ReactNode;
     }
 }
 
@@ -57,6 +69,7 @@ const defaultThumbnailsProps: ThumbnailsInternal = {
     borderRadius: 4,
     padding: 4,
     gap: 16,
+    imageFit: "contain",
 };
 
 const VideoThumbnailIcon = createIcon(
@@ -94,10 +107,11 @@ type ThumbnailProps = {
     fadeOut?: FadeSettings;
     placeholder: boolean;
     render: LightboxProps["render"];
+    imageFit: ImageFit;
 };
 
-const renderThumbnail = ({ slide, render, rect }: Pick<ThumbnailProps, "render" | "rect"> & { slide: Slide }) => {
-    const customThumbnail = render.thumbnail?.({ slide, rect });
+const renderThumbnail: Render["thumbnail"] = ({ slide, render, rect, imageFit }) => {
+    const customThumbnail = render.thumbnail?.({ slide, render, rect, imageFit });
     if (customThumbnail) {
         return customThumbnail;
     }
@@ -120,7 +134,7 @@ const renderThumbnail = ({ slide, render, rect }: Pick<ThumbnailProps, "render" 
             );
         }
     } else if ("src" in slide) {
-        return <ImageSlide slide={slide} rect={rect} />;
+        return <ImageSlide slide={slide} render={render} rect={rect} imageFit={imageFit} />;
     }
 
     return <UnknownThumbnailIcon className={thumbnailIconClass} />;
@@ -135,6 +149,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
     fadeOut,
     placeholder,
     render,
+    imageFit,
 }) => (
     <button
         type="button"
@@ -161,7 +176,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
         }}
         onClick={onClick}
     >
-        {slide && renderThumbnail({ slide, render, rect })}
+        {slide && renderThumbnail({ slide, render, rect, imageFit })}
     </button>
 );
 
@@ -348,28 +363,28 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
         }
     };
 
+    const { width, height, border, borderRadius, padding, gap, imageFit } = thumbnails;
+
     return (
         <div
             className={clsx(cssClass(cssPrefix("container")), cssClass("flex_center"))}
             style={{
-                ...(thumbnails.width !== defaultThumbnailsProps.width
-                    ? { [cssVar(cssThumbnailPrefix("width"))]: `${boxSize(thumbnails, thumbnails.width)}px` }
+                ...(width !== defaultThumbnailsProps.width
+                    ? { [cssVar(cssThumbnailPrefix("width"))]: `${boxSize(thumbnails, width)}px` }
                     : null),
-                ...(thumbnails.height !== defaultThumbnailsProps.height
-                    ? { [cssVar(cssThumbnailPrefix("height"))]: `${boxSize(thumbnails, thumbnails.height)}px` }
+                ...(height !== defaultThumbnailsProps.height
+                    ? { [cssVar(cssThumbnailPrefix("height"))]: `${boxSize(thumbnails, height)}px` }
                     : null),
-                ...(thumbnails.border !== defaultThumbnailsProps.border
-                    ? { [cssVar(cssThumbnailPrefix("border"))]: `${thumbnails.border}px` }
+                ...(border !== defaultThumbnailsProps.border
+                    ? { [cssVar(cssThumbnailPrefix("border"))]: `${border}px` }
                     : null),
-                ...(thumbnails.borderRadius !== defaultThumbnailsProps.borderRadius
-                    ? { [cssVar(cssThumbnailPrefix("border_radius"))]: `${thumbnails.borderRadius}px` }
+                ...(borderRadius !== defaultThumbnailsProps.borderRadius
+                    ? { [cssVar(cssThumbnailPrefix("border_radius"))]: `${borderRadius}px` }
                     : null),
-                ...(thumbnails.padding !== defaultThumbnailsProps.padding
-                    ? { [cssVar(cssThumbnailPrefix("padding"))]: `${thumbnails.padding}px` }
+                ...(padding !== defaultThumbnailsProps.padding
+                    ? { [cssVar(cssThumbnailPrefix("padding"))]: `${padding}px` }
                     : null),
-                ...(thumbnails.gap !== defaultThumbnailsProps.gap
-                    ? { [cssVar(cssThumbnailPrefix("gap"))]: `${thumbnails.gap}px` }
-                    : null),
+                ...(gap !== defaultThumbnailsProps.gap ? { [cssVar(cssThumbnailPrefix("gap"))]: `${gap}px` } : null),
             }}
         >
             <nav ref={track} className={cssClass(cssPrefix("track"))}>
@@ -407,6 +422,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                             key={slideIndex}
                             rect={thumbnailRect}
                             slide={slide}
+                            imageFit={imageFit}
                             render={render}
                             active={slideIndex === index}
                             fadeIn={fadeIn}
