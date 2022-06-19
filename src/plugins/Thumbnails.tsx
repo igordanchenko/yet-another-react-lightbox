@@ -12,6 +12,7 @@ import {
     isRTL,
     useEnhancedEffect,
     useEvents,
+    useMotionPreference,
 } from "../core/index.js";
 
 export type Position = "top" | "bottom" | "start" | "end";
@@ -216,6 +217,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     const animationRef = React.useRef<Animation>();
 
     const { publish, subscribe } = useEvents();
+    const { reduceMotion } = useMotionPreference();
 
     React.useEffect(() => {
         if (track.current) {
@@ -284,7 +286,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                           },
                           { transform: "translate3d(0, 0, 0)" },
                       ],
-                animationDuration
+                reduceMotion ? 0 : animationDuration
             );
 
             if (animationRef.current) {
