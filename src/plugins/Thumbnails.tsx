@@ -218,7 +218,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     });
 
     const { publish, subscribe } = useEvents();
-    const { reduceMotion } = useMotionPreference();
+    const reduceMotion = useLatest(useMotionPreference());
     const isRTL = useLatest(useRTL());
 
     const refs = React.useRef<ThumbnailsTrackRefs>({
@@ -296,7 +296,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                           },
                           { transform: "translate3d(0, 0, 0)" },
                       ],
-                reduceMotion ? 0 : animationDuration
+                reduceMotion.current ? 0 : animationDuration
             );
 
             if (animationRef.current) {

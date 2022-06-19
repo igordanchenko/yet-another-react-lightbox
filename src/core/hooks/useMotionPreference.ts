@@ -1,13 +1,15 @@
 import * as React from "react";
 
-export const useMotionPreference = () => {
-    const [reduceMotion, setReduceMotion] = React.useState<boolean>();
+import { useEnhancedEffect } from "./useEnhancedEffect.js";
 
-    React.useEffect(() => {
+export const useMotionPreference = () => {
+    const [reduceMotion, setReduceMotion] = React.useState(false);
+
+    useEnhancedEffect(() => {
         const mediaQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
         mediaQuery?.addEventListener("change", () => setReduceMotion(mediaQuery.matches));
         setReduceMotion(mediaQuery?.matches);
     }, []);
 
-    return React.useMemo(() => ({ reduceMotion }), [reduceMotion]);
+    return reduceMotion;
 };
