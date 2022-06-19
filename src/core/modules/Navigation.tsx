@@ -6,6 +6,7 @@ import { cssClass, label as translateLabel } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
 import { Publish, useEvents } from "../contexts/index.js";
 import { useController } from "./Controller.js";
+import { useLatest, useRTL } from "../hooks/index.js";
 
 export type NavigationButtonProps = {
     publish: Publish;
@@ -45,16 +46,17 @@ export const Navigation: Component = ({
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }) => {
-    const { currentIndex, subscribeSensors, isRTL } = useController();
+    const { currentIndex, subscribeSensors } = useController();
     const { publish } = useEvents();
+    const isRTL = useLatest(useRTL());
 
     React.useEffect(
         () =>
             subscribeSensors("onKeyUp", (event) => {
                 if (event.code === "ArrowLeft") {
-                    publish(isRTL ? "next" : "prev");
+                    publish(isRTL.current ? "next" : "prev");
                 } else if (event.code === "ArrowRight") {
-                    publish(isRTL ? "prev" : "next");
+                    publish(isRTL.current ? "prev" : "next");
                 }
             }),
         [subscribeSensors, publish, isRTL]

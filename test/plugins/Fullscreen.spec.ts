@@ -109,12 +109,7 @@ describe("Fullscreen", () => {
     });
 
     it("auto opens", async () => {
-        render(
-            lightbox({
-                plugins: [Fullscreen],
-                fullscreen: true,
-            })
-        );
+        render(lightbox({ plugins: [Fullscreen], fullscreen: true }));
 
         expect(await findExitFullscreenButton()).toBeInTheDocument();
     });

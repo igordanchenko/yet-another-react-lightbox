@@ -9,10 +9,11 @@ import {
     cssClass,
     cssVar,
     ImageSlide,
-    isRTL,
     useEnhancedEffect,
     useEvents,
+    useLatest,
     useMotionPreference,
+    useRTL,
 } from "../core/index.js";
 
 export type Position = "top" | "bottom" | "start" | "end";
@@ -190,7 +191,6 @@ type ThumbnailsTrackRefs = Pick<LightboxProps, "carousel" | "animation"> & {
     thumbnails: ThumbnailsInternal;
     animationOffset: number;
     animationOverride?: number;
-    isRTL?: boolean;
 };
 
 type ThumbnailsTrackProps = Pick<LightboxProps, "slides" | "carousel" | "animation" | "render"> & {
@@ -217,6 +217,10 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
         offset: 0,
     });
 
+    const { publish, subscribe } = useEvents();
+    const { reduceMotion } = useMotionPreference();
+    const isRTL = useLatest(useRTL());
+
     const refs = React.useRef<ThumbnailsTrackRefs>({
         state,
         thumbnails,
@@ -230,15 +234,6 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     refs.current.animation = animation;
 
     const animationRef = React.useRef<Animation>();
-
-    const { publish, subscribe } = useEvents();
-    const { reduceMotion } = useMotionPreference();
-
-    React.useEffect(() => {
-        if (track.current) {
-            refs.current.isRTL = isRTL(track.current);
-        }
-    }, []);
 
     React.useEffect(
         () =>
@@ -284,7 +279,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                     ? [
                           {
                               transform: `translate3d(${
-                                  (current.isRTL ? -1 : 1) *
+                                  (isRTL.current ? -1 : 1) *
                                       boxSize(current.thumbnails, current.thumbnails.width, true) *
                                       state.offset +
                                   current.animationOffset
@@ -316,7 +311,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
 
             current.animationOffset = 0;
         }
-    }, [state.index, state.offset]);
+    }, [state.index, state.offset, isRTL, reduceMotion]);
 
     const { index, offset } = state;
     const { finite, preload } = carousel;

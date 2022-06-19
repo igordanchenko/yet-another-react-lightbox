@@ -1,10 +1,6 @@
 import * as React from "react";
 
-type MotionPreference = {
-    reduceMotion?: boolean;
-};
-
-export const useMotionPreference = (): MotionPreference => {
+export const useMotionPreference = () => {
     const [reduceMotion, setReduceMotion] = React.useState<boolean>();
 
     React.useEffect(() => {

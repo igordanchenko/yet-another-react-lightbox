@@ -1,9 +1,16 @@
 import * as React from "react";
 
 import { Component, ComponentProps, LightboxDefaultProps } from "../../types.js";
-import { cleanup, clsx, cssClass, cssVar, isRTL, makeUseContext } from "../utils.js";
+import { cleanup, clsx, cssClass, cssVar, makeUseContext } from "../utils.js";
 import { createModule } from "../config.js";
-import { SubscribeSensors, useContainerRect, useEnhancedEffect, useLatest, useSensors } from "../hooks/index.js";
+import {
+    SubscribeSensors,
+    useContainerRect,
+    useEnhancedEffect,
+    useLatest,
+    useRTL,
+    useSensors,
+} from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 
 const SWIPE_OFFSET_THRESHOLD = 30;
@@ -11,7 +18,6 @@ const SWIPE_OFFSET_THRESHOLD = 30;
 type ControllerState = {
     currentIndex: number;
     globalIndex: number;
-    isRTL: boolean;
 };
 
 export type ControllerContextType = ControllerState & {
@@ -43,11 +49,11 @@ export const Controller: Component = ({ children, ...props }) => {
     const { registerSensors, subscribeSensors } = useSensors<HTMLDivElement>();
     const { subscribe, publish } = useEvents();
     const { setTimeout, clearTimeout } = useTimeouts();
+    const isRTL = useLatest(useRTL());
 
     const [state, setState] = React.useState<ControllerState>({
         currentIndex: props.index,
         globalIndex: props.index,
-        isRTL: false,
     });
 
     const latestProps = useLatest(props);
@@ -84,13 +90,6 @@ export const Controller: Component = ({ children, ...props }) => {
                 node.removeEventListener("wheel", preventDefault);
             }
         };
-    }, [containerRef]);
-
-    useEnhancedEffect(() => {
-        const node = containerRef.current;
-        if (node) {
-            setState((prev) => ({ ...prev, isRTL: isRTL(node) }));
-        }
     }, [containerRef]);
 
     React.useEffect(() => {
@@ -135,8 +134,8 @@ export const Controller: Component = ({ children, ...props }) => {
     }, [clearTimeout]);
 
     const rtl = React.useCallback(
-        (value?: number) => (refs.current.state.isRTL ? -1 : 1) * (typeof value === "number" ? value : 1),
-        [refs]
+        (value?: number) => (isRTL.current ? -1 : 1) * (typeof value === "number" ? value : 1),
+        [isRTL]
     );
 
     const isSwipeValid = React.useCallback(
@@ -431,10 +430,9 @@ export const Controller: Component = ({ children, ...props }) => {
             latestProps,
             currentIndex: state.currentIndex,
             globalIndex: state.globalIndex,
-            isRTL: state.isRTL,
             subscribeSensors,
         }),
-        [latestProps, state.currentIndex, state.globalIndex, state.isRTL, subscribeSensors]
+        [latestProps, state.currentIndex, state.globalIndex, subscribeSensors]
     );
 
     return (
