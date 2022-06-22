@@ -222,6 +222,7 @@ $swipe-animation-timing-function: ease-out;
     &_no_scroll {
         height: 100%;
         overflow: hidden;
+        overscroll-behavior: none;
     }
 
     &_pad_scrollbar {
