@@ -136,7 +136,7 @@ The following plugins come bundled in the package:
 - [Slideshow](https://yet-another-react-lightbox.vercel.app/plugins/slideshow) - adds slideshow autoplay feature
 - [Thumbnails](https://yet-another-react-lightbox.vercel.app/plugins/thumbnails) - adds thumbnails track
 - [Video](https://yet-another-react-lightbox.vercel.app/plugins/video) - adds support for video slides
-- [Zoom](https://yet-another-react-lightbox.vercel.app/plugins/zoom) - adds zoom feature
+- [Zoom](https://yet-another-react-lightbox.vercel.app/plugins/zoom) - adds image zoom feature
 
 ## License
 
