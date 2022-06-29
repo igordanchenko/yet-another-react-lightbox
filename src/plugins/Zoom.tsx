@@ -256,14 +256,13 @@ const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, 
     let maxSlideRect: ContainerRect = { width: 0, height: 0 };
 
     if (rect && !("type" in slide) && "src" in slide) {
-        const width = Math.max(
-            ...(slide.srcSet?.map((x) => x.width) || []),
-            ...[...(slide.width ? [slide.width] : [])]
-        );
+        const width = Math.max(...(slide.srcSet?.map((x) => x.width) || []).concat(slide.width ? [slide.width] : []));
 
         const height = Math.max(
-            ...(slide.srcSet?.map((x) => x.width) || (slide.aspectRatio ? [width / slide.aspectRatio] : [])),
-            ...[...(slide.height ? [slide.height] : [])]
+            ...(
+                slide.srcSet?.map((x) => x.height).filter((x): x is number => Boolean(x)) ??
+                (slide.aspectRatio ? [width / slide.aspectRatio] : [])
+            ).concat(slide.height ? [slide.height] : [])
         );
 
         if (width > 0 && height > 0 && rect.width > 0 && rect.height > 0) {
