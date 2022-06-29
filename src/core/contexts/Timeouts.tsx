@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { makeUseContext } from "../utils.js";
+import { isDefined, makeUseContext } from "../utils.js";
 
 export type TimeoutsContextType = {
     setTimeout: (func: () => void, time?: number) => number;
@@ -29,7 +29,7 @@ export const TimeoutsProvider = ({ children }: React.PropsWithChildren<{}>) => {
     };
 
     const clearTimeout = (id?: number) => {
-        if (typeof id !== "undefined") {
+        if (isDefined(id)) {
             removeTimeout(id);
             window.clearTimeout(id);
         }

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Component, Plugin, Slide } from "../types.js";
-import { cssClass, cssVar, makeUseContext } from "../core/utils.js";
+import { cssClass, cssVar, isDefined, makeUseContext } from "../core/utils.js";
 import { useEvents } from "../core/contexts/Events.js";
 import { createModule } from "../core/index.js";
 
@@ -97,7 +97,7 @@ export const CaptionsComponent: Component = ({ children }) => {
     React.useEffect(
         () =>
             subscribe("toolbar-width", (topic, event) => {
-                if (typeof event === "undefined" || typeof event === "number") {
+                if (!isDefined(event) || typeof event === "number") {
                     setToolbarWidth(event);
                 }
             }),

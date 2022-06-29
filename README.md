@@ -14,10 +14,11 @@ Modern React lightbox component. Performant, easy to use, customizable and exten
 - **Performance:** preloads limited number of images without compromising performance or UX
 - **Responsive:** responsive images with automatic resolution switching are supported out of the box
 - **Video:** video slides are supported via an optional plugin
+- **Zoom:** image zoom is supported via an optional plugin
 - **Customization:** customize any UI element or add your own custom slides
 - **No bloat:** never bundle rarely used features; add optional features via plugins
-- **RTL:** compatible with RTL layout
 - **TypeScript:** type definitions come built-in in the package
+- **RTL:** compatible with RTL layout
 
 ## Documentation
 
@@ -99,13 +100,14 @@ const App = () => {
                     {
                         src: "/image1x3840.jpg",
                         alt: "image 1",
-                        aspectRatio: 3 / 2,
+                        width: 3840,
+                        height: 2560,
                         srcSet: [
-                            { src: "/image1x320.jpg", width: 320 },
-                            { src: "/image1x640.jpg", width: 640 },
-                            { src: "/image1x1200.jpg", width: 1200 },
-                            { src: "/image1x2048.jpg", width: 2048 },
-                            { src: "/image1x3840.jpg", width: 3840 },
+                            { src: "/image1x320.jpg", width: 320, height: 213 },
+                            { src: "/image1x640.jpg", width: 640, height: 427 },
+                            { src: "/image1x1200.jpg", width: 1200, height: 800 },
+                            { src: "/image1x2048.jpg", width: 2048, height: 1365 },
+                            { src: "/image1x3840.jpg", width: 3840, height: 2560 },
                         ]
                     },
                     // ...
@@ -134,6 +136,7 @@ The following plugins come bundled in the package:
 - [Slideshow](https://yet-another-react-lightbox.vercel.app/plugins/slideshow) - adds slideshow autoplay feature
 - [Thumbnails](https://yet-another-react-lightbox.vercel.app/plugins/thumbnails) - adds thumbnails track
 - [Video](https://yet-another-react-lightbox.vercel.app/plugins/video) - adds support for video slides
+- [Zoom](https://yet-another-react-lightbox.vercel.app/plugins/zoom) - adds zoom feature
 
 ## License
 

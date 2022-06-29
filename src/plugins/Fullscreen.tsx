@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component, LightboxProps, Plugin, Render } from "../types.js";
+import { Component, LightboxProps, Plugin } from "../types.js";
 import {
     clsx,
     createIcon,
@@ -89,9 +89,8 @@ const ExitFullscreenIcon = createIcon(
 );
 
 /** Fullscreen button props */
-export type FullscreenButtonProps = Pick<LightboxProps, "labels"> & {
+export type FullscreenButtonProps = Pick<LightboxProps, "labels" | "render"> & {
     auto: boolean;
-    render: Render;
 };
 
 /** Fullscreen button */

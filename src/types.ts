@@ -11,8 +11,12 @@ export interface SlideImage {
     src?: string;
     /** image 'alt' attribute */
     alt?: string;
-    /** image aspect ratio */
-    aspectRatio?: number;
+    /** @deprecated use `width` and `height` instead */
+    aspectRatio?: number; // TODO v2: remove
+    /** image width in pixels */
+    width?: number;
+    /** image height in pixels */
+    height?: number;
     /** `object-fit` setting */
     imageFit?: ImageFit;
     /** alternative images to be passed to the 'srcSet' */
@@ -21,6 +25,8 @@ export interface SlideImage {
         src: string;
         /** image width in pixels */
         width: number;
+        /** image height in pixels */
+        height?: number; // TODO v2: make required
     }[];
 }
 
@@ -231,6 +237,11 @@ export type Plugin = ({ addParent, addChild, addSibling, replace, remove, append
 export type DeepPartial<T, K extends keyof T> = Omit<T, K> & {
     [P in keyof Pick<T, K>]?: Partial<Pick<T, K>[P]>;
 };
+
+/** Deep non-nullable utility type */
+export type DeepNonNullable<T> = NonNullable<{
+    [K in keyof T]-?: NonNullable<T[K]>;
+}>;
 
 /** Lightbox external props */
 export type LightboxExternalProps = DeepPartial<

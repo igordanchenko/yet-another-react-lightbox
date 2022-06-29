@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component, ImageFit, LightboxProps, Plugin, Render, Slide } from "../types.js";
+import { Component, DeepNonNullable, ImageFit, LightboxProps, Plugin, Render, Slide } from "../types.js";
 import {
     clsx,
     ContainerRect,
@@ -55,10 +55,6 @@ declare module "../types.js" {
         }) => React.ReactNode;
     }
 }
-
-type DeepNonNullable<T> = NonNullable<{
-    [K in keyof T]-?: NonNullable<T[K]>;
-}>;
 
 type ThumbnailsInternal = DeepNonNullable<LightboxProps["thumbnails"]>;
 
@@ -434,7 +430,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
 
 /** Thumbnails plugin component */
 export const ThumbnailsComponent: Component = ({
-    thumbnails: originalThumbnails,
+    thumbnails: thumbnailsProps,
     slides,
     index,
     carousel,
@@ -442,7 +438,7 @@ export const ThumbnailsComponent: Component = ({
     render,
     children,
 }) => {
-    const thumbnails = { ...defaultThumbnailsProps, ...originalThumbnails };
+    const thumbnails = { ...defaultThumbnailsProps, ...thumbnailsProps };
 
     const ref = React.useRef<HTMLDivElement | null>(null);
 
@@ -473,10 +469,10 @@ export const ThumbnailsComponent: Component = ({
 
 /** Thumbnails plugin */
 export const Thumbnails: Plugin = ({ augment, contains, append, addParent }) => {
-    augment(({ thumbnails: originalThumbnails, ...restProps }) => ({
+    augment(({ thumbnails, ...restProps }) => ({
         thumbnails: {
             ...defaultThumbnailsProps,
-            ...originalThumbnails,
+            ...thumbnails,
         },
         ...restProps,
     }));

@@ -41,7 +41,9 @@ export const useSensors = <T extends Element>(): UseSensors<T> => {
 
     return React.useMemo(() => {
         const notifySubscribers = <ET extends SupportedEventType>(type: ET, event: ReactEventType<T, ET>) => {
-            (subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[])?.forEach((listener) => listener(event));
+            (subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[])?.forEach((listener) => {
+                if (!event.isPropagationStopped()) listener(event);
+            });
         };
 
         return {
@@ -66,7 +68,7 @@ export const useSensors = <T extends Element>(): UseSensors<T> => {
                 if (!subscribers[type]) {
                     subscribers[type] = [];
                 }
-                (subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[]).push(callback);
+                (subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[]).unshift(callback);
 
                 return () => {
                     const listeners = subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[];

@@ -18,6 +18,7 @@
         "./plugins/thumbnails": "./dist/plugins/Thumbnails.js",
         "./plugins/thumbnails.css": "./dist/plugins/thumbnails.css",
         "./plugins/video": "./dist/plugins/Video.js",
+        "./plugins/zoom": "./dist/plugins/Zoom.js",
         "./styles.css": "./dist/styles.css"
     },
     "types": "dist/index.d.ts",
@@ -49,6 +50,9 @@
             ],
             "plugins/video": [
                 "dist/plugins/Video.d.ts"
+            ],
+            "plugins/zoom": [
+                "dist/plugins/Zoom.d.ts"
             ]
         }
     },

@@ -11,21 +11,18 @@ export type IconButtonProps = Omit<
     renderIcon?: () => React.ReactNode;
 };
 
-export const IconButton: React.FC<IconButtonProps> = ({
-    label,
-    className,
-    icon: Icon,
-    renderIcon,
-    onClick,
-    ...rest
-}) => (
-    <button
-        type="button"
-        aria-label={label}
-        className={clsx(cssClass("button"), className)}
-        onClick={onClick}
-        {...rest}
-    >
-        {renderIcon ? renderIcon() : <Icon className={cssClass("icon")} />}
-    </button>
+export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+    ({ label, className, icon: Icon, renderIcon, onClick, ...rest }, ref) => (
+        <button
+            ref={ref}
+            type="button"
+            aria-label={label}
+            className={clsx(cssClass("button"), className)}
+            onClick={onClick}
+            {...rest}
+        >
+            {renderIcon ? renderIcon() : <Icon className={cssClass("icon")} />}
+        </button>
+    )
 );
+IconButton.displayName = "IconButton";

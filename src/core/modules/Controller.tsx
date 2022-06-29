@@ -4,6 +4,7 @@ import { Component, ComponentProps, LightboxDefaultProps } from "../../types.js"
 import { cleanup, clsx, cssClass, cssVar, makeUseContext } from "../utils.js";
 import { createModule } from "../config.js";
 import {
+    ContainerRect,
     SubscribeSensors,
     useContainerRect,
     useEnhancedEffect,
@@ -23,6 +24,9 @@ type ControllerState = {
 export type ControllerContextType = ControllerState & {
     latestProps: React.MutableRefObject<ComponentProps>;
     subscribeSensors: SubscribeSensors<HTMLDivElement>;
+    transferFocus: () => void;
+    containerRect: ContainerRect;
+    containerRef: React.RefObject<HTMLDivElement>;
 };
 
 const ControllerContext = React.createContext<ControllerContextType | null>(null);
@@ -45,7 +49,7 @@ type ControllerRefs = {
 };
 
 export const Controller: Component = ({ children, ...props }) => {
-    const { containerRef, setContainerRef } = useContainerRect<HTMLDivElement>();
+    const { containerRef, setContainerRef, containerRect } = useContainerRect<HTMLDivElement>();
     const { registerSensors, subscribeSensors } = useSensors<HTMLDivElement>();
     const { subscribe, publish } = useEvents();
     const { setTimeout, clearTimeout } = useTimeouts();
@@ -75,7 +79,7 @@ export const Controller: Component = ({ children, ...props }) => {
     // this has to be done via non-passive native event handler
     useEnhancedEffect(() => {
         const preventDefault = (event: WheelEvent) => {
-            if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+            if (Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.ctrlKey) {
                 event.preventDefault();
             }
         };
@@ -425,14 +429,27 @@ export const Controller: Component = ({ children, ...props }) => {
 
     React.useEffect(() => subscribeSensors("onWheel", onWheel), [subscribeSensors, onWheel]);
 
+    const transferFocus = React.useCallback(() => containerRef.current?.focus(), [containerRef]);
+
     const context = React.useMemo(
         () => ({
             latestProps,
             currentIndex: state.currentIndex,
             globalIndex: state.globalIndex,
             subscribeSensors,
+            transferFocus,
+            containerRect,
+            containerRef,
         }),
-        [latestProps, state.currentIndex, state.globalIndex, subscribeSensors]
+        [
+            latestProps,
+            state.currentIndex,
+            state.globalIndex,
+            subscribeSensors,
+            transferFocus,
+            containerRect,
+            containerRef,
+        ]
     );
 
     return (
@@ -460,7 +477,11 @@ export const Controller: Component = ({ children, ...props }) => {
             tabIndex={-1}
             {...registerSensors}
         >
-            <ControllerContext.Provider value={context}>{children}</ControllerContext.Provider>
+            {containerRect && (
+                <ControllerContext.Provider value={context as ControllerContextType}>
+                    {children}
+                </ControllerContext.Provider>
+            )}
         </div>
     );
 };

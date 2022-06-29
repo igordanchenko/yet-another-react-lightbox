@@ -33,5 +33,12 @@ export const makeUseContext =
 
 export const hasWindow = () => typeof window !== "undefined";
 
+export const isDefined = <T = any>(x: T | undefined): x is T => typeof x !== "undefined";
+
 export const adjustDevicePixelRatio = (value: number) =>
     hasWindow() ? Math.round(value / (window.devicePixelRatio || 1)) : value;
+
+export const round = (value: number, decimals = 0) => {
+    const factor = 10 ** decimals;
+    return Math.round((value + Number.EPSILON) * factor) / factor;
+};

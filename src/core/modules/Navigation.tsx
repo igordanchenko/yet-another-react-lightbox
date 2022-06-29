@@ -52,10 +52,10 @@ export const Navigation: Component = ({
 
     React.useEffect(
         () =>
-            subscribeSensors("onKeyUp", (event) => {
-                if (event.code === "ArrowLeft") {
+            subscribeSensors("onKeyDown", (event) => {
+                if (event.key === "ArrowLeft") {
                     publish(isRTL.current ? "next" : "prev");
-                } else if (event.code === "ArrowRight") {
+                } else if (event.key === "ArrowRight") {
                     publish(isRTL.current ? "prev" : "next");
                 }
             }),

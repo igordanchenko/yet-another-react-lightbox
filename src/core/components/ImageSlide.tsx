@@ -75,6 +75,52 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit }: Ima
         setStatus(SLIDE_STATUS_ERROR);
     }, []);
 
+    const cover = image.imageFit === "cover" || (image.imageFit !== "contain" && imageFit === "cover");
+
+    const nonInfinite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
+
+    const maxWidth = adjustDevicePixelRatio(
+        nonInfinite(
+            Math.max(...(image.srcSet?.map((x) => x.width) ?? []).concat(image.width ? [image.width] : [])),
+            imageRef.current?.naturalWidth || 0
+        )
+    );
+    const maxHeight = adjustDevicePixelRatio(
+        nonInfinite(
+            Math.max(
+                ...(image.srcSet?.map((x) => x.height).filter((x): x is number => Boolean(x)) ?? []).concat(
+                    image.height ? [image.height] : []
+                )
+            ),
+            // TODO v2: remove aspectRatio
+            (image.aspectRatio && maxWidth ? maxWidth / image.aspectRatio : imageRef.current?.naturalHeight) || 0
+        )
+    );
+
+    const style = maxWidth && maxHeight ? { maxWidth, maxHeight } : undefined;
+
+    const srcSet = image.srcSet
+        ?.sort((a, b) => a.width - b.width)
+        .map((item) => `${item.src} ${item.width}w`)
+        .join(", ");
+
+    const estimateActualWidth = () => {
+        if (rect && !cover) {
+            if (image.width && image.height) {
+                return (rect.height / image.height) * image.width;
+            }
+            if (image.aspectRatio) {
+                return rect.height * image.aspectRatio;
+            }
+        }
+        return Number.MAX_VALUE;
+    };
+
+    const sizes =
+        srcSet && rect && hasWindow()
+            ? `${Math.ceil((Math.min(estimateActualWidth(), rect.width) / window.innerWidth) * 100)}vw`
+            : undefined;
+
     return (
         <>
             <img
@@ -84,42 +130,14 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit }: Ima
                 className={clsx(
                     cssClass("slide_image"),
                     cssClass("fullsize"),
-                    (image.imageFit === "cover" || (image.imageFit !== "contain" && imageFit === "cover")) &&
-                        cssClass("slide_image_cover"),
+                    cover && cssClass("slide_image_cover"),
                     status !== SLIDE_STATUS_COMPLETE && cssClass("slide_image_loading")
                 )}
                 draggable={false}
                 alt={image.alt}
-                {...(image.srcSet
-                    ? {
-                          ...(rect && hasWindow()
-                              ? {
-                                    sizes: `${Math.ceil(
-                                        (Math.min(
-                                            image.aspectRatio ? rect.height * image.aspectRatio : Number.MAX_VALUE,
-                                            rect.width
-                                        ) /
-                                            window.innerWidth) *
-                                            100
-                                    )}vw`,
-                                }
-                              : null),
-                          srcSet: image.srcSet
-                              .sort((a, b) => a.width - b.width)
-                              .map((item) => `${item.src} ${item.width}w`)
-                              .join(", "),
-                          style: {
-                              maxWidth: `${adjustDevicePixelRatio(Math.max(...image.srcSet.map((x) => x.width)))}px`,
-                          },
-                      }
-                    : {
-                          style:
-                              imageRef.current && imageRef.current?.naturalWidth > 0
-                                  ? {
-                                        maxWidth: `${adjustDevicePixelRatio(imageRef.current.naturalWidth)}px`,
-                                    }
-                                  : undefined,
-                      })}
+                style={style}
+                sizes={sizes}
+                srcSet={srcSet}
                 src={image.src}
             />
 
