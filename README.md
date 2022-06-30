@@ -22,11 +22,11 @@ Modern React lightbox component. Performant, easy to use, customizable and exten
 
 ## Documentation
 
-[https://yet-another-react-lightbox.vercel.app/documentation](https://yet-another-react-lightbox.vercel.app/documentation)
+[https://yet-another-react-lightbox.com/documentation](https://yet-another-react-lightbox.com/documentation)
 
 ## Examples
 
-[https://yet-another-react-lightbox.vercel.app/examples](https://yet-another-react-lightbox.vercel.app/examples)
+[https://yet-another-react-lightbox.com/examples](https://yet-another-react-lightbox.com/examples)
 
 ## Installation
 
@@ -121,7 +121,7 @@ export default App;
 ```
 
 You can also integrate 3rd-party image components (e.g., Next.js Image or Gatsby Image) via a custom render function.
-See [examples](https://yet-another-react-lightbox.vercel.app/examples) on the documentation website.
+See [examples](https://yet-another-react-lightbox.com/examples) on the documentation website.
 
 ## Plugins
 
@@ -129,14 +129,14 @@ Yet Another React Lightbox allows you to add optional features based on your req
 
 The following plugins come bundled in the package:
 
-- [Captions](https://yet-another-react-lightbox.vercel.app/plugins/captions) - adds support for slide title and
+- [Captions](https://yet-another-react-lightbox.com/plugins/captions) - adds support for slide title and
   description
-- [Fullscreen](https://yet-another-react-lightbox.vercel.app/plugins/fullscreen) - adds support for fullscreen mode
-- [Inline](https://yet-another-react-lightbox.vercel.app/plugins/inline) - adds support for inline rendering mode
-- [Slideshow](https://yet-another-react-lightbox.vercel.app/plugins/slideshow) - adds slideshow autoplay feature
-- [Thumbnails](https://yet-another-react-lightbox.vercel.app/plugins/thumbnails) - adds thumbnails track
-- [Video](https://yet-another-react-lightbox.vercel.app/plugins/video) - adds support for video slides
-- [Zoom](https://yet-another-react-lightbox.vercel.app/plugins/zoom) - adds image zoom feature
+- [Fullscreen](https://yet-another-react-lightbox.com/plugins/fullscreen) - adds support for fullscreen mode
+- [Inline](https://yet-another-react-lightbox.com/plugins/inline) - adds support for inline rendering mode
+- [Slideshow](https://yet-another-react-lightbox.com/plugins/slideshow) - adds slideshow autoplay feature
+- [Thumbnails](https://yet-another-react-lightbox.com/plugins/thumbnails) - adds thumbnails track
+- [Video](https://yet-another-react-lightbox.com/plugins/video) - adds support for video slides
+- [Zoom](https://yet-another-react-lightbox.com/plugins/zoom) - adds image zoom feature
 
 ## License
 

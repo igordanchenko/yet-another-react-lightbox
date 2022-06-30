@@ -60,7 +60,7 @@
         "dist"
     ],
     "sideEffects": false,
-    "homepage": "https://yet-another-react-lightbox.vercel.app/",
+    "homepage": "https://yet-another-react-lightbox.com",
     "repository": {
         "type": "git",
         "url": "https://github.com/igordanchenko/yet-another-react-lightbox.git"
