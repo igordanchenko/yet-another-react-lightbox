@@ -352,7 +352,9 @@ const ZoomContainer: React.FC<
         zoomProps.maxZoomPixelRatio,
         currentContainerRect
     );
-    const currentMaxZoom = currentSlideRect.width ? round(currentMaxSlideRect.width / currentSlideRect.width, 3) : 1;
+    const currentMaxZoom = currentSlideRect.width
+        ? Math.max(round(currentMaxSlideRect.width / currentSlideRect.width, 5), 1)
+        : 1;
 
     const [state, setState] = React.useState<ZoomContainerState>({ zoom: 1, offsetX: 0, offsetY: 0 });
 
@@ -444,15 +446,6 @@ const ZoomContainer: React.FC<
 
     useEnhancedEffect(() => {
         if (offset === 0) {
-            const { setMinZoom, setMaxZoom, maxZoom } = refs.current;
-
-            setMinZoom(state.zoom <= 1);
-            setMaxZoom(state.zoom >= maxZoom);
-        }
-    }, [offset, state.zoom]);
-
-    useEnhancedEffect(() => {
-        if (offset === 0) {
             const { setMinZoom, setMaxZoom } = refs.current;
 
             const resetZoom = () => {
@@ -471,6 +464,15 @@ const ZoomContainer: React.FC<
 
         return () => {};
     }, [offset]);
+
+    useEnhancedEffect(() => {
+        if (offset === 0) {
+            const { setMinZoom, setMaxZoom, maxZoom } = refs.current;
+
+            setMinZoom(state.zoom <= 1);
+            setMaxZoom(state.zoom >= maxZoom);
+        }
+    }, [offset, state.zoom]);
 
     const changeZoom = React.useCallback(
         (value: number, rapid?: boolean, dx?: number, dy?: number) => {
