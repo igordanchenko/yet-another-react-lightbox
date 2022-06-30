@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { ImageFit, Render, SlideImage } from "../../types.js";
-import { adjustDevicePixelRatio, clsx, cssClass, hasWindow } from "../utils.js";
+import { clsx, cssClass, hasWindow } from "../utils.js";
 import { ContainerRect, useLatest } from "../hooks/index.js";
 import { useEvents } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
@@ -79,22 +79,19 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit }: Ima
 
     const nonInfinite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
 
-    const maxWidth = adjustDevicePixelRatio(
-        nonInfinite(
-            Math.max(...(image.srcSet?.map((x) => x.width) ?? []).concat(image.width ? [image.width] : [])),
-            imageRef.current?.naturalWidth || 0
-        )
+    const maxWidth = nonInfinite(
+        Math.max(...(image.srcSet?.map((x) => x.width) ?? []).concat(image.width ? [image.width] : [])),
+        imageRef.current?.naturalWidth || 0
     );
-    const maxHeight = adjustDevicePixelRatio(
-        nonInfinite(
-            Math.max(
-                ...(image.srcSet?.map((x) => x.height).filter((x): x is number => Boolean(x)) ?? []).concat(
-                    image.height ? [image.height] : []
-                )
-            ),
-            // TODO v2: remove aspectRatio
-            (image.aspectRatio && maxWidth ? maxWidth / image.aspectRatio : imageRef.current?.naturalHeight) || 0
-        )
+
+    const maxHeight = nonInfinite(
+        Math.max(
+            ...(image.srcSet?.map((x) => x.height).filter((x): x is number => Boolean(x)) ?? []).concat(
+                image.height ? [image.height] : []
+            )
+        ),
+        // TODO v2: remove aspectRatio
+        (image.aspectRatio && maxWidth ? maxWidth / image.aspectRatio : imageRef.current?.naturalHeight) || 0
     );
 
     const style = maxWidth && maxHeight ? { maxWidth, maxHeight } : undefined;

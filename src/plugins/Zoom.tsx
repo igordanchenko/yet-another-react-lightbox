@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { Component, DeepNonNullable, LightboxProps, Plugin, Slide } from "../types.js";
 import {
-    adjustDevicePixelRatio,
     cleanup,
     clsx,
     ContainerRect,
@@ -274,8 +273,8 @@ const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, 
                 : { width, height };
 
             maxSlideRect = {
-                width: adjustDevicePixelRatio(maxSlideRect.width) * maxZoomPixelRatio,
-                height: adjustDevicePixelRatio(maxSlideRect.height) * maxZoomPixelRatio,
+                width: maxSlideRect.width * maxZoomPixelRatio,
+                height: maxSlideRect.height * maxZoomPixelRatio,
             };
 
             slideRect = cover
