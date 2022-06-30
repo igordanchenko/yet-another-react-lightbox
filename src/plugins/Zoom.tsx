@@ -467,12 +467,12 @@ const ZoomContainer: React.FC<
 
     useEnhancedEffect(() => {
         if (offset === 0) {
-            const { setMinZoom, setMaxZoom, maxZoom } = refs.current;
+            const { setMinZoom, setMaxZoom } = refs.current;
 
             setMinZoom(state.zoom <= 1);
-            setMaxZoom(state.zoom >= maxZoom);
+            setMaxZoom(state.zoom >= currentMaxZoom);
         }
-    }, [offset, state.zoom]);
+    }, [offset, state.zoom, currentMaxZoom]);
 
     const changeZoom = React.useCallback(
         (value: number, rapid?: boolean, dx?: number, dy?: number) => {
@@ -762,7 +762,7 @@ const ZoomContainer: React.FC<
 };
 
 /** Zoom slide wrapper */
-const ZoomWrapper: typeof ZoomContainer = ({ slide, offset, rect, render, carousel, animation }) => {
+const ZoomWrapper: typeof ZoomContainer = ({ slide, offset, rect, render, carousel, animation, zoom }) => {
     const { setZoomSupported } = useZoom();
 
     const imageSlide = !("type" in slide);
@@ -783,6 +783,7 @@ const ZoomWrapper: typeof ZoomContainer = ({ slide, offset, rect, render, carous
                 render={render}
                 carousel={carousel}
                 animation={animation}
+                zoom={zoom}
             />
         );
     }
@@ -818,6 +819,7 @@ export const Zoom: Plugin = ({ augment, append }) => {
                     render={render}
                     carousel={carousel}
                     animation={animation}
+                    zoom={zoom}
                 />
             ),
         },
