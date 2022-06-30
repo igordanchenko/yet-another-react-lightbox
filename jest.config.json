@@ -9,8 +9,8 @@
     "collectCoverageFrom": ["src/**/*.{ts,tsx}"],
     "coverageThreshold": {
         "global": {
-            "lines": 75,
-            "statements": 75
+            "lines": 70,
+            "statements": 70
         }
     }
 }
