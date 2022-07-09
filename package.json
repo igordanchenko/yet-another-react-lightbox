@@ -59,7 +59,9 @@
     "files": [
         "dist"
     ],
-    "sideEffects": false,
+    "sideEffects": [
+        "*.css"
+    ],
     "homepage": "https://yet-another-react-lightbox.com",
     "repository": {
         "type": "git",
