@@ -103,12 +103,12 @@ const ZoomOutIcon = createIcon(
 );
 
 type ZoomContextType = {
-    minZoom: boolean;
-    maxZoom: boolean;
-    zoomSupported: boolean;
-    setMinZoom: (value: boolean) => void;
-    setMaxZoom: (value: boolean) => void;
-    setZoomSupported: (value: boolean) => void;
+    isMinZoom: boolean;
+    isMaxZoom: boolean;
+    isZoomSupported: boolean;
+    setIsMinZoom: (value: boolean) => void;
+    setIsMaxZoom: (value: boolean) => void;
+    setIsZoomSupported: (value: boolean) => void;
 };
 
 const ZoomContext = React.createContext<ZoomContextType | null>(null);
@@ -116,20 +116,20 @@ const ZoomContext = React.createContext<ZoomContextType | null>(null);
 const useZoom = makeUseContext("useZoom", "ZoomContext", ZoomContext);
 
 const ZoomContextProvider: Component = ({ children }) => {
-    const [minZoom, setMinZoom] = React.useState(false);
-    const [maxZoom, setMaxZoom] = React.useState(false);
-    const [zoomSupported, setZoomSupported] = React.useState(false);
+    const [isMinZoom, setIsMinZoom] = React.useState(false);
+    const [isMaxZoom, setIsMaxZoom] = React.useState(false);
+    const [isZoomSupported, setIsZoomSupported] = React.useState(false);
 
     const context = React.useMemo<ZoomContextType>(
         () => ({
-            minZoom,
-            maxZoom,
-            zoomSupported,
-            setMinZoom,
-            setMaxZoom,
-            setZoomSupported,
+            isMinZoom,
+            isMaxZoom,
+            isZoomSupported,
+            setIsMinZoom,
+            setIsMaxZoom,
+            setIsZoomSupported,
         }),
-        [minZoom, maxZoom, zoomSupported]
+        [isMinZoom, isMaxZoom, isZoomSupported]
     );
 
     return <ZoomContext.Provider value={context}>{children}</ZoomContext.Provider>;
@@ -147,10 +147,10 @@ const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>(
         const wasEnabled = React.useRef(false);
         const wasFocused = React.useRef(false);
 
-        const { zoomSupported, minZoom, maxZoom } = useZoom();
+        const { isMinZoom, isMaxZoom, isZoomSupported } = useZoom();
         const { publish } = useEvents();
 
-        const disabled = !zoomSupported || (zoomIn ? maxZoom : minZoom);
+        const disabled = !isZoomSupported || (zoomIn ? isMaxZoom : isMinZoom);
 
         const onClick = () => publish(zoomIn ? "zoom-in" : "zoom-out");
 
@@ -314,8 +314,6 @@ type ZoomContainerRefs = {
     zoomAnimationDuration?: number;
     pinchZoomDistance?: number;
     reduceMotion: boolean;
-    setMinZoom: ZoomContextType["setMinZoom"];
-    setMaxZoom: ZoomContextType["setMaxZoom"];
     activePointers: React.PointerEvent[];
     lastPointerDown: number;
     zoomProps: ZoomInternal;
@@ -331,18 +329,22 @@ const ZoomContainer: React.FC<
 > = ({ slide, offset, rect, render, carousel, animation, zoom: originalZoomProps }) => {
     const zoomProps = { ...defaultZoomProps, ...originalZoomProps };
 
-    const { setMinZoom: currentSetMinZoom, setMaxZoom: currentSetMaxZoom } = useZoom();
+    const { isMinZoom, isMaxZoom, setIsMinZoom, setIsMaxZoom } = useZoom();
+
     const {
         setContainerRef,
         containerRef: currentContainerRef,
         containerRect: currentContainerRect,
     } = useContainerRect();
+
     const {
         subscribeSensors,
         containerRef: currentControllerRef,
         containerRect: currentControllerRect,
     } = useController();
+
     const { subscribe } = useEvents();
+
     const currentReduceMotion = useMotionPreference();
 
     const { slideRect: currentSlideRect, maxSlideRect: currentMaxSlideRect } = getSlideRects(
@@ -351,6 +353,7 @@ const ZoomContainer: React.FC<
         zoomProps.maxZoomPixelRatio,
         currentContainerRect
     );
+
     const currentMaxZoom = currentSlideRect.width
         ? Math.max(round(currentMaxSlideRect.width / currentSlideRect.width, 5), 1)
         : 1;
@@ -366,8 +369,6 @@ const ZoomContainer: React.FC<
         controllerRect: currentControllerRect,
         maxZoom: currentMaxZoom,
         reduceMotion: currentReduceMotion,
-        setMinZoom: currentSetMinZoom,
-        setMaxZoom: currentSetMaxZoom,
         activePointers: [],
         lastPointerDown: 0,
         zoomProps,
@@ -381,8 +382,6 @@ const ZoomContainer: React.FC<
     refs.current.controllerRect = currentControllerRect;
     refs.current.maxZoom = currentMaxZoom;
     refs.current.reduceMotion = currentReduceMotion;
-    refs.current.setMinZoom = currentSetMinZoom;
-    refs.current.setMaxZoom = currentSetMaxZoom;
     refs.current.zoomAnimationDuration = animation.zoom;
     refs.current.zoomProps = zoomProps;
 
@@ -445,13 +444,11 @@ const ZoomContainer: React.FC<
 
     useEnhancedEffect(() => {
         if (offset === 0) {
-            const { setMinZoom, setMaxZoom } = refs.current;
-
             const resetZoom = () => {
                 setState({ zoom: 1, offsetX: 0, offsetY: 0 });
 
-                setMinZoom(true);
-                setMaxZoom(false);
+                setIsMinZoom(true);
+                setIsMaxZoom(false);
             };
 
             resetZoom();
@@ -462,16 +459,21 @@ const ZoomContainer: React.FC<
         }
 
         return () => {};
-    }, [offset]);
+    }, [offset, setIsMinZoom, setIsMaxZoom]);
 
     useEnhancedEffect(() => {
         if (offset === 0) {
-            const { setMinZoom, setMaxZoom } = refs.current;
+            const newMinZoom = state.zoom <= 1;
+            if (newMinZoom !== isMinZoom) {
+                setIsMinZoom(newMinZoom);
+            }
 
-            setMinZoom(state.zoom <= 1);
-            setMaxZoom(state.zoom >= currentMaxZoom);
+            const newMaxZoom = state.zoom >= currentMaxZoom;
+            if (newMaxZoom !== isMaxZoom) {
+                setIsMaxZoom(newMaxZoom);
+            }
         }
-    }, [offset, state.zoom, currentMaxZoom]);
+    }, [offset, state.zoom, currentMaxZoom, isMinZoom, isMaxZoom, setIsMinZoom, setIsMaxZoom]);
 
     const changeZoom = React.useCallback(
         (value: number, rapid?: boolean, dx?: number, dy?: number) => {
@@ -762,16 +764,16 @@ const ZoomContainer: React.FC<
 
 /** Zoom slide wrapper */
 const ZoomWrapper: typeof ZoomContainer = ({ slide, offset, rect, render, carousel, animation, zoom }) => {
-    const { setZoomSupported } = useZoom();
+    const { setIsZoomSupported, isZoomSupported } = useZoom();
 
     const imageSlide = !("type" in slide);
     const zoomSupported = imageSlide && ("srcSet" in slide || ("width" in slide && "height" in slide));
 
     React.useEffect(() => {
-        if (offset === 0) {
-            setZoomSupported(zoomSupported);
+        if (offset === 0 && zoomSupported !== isZoomSupported) {
+            setIsZoomSupported(zoomSupported);
         }
-    }, [offset, zoomSupported, setZoomSupported]);
+    }, [offset, zoomSupported, isZoomSupported, setIsZoomSupported]);
 
     if (zoomSupported) {
         return (
