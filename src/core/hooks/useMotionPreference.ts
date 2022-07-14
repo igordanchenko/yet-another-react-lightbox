@@ -7,8 +7,10 @@ export const useMotionPreference = () => {
 
     useLayoutEffect(() => {
         const mediaQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-        mediaQuery?.addEventListener("change", () => setReduceMotion(mediaQuery.matches));
         setReduceMotion(mediaQuery?.matches);
+        const listener = () => setReduceMotion(mediaQuery.matches);
+        mediaQuery?.addEventListener("change", listener);
+        return () => mediaQuery?.removeEventListener("change", listener);
     }, []);
 
     return reduceMotion;
