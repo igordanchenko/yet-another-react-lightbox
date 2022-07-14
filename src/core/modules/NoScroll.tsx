@@ -2,28 +2,64 @@ import * as React from "react";
 
 import { Component } from "../../types.js";
 import { createModule } from "../config.js";
-import { cssClass, cssVar } from "../utils.js";
+import { cssClass } from "../utils.js";
+import { useEnhancedEffect, useRTL } from "../hooks/index.js";
 
 const noScroll = cssClass("no_scroll");
-const padScrollbar = cssClass("pad_scrollbar");
-const scrollbarPadding = cssVar("scrollbar_padding");
+const noScrollPadding = cssClass("no_scroll_padding");
+
+const isHTMLElement = (element: Element): element is HTMLElement => "style" in element;
+
+const padScrollbar = (element: HTMLElement, padding: number, rtl: boolean) => {
+    const styles = window.getComputedStyle(element);
+    const property = rtl ? "padding-left" : "padding-right";
+    const computedValue = rtl ? styles.paddingLeft : styles.paddingRight;
+    const originalValue = element.style.getPropertyValue(property);
+
+    element.style.setProperty(property, `${(parseInt(computedValue, 10) || 0) + padding}px`);
+
+    return () => {
+        if (originalValue) {
+            element.style.setProperty(property, originalValue);
+        } else {
+            element.style.removeProperty(property);
+        }
+    };
+};
 
 export const NoScroll: Component = ({ children }) => {
-    React.useEffect(() => {
-        const scrollbarWidth = Math.round(window.innerWidth - document.documentElement.clientWidth);
+    const rtl = useRTL();
 
-        // using an arbitrary threshold to counter the 1px difference in some browsers
-        if (scrollbarWidth > 1) {
-            document.body.style.setProperty(scrollbarPadding, `${scrollbarWidth}px`);
-            document.body.classList.add(padScrollbar);
+    useEnhancedEffect(() => {
+        const cleanup: (() => void)[] = [];
+
+        const { body, documentElement } = document;
+
+        const scrollbar = Math.round(window.innerWidth - documentElement.clientWidth);
+        if (scrollbar > 0) {
+            cleanup.push(padScrollbar(body, scrollbar, rtl));
+
+            const elements = body.getElementsByTagName("*");
+            for (let i = 0; i < elements.length; i += 1) {
+                const element = elements[i];
+                if (
+                    isHTMLElement(element) &&
+                    window.getComputedStyle(element).getPropertyValue("position") === "fixed" &&
+                    !element.classList.contains(noScrollPadding)
+                ) {
+                    cleanup.push(padScrollbar(element, scrollbar, rtl));
+                }
+            }
         }
-        document.body.classList.add(noScroll);
+
+        body.classList.add(noScroll);
 
         return () => {
-            document.body.style.removeProperty(scrollbarPadding);
-            document.body.classList.remove(noScroll, padScrollbar);
+            body.classList.remove(noScroll);
+
+            cleanup.forEach((clean) => clean());
         };
-    });
+    }, [rtl]);
 
     return <>{children}</>;
 };

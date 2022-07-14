@@ -224,15 +224,6 @@ $swipe-animation-timing-function: ease-out;
         overflow: hidden;
         overscroll-behavior: none;
     }
-
-    &_pad_scrollbar {
-        padding-right: var(--yarl__scrollbar_padding, 17px);
-    }
-
-    [dir="rtl"] &_pad_scrollbar {
-        padding-right: unset;
-        padding-left: var(--yarl__scrollbar_padding, 17px);
-    }
 }
 
 @keyframes yarl__delayed_fadein {

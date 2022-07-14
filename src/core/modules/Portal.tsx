@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import { Component, LightboxDefaultProps } from "../../types.js";
 import { createModule } from "../config.js";
-import { cssClass, cssVar } from "../utils.js";
+import { clsx, cssClass, cssVar } from "../utils.js";
 import { useLatest } from "../hooks/useLatest.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 
@@ -17,7 +17,7 @@ export const Portal: Component = ({ children, ...props }) => {
 
     const [portal] = React.useState(() => {
         const div = document.createElement("div");
-        div.className = cssClass("portal");
+        div.className = clsx(cssClass("portal"), cssClass("no_scroll_padding"));
 
         const fadeAnimation = latestProps.current.animation.fade;
         if (fadeAnimation !== LightboxDefaultProps.animation.fade) {
