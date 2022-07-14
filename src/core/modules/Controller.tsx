@@ -7,8 +7,8 @@ import {
     ContainerRect,
     SubscribeSensors,
     useContainerRect,
-    useLayoutEffect,
     useLatest,
+    useLayoutEffect,
     useRTL,
     useSensors,
 } from "../hooks/index.js";
@@ -472,8 +472,7 @@ export const Controller: Component = ({ children, ...props }) => {
                       }
                     : null),
             }}
-            role="presentation"
-            aria-live="polite"
+            {...(props.controller.aria ? { role: "presentation", "aria-live": "polite" } : null)}
             tabIndex={-1}
             {...registerSensors}
         >

@@ -67,6 +67,8 @@ export interface ControllerSettings {
     focus: boolean;
     /** controller `touch-action` */
     touchAction: "none" | "pan-y";
+    /** if `true`, set ARIA attributes on the controller div */
+    aria: boolean;
 }
 
 /** Custom render functions. */
@@ -171,6 +173,7 @@ export const LightboxDefaultProps = {
     } as CarouselSettings,
     controller: {
         focus: true,
+        aria: false,
         touchAction: "none",
     } as ControllerSettings,
     on: {} as Callbacks,

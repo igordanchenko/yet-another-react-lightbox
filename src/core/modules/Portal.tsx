@@ -7,9 +7,25 @@ import { clsx, cssClass, cssVar } from "../utils.js";
 import { useLatest, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 
+const setAttribute = (element: Element, attribute: string, value: string) => {
+    const previousValue = element.getAttribute(attribute);
+
+    element.setAttribute(attribute, value);
+
+    return () => {
+        if (previousValue) {
+            element.setAttribute(attribute, previousValue);
+        } else {
+            element.removeAttribute(attribute);
+        }
+    };
+};
+
 export const Portal: Component = ({ children, ...props }) => {
     const [mounted, setMounted] = React.useState(false);
     const [visible, setVisible] = React.useState(false);
+
+    const cleanup = React.useRef<(() => void)[]>([]);
 
     const latestProps = useLatest(props);
     const latestAnimationDuration = useLatest(!useMotionPreference() ? props.animation.fade : 0);
@@ -51,9 +67,21 @@ export const Portal: Component = ({ children, ...props }) => {
 
                 latestProps.current.on.entering?.();
 
+                const elements = node.parentNode?.children ?? [];
+                for (let i = 0; i < elements.length; i += 1) {
+                    const element = elements[i];
+                    if (["TEMPLATE", "SCRIPT", "STYLE"].indexOf(element.tagName) === -1 && element !== node) {
+                        cleanup.current.push(setAttribute(element, "inert", "true"));
+                        cleanup.current.push(setAttribute(element, "aria-hidden", "true"));
+                    }
+                }
+
                 setTimeout(() => {
                     latestProps.current.on.entered?.();
                 }, latestAnimationDuration.current);
+            } else {
+                cleanup.current.forEach((clean) => clean());
+                cleanup.current = [];
             }
         },
         [setTimeout, latestProps, latestAnimationDuration]

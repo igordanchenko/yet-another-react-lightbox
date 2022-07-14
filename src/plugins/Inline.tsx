@@ -23,7 +23,7 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
             toolbar: { buttons, ...restToolbar },
             open,
             close,
-            controller: { focus, touchAction, ...restController },
+            controller: { focus, aria, touchAction, ...restController },
             ...restProps
         }) => ({
             open: true,
@@ -33,7 +33,7 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
                 ...restToolbar,
             },
             inline: { style: { width: "100%", height: "100%" } },
-            controller: { focus: false, touchAction: "pan-y", ...restController },
+            controller: { focus: false, aria: true, touchAction: "pan-y", ...restController },
             ...restProps,
         })
     );
