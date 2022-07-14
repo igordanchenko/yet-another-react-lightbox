@@ -9,7 +9,7 @@ import {
     cssClass,
     cssVar,
     ImageSlide,
-    useEnhancedEffect,
+    useLayoutEffect,
     useEvents,
     useLatest,
     useMotionPreference,
@@ -262,7 +262,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
         [container, subscribe]
     );
 
-    useEnhancedEffect(() => {
+    useLayoutEffect(() => {
         if (track.current && state.offset) {
             const { current } = refs;
 

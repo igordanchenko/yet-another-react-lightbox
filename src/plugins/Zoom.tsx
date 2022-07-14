@@ -15,7 +15,7 @@ import {
     round,
     useContainerRect,
     useController,
-    useEnhancedEffect,
+    useLayoutEffect,
     useEvents,
     useMotionPreference,
 } from "../core/index.js";
@@ -406,13 +406,13 @@ const ZoomContainer: React.FC<
         }));
     }, []);
 
-    useEnhancedEffect(() => {
+    useLayoutEffect(() => {
         if (refs.current.state.zoom > 1) {
             changeOffsets();
         }
     }, [currentControllerRect.width, currentControllerRect.height, changeOffsets]);
 
-    useEnhancedEffect(() => {
+    useLayoutEffect(() => {
         const { current } = refs;
         const { zoomAnimation, zoomAnimationStart, zoomAnimationDuration, reduceMotion, containerRef } = current;
 
@@ -442,7 +442,7 @@ const ZoomContainer: React.FC<
         }
     }, [state.zoom, state.offsetX, state.offsetY]);
 
-    useEnhancedEffect(() => {
+    useLayoutEffect(() => {
         if (offset === 0) {
             const resetZoom = () => {
                 setState({ zoom: 1, offsetX: 0, offsetY: 0 });
@@ -461,7 +461,7 @@ const ZoomContainer: React.FC<
         return () => {};
     }, [offset, setIsMinZoom, setIsMaxZoom]);
 
-    useEnhancedEffect(() => {
+    useLayoutEffect(() => {
         if (offset === 0) {
             const newMinZoom = state.zoom <= 1;
             if (newMinZoom !== isMinZoom) {

@@ -7,7 +7,7 @@ import {
     ContainerRect,
     SubscribeSensors,
     useContainerRect,
-    useEnhancedEffect,
+    useLayoutEffect,
     useLatest,
     useRTL,
     useSensors,
@@ -77,7 +77,7 @@ export const Controller: Component = ({ children, ...props }) => {
 
     // prevent browser back/forward navigation on touchpad left/right swipe
     // this has to be done via non-passive native event handler
-    useEnhancedEffect(() => {
+    useLayoutEffect(() => {
         const preventDefault = (event: WheelEvent) => {
             if (Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.ctrlKey) {
                 event.preventDefault();
@@ -115,7 +115,7 @@ export const Controller: Component = ({ children, ...props }) => {
         }
     }, [containerRef]);
 
-    useEnhancedEffect(() => {
+    useLayoutEffect(() => {
         updateSwipeOffset();
     });
 

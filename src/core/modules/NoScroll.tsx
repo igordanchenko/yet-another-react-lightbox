@@ -3,7 +3,7 @@ import * as React from "react";
 import { Component } from "../../types.js";
 import { createModule } from "../config.js";
 import { cssClass } from "../utils.js";
-import { useEnhancedEffect, useRTL } from "../hooks/index.js";
+import { useLayoutEffect, useRTL } from "../hooks/index.js";
 
 const noScroll = cssClass("no_scroll");
 const noScrollPadding = cssClass("no_scroll_padding");
@@ -30,7 +30,7 @@ const padScrollbar = (element: HTMLElement, padding: number, rtl: boolean) => {
 export const NoScroll: Component = ({ children }) => {
     const rtl = useRTL();
 
-    useEnhancedEffect(() => {
+    useLayoutEffect(() => {
         const cleanup: (() => void)[] = [];
 
         const { body, documentElement } = document;
