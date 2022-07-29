@@ -15,8 +15,8 @@ import {
     round,
     useContainerRect,
     useController,
-    useLayoutEffect,
     useEvents,
+    useLayoutEffect,
     useMotionPreference,
 } from "../core/index.js";
 
@@ -56,6 +56,8 @@ declare module "../types.js" {
             wheelZoomDistanceFactor?: number;
             /** pinch zoom distance factor */
             pinchZoomDistanceFactor?: number;
+            /** if `true`, enables image zoom via scroll gestures for mouse and trackpad users */
+            scrollToZoom?: boolean;
         };
     }
 
@@ -87,6 +89,7 @@ const defaultZoomProps: ZoomInternal = {
     keyboardMoveDistance: 50,
     wheelZoomDistanceFactor: 100,
     pinchZoomDistanceFactor: 100,
+    scrollToZoom: false,
 };
 
 const ZoomInIcon = createIcon(
@@ -552,26 +555,29 @@ const ZoomContainer: React.FC<
         (event: React.WheelEvent) => {
             const {
                 state: { zoom },
-                zoomProps: { wheelZoomDistanceFactor },
+                zoomProps: { wheelZoomDistanceFactor, scrollToZoom },
             } = refs.current;
 
-            if (event.ctrlKey) {
-                event.stopPropagation();
-
+            if (event.ctrlKey || scrollToZoom) {
                 if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+                    event.stopPropagation();
+
                     changeZoom(
                         zoom * (1 - event.deltaY / wheelZoomDistanceFactor),
                         true,
                         ...translateCoordinates(event)
                     );
+
+                    return;
                 }
-                return;
             }
 
             if (zoom > 1) {
                 event.stopPropagation();
 
-                changeOffsets(event.deltaX, event.deltaY);
+                if (!scrollToZoom) {
+                    changeOffsets(event.deltaX, event.deltaY);
+                }
             }
         },
         [changeZoom, changeOffsets, translateCoordinates]
