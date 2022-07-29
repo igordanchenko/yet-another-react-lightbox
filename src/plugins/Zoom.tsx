@@ -409,11 +409,47 @@ const ZoomContainer: React.FC<
         }));
     }, []);
 
+    const changeZoom = React.useCallback(
+        (value: number, rapid?: boolean, dx?: number, dy?: number) => {
+            const { current } = refs;
+            const {
+                state: { zoom },
+                containerRef,
+                containerRect,
+                maxZoom,
+            } = current;
+
+            if (!containerRef.current || !containerRect) return;
+
+            const newZoom = round(Math.min(Math.max(value + 0.001 < maxZoom ? value : maxZoom, 1), maxZoom), 5);
+
+            if (newZoom === zoom) return;
+
+            if (!rapid) {
+                current.zoomAnimationStart = window.getComputedStyle(containerRef.current).transform;
+            }
+
+            changeOffsets(dx ? dx * (1 / zoom - 1 / newZoom) : 0, dy ? dy * (1 / zoom - 1 / newZoom) : 0, newZoom);
+
+            setState((prev) => ({ ...prev, zoom: newZoom }));
+        },
+        [changeOffsets]
+    );
+
     useLayoutEffect(() => {
         if (refs.current.state.zoom > 1) {
+            const {
+                maxZoom,
+                state: { zoom: currentZoom },
+            } = refs.current;
+
+            if (currentZoom > maxZoom) {
+                changeZoom(maxZoom, true);
+            }
+
             changeOffsets();
         }
-    }, [currentControllerRect.width, currentControllerRect.height, changeOffsets]);
+    }, [currentControllerRect.width, currentControllerRect.height, changeOffsets, changeZoom]);
 
     useLayoutEffect(() => {
         const { current } = refs;
@@ -477,33 +513,6 @@ const ZoomContainer: React.FC<
             }
         }
     }, [offset, state.zoom, currentMaxZoom, isMinZoom, isMaxZoom, setIsMinZoom, setIsMaxZoom]);
-
-    const changeZoom = React.useCallback(
-        (value: number, rapid?: boolean, dx?: number, dy?: number) => {
-            const { current } = refs;
-            const {
-                state: { zoom },
-                containerRef,
-                containerRect,
-                maxZoom,
-            } = current;
-
-            if (!containerRef.current || !containerRect) return;
-
-            const newZoom = round(Math.min(Math.max(value + 0.001 < maxZoom ? value : maxZoom, 1), maxZoom), 5);
-
-            if (newZoom === zoom) return;
-
-            if (!rapid) {
-                current.zoomAnimationStart = window.getComputedStyle(containerRef.current).transform;
-            }
-
-            changeOffsets(dx ? dx * (1 / zoom - 1 / newZoom) : 0, dy ? dy * (1 / zoom - 1 / newZoom) : 0, newZoom);
-
-            setState((prev) => ({ ...prev, zoom: newZoom }));
-        },
-        [changeOffsets]
-    );
 
     const translateCoordinates = React.useCallback((event: React.MouseEvent) => {
         const { controllerRef } = refs.current;
