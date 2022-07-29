@@ -523,9 +523,14 @@ const ZoomContainer: React.FC<
                 zoomProps: { keyboardMoveDistance, zoomInMultiplier },
             } = refs.current;
 
+            const preventDefault = () => {
+                event.preventDefault();
+                event.stopPropagation();
+            };
+
             if (zoom > 1) {
                 const move = (deltaX: number, deltaY: number) => {
-                    event.stopPropagation();
+                    preventDefault();
                     changeOffsets(deltaX, deltaY);
                 };
 
@@ -540,12 +545,19 @@ const ZoomContainer: React.FC<
                 }
             }
 
-            if (event.key === "+" || (event.key === "=" && event.metaKey)) {
-                changeZoom(zoom * zoomInMultiplier);
-            } else if (event.key === "-" || (event.key === "_" && event.metaKey)) {
-                changeZoom(zoom / zoomInMultiplier);
-            } else if (event.key === "0" && event.metaKey) {
-                changeZoom(1);
+            const handleChangeZoom = (zoomValue: number) => {
+                preventDefault();
+                changeZoom(zoomValue);
+            };
+
+            const hasMeta = () => event.getModifierState("Meta") || event.getModifierState("OS");
+
+            if (event.key === "+" || (event.key === "=" && hasMeta())) {
+                handleChangeZoom(zoom * zoomInMultiplier);
+            } else if (event.key === "-" || (event.key === "_" && hasMeta())) {
+                handleChangeZoom(zoom / zoomInMultiplier);
+            } else if (event.key === "0" && hasMeta()) {
+                handleChangeZoom(1);
             }
         },
         [changeZoom, changeOffsets]
