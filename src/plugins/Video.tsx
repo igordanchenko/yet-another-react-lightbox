@@ -135,9 +135,13 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
         if (!width || !height || !containerRect) return null;
 
         const widthBound = width / height > containerRect.width / containerRect.height;
+        const elementWidth = widthBound ? containerRect.width : Math.round((containerRect.height / height) * width);
+        const elementHeight = !widthBound ? containerRect.height : Math.round((containerRect.width / width) * height);
+
         return {
-            width: widthBound ? containerRect.width : Math.round((containerRect.height / height) * width),
-            height: !widthBound ? containerRect.height : Math.round((containerRect.width / width) * height),
+            width: elementWidth,
+            height: elementHeight,
+            style: { width: elementWidth, height: elementHeight, maxWidth: "100%", maxHeight: "100%" },
         };
     };
 
