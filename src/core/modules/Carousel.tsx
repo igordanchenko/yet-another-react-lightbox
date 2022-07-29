@@ -15,7 +15,7 @@ type CarouselSlideProps = {
 const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
     const { setContainerRef, containerRect } = useContainerRect();
 
-    const { latestProps } = useController();
+    const { latestProps, currentIndex } = useController();
     const { render } = latestProps.current;
 
     const renderSlide = (rect: ContainerRect) => {
@@ -29,6 +29,13 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
                     render={render}
                     rect={rect}
                     imageFit={latestProps.current.carousel.imageFit}
+                    onClick={
+                        latestProps.current.on.click && offset === 0
+                            ? () => {
+                                  latestProps.current.on.click?.(currentIndex);
+                              }
+                            : undefined
+                    }
                 />
             );
         }

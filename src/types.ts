@@ -110,6 +110,8 @@ export interface Render {
 export interface Callbacks {
     /** a callback called when a slide becomes active */
     view?: (index: number) => void;
+    /** a callback called when a slide is clicked */
+    click?: (index: number) => void;
     /** a callback called when the portal starts opening */
     entering?: () => void;
     /** a callback called when the portal opens */

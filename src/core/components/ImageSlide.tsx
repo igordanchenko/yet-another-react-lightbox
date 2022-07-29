@@ -19,9 +19,10 @@ export type ImageSlideProps = {
     render?: Render;
     rect?: ContainerRect;
     imageFit?: ImageFit;
+    onClick?: () => void;
 };
 
-export const ImageSlide = ({ slide: image, offset, render, rect, imageFit }: ImageSlideProps) => {
+export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onClick }: ImageSlideProps) => {
     const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
     const latestStatus = useLatest(status);
 
@@ -120,10 +121,12 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit }: Ima
 
     return (
         <>
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
             <img
                 ref={setImageRef}
                 onLoad={onLoad}
                 onError={onError}
+                onClick={onClick}
                 className={clsx(
                     cssClass("slide_image"),
                     cssClass("fullsize"),
