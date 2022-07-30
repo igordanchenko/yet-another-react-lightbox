@@ -1,33 +1,27 @@
-$captions-font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-$captions-background-color: rgba(0, 0, 0, .5);
-$captions-padding: 16px;
-
 .yarl__slide {
+    &_captions_container {
+        position: absolute;
+        left: var(--yarl__slide_captions_container_left, 0);
+        right: var(--yarl__slide_captions_container_right, 0);
+        padding: var(--yarl__slide_captions_container_padding, 16px);
+        background: var(--yarl__slide_captions_container_background, rgba(0, 0, 0, .5));
+        transform: translateZ(0);
+    }
+
     &_title {
-        font-family: $captions-font-family;
-        font-size: 1.25rem;
-        font-weight: 700;
+        font-size: var(--yarl__slide_title_font_size, 125%);
+        font-weight: var(--yarl__slide_title_font_weight, bolder);
         max-width: calc(100% - var(--yarl__toolbar_width, 0px));
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
 
         &_container {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            padding: $captions-padding;
-            background: $captions-background-color;
-            transform: translateZ(0);
+            top: var(--yarl__slide_title_container_top, 0);
         }
     }
 
     &_description {
-        font-family: $captions-font-family;
-        font-size: 1rem;
-        line-height: 1.2;
-        font-weight: 500;
         overflow: hidden;
         hyphens: auto;
         display: -webkit-box;
@@ -36,13 +30,7 @@ $captions-padding: 16px;
         text-align: var(--yarl__slide_description_text_align, start);
 
         &_container {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: $captions-padding;
-            background: $captions-background-color;
-            transform: translateZ(0);
+            bottom: var(--yarl__slide_description_container_bottom, 0);
         }
     }
 }

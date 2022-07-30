@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Component, Plugin, Slide } from "../types.js";
-import { cssClass, cssVar, isDefined, makeUseContext } from "../core/utils.js";
+import { clsx, cssClass, cssVar, isDefined, makeUseContext } from "../core/utils.js";
 import { useEvents } from "../core/contexts/Events.js";
 import { createModule } from "../core/index.js";
 
@@ -29,7 +29,7 @@ declare module "../types.js" {
 const defaultTextAlign = "start";
 const defaultMaxLines = 3;
 
-const cls = (className: string) => cssClass(`slide_${className}`);
+const cssPrefix = (className: string) => cssClass(`slide_${className}`);
 
 const hasTitle = (slide: Slide): slide is Slide & { title: string } =>
     "title" in slide ? typeof (slide as unknown as { title: unknown }).title === "string" : false;
@@ -53,9 +53,9 @@ const Title: React.FC<TitleProps> = ({ title }) => {
     const { toolbarWidth } = useCaptions();
 
     return (
-        <div className={cls(`title_container`)}>
+        <div className={clsx(cssPrefix("captions_container"), cssPrefix("title_container"))}>
             <div
-                className={cls("title")}
+                className={cssPrefix("title")}
                 {...(toolbarWidth ? { style: { [cssVar("toolbar_width")]: `${toolbarWidth}px` } } : null)}
             >
                 {title}
@@ -71,9 +71,9 @@ type DescriptionProps = {
 };
 
 const Description: React.FC<DescriptionProps> = ({ description, align, maxLines }) => (
-    <div className={cls("description_container")}>
+    <div className={clsx(cssPrefix("captions_container"), cssPrefix("description_container"))}>
         <div
-            className={cls("description")}
+            className={cssPrefix("description")}
             {...(align !== defaultTextAlign || maxLines !== defaultMaxLines
                 ? {
                       style: {
@@ -137,4 +137,5 @@ export const Captions: Plugin = ({ augment, addParent }) => {
     }));
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default Captions;
