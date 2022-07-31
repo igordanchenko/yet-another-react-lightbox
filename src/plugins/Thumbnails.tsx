@@ -151,6 +151,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
     <button
         type="button"
         className={clsx(
+            cssClass("flex_center"),
             cssClass(cssThumbnailPrefix()),
             active && cssClass(cssThumbnailPrefix("active")),
             fadeIn && cssClass(cssThumbnailPrefix("fadein")),

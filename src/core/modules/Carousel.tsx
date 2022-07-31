@@ -1,11 +1,13 @@
 import * as React from "react";
 
+import { YARL_EVENT_BACKDROP_CLICK } from "../consts.js";
 import { Component, LightboxDefaultProps, Slide } from "../../types.js";
 import { ContainerRect, useContainerRect } from "../hooks/index.js";
 import { createModule } from "../config.js";
 import { clsx, cssClass, cssVar } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller.js";
+import { useEvents } from "../contexts/Events.js";
 
 type CarouselSlideProps = {
     slide: Slide;
@@ -13,8 +15,9 @@ type CarouselSlideProps = {
 };
 
 const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
-    const { setContainerRef, containerRect } = useContainerRect();
+    const { setContainerRef, containerRect, containerRef } = useContainerRect();
 
+    const { publish } = useEvents();
     const { latestProps, currentIndex } = useController();
     const { render } = latestProps.current;
 
@@ -49,11 +52,28 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
         ) : null;
     };
 
+    const handleBackdropClick: React.MouseEventHandler = (event) => {
+        const container = containerRef.current;
+        const target = event.target instanceof HTMLElement ? event.target : undefined;
+        if (
+            target &&
+            container &&
+            (target === container ||
+                // detect zoom wrapper
+                (Array.from(container.children).find((x) => x === target) &&
+                    target.classList.contains(cssClass("fullsize"))))
+        ) {
+            publish(YARL_EVENT_BACKDROP_CLICK);
+        }
+    };
+
     return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
         <div
             ref={setContainerRef}
             className={clsx(cssClass("slide"), cssClass("flex_center"))}
             style={{ [cssVar("slide_offset")]: offset }}
+            onClick={handleBackdropClick}
         >
             {containerRect && renderSlide(containerRect)}
         </div>

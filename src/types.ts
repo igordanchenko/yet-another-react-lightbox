@@ -69,6 +69,8 @@ export interface ControllerSettings {
     touchAction: "none" | "pan-y";
     /** if `true`, set ARIA attributes on the controller div */
     aria: boolean;
+    /** if `true`, close the lightbox when the backdrop is clicked */
+    closeOnBackdropClick: boolean;
 }
 
 /** Custom render functions. */
@@ -177,6 +179,7 @@ export const LightboxDefaultProps = {
         focus: true,
         aria: false,
         touchAction: "none",
+        closeOnBackdropClick: false,
     } as ControllerSettings,
     on: {} as Callbacks,
 };

@@ -95,7 +95,13 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
         (image.aspectRatio && maxWidth ? maxWidth / image.aspectRatio : imageRef.current?.naturalHeight) || 0
     );
 
-    const style = maxWidth && maxHeight ? { maxWidth, maxHeight } : undefined;
+    const style =
+        maxWidth && maxHeight
+            ? {
+                  maxWidth: `min(${maxWidth}px, 100%)`,
+                  maxHeight: `min(${maxHeight}px, 100%)`,
+              }
+            : undefined;
 
     const srcSet = image.srcSet
         ?.sort((a, b) => a.width - b.width)
@@ -129,7 +135,6 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
                 onClick={onClick}
                 className={clsx(
                     cssClass("slide_image"),
-                    cssClass("fullsize"),
                     cover && cssClass("slide_image_cover"),
                     status !== SLIDE_STATUS_COMPLETE && cssClass("slide_image_loading")
                 )}

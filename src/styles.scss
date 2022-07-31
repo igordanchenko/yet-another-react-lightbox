@@ -79,7 +79,7 @@ $swipe-animation-timing-function: ease-out;
         }
 
         &_image {
-            object-fit: contain;
+            display: block;
             user-select: none;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
@@ -88,6 +88,8 @@ $swipe-animation-timing-function: ease-out;
             transform: translate3d(0, 0, 0);
 
             &_cover {
+                width: 100%;
+                height: 100%;
                 object-fit: cover;
             }
 

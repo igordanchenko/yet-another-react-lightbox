@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { YARL_EVENT_BACKDROP_CLICK } from "../consts.js";
 import { Component, ComponentProps, LightboxDefaultProps } from "../../types.js";
 import { cleanup, clsx, cssClass, cssVar, makeUseContext } from "../utils.js";
 import { createModule } from "../config.js";
@@ -255,6 +256,14 @@ export const Controller: Component = ({ children, ...props }) => {
                 }
             }),
         [subscribeSensors, publish]
+    );
+
+    React.useEffect(
+        () =>
+            props.controller.closeOnBackdropClick
+                ? subscribe(YARL_EVENT_BACKDROP_CLICK, () => publish("close"))
+                : () => {},
+        [props.controller.closeOnBackdropClick, publish, subscribe]
     );
 
     const clearPointer = React.useCallback((event: React.PointerEvent) => {
