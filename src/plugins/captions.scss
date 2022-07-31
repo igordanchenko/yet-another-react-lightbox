@@ -1,23 +1,30 @@
+@import "../_common";
+
+@function localVar($key, $default) {
+    @return globalVar(slide_ + $key, $default);
+}
+
 .yarl__slide {
     &_captions_container {
         position: absolute;
-        left: var(--yarl__slide_captions_container_left, 0);
-        right: var(--yarl__slide_captions_container_right, 0);
-        padding: var(--yarl__slide_captions_container_padding, 16px);
-        background: var(--yarl__slide_captions_container_background, rgba(0, 0, 0, .5));
+        left: localVar(captions_container_left, 0);
+        right: localVar(captions_container_right, 0);
+        padding: localVar(captions_container_padding, 16px);
+        background: localVar(captions_container_background, rgba(0, 0, 0, .5));
         transform: translateZ(0);
     }
 
     &_title {
-        font-size: var(--yarl__slide_title_font_size, 125%);
-        font-weight: var(--yarl__slide_title_font_weight, bolder);
+        color: localVar(title_color, $color-white);
+        font-size: localVar(title_font_size, 125%);
+        font-weight: localVar(title_font_weight, bolder);
         max-width: calc(100% - var(--yarl__toolbar_width, 0px));
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
 
         &_container {
-            top: var(--yarl__slide_title_container_top, 0);
+            top: localVar(title_container_top, 0);
         }
     }
 
@@ -26,11 +33,12 @@
         hyphens: auto;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: var(--yarl__slide_description_max_lines, 3);
-        text-align: var(--yarl__slide_description_text_align, start);
+        -webkit-line-clamp: localVar(description_max_lines, 3);
+        text-align: localVar(description_text_align, start);
+        color: localVar(description_color, $color-white);
 
         &_container {
-            bottom: var(--yarl__slide_description_container_bottom, 0);
+            bottom: localVar(description_container_bottom, 0);
         }
     }
 }

@@ -192,4 +192,5 @@ export const Slideshow: Plugin = ({ augment }) => {
     }));
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default Slideshow;

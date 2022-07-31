@@ -1,0 +1,12 @@
+@function globalVar($key, $default) {
+    @return var(--yarl__ + $key, $default);
+}
+
+$color-white: #fff;
+$color-black: #000;
+
+$color-backdrop: globalVar(color_backdrop, $color-black);
+
+$color-button: globalVar(color_button, rgba($color-white, .8));
+$color-button-active: globalVar(color_button_active, $color-white);
+$color-button-disabled: globalVar(color_button_disabled, rgba($color-white, .4));

@@ -229,4 +229,5 @@ export const Fullscreen: Plugin = ({ augment, contains, addParent }) => {
     addParent(contains("thumbnails") ? "thumbnails" : "controller", createModule("fullscreen", FullscreenContainer));
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default Fullscreen;

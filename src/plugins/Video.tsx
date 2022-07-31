@@ -229,4 +229,5 @@ export const Video: Plugin = ({ augment }) => {
     }));
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default Video;

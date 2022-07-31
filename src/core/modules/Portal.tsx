@@ -35,10 +35,7 @@ export const Portal: Component = ({ children, ...props }) => {
 
     React.useEffect(() => {
         setMounted(true);
-
-        return () => {
-            setMounted(false);
-        };
+        return () => setMounted(false);
     }, []);
 
     React.useEffect(
@@ -92,19 +89,22 @@ export const Portal: Component = ({ children, ...props }) => {
               <div
                   ref={handlePortalRef}
                   className={clsx(
+                      props.className,
+                      cssClass("root"),
                       cssClass("portal"),
                       cssClass("no_scroll_padding"),
                       visible && cssClass("portal_open")
                   )}
                   role="presentation"
                   aria-live="polite"
-                  {...(props.animation.fade !== LightboxDefaultProps.animation.fade
-                      ? {
-                            style: {
+                  style={{
+                      ...(props.animation.fade !== LightboxDefaultProps.animation.fade
+                          ? {
                                 [cssVar("fade_animation_duration")]: `${Math.round(props.animation.fade)}ms`,
-                            },
-                        }
-                      : null)}
+                            }
+                          : null),
+                      ...props.styles.root,
+                  }}
               >
                   {children}
               </div>,

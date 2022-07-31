@@ -9,9 +9,9 @@ import {
     cssClass,
     cssVar,
     ImageSlide,
-    useLayoutEffect,
     useEvents,
     useLatest,
+    useLayoutEffect,
     useMotionPreference,
     useRTL,
 } from "../core/index.js";
@@ -53,6 +53,16 @@ declare module "../types.js" {
             render: Render;
             imageFit: ImageFit;
         }) => React.ReactNode;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    interface SlotType {
+        /** thumbnail customization slot */
+        thumbnail: "thumbnail";
+        /** thumbnails track customization slot */
+        thumbnailsTrack: "thumbnailsTrack";
+        /** thumbnails container customization slot */
+        thumbnailsContainer: "thumbnailsContainer";
     }
 }
 
@@ -105,6 +115,7 @@ type ThumbnailProps = {
     placeholder: boolean;
     render: LightboxProps["render"];
     imageFit: ImageFit;
+    style?: React.CSSProperties;
 };
 
 const renderThumbnail: Render["thumbnail"] = ({ slide, render, rect, imageFit }) => {
@@ -147,6 +158,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
     placeholder,
     render,
     imageFit,
+    style,
 }) => (
     <button
         type="button"
@@ -171,6 +183,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
                       [cssVar(cssThumbnailPrefix("fadeout_delay"))]: `${fadeOut.delay}ms`,
                   }
                 : null),
+            ...style,
         }}
         onClick={onClick}
     >
@@ -190,7 +203,7 @@ type ThumbnailsTrackRefs = Pick<LightboxProps, "carousel" | "animation"> & {
     animationOverride?: number;
 };
 
-type ThumbnailsTrackProps = Pick<LightboxProps, "slides" | "carousel" | "animation" | "render"> & {
+type ThumbnailsTrackProps = Pick<LightboxProps, "slides" | "carousel" | "animation" | "render" | "styles"> & {
     container: React.RefObject<HTMLDivElement>;
     thumbnails: ThumbnailsInternal;
     startingIndex: number;
@@ -206,6 +219,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     render,
     thumbnails,
     thumbnailRect,
+    styles,
 }) => {
     const track = React.useRef<HTMLDivElement | null>(null);
 
@@ -377,9 +391,10 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                     ? { [cssVar(cssThumbnailPrefix("padding"))]: `${padding}px` }
                     : null),
                 ...(gap !== defaultThumbnailsProps.gap ? { [cssVar(cssThumbnailPrefix("gap"))]: `${gap}px` } : null),
+                ...styles.thumbnailsContainer,
             }}
         >
-            <nav ref={track} className={cssClass(cssPrefix("track"))}>
+            <nav ref={track} style={styles.thumbnailsTrack} className={cssClass(cssPrefix("track"))}>
                 {items.map(({ slide, index: slideIndex, placeholder }) => {
                     const fadeAnimationDuration =
                         (refs.current.animationOverride ?? animation.swipe) / Math.abs(offset || 1);
@@ -421,6 +436,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                             fadeOut={fadeOut}
                             placeholder={Boolean(placeholder)}
                             onClick={handleClick(slideIndex)}
+                            style={styles.thumbnail}
                         />
                     );
                 })}
@@ -437,6 +453,7 @@ export const ThumbnailsComponent: Component = ({
     carousel,
     animation,
     render,
+    styles,
     children,
 }) => {
     const thumbnails = { ...defaultThumbnailsProps, ...thumbnailsProps };
@@ -453,6 +470,7 @@ export const ThumbnailsComponent: Component = ({
             render={render}
             startingIndex={index}
             thumbnailRect={{ width: thumbnails.width, height: thumbnails.height }}
+            styles={styles}
         />
     );
 
@@ -486,4 +504,5 @@ export const Thumbnails: Plugin = ({ augment, contains, append, addParent }) => 
     }
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default Thumbnails;

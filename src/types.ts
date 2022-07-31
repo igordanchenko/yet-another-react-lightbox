@@ -39,6 +39,24 @@ export interface SlideTypes {
 /** Slide */
 export type Slide = SlideTypes[keyof SlideTypes];
 
+/** Supported customization slots */
+export interface SlotType {
+    /** lightbox root customization slot */
+    root: "root";
+    /** lightbox container customization slot */
+    container: "container";
+    /** lightbox button customization slot */
+    button: "button";
+    /** lightbox icon customization slot */
+    icon: "icon";
+}
+
+/** Customization slots */
+export type Slot = SlotType[keyof SlotType];
+
+/** Customization slots styles */
+export type SlotStyles = { [key in Slot]?: React.CSSProperties };
+
 /** Carousel settings */
 export interface CarouselSettings {
     /** if `true`, the lightbox carousel doesn't wrap around */
@@ -153,6 +171,10 @@ export interface LightboxProps {
     controller: ControllerSettings;
     /** lifecycle callbacks */
     on: Callbacks;
+    /** customization styles */
+    styles: SlotStyles;
+    /** CSS class of the lightbox root element */
+    className: string;
 }
 
 export const LightboxDefaultProps = {
@@ -182,6 +204,8 @@ export const LightboxDefaultProps = {
         closeOnBackdropClick: false,
     } as ControllerSettings,
     on: {} as Callbacks,
+    styles: {} as SlotStyles,
+    className: "",
 };
 
 /** Custom UI labels */

@@ -1,18 +1,10 @@
-$fade-animation-duration: 250ms;
-$fade-animation-timing-function: ease;
-
-$color-main: #fff;
-$color-background: #000;
+@import "./_common";
 
 $toolbar-padding: 8px;
 $icon-button-padding: 8px;
-$icon-size: 32px;
 
 $carousel-padding: 16px;
 $carousel-spacing: 30%;
-
-$swipe-animation-duration: 500ms;
-$swipe-animation-timing-function: ease-out;
 
 .yarl_ {
     &_fullsize {
@@ -23,10 +15,10 @@ $swipe-animation-timing-function: ease-out;
     &_portal {
         position: fixed;
         inset: 0;
-        z-index: 9999;
-        overflow: hidden;
         opacity: 0;
-        transition: opacity var(--yarl__fade_animation_duration, $fade-animation-duration) $fade-animation-timing-function;
+        overflow: hidden;
+        z-index: globalVar(portal_zindex, 9999);
+        transition: opacity globalVar(fade_animation_duration, 250ms) globalVar(fade_animation_timing_function, ease);
 
         &_open {
             opacity: 1;
@@ -35,14 +27,13 @@ $swipe-animation-timing-function: ease-out;
 
     &_container {
         user-select: none;
-        touch-action: var(--yarl__controller_touch_action, none);
+        touch-action: globalVar(controller_touch_action, none);
     }
 
     &_container {
         position: relative;
         overflow: hidden;
-        color: $color-main;
-        background-color: $color-background;
+        background-color: globalVar(container_background_color, $color-backdrop);
         outline: 0;
     }
 
@@ -64,17 +55,17 @@ $swipe-animation-timing-function: ease-out;
         overflow: hidden;
         inset: 0;
 
-        padding: var(--yarl__carousel_padding, $carousel-padding);
+        padding: globalVar(carousel_padding, $carousel-padding);
 
         [dir="rtl"] & {
             --yarl__direction: -1;
         }
 
-        transform: translate3d(calc(var(--yarl__slide_offset, 0) * (100% + var(--yarl__carousel_spacing, $carousel-spacing)) * var(--yarl__direction, 1)), 0, 0);
-        transition: transform var(--yarl__swipe_animation_duration, $swipe-animation-duration) $swipe-animation-timing-function;
+        transform: translate3d(calc(globalVar(slide_offset, 0) * (100% + globalVar(carousel_spacing, $carousel-spacing)) * globalVar(direction, 1)), 0, 0);
+        transition: transform globalVar(swipe_animation_duration, 500ms) globalVar(swipe_animation_timing_function, ease-out);
 
         .yarl__container_swipe & {
-            transform: translate3d(calc(var(--yarl__slide_offset, 0) * (100% + var(--yarl__carousel_spacing, $carousel-spacing)) * var(--yarl__direction, 1)), 0, 0) translate3d(var(--yarl__swipe_offset, 0px), 0, 0);
+            transform: translate3d(calc(globalVar(slide_offset, 0) * (100% + globalVar(carousel_spacing, $carousel-spacing)) * globalVar(direction, 1)), 0, 0) translate3d(globalVar(swipe_offset, 0px), 0, 0);
             transition: unset;
         }
 
@@ -107,7 +98,7 @@ $swipe-animation-timing-function: ease-out;
         }
 
         &_loading {
-            color: rgba($color-main, .8);
+            color: globalVar(slide_icon_loading_color, $color-button);
             animation: yarl__delayed_fadein 1s linear;
 
             & line {
@@ -122,9 +113,10 @@ $swipe-animation-timing-function: ease-out;
         }
 
         &_error {
-            width: 48px;
-            height: 48px;
-            color: red;
+            $icon-size: 48px;
+            width: globalVar(slide_icon_error_size, $icon-size);
+            height: globalVar(slide_icon_error_size, $icon-size);
+            color: globalVar(slide_icon_error_color, red);
         }
     }
 
@@ -143,7 +135,7 @@ $swipe-animation-timing-function: ease-out;
         inset: 0 0 auto auto;
         display: flex;
         justify-content: flex-end;
-        padding: $toolbar-padding;
+        padding: globalVar(toolbar_padding, $toolbar-padding);
 
         [dir="rtl"] & {
             inset: 0 auto auto 0;
@@ -151,43 +143,44 @@ $swipe-animation-timing-function: ease-out;
     }
 
     &_icon {
-        width: $icon-size;
-        height: $icon-size;
+        $icon-size: 32px;
+        width: globalVar(icon_size, $icon-size);
+        height: globalVar(icon_size, $icon-size);
     }
 
     &_button {
-        appearance: none;
-        background-color: transparent;
         cursor: pointer;
-        border: 0;
-        margin: 0;
+        appearance: none;
+        background-color: globalVar(button_background_color, transparent);
+        border: globalVar(button_border, 0);
+        margin: globalVar(button_margin, 0);
         outline: none;
         line-height: 0;
-        padding: $icon-button-padding;
-        color: rgba($color-main, .8);
-        filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .8));
+        padding: globalVar(button_padding, $icon-button-padding);
+        color: $color-button;
+        filter: globalVar(button_filter, drop-shadow(2px 2px 2px rgba(0, 0, 0, .8)));
         -webkit-tap-highlight-color: transparent;
 
         &:focus {
-            color: $color-main;
+            color: $color-button-active;
         }
 
         &:focus:not(:focus-visible) {
-            color: rgba($color-main, .8);
+            color: $color-button;
         }
 
         &:focus-visible {
-            color: $color-main;
+            color: $color-button-active;
         }
 
         @media (hover: hover) {
             &:hover, &:focus:hover, &:focus-visible:hover {
-                color: $color-main;
+                color: $color-button-active;
             }
         }
 
         &:disabled {
-            color: rgba($color-main, .4);
+            color: $color-button-disabled;
             cursor: default;
         }
     }
@@ -197,7 +190,7 @@ $swipe-animation-timing-function: ease-out;
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            padding: $toolbar-padding + 2 * $icon-button-padding $toolbar-padding + $icon-button-padding;
+            padding: globalVar(navigation_button_padding, $toolbar-padding + 2 * $icon-button-padding $toolbar-padding + $icon-button-padding);
         }
 
         &_prev {

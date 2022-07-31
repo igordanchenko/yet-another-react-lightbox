@@ -480,6 +480,7 @@ export const Controller: Component = ({ children, ...props }) => {
                           [cssVar("controller_touch_action")]: props.controller.touchAction,
                       }
                     : null),
+                ...props.styles.container,
             }}
             {...(props.controller.aria ? { role: "presentation", "aria-live": "polite" } : null)}
             tabIndex={-1}

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Component, Plugin } from "../types.js";
-import { createModule } from "../core/index.js";
+import { clsx, createModule, cssClass } from "../core/index.js";
 
 declare module "../types.js" {
     interface LightboxProps {
@@ -11,7 +11,11 @@ declare module "../types.js" {
 }
 
 /** Inline plugin container */
-export const InlineContainer: Component = ({ inline, children }) => <div {...inline}>{children}</div>;
+export const InlineContainer: Component = ({ inline: { className, ...rest } = {}, children }) => (
+    <div className={clsx(cssClass("root"), className)} {...rest}>
+        {children}
+    </div>
+);
 
 /** Inline plugin module */
 export const InlineModule = createModule("inline", InlineContainer);
@@ -24,6 +28,7 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
             open,
             close,
             controller: { focus, aria, touchAction, ...restController },
+            className,
             ...restProps
         }) => ({
             open: true,
@@ -32,8 +37,9 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
                 buttons: buttons.filter((button) => button !== "close"),
                 ...restToolbar,
             },
-            inline: { style: { width: "100%", height: "100%" } },
+            inline: { style: { width: "100%", height: "100%" }, className },
             controller: { focus: false, aria: true, touchAction: "pan-y", ...restController },
+            className,
             ...restProps,
         })
     );
@@ -42,4 +48,5 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
     replace("portal", InlineModule);
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default Inline;

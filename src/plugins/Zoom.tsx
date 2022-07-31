@@ -863,4 +863,5 @@ export const Zoom: Plugin = ({ augment, append }) => {
     append("controller", ZoomModule);
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default Zoom;

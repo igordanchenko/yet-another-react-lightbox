@@ -1,21 +1,8 @@
-$color-main: #fff;
-$color-controls: rgba($color-main, .8);
-$color-shadow: rgba(#000, .8);
-$color-background: #000;
+@import "../_common";
 
-$icons-size: 32px;
-
-$thumbnail-width: var(--yarl__thumbnails_thumbnail_width, 120px);
-$thumbnail-height: var(--yarl__thumbnails_thumbnail_height, 80px);
-$thumbnail-padding: var(--yarl__thumbnails_thumbnail_padding, 4px);
-$thumbnail-gap: var(--yarl__thumbnails_thumbnail_gap, 16px);
-$thumbnail-border: var(--yarl__thumbnails_thumbnail_border, 1px);
-$thumbnail-border-radius: var(--yarl__thumbnails_thumbnail_border_radius, 4px);
-
-$fadein-duration: var(--yarl__thumbnails_thumbnail_fadein_duration, .5s);
-$fadein-delay: var(--yarl__thumbnails_thumbnail_fadein_delay, 0s);
-$fadeout-duration: var(--yarl__thumbnails_thumbnail_fadeout_duration, .5s);
-$fadeout-delay: var(--yarl__thumbnails_thumbnail_fadeout_delay, 0s);
+@function localVar($key, $default) {
+    @return globalVar(thumbnails_ + $key, $default);
+}
 
 .yarl__thumbnails {
     display: flex;
@@ -42,11 +29,10 @@ $fadeout-delay: var(--yarl__thumbnails_thumbnail_fadeout_delay, 0s);
     }
 
     &_container {
-        color: $color-main;
-        background-color: $color-background;
-        overflow: hidden;
-        padding: 16px;
+        background-color: localVar(container_background_color, $color-backdrop);
+        padding: localVar(container_padding, 16px);
         position: relative;
+        overflow: hidden;
         z-index: 0;
         user-select: none;
         -webkit-touch-callout: none;
@@ -60,12 +46,12 @@ $fadeout-delay: var(--yarl__thumbnails_thumbnail_fadeout_delay, 0s);
 
     &_top &_container::before, &_bottom &_container::before {
         left: 0;
-        background: linear-gradient(to left, transparent, $color-background);
+        background: linear-gradient(to left, transparent, $color-backdrop);
     }
 
     &_top &_container::after, &_bottom &_container::after {
         right: 0;
-        background: linear-gradient(to right, transparent, $color-background);
+        background: linear-gradient(to right, transparent, $color-backdrop);
     }
 
     &_top &_container::before, &_top &_container::after, &_bottom &_container::before, &_bottom &_container::after {
@@ -76,12 +62,12 @@ $fadeout-delay: var(--yarl__thumbnails_thumbnail_fadeout_delay, 0s);
 
     &_start &_container::before, &_end &_container::before {
         top: 0;
-        background: linear-gradient(to top, transparent, $color-background);
+        background: linear-gradient(to top, transparent, $color-backdrop);
     }
 
     &_start &_container::after, &_end &_container::after {
         bottom: 0;
-        background: linear-gradient(to bottom, transparent, $color-background);
+        background: linear-gradient(to bottom, transparent, $color-backdrop);
     }
 
     &_start &_container::before, &_start &_container::after, &_end &_container::before, &_end &_container::after {
@@ -92,36 +78,36 @@ $fadeout-delay: var(--yarl__thumbnails_thumbnail_fadeout_delay, 0s);
 
     &_track {
         display: flex;
-        gap: $thumbnail-gap;
+        gap: localVar(thumbnail_gap, 16px);
     }
 
     &_thumbnail {
         cursor: pointer;
         appearance: none;
-        background: transparent;
-        border: $thumbnail-border solid $color-controls;
-        border-radius: $thumbnail-border-radius;
+        background: localVar(thumbnail_background, $color-black);
+        border: localVar(thumbnail_border, 1px solid $color-button);
+        border-radius: localVar(thumbnail_border_radius, 4px);
         -webkit-tap-highlight-color: transparent;
         flex-shrink: 0;
         position: relative;
         overflow: hidden;
-        padding: $thumbnail-padding;
+        padding: localVar(thumbnail_padding, 4px);
 
-        width: $thumbnail-width;
-        height: $thumbnail-height;
+        width: localVar(thumbnail_width, 120px);
+        height: localVar(thumbnail_height, 80px);
         box-sizing: content-box;
 
         &_active {
-            border-color: $color-main;
+            border-color: localVar(thumbnail_active_border_color, $color-button-active);
         }
 
         &_fadein {
             opacity: 0;
-            animation: yarl__thumbnails_thumbnail_fadein $fadein-duration ease-in-out $fadein-delay forwards;
+            animation: yarl__thumbnails_thumbnail_fadein localVar(thumbnail_fadein_duration, .5s) ease-in-out localVar(thumbnail_fadein_delay, 0s) forwards;
         }
 
         &_fadeout {
-            animation: yarl__thumbnails_thumbnail_fadeout $fadeout-duration ease-in-out $fadeout-delay forwards;
+            animation: yarl__thumbnails_thumbnail_fadeout localVar(thumbnail_fadeout_duration, .5s) ease-in-out localVar(thumbnail_fadeout_delay, 0s) forwards;
             cursor: unset;
         }
 
@@ -132,14 +118,14 @@ $fadeout-delay: var(--yarl__thumbnails_thumbnail_fadeout_delay, 0s);
     }
 
     &_thumbnail_icon {
-        color: $color-controls;
-        filter: drop-shadow(2px 2px 2px $color-shadow);
+        color: localVar(thumbnail_icon_color, $color-button);
+        filter: localVar(thumbnail_icon_filter, drop-shadow(2px 2px 2px rgba($color-black, .8)));
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate3d(-50%, -50%, 0);
-        width: $icons-size;
-        height: $icons-size;
+        width: localVar(thumbnail_icon_size, 32px);
+        height: localVar(thumbnail_icon_size, 32px);
     }
 
     &_contain_image {
