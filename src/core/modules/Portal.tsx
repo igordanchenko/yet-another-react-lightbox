@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { Component, LightboxDefaultProps } from "../../types.js";
+import { Component } from "../../types.js";
+import { LightboxDefaultProps } from "../../props.js";
 import { createModule } from "../config.js";
 import { clsx, cssClass, cssVar } from "../utils.js";
 import { useLatest, useMotionPreference } from "../hooks/index.js";

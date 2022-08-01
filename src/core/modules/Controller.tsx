@@ -1,7 +1,8 @@
 import * as React from "react";
 
 import { YARL_EVENT_BACKDROP_CLICK } from "../consts.js";
-import { Component, ComponentProps, LightboxDefaultProps } from "../../types.js";
+import { Component, ComponentProps } from "../../types.js";
+import { LightboxDefaultProps } from "../../props.js";
 import { cleanup, clsx, cssClass, cssVar, makeUseContext } from "../utils.js";
 import { createModule } from "../config.js";
 import {
@@ -242,8 +243,8 @@ export const Controller: Component = ({ children, ...props }) => {
     React.useEffect(
         () =>
             cleanup(
-                subscribe("prev", (_, count) => swipe("prev", typeof count === "number" ? count : undefined)),
-                subscribe("next", (_, count) => swipe("next", typeof count === "number" ? count : undefined))
+                subscribe("prev", (count) => swipe("prev", typeof count === "number" ? count : undefined)),
+                subscribe("next", (count) => swipe("next", typeof count === "number" ? count : undefined))
             ),
         [subscribe, swipe]
     );

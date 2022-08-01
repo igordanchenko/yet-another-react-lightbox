@@ -10,6 +10,7 @@ import {
     cssClass,
     IconButton,
     ImageSlide,
+    isImageSlide,
     label,
     makeUseContext,
     round,
@@ -61,6 +62,7 @@ declare module "../types.js" {
         };
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface AnimationSettings {
         /** zoom animation duration */
         zoom?: number;
@@ -257,14 +259,11 @@ const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, 
     let slideRect: ContainerRect = { width: 0, height: 0 };
     let maxSlideRect: ContainerRect = { width: 0, height: 0 };
 
-    if (rect && !("type" in slide) && "src" in slide) {
+    if (rect && isImageSlide(slide)) {
         const width = Math.max(...(slide.srcSet?.map((x) => x.width) || []).concat(slide.width ? [slide.width] : []));
 
         const height = Math.max(
-            ...(
-                slide.srcSet?.map((x) => x.height).filter((x): x is number => Boolean(x)) ??
-                (slide.aspectRatio ? [width / slide.aspectRatio] : [])
-            ).concat(slide.height ? [slide.height] : [])
+            ...(slide.srcSet?.map((x) => x.height) || []).concat(slide.height ? [slide.height] : [])
         );
 
         if (width > 0 && height > 0 && rect.width > 0 && rect.height > 0) {
@@ -770,7 +769,7 @@ const ZoomContainer: React.FC<
 
     let rendered = render.slide?.(slide, offset, scaledRect);
 
-    if (!rendered && !("type" in slide) && "src" in slide) {
+    if (!rendered && isImageSlide(slide)) {
         rendered = (
             <ImageSlide slide={slide} offset={offset} rect={scaledRect} render={render} imageFit={carousel.imageFit} />
         );
@@ -793,8 +792,7 @@ const ZoomContainer: React.FC<
 const ZoomWrapper: typeof ZoomContainer = ({ slide, offset, rect, render, carousel, animation, zoom }) => {
     const { setIsZoomSupported, isZoomSupported } = useZoom();
 
-    const imageSlide = !("type" in slide);
-    const zoomSupported = imageSlide && ("srcSet" in slide || ("width" in slide && "height" in slide));
+    const zoomSupported = isImageSlide(slide) && (Boolean(slide.srcSet) || Boolean(slide.width && slide.height));
 
     React.useEffect(() => {
         if (offset === 0 && zoomSupported !== isZoomSupported) {
@@ -821,7 +819,7 @@ const ZoomWrapper: typeof ZoomContainer = ({ slide, offset, rect, render, carous
         return <>{rendered}</>;
     }
 
-    if (imageSlide) {
+    if (isImageSlide(slide)) {
         return <ImageSlide slide={slide} offset={offset} rect={rect} render={render} imageFit={carousel.imageFit} />;
     }
 

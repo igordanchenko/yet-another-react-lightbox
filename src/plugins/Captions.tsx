@@ -118,7 +118,7 @@ export const CaptionsComponent: Component = ({ children }) => {
 
     React.useEffect(
         () =>
-            subscribe("toolbar-width", (topic, event) => {
+            subscribe("toolbar-width", (event) => {
                 if (!isDefined(event) || typeof event === "number") {
                     setToolbarWidth(event);
                 }

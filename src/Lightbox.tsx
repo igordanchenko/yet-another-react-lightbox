@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import { LightboxDefaultProps, LightboxExternalProps, LightboxProps, Node } from "./types.js";
+import { LightboxExternalProps, LightboxProps, Node } from "./types.js";
+import { LightboxDefaultProps } from "./props.js";
 import {
     CarouselModule,
     ControllerModule,

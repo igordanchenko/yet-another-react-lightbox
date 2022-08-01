@@ -3,6 +3,7 @@ import { act, render, screen } from "@testing-library/react";
 
 import { lightbox } from "../utils.js";
 import { Slideshow } from "../../src/plugins/index.js";
+import { isImageSlide } from "../../src/core/index.js";
 
 describe("Inline", () => {
     it("provides slideshow play button", () => {
@@ -19,7 +20,9 @@ describe("Inline", () => {
         render(
             lightbox({
                 slides: [{ src: "image1" }, { src: "image2" }, { src: "image3" }, { src: "image4" }],
-                render: { slide: (slide) => ("src" in slide ? React.createElement("div", null, slide.src) : null) },
+                render: {
+                    slide: (slide) => (isImageSlide(slide) ? React.createElement("div", null, slide.src) : null),
+                },
                 on: { view: onView },
                 carousel: { finite: true },
                 slideshow: { autoplay: true },

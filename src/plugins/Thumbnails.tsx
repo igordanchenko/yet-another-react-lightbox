@@ -9,6 +9,7 @@ import {
     cssClass,
     cssVar,
     ImageSlide,
+    isImageSlide,
     useEvents,
     useLatest,
     useLayoutEffect,
@@ -126,7 +127,7 @@ const renderThumbnail: Render["thumbnail"] = ({ slide, render, rect, imageFit })
 
     const thumbnailIconClass = cssClass(cssThumbnailPrefix("icon"));
 
-    if ("type" in slide) {
+    if (!isImageSlide(slide)) {
         if (slide.type === "video") {
             return (
                 <>
@@ -141,7 +142,7 @@ const renderThumbnail: Render["thumbnail"] = ({ slide, render, rect, imageFit })
                 </>
             );
         }
-    } else if ("src" in slide) {
+    } else {
         return <ImageSlide slide={slide} render={render} rect={rect} imageFit={imageFit} />;
     }
 
@@ -248,7 +249,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
 
     React.useEffect(
         () =>
-            subscribe("controller-swipe", (_, event) => {
+            subscribe("controller-swipe", (event) => {
                 if (event && typeof event === "object" && "globalIndex" in event) {
                     const { current } = refs;
 

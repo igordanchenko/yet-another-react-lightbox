@@ -44,7 +44,7 @@ export interface SlideVideo {
     /** disables the capability of remote playback */
     disableRemotePlayback?: boolean;
     /** an array of video files */
-    sources?: {
+    sources: {
         /** video source URL */
         src: string;
         /** video source type (e.g., `video/mp4`) */
@@ -214,7 +214,7 @@ export const Video: Plugin = ({ augment }) => {
     augment(({ render: { slide: renderSlide, ...restRender }, video: originalVideo, ...restProps }) => ({
         render: {
             slide: (slide, offset, rect) => {
-                if ("type" in slide && slide.type === "video") {
+                if (slide.type === "video") {
                     return <VideoSlide slide={slide} offset={offset} />;
                 }
                 return renderSlide?.(slide, offset, rect);

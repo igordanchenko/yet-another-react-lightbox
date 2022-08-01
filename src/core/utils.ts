@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Labels } from "../types.js";
+import { Labels, Slide, SlideImage } from "../types.js";
 
 export const clsx = (...classes: (string | boolean | undefined)[]) =>
     [...classes].filter((cls) => Boolean(cls)).join(" ");
@@ -39,3 +39,5 @@ export const round = (value: number, decimals = 0) => {
     const factor = 10 ** decimals;
     return Math.round((value + Number.EPSILON) * factor) / factor;
 };
+
+export const isImageSlide = (slide: Slide): slide is SlideImage => !isDefined(slide.type) || slide.type === "image";

@@ -86,13 +86,8 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
     );
 
     const maxHeight = nonInfinite(
-        Math.max(
-            ...(image.srcSet?.map((x) => x.height).filter((x): x is number => Boolean(x)) ?? []).concat(
-                image.height ? [image.height] : []
-            )
-        ),
-        // TODO v2: remove aspectRatio
-        (image.aspectRatio && maxWidth ? maxWidth / image.aspectRatio : imageRef.current?.naturalHeight) || 0
+        Math.max(...(image.srcSet?.map((x) => x.height) ?? []).concat(image.height ? [image.height] : [])),
+        imageRef.current?.naturalHeight || 0
     );
 
     const style =
@@ -111,17 +106,8 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
         .map((item) => `${item.src} ${item.width}w`)
         .join(", ");
 
-    const estimateActualWidth = () => {
-        if (rect && !cover) {
-            if (image.width && image.height) {
-                return (rect.height / image.height) * image.width;
-            }
-            if (image.aspectRatio) {
-                return rect.height * image.aspectRatio;
-            }
-        }
-        return Number.MAX_VALUE;
-    };
+    const estimateActualWidth = () =>
+        rect && !cover && image.width && image.height ? (rect.height / image.height) * image.width : Number.MAX_VALUE;
 
     const sizes =
         srcSet && rect && hasWindow() ? `${Math.round(Math.min(estimateActualWidth(), rect.width))}px` : undefined;

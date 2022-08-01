@@ -1,10 +1,11 @@
 import * as React from "react";
 
 import { YARL_EVENT_BACKDROP_CLICK } from "../consts.js";
-import { Component, LightboxDefaultProps, Slide } from "../../types.js";
+import { Component, Slide } from "../../types.js";
+import { LightboxDefaultProps } from "../../props.js";
 import { ContainerRect, useContainerRect } from "../hooks/index.js";
 import { createModule } from "../config.js";
-import { clsx, cssClass, cssVar } from "../utils.js";
+import { clsx, cssClass, cssVar, isImageSlide } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller.js";
 import { useEvents } from "../contexts/Events.js";
@@ -24,7 +25,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
     const renderSlide = (rect: ContainerRect) => {
         let rendered = render.slide?.(slide, offset, rect);
 
-        if (!rendered && "src" in slide) {
+        if (!rendered && isImageSlide(slide)) {
             rendered = (
                 <ImageSlide
                     slide={slide}

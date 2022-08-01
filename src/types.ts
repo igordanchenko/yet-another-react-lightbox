@@ -7,12 +7,12 @@ export type ImageFit = "contain" | "cover";
 
 /** Image slide properties */
 export interface SlideImage {
+    /** slide type */
+    type?: "image";
     /** image URL */
-    src?: string;
+    src: string;
     /** image 'alt' attribute */
     alt?: string;
-    /** @deprecated use `width` and `height` instead */
-    aspectRatio?: number; // TODO v2: remove
     /** image width in pixels */
     width?: number;
     /** image height in pixels */
@@ -26,7 +26,7 @@ export interface SlideImage {
         /** image width in pixels */
         width: number;
         /** image height in pixels */
-        height?: number; // TODO v2: make required
+        height: number;
     }[];
 }
 
@@ -177,37 +177,6 @@ export interface LightboxProps {
     className: string;
 }
 
-export const LightboxDefaultProps = {
-    open: false,
-    close: () => {},
-    index: 0,
-    slides: [] as Slide[],
-    render: {} as Render,
-    plugins: [] as Plugin[],
-    toolbar: { buttons: ["close"] } as ToolbarSettings,
-    labels: {} as Labels,
-    animation: {
-        fade: 330,
-        swipe: 500,
-    } as AnimationSettings,
-    carousel: {
-        finite: false,
-        preload: 2,
-        padding: "16px",
-        spacing: "30%",
-        imageFit: "contain",
-    } as CarouselSettings,
-    controller: {
-        focus: true,
-        aria: false,
-        touchAction: "none",
-        closeOnBackdropClick: false,
-    } as ControllerSettings,
-    on: {} as Callbacks,
-    styles: {} as SlotStyles,
-    className: "",
-};
-
 /** Custom UI labels */
 export type Labels = { [key: string]: string };
 
@@ -278,5 +247,5 @@ export type DeepNonNullable<T> = NonNullable<{
 /** Lightbox external props */
 export type LightboxExternalProps = DeepPartial<
     Partial<LightboxProps>,
-    "carousel" | "animation" | "render" | "toolbar" | "controller" | "on"
+    "carousel" | "animation" | "controller" | "toolbar"
 >;
