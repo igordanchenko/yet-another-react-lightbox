@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Plugin } from "../../types.js";
-import { createModule } from "../../core/index.js";
+import { createModule, MODULE_CONTROLLER, PLUGIN_CAPTIONS } from "../../core/index.js";
 import { CaptionsContextProvider } from "./CaptionsContext.js";
 import { Description } from "./Description.js";
 import { Title } from "./Title.js";
@@ -13,7 +13,7 @@ export const defaultCaptionsProps = {
 
 /** Captions plugin */
 export const Captions: Plugin = ({ augment, addParent }) => {
-    addParent("controller", createModule("captions", CaptionsContextProvider));
+    addParent(MODULE_CONTROLLER, createModule(PLUGIN_CAPTIONS, CaptionsContextProvider));
 
     augment(({ render: { slideFooter: renderFooter, ...restRender }, captions, styles, ...restProps }) => ({
         render: {

@@ -1,4 +1,5 @@
 import { LightboxProps } from "./types.js";
+import { ACTION_CLOSE, IMAGE_FIT_CONTAIN } from "./core/consts.js";
 
 export const LightboxDefaultProps: LightboxProps = {
     open: false,
@@ -7,7 +8,7 @@ export const LightboxDefaultProps: LightboxProps = {
     slides: [],
     render: {},
     plugins: [],
-    toolbar: { buttons: ["close"] },
+    toolbar: { buttons: [ACTION_CLOSE] },
     labels: {},
     animation: {
         fade: 330,
@@ -18,7 +19,7 @@ export const LightboxDefaultProps: LightboxProps = {
         preload: 2,
         padding: "16px",
         spacing: "30%",
-        imageFit: "contain",
+        imageFit: IMAGE_FIT_CONTAIN,
     },
     controller: {
         focus: true,

@@ -1,22 +1,33 @@
 import * as React from "react";
 
 import {
+    CLASS_FLEX_CENTER,
+    CLASS_FULLSIZE,
     cleanup,
     clsx,
     ContainerRect,
     cssClass,
+    EVENT_ON_KEY_DOWN,
+    EVENT_ON_POINTER_CANCEL,
+    EVENT_ON_POINTER_DOWN,
+    EVENT_ON_POINTER_LEAVE,
+    EVENT_ON_POINTER_MOVE,
+    EVENT_ON_POINTER_UP,
+    EVENT_ON_WHEEL,
     ImageSlide,
     isImageSlide,
     round,
     useContainerRect,
     useController,
+    useEventCallback,
     useEvents,
     useLayoutEffect,
     useMotionPreference,
 } from "../../core/index.js";
-import { DeepNonNullable, LightboxProps, Slide } from "../../types.js";
+import { LightboxProps, Slide } from "../../types.js";
 import { useZoom } from "./ZoomContext.js";
 import { defaultZoomProps } from "./Zoom.js";
+import { ACTION_ZOOM_IN, ACTION_ZOOM_OUT } from "./index.js";
 
 const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, rect?: ContainerRect) => {
     let slideRect: ContainerRect = { width: 0, height: 0 };
@@ -60,30 +71,6 @@ const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, 
 const distance = (pointerA: React.MouseEvent, pointerB: React.MouseEvent) =>
     ((pointerA.clientX - pointerB.clientX) ** 2 + (pointerA.clientY - pointerB.clientY) ** 2) ** 0.5;
 
-type ZoomContainerState = {
-    zoom: number;
-    offsetX: number;
-    offsetY: number;
-};
-
-type ZoomContainerRefs = {
-    state: ZoomContainerState;
-    slideRect: ContainerRect;
-    containerRef: React.MutableRefObject<HTMLElement | null>;
-    controllerRef: React.MutableRefObject<HTMLElement | null>;
-    containerRect?: ContainerRect;
-    controllerRect?: ContainerRect;
-    maxZoom: number;
-    zoomAnimation?: Animation;
-    zoomAnimationStart?: CSSStyleDeclaration["transform"];
-    zoomAnimationDuration?: number;
-    pinchZoomDistance?: number;
-    reduceMotion: boolean;
-    activePointers: React.PointerEvent[];
-    lastPointerDown: number;
-    zoomProps: DeepNonNullable<LightboxProps["zoom"]>;
-};
-
 /** Zoom container */
 export const ZoomContainer: React.FC<
     Pick<LightboxProps, "render" | "carousel" | "zoom" | "animation"> & {
@@ -94,159 +81,111 @@ export const ZoomContainer: React.FC<
 > = ({ slide, offset, rect, render, carousel, animation, zoom: originalZoomProps }) => {
     const zoomProps = { ...defaultZoomProps, ...originalZoomProps };
 
+    const [zoom, setZoom] = React.useState(1);
+    const [offsetX, setOffsetX] = React.useState(0);
+    const [offsetY, setOffsetY] = React.useState(0);
+
+    const activePointers = React.useRef<React.PointerEvent[]>([]);
+    const lastPointerDown = React.useRef(0);
+    const zoomAnimation = React.useRef<Animation>();
+    const zoomAnimationStart = React.useRef<CSSStyleDeclaration["transform"]>();
+    const pinchZoomDistance = React.useRef<number>();
+
     const { isMinZoom, isMaxZoom, setIsMinZoom, setIsMaxZoom } = useZoom();
-
-    const {
-        setContainerRef,
-        containerRef: currentContainerRef,
-        containerRect: currentContainerRect,
-    } = useContainerRect();
-
-    const {
-        subscribeSensors,
-        containerRef: currentControllerRef,
-        containerRect: currentControllerRect,
-    } = useController();
-
+    const { setContainerRef, containerRef, containerRect } = useContainerRect();
+    const { subscribeSensors, containerRef: controllerRef, containerRect: controllerRect } = useController();
     const { subscribe } = useEvents();
+    const reduceMotion = useMotionPreference();
 
-    const currentReduceMotion = useMotionPreference();
-
-    const { slideRect: currentSlideRect, maxSlideRect: currentMaxSlideRect } = getSlideRects(
+    const { slideRect, maxSlideRect: currentMaxSlideRect } = getSlideRects(
         slide,
         carousel.imageFit === "cover" || ("imageFit" in slide && slide.imageFit === "cover"),
         zoomProps.maxZoomPixelRatio,
-        currentContainerRect
+        containerRect
     );
 
-    const currentMaxZoom = currentSlideRect.width
-        ? Math.max(round(currentMaxSlideRect.width / currentSlideRect.width, 5), 1)
-        : 1;
+    const maxZoom = slideRect.width ? Math.max(round(currentMaxSlideRect.width / slideRect.width, 5), 1) : 1;
 
-    const [state, setState] = React.useState<ZoomContainerState>({ zoom: 1, offsetX: 0, offsetY: 0 });
+    const changeOffsets = useEventCallback((dx?: number, dy?: number, targetZoom?: number) => {
+        const newZoom = targetZoom || zoom;
 
-    const refs = React.useRef<ZoomContainerRefs>({
-        state,
-        slideRect: currentSlideRect,
-        containerRef: currentContainerRef,
-        controllerRef: currentControllerRef,
-        containerRect: currentContainerRect,
-        controllerRect: currentControllerRect,
-        maxZoom: currentMaxZoom,
-        reduceMotion: currentReduceMotion,
-        activePointers: [],
-        lastPointerDown: 0,
-        zoomProps,
-    });
-
-    refs.current.state = state;
-    refs.current.slideRect = currentSlideRect;
-    refs.current.containerRef = currentContainerRef;
-    refs.current.controllerRef = currentControllerRef;
-    refs.current.containerRect = currentContainerRect;
-    refs.current.controllerRect = currentControllerRect;
-    refs.current.maxZoom = currentMaxZoom;
-    refs.current.reduceMotion = currentReduceMotion;
-    refs.current.zoomAnimationDuration = animation.zoom;
-    refs.current.zoomProps = zoomProps;
-
-    const changeOffsets = React.useCallback((dx?: number, dy?: number, newZoom?: number) => {
-        const {
-            state: { zoom, offsetX, offsetY },
-            containerRect,
-            slideRect,
-        } = refs.current;
-
-        const targetZoom = newZoom || zoom;
         const newOffsetX = offsetX - (dx || 0);
         const newOffsetY = offsetY - (dy || 0);
 
-        const maxOffsetX = containerRect ? (slideRect.width * targetZoom - containerRect.width) / 2 / targetZoom : 0;
-        const maxOffsetY = containerRect ? (slideRect.height * targetZoom - containerRect.height) / 2 / targetZoom : 0;
+        const maxOffsetX = containerRect ? (slideRect.width * newZoom - containerRect.width) / 2 / newZoom : 0;
+        const maxOffsetY = containerRect ? (slideRect.height * newZoom - containerRect.height) / 2 / newZoom : 0;
 
-        setState((prev) => ({
-            ...prev,
-            offsetX: Math.min(Math.abs(newOffsetX), Math.max(maxOffsetX, 0)) * Math.sign(newOffsetX),
-            offsetY: Math.min(Math.abs(newOffsetY), Math.max(maxOffsetY, 0)) * Math.sign(newOffsetY),
-        }));
-    }, []);
+        setOffsetX(Math.min(Math.abs(newOffsetX), Math.max(maxOffsetX, 0)) * Math.sign(newOffsetX));
+        setOffsetY(Math.min(Math.abs(newOffsetY), Math.max(maxOffsetY, 0)) * Math.sign(newOffsetY));
+    });
 
-    const changeZoom = React.useCallback(
-        (value: number, rapid?: boolean, dx?: number, dy?: number) => {
-            const { current } = refs;
-            const {
-                state: { zoom },
-                containerRef,
-                containerRect,
-                maxZoom,
-            } = current;
+    const changeZoom = useEventCallback((value: number, rapid?: boolean, dx?: number, dy?: number) => {
+        if (!containerRef.current || !containerRect) return;
 
-            if (!containerRef.current || !containerRect) return;
+        const newZoom = round(Math.min(Math.max(value + 0.001 < maxZoom ? value : maxZoom, 1), maxZoom), 5);
 
-            const newZoom = round(Math.min(Math.max(value + 0.001 < maxZoom ? value : maxZoom, 1), maxZoom), 5);
+        if (newZoom === zoom) return;
 
-            if (newZoom === zoom) return;
+        if (!rapid) {
+            zoomAnimationStart.current = window.getComputedStyle(containerRef.current).transform;
+        }
 
-            if (!rapid) {
-                current.zoomAnimationStart = window.getComputedStyle(containerRef.current).transform;
-            }
+        changeOffsets(dx ? dx * (1 / zoom - 1 / newZoom) : 0, dy ? dy * (1 / zoom - 1 / newZoom) : 0, newZoom);
 
-            changeOffsets(dx ? dx * (1 / zoom - 1 / newZoom) : 0, dy ? dy * (1 / zoom - 1 / newZoom) : 0, newZoom);
+        setZoom(newZoom);
+    });
 
-            setState((prev) => ({ ...prev, zoom: newZoom }));
-        },
-        [changeOffsets]
-    );
-
-    useLayoutEffect(() => {
-        if (refs.current.state.zoom > 1) {
-            const {
-                maxZoom,
-                state: { zoom: currentZoom },
-            } = refs.current;
-
-            if (currentZoom > maxZoom) {
+    const handleControllerRectChange = useEventCallback(() => {
+        if (zoom > 1) {
+            if (zoom > maxZoom) {
                 changeZoom(maxZoom, true);
             }
 
             changeOffsets();
         }
-    }, [currentControllerRect.width, currentControllerRect.height, changeOffsets, changeZoom]);
+    });
 
-    useLayoutEffect(() => {
-        const { current } = refs;
-        const { zoomAnimation, zoomAnimationStart, zoomAnimationDuration, reduceMotion, containerRef } = current;
+    useLayoutEffect(handleControllerRectChange, [
+        controllerRect.width,
+        controllerRect.height,
+        handleControllerRectChange,
+    ]);
 
-        zoomAnimation?.cancel();
+    const handleZoomAndOffsetChange = useEventCallback(() => {
+        zoomAnimation.current?.cancel();
 
-        if (zoomAnimationStart && containerRef.current) {
-            current.zoomAnimation = containerRef.current.animate?.(
+        if (zoomAnimationStart.current && containerRef.current) {
+            zoomAnimation.current = containerRef.current.animate?.(
                 [
-                    { transform: zoomAnimationStart },
+                    { transform: zoomAnimationStart.current },
                     {
-                        transform: `scale(${state.zoom}) translate3d(${state.offsetX}px, ${state.offsetY}px, 0)`,
+                        transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)`,
                     },
                 ],
                 {
-                    duration: reduceMotion ? 0 : zoomAnimationDuration ?? 500,
+                    duration: reduceMotion ? 0 : animation.zoom ?? 500,
                     easing: zoomAnimation ? "ease-out" : "ease-in-out",
                 }
             );
 
-            current.zoomAnimationStart = undefined;
+            zoomAnimationStart.current = undefined;
 
-            if (current.zoomAnimation) {
-                current.zoomAnimation.onfinish = () => {
-                    current.zoomAnimation = undefined;
+            if (zoomAnimation.current) {
+                zoomAnimation.current.onfinish = () => {
+                    zoomAnimation.current = undefined;
                 };
             }
         }
-    }, [state.zoom, state.offsetX, state.offsetY]);
+    });
+
+    useLayoutEffect(handleZoomAndOffsetChange, [zoom, offsetX, offsetY, handleZoomAndOffsetChange]);
 
     useLayoutEffect(() => {
         if (offset === 0) {
             const resetZoom = () => {
-                setState({ zoom: 1, offsetX: 0, offsetY: 0 });
+                setZoom(1);
+                setOffsetX(0);
+                setOffsetY(0);
 
                 setIsMinZoom(true);
                 setIsMaxZoom(false);
@@ -264,231 +203,191 @@ export const ZoomContainer: React.FC<
 
     useLayoutEffect(() => {
         if (offset === 0) {
-            const newMinZoom = state.zoom <= 1;
+            const newMinZoom = zoom <= 1;
             if (newMinZoom !== isMinZoom) {
                 setIsMinZoom(newMinZoom);
             }
 
-            const newMaxZoom = state.zoom >= currentMaxZoom;
+            const newMaxZoom = zoom >= maxZoom;
             if (newMaxZoom !== isMaxZoom) {
                 setIsMaxZoom(newMaxZoom);
             }
         }
-    }, [offset, state.zoom, currentMaxZoom, isMinZoom, isMaxZoom, setIsMinZoom, setIsMaxZoom]);
+    }, [offset, zoom, maxZoom, isMinZoom, isMaxZoom, setIsMinZoom, setIsMaxZoom]);
 
-    const translateCoordinates = React.useCallback((event: React.MouseEvent) => {
-        const { controllerRef } = refs.current;
-        if (controllerRef.current) {
-            const { pageX, pageY } = event;
-            const { scrollX, scrollY } = window;
-            const { left, top, width, height } = controllerRef.current.getBoundingClientRect();
-            return [pageX - left - scrollX - width / 2, pageY - top - scrollY - height / 2];
-        }
-        return [];
-    }, []);
-
-    const onKeyDown = React.useCallback(
-        (event: React.KeyboardEvent) => {
-            const {
-                state: { zoom },
-                zoomProps: { keyboardMoveDistance, zoomInMultiplier },
-            } = refs.current;
-
-            const preventDefault = () => {
-                event.preventDefault();
-                event.stopPropagation();
-            };
-
-            if (zoom > 1) {
-                const move = (deltaX: number, deltaY: number) => {
-                    preventDefault();
-                    changeOffsets(deltaX, deltaY);
-                };
-
-                if (event.key === "ArrowDown") {
-                    move(0, keyboardMoveDistance);
-                } else if (event.key === "ArrowUp") {
-                    move(0, -keyboardMoveDistance);
-                } else if (event.key === "ArrowLeft") {
-                    move(-keyboardMoveDistance, 0);
-                } else if (event.key === "ArrowRight") {
-                    move(keyboardMoveDistance, 0);
-                }
+    const translateCoordinates = React.useCallback(
+        (event: React.MouseEvent) => {
+            if (controllerRef.current) {
+                const { pageX, pageY } = event;
+                const { scrollX, scrollY } = window;
+                const { left, top, width, height } = controllerRef.current.getBoundingClientRect();
+                return [pageX - left - scrollX - width / 2, pageY - top - scrollY - height / 2];
             }
+            return [];
+        },
+        [controllerRef]
+    );
 
-            const handleChangeZoom = (zoomValue: number) => {
+    const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+        const { keyboardMoveDistance, zoomInMultiplier } = zoomProps;
+
+        const preventDefault = () => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+
+        if (zoom > 1) {
+            const move = (deltaX: number, deltaY: number) => {
                 preventDefault();
-                changeZoom(zoomValue);
+                changeOffsets(deltaX, deltaY);
             };
 
-            const hasMeta = () => event.getModifierState("Meta") || event.getModifierState("OS");
-
-            if (event.key === "+" || (event.key === "=" && hasMeta())) {
-                handleChangeZoom(zoom * zoomInMultiplier);
-            } else if (event.key === "-" || (event.key === "_" && hasMeta())) {
-                handleChangeZoom(zoom / zoomInMultiplier);
-            } else if (event.key === "0" && hasMeta()) {
-                handleChangeZoom(1);
+            if (event.key === "ArrowDown") {
+                move(0, keyboardMoveDistance);
+            } else if (event.key === "ArrowUp") {
+                move(0, -keyboardMoveDistance);
+            } else if (event.key === "ArrowLeft") {
+                move(-keyboardMoveDistance, 0);
+            } else if (event.key === "ArrowRight") {
+                move(keyboardMoveDistance, 0);
             }
-        },
-        [changeZoom, changeOffsets]
-    );
+        }
 
-    const onWheel = React.useCallback(
-        (event: React.WheelEvent) => {
-            const {
-                state: { zoom },
-                zoomProps: { wheelZoomDistanceFactor, scrollToZoom },
-            } = refs.current;
+        const handleChangeZoom = (zoomValue: number) => {
+            preventDefault();
+            changeZoom(zoomValue);
+        };
 
-            if (event.ctrlKey || scrollToZoom) {
-                if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-                    event.stopPropagation();
+        const hasMeta = () => event.getModifierState("Meta") || event.getModifierState("OS");
 
-                    changeZoom(
-                        zoom * (1 - event.deltaY / wheelZoomDistanceFactor),
-                        true,
-                        ...translateCoordinates(event)
-                    );
+        if (event.key === "+" || (event.key === "=" && hasMeta())) {
+            handleChangeZoom(zoom * zoomInMultiplier);
+        } else if (event.key === "-" || (event.key === "_" && hasMeta())) {
+            handleChangeZoom(zoom / zoomInMultiplier);
+        } else if (event.key === "0" && hasMeta()) {
+            handleChangeZoom(1);
+        }
+    });
 
-                    return;
-                }
-            }
+    const onWheel = useEventCallback((event: React.WheelEvent) => {
+        const { wheelZoomDistanceFactor, scrollToZoom } = zoomProps;
 
-            if (zoom > 1) {
+        if (event.ctrlKey || scrollToZoom) {
+            if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
                 event.stopPropagation();
 
-                if (!scrollToZoom) {
-                    changeOffsets(event.deltaX, event.deltaY);
-                }
+                changeZoom(zoom * (1 - event.deltaY / wheelZoomDistanceFactor), true, ...translateCoordinates(event));
+
+                return;
             }
-        },
-        [changeZoom, changeOffsets, translateCoordinates]
-    );
+        }
+
+        if (zoom > 1) {
+            event.stopPropagation();
+
+            if (!scrollToZoom) {
+                changeOffsets(event.deltaX, event.deltaY);
+            }
+        }
+    });
 
     const clearPointer = React.useCallback((event: React.PointerEvent) => {
-        const { activePointers } = refs.current;
-
-        activePointers.splice(
-            0,
-            activePointers.length,
-            ...activePointers.filter((p) => p.pointerId !== event.pointerId)
-        );
+        const pointers = activePointers.current;
+        pointers.splice(0, pointers.length, ...pointers.filter((p) => p.pointerId !== event.pointerId));
     }, []);
 
     const replacePointer = React.useCallback(
         (event: React.PointerEvent) => {
             clearPointer(event);
-
-            refs.current.activePointers.push(event);
+            activePointers.current.push(event);
         },
         [clearPointer]
     );
 
-    const onPointerDown = React.useCallback(
-        (event: React.PointerEvent) => {
-            const { current } = refs;
-            const {
-                state: { zoom },
-                containerRef,
-                activePointers,
-                lastPointerDown,
-                maxZoom,
-                zoomProps: { doubleTapDelay, doubleClickDelay, zoomInMultiplier, doubleClickMaxStops },
-            } = current;
+    const onPointerDown = useEventCallback((event: React.PointerEvent) => {
+        const { doubleTapDelay, doubleClickDelay, zoomInMultiplier, doubleClickMaxStops } = zoomProps;
+        const pointers = activePointers.current;
 
-            if (!containerRef.current?.contains(event.target as unknown as Element)) {
-                return;
-            }
+        if (!containerRef.current?.contains(event.target as unknown as Element)) {
+            return;
+        }
 
-            if (zoom > 1) {
-                event.stopPropagation();
-            }
+        if (zoom > 1) {
+            event.stopPropagation();
+        }
 
-            const { timeStamp } = event;
-            if (
-                activePointers.length === 0 &&
-                timeStamp - lastPointerDown < (event.pointerType === "touch" ? doubleTapDelay : doubleClickDelay)
-            ) {
-                current.lastPointerDown = 0;
-                changeZoom(
-                    zoom !== maxZoom ? zoom * Math.max(maxZoom ** (1 / doubleClickMaxStops), zoomInMultiplier) : 1,
-                    false,
-                    ...translateCoordinates(event)
-                );
-            } else {
-                current.lastPointerDown = timeStamp;
-            }
+        const { timeStamp } = event;
+        if (
+            pointers.length === 0 &&
+            timeStamp - lastPointerDown.current < (event.pointerType === "touch" ? doubleTapDelay : doubleClickDelay)
+        ) {
+            lastPointerDown.current = 0;
+            changeZoom(
+                zoom !== maxZoom ? zoom * Math.max(maxZoom ** (1 / doubleClickMaxStops), zoomInMultiplier) : 1,
+                false,
+                ...translateCoordinates(event)
+            );
+        } else {
+            lastPointerDown.current = timeStamp;
+        }
+
+        replacePointer(event);
+
+        if (pointers.length === 2) {
+            pinchZoomDistance.current = distance(pointers[0], pointers[1]);
+        }
+    });
+
+    const onPointerMove = useEventCallback((event: React.PointerEvent) => {
+        const pointers = activePointers.current;
+
+        const activePointer = pointers.find((p) => p.pointerId === event.pointerId);
+
+        if (pointers.length === 2 && pinchZoomDistance.current) {
+            event.stopPropagation();
 
             replacePointer(event);
 
-            if (activePointers.length === 2) {
-                current.pinchZoomDistance = distance(activePointers[0], activePointers[1]);
+            const currentDistance = distance(pointers[0], pointers[1]);
+            const delta = currentDistance - pinchZoomDistance.current;
+
+            if (Math.abs(delta) > 0) {
+                changeZoom(
+                    zoom * (1 + delta / zoomProps.pinchZoomDistanceFactor),
+                    true,
+                    ...pointers
+                        .map((x) => translateCoordinates(x))
+                        .reduce((acc, coordinate) => coordinate.map((x, i) => acc[i] + x / 2))
+                );
+
+                pinchZoomDistance.current = currentDistance;
             }
-        },
-        [changeZoom, replacePointer, translateCoordinates]
-    );
 
-    const onPointerMove = React.useCallback(
-        (event: React.PointerEvent) => {
-            const { current } = refs;
-            const {
-                state: { zoom },
-                activePointers,
-                pinchZoomDistance,
-                zoomProps: { pinchZoomDistanceFactor },
-            } = current;
+            return;
+        }
 
-            const activePointer = activePointers.find((p) => p.pointerId === event.pointerId);
+        if (zoom > 1) {
+            event.stopPropagation();
 
-            if (activePointers.length === 2 && pinchZoomDistance) {
-                event.stopPropagation();
+            if (activePointer) {
+                if (pointers.length === 1) {
+                    changeOffsets(
+                        (activePointer.clientX - event.clientX) / zoom,
+                        (activePointer.clientY - event.clientY) / zoom
+                    );
+                }
 
                 replacePointer(event);
-
-                const currentDistance = distance(activePointers[0], activePointers[1]);
-                const delta = currentDistance - pinchZoomDistance;
-
-                if (Math.abs(delta) > 0) {
-                    changeZoom(
-                        zoom * (1 + delta / pinchZoomDistanceFactor),
-                        true,
-                        ...activePointers
-                            .map((x) => translateCoordinates(x))
-                            .reduce((acc, coordinate) => coordinate.map((x, i) => acc[i] + x / 2))
-                    );
-
-                    current.pinchZoomDistance = currentDistance;
-                }
-
-                return;
             }
-
-            if (zoom > 1) {
-                event.stopPropagation();
-
-                if (activePointer) {
-                    if (activePointers.length === 1) {
-                        changeOffsets(
-                            (activePointer.clientX - event.clientX) / zoom,
-                            (activePointer.clientY - event.clientY) / zoom
-                        );
-                    }
-
-                    replacePointer(event);
-                }
-            }
-        },
-        [changeOffsets, replacePointer, changeZoom, translateCoordinates]
-    );
+        }
+    });
 
     const onPointerUp = React.useCallback(
         (event: React.PointerEvent) => {
-            const { current } = refs;
-            const { activePointers } = current;
+            const pointers = activePointers.current;
 
-            if (activePointers.length === 2 && activePointers.find((p) => p.pointerId === event.pointerId)) {
-                current.pinchZoomDistance = undefined;
+            if (pointers.length === 2 && pointers.find((p) => p.pointerId === event.pointerId)) {
+                pinchZoomDistance.current = undefined;
             }
 
             clearPointer(event);
@@ -496,31 +395,43 @@ export const ZoomContainer: React.FC<
         [clearPointer]
     );
 
+    const handleZoomIn = useEventCallback(() => {
+        changeZoom(zoom * zoomProps.zoomInMultiplier);
+    });
+
+    const handleZoomOut = useEventCallback(() => {
+        changeZoom(zoom / zoomProps.zoomInMultiplier);
+    });
+
     React.useEffect(
         () =>
             offset === 0
                 ? cleanup(
-                      subscribe("zoom-in", () =>
-                          changeZoom(refs.current.state.zoom * refs.current.zoomProps.zoomInMultiplier)
-                      ),
-                      subscribe("zoom-out", () =>
-                          changeZoom(refs.current.state.zoom / refs.current.zoomProps.zoomInMultiplier)
-                      ),
-                      subscribeSensors("onKeyDown", onKeyDown),
-                      subscribeSensors("onWheel", onWheel),
-                      subscribeSensors("onPointerDown", onPointerDown),
-                      subscribeSensors("onPointerMove", onPointerMove),
-                      subscribeSensors("onPointerUp", onPointerUp),
-                      subscribeSensors("onPointerLeave", onPointerUp),
-                      subscribeSensors("onPointerCancel", onPointerUp)
+                      subscribe(ACTION_ZOOM_IN, handleZoomIn),
+                      subscribe(ACTION_ZOOM_OUT, handleZoomOut),
+                      subscribeSensors(EVENT_ON_KEY_DOWN, onKeyDown),
+                      subscribeSensors(EVENT_ON_WHEEL, onWheel),
+                      subscribeSensors(EVENT_ON_POINTER_DOWN, onPointerDown),
+                      subscribeSensors(EVENT_ON_POINTER_MOVE, onPointerMove),
+                      subscribeSensors(EVENT_ON_POINTER_UP, onPointerUp),
+                      subscribeSensors(EVENT_ON_POINTER_LEAVE, onPointerUp),
+                      subscribeSensors(EVENT_ON_POINTER_CANCEL, onPointerUp)
                   )
                 : () => {},
-        [offset, subscribe, subscribeSensors, onKeyDown, onPointerDown, onPointerMove, onPointerUp, onWheel, changeZoom]
+        [
+            offset,
+            subscribe,
+            subscribeSensors,
+            onKeyDown,
+            onPointerDown,
+            onPointerMove,
+            onPointerUp,
+            onWheel,
+            changeZoom,
+            handleZoomIn,
+            handleZoomOut,
+        ]
     );
-
-    const {
-        state: { zoom, offsetX, offsetY },
-    } = refs.current;
 
     const scaledRect =
         offset === 0
@@ -541,9 +452,9 @@ export const ZoomContainer: React.FC<
     return rendered ? (
         <div
             ref={setContainerRef}
-            className={clsx(cssClass("fullsize"), cssClass("flex_center"))}
+            className={clsx(cssClass(CLASS_FULLSIZE), cssClass(CLASS_FLEX_CENTER))}
             {...(offset === 0
-                ? { style: { transform: `scale(${zoom}) translate3d(${offsetX}px, ${offsetY}px, 0)` } }
+                ? { style: { transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)` } }
                 : null)}
         >
             {rendered}

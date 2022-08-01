@@ -4,12 +4,13 @@ import {
     ACTIVE_SLIDE_COMPLETE,
     ACTIVE_SLIDE_LOADING,
     ACTIVE_SLIDE_PLAYING,
+    CLASS_FLEX_CENTER,
     clsx,
     cssClass,
     useContainerRect,
     useController,
+    useEventCallback,
     useEvents,
-    useLatest,
 } from "../../core/index.js";
 import { LightboxProps } from "../../types.js";
 import { SlideVideo } from "./index.js";
@@ -22,12 +23,11 @@ type VideoSlideProps = {
 
 /** Video slide */
 export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
-    const { latestProps } = useController();
     const { publish } = useEvents();
     const { setContainerRef, containerRect } = useContainerRect();
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
-    const video = { ...defaultVideoProps, ...latestProps.current.video };
+    const video = { ...defaultVideoProps, ...useController().getLightboxProps().video };
 
     React.useEffect(() => {
         if (offset !== 0 && videoRef.current && !videoRef.current.paused) {
@@ -43,24 +43,21 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
         }
     }, [offset, video.autoPlay, slide.autoPlay, publish]);
 
-    const latestOffset = useLatest(offset);
-    const latestVideoAutoPlay = useLatest(video.autoPlay);
-    const latestSlideAutoPlay = useLatest(slide.autoPlay);
+    const handleVideoRef = useEventCallback((node: HTMLVideoElement) => {
+        if (offset === 0 && (video.autoPlay || slide.autoPlay) && node.paused) {
+            node.play().catch(() => {});
+        }
+    });
 
     const setVideoRef = React.useCallback(
-        (el: HTMLVideoElement | null) => {
-            videoRef.current = el;
+        (node: HTMLVideoElement | null) => {
+            videoRef.current = node;
 
-            if (
-                el &&
-                latestOffset.current === 0 &&
-                (latestVideoAutoPlay.current || latestSlideAutoPlay.current) &&
-                el.paused
-            ) {
-                el.play().catch(() => {});
+            if (node) {
+                handleVideoRef(node);
             }
         },
-        [latestOffset, latestVideoAutoPlay, latestSlideAutoPlay]
+        [handleVideoRef]
     );
 
     const { width, height, poster, sources } = slide;
@@ -106,7 +103,7 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
                         // even without devicePixelRatio adjustment
                         ...(width ? { maxWidth: `${width}px` } : null),
                     }}
-                    className={clsx(cssClass("video_container"), cssClass("flex_center"))}
+                    className={clsx(cssClass("video_container"), cssClass(CLASS_FLEX_CENTER))}
                 >
                     {containerRect && (
                         // eslint-disable-next-line jsx-a11y/media-has-caption

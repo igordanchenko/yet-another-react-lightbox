@@ -3,7 +3,7 @@ import * as React from "react";
 import { isDefined, makeUseContext } from "../utils.js";
 
 export type TimeoutsContextType = {
-    setTimeout: (func: () => void, time?: number) => number;
+    setTimeout: (fn: () => void, delay?: number) => number;
     clearTimeout: (id?: number) => void;
 };
 
@@ -12,16 +12,19 @@ const TimeoutsContext = React.createContext<TimeoutsContextType | null>(null);
 export const useTimeouts = makeUseContext("useTimeouts", "TimeoutsContext", TimeoutsContext);
 
 export const TimeoutsProvider = ({ children }: React.PropsWithChildren<{}>) => {
-    const timeouts = React.useRef<number[]>([]);
+    const [timeouts] = React.useState<number[]>([]);
 
-    React.useEffect(() => {
-        timeouts.current.forEach((tid) => window.clearTimeout(tid));
-        timeouts.current.splice(0, timeouts.current.length);
-    }, []);
+    React.useEffect(
+        () => () => {
+            timeouts.forEach((tid) => window.clearTimeout(tid));
+            timeouts.splice(0, timeouts.length);
+        },
+        [timeouts]
+    );
 
     const context = React.useMemo(() => {
         const removeTimeout = (id: number) => {
-            timeouts.current.splice(0, timeouts.current.length, ...timeouts.current.filter((tid) => tid !== id));
+            timeouts.splice(0, timeouts.length, ...timeouts.filter((tid) => tid !== id));
         };
 
         const setTimeout = (fn: () => void, delay?: number) => {
@@ -29,7 +32,7 @@ export const TimeoutsProvider = ({ children }: React.PropsWithChildren<{}>) => {
                 removeTimeout(id);
                 fn();
             }, delay);
-            timeouts.current.push(id);
+            timeouts.push(id);
             return id;
         };
 
@@ -41,7 +44,7 @@ export const TimeoutsProvider = ({ children }: React.PropsWithChildren<{}>) => {
         };
 
         return { setTimeout, clearTimeout };
-    }, []);
+    }, [timeouts]);
 
     return <TimeoutsContext.Provider value={context}>{children}</TimeoutsContext.Provider>;
 };

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, IconButton, label, useLatest } from "../../core/index.js";
+import { createIcon, IconButton, label, useEventCallback } from "../../core/index.js";
 import { LightboxProps } from "../../types.js";
 import { useFullscreen } from "./FullscreenContext.js";
 
@@ -23,9 +23,8 @@ export type FullscreenButtonProps = Pick<LightboxProps, "labels" | "render"> & {
 export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels, render }) => {
     const [mounted, setMounted] = React.useState(false);
     const [fullscreen, setFullscreen] = React.useState(false);
-    const latestAuto = useLatest(auto);
 
-    const { containerRef } = useFullscreen();
+    const containerRef = useFullscreen();
 
     const isFullscreenEnabled = () =>
         document.fullscreenEnabled ??
@@ -96,7 +95,10 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels
         }
     }, [containerRef, getFullscreenElement]);
 
-    React.useEffect(() => setMounted(true), []);
+    React.useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
 
     React.useEffect(() => {
         const events = ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"];
@@ -112,13 +114,19 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels
         };
     }, [fullscreenChangeListener]);
 
-    React.useEffect(() => () => exitFullscreen(), [exitFullscreen]);
-
-    React.useEffect(() => {
-        if (latestAuto.current) {
+    const handleAutoFullscreen = useEventCallback(() => {
+        if (auto) {
             requestFullscreen();
         }
-    }, [latestAuto, requestFullscreen]);
+    });
+
+    React.useEffect(() => {
+        handleAutoFullscreen();
+
+        return () => {
+            exitFullscreen();
+        };
+    }, [handleAutoFullscreen, exitFullscreen]);
 
     if (!mounted || !isFullscreenEnabled()) return null;
 

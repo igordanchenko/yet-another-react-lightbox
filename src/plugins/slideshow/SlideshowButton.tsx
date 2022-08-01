@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import {
+    ACTION_NEXT,
     ACTIVE_SLIDE_COMPLETE,
     ACTIVE_SLIDE_ERROR,
     ACTIVE_SLIDE_LOADING,
@@ -15,8 +16,9 @@ import {
     SLIDE_STATUS_PLAYING,
     SlideStatus,
     useController,
+    useEventCallback,
     useEvents,
-    useLatest,
+    useLightboxState,
     useTimeouts,
 } from "../../core/index.js";
 import { defaultSlideshowProps } from "./Slideshow.js";
@@ -25,34 +27,27 @@ const PlayIcon = createIcon("Play", <path d="M8 5v14l11-7z" />);
 
 const PauseIcon = createIcon("Pause", <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />);
 
-type SlideshowButtonRefs = {
-    playing: boolean;
-    delay: number;
-    currentIndex: number;
-    finite: boolean;
-    slidesCount: number;
-};
-
 export const SlideshowButton: React.FC = () => {
-    const { currentIndex, latestProps } = useController();
+    const {
+        state: { currentIndex },
+    } = useLightboxState();
+    const { getLightboxProps } = useController();
     const { setTimeout, clearTimeout } = useTimeouts();
     const { publish, subscribe } = useEvents();
 
-    const slideshow = {
-        ...defaultSlideshowProps,
-        ...latestProps.current.slideshow,
-    };
+    const {
+        slideshow: slideshowProps,
+        carousel: { finite },
+        slides,
+        render,
+        labels,
+    } = getLightboxProps();
+    const slidesCount = slides.length;
+
+    const slideshow = { ...defaultSlideshowProps, ...slideshowProps };
 
     const [playing, setPlaying] = React.useState(slideshow.autoplay);
     const scheduler = React.useRef<number>();
-
-    const refs = useLatest<SlideshowButtonRefs>({
-        playing,
-        delay: slideshow.delay,
-        currentIndex,
-        finite: latestProps.current.carousel.finite,
-        slidesCount: latestProps.current.slides.length,
-    });
 
     const slideStatus = React.useRef<SlideStatus | undefined>();
 
@@ -61,16 +56,13 @@ export const SlideshowButton: React.FC = () => {
         scheduler.current = undefined;
     }, [clearTimeout]);
 
-    const reachedLastSlide = React.useCallback(
-        () => refs.current.finite && refs.current.currentIndex === refs.current.slidesCount - 1,
-        [refs]
-    );
+    const reachedLastSlide = useEventCallback(() => finite && currentIndex === slidesCount - 1);
 
-    const scheduleNextSlide = React.useCallback(() => {
+    const scheduleNextSlide = useEventCallback(() => {
         cancelScheduler();
 
         if (
-            !refs.current.playing ||
+            !playing ||
             reachedLastSlide() ||
             slideStatus.current === SLIDE_STATUS_LOADING ||
             slideStatus.current === SLIDE_STATUS_PLAYING
@@ -79,20 +71,18 @@ export const SlideshowButton: React.FC = () => {
         }
 
         scheduler.current = setTimeout(() => {
-            if (refs.current.playing) {
+            if (playing) {
                 slideStatus.current = undefined;
-                publish("next");
+                publish(ACTION_NEXT);
             }
-        }, refs.current.delay);
-    }, [publish, setTimeout, cancelScheduler, refs, reachedLastSlide]);
+        }, slideshow.delay);
+    });
 
     const togglePlaying = React.useCallback(() => {
         setPlaying((prev) => !prev);
     }, []);
 
-    React.useEffect(() => {
-        scheduleNextSlide();
-    }, [currentIndex, playing, scheduleNextSlide]);
+    React.useEffect(scheduleNextSlide, [currentIndex, playing, scheduleNextSlide]);
 
     React.useEffect(() => {
         if (playing && reachedLastSlide()) {
@@ -118,12 +108,12 @@ export const SlideshowButton: React.FC = () => {
                 subscribe(ACTIVE_SLIDE_COMPLETE, () => {
                     slideStatus.current = SLIDE_STATUS_COMPLETE;
                     scheduleNextSlide();
-                })
+                }),
+                cancelScheduler
             ),
         [subscribe, cancelScheduler, scheduleNextSlide]
     );
 
-    const { render, labels } = latestProps.current;
     const disabled = reachedLastSlide();
 
     return render.buttonSlideshow ? (

@@ -2,12 +2,17 @@ import * as React from "react";
 
 import { Component } from "../../types.js";
 import { createModule } from "../config.js";
-import { EventsProvider, TimeoutsProvider } from "../contexts/index.js";
+import { EventsProvider, LightboxStateProvider, TimeoutsProvider } from "../contexts/index.js";
+import { MODULE_CORE } from "../consts.js";
 
-export const Core: Component = ({ children }) => (
+export const Core: Component = ({ slides, index, children }) => (
     <TimeoutsProvider>
-        <EventsProvider>{children}</EventsProvider>
+        <EventsProvider>
+            <LightboxStateProvider slidesCount={slides.length} initialIndex={index}>
+                {children}
+            </LightboxStateProvider>
+        </EventsProvider>
     </TimeoutsProvider>
 );
 
-export const CoreModule = createModule("core", Core);
+export const CoreModule = createModule(MODULE_CORE, Core);

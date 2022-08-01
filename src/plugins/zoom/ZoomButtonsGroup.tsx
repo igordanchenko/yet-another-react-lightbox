@@ -3,6 +3,7 @@ import * as React from "react";
 import { LightboxProps } from "../../types.js";
 import { useController } from "../../core/index.js";
 import { ZoomButton } from "./ZoomButton.js";
+import { ACTION_ZOOM_IN, ACTION_ZOOM_OUT } from "./index.js";
 
 type ZoomButtonsGroupProps = Pick<LightboxProps, "labels" | "render">;
 
@@ -30,13 +31,19 @@ export const ZoomButtonsGroup: React.FC<ZoomButtonsGroupProps> = ({ labels, rend
         <>
             <ZoomButton
                 ref={zoomInRef}
-                key="zoomIn"
+                key={ACTION_ZOOM_IN}
                 zoomIn
                 labels={labels}
                 render={render}
                 onLoseFocus={focusZoomOut}
             />
-            <ZoomButton ref={zoomOutRef} key="zoomOut" labels={labels} render={render} onLoseFocus={focusZoomIn} />
+            <ZoomButton
+                ref={zoomOutRef}
+                key={ACTION_ZOOM_OUT}
+                labels={labels}
+                render={render}
+                onLoseFocus={focusZoomIn}
+            />
         </>
     );
 };

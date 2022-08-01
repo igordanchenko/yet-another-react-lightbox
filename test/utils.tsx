@@ -5,11 +5,8 @@ import Lightbox from "../src/index.js";
 
 export const lightbox = (props?: Parameters<typeof Lightbox>[0]) => <Lightbox open {...props} />;
 
-export const querySelectorAll = (selector: string) => screen.getByRole("presentation").querySelectorAll(selector);
+export const querySelector = (selector: string) => screen.getByRole("presentation").querySelector(selector);
 
-export const findCurrentSlide = () =>
-    Array.from(querySelectorAll("div.yarl__slide")).find((el) =>
-        el.getAttribute("style")?.includes("--yarl__slide_offset: 0")
-    );
+export const findCurrentSlide = () => querySelector("div.yarl__slide_current");
 
 export const findCurrentImage = () => findCurrentSlide()?.querySelector("img")?.src;

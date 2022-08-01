@@ -11,6 +11,10 @@ export const cssClass = (name: string) => `${cssPrefix}${name}`;
 
 export const cssVar = (name: string) => `--${cssPrefix}${name}`;
 
+export const composePrefix = (base: string, prefix?: string) => `${base}${prefix ? `_${prefix}` : ""}`;
+
+export const makeComposePrefix = (base: string) => (prefix?: string) => composePrefix(base, prefix);
+
 export const label = (labels: Labels | undefined, lbl: string) => (labels && labels[lbl] ? labels[lbl] : lbl);
 
 export const cleanup =
@@ -35,9 +39,24 @@ export const hasWindow = () => typeof window !== "undefined";
 
 export const isDefined = <T = any>(x: T | undefined): x is T => typeof x !== "undefined";
 
+export const isNumber = (value: any): value is number => typeof value === "number";
+
 export const round = (value: number, decimals = 0) => {
     const factor = 10 ** decimals;
     return Math.round((value + Number.EPSILON) * factor) / factor;
 };
 
 export const isImageSlide = (slide: Slide): slide is SlideImage => !isDefined(slide.type) || slide.type === "image";
+
+export const parseSpacing = (spacing: unknown) => {
+    if (typeof spacing === "number") {
+        return { pixel: spacing };
+    }
+
+    if (typeof spacing === "string") {
+        const value = parseInt(spacing, 10);
+        return spacing.endsWith("%") ? { percent: value } : { pixel: value };
+    }
+
+    return { pixel: 0 };
+};

@@ -3,6 +3,7 @@ import * as React from "react";
 import { LightboxProps } from "../../types.js";
 import { createIcon, IconButton, label, useEvents } from "../../core/index.js";
 import { useZoom } from "./ZoomContext.js";
+import { ACTION_ZOOM_IN, ACTION_ZOOM_OUT } from "./index.js";
 
 const ZoomInIcon = createIcon(
     "ZoomIn",
@@ -34,7 +35,7 @@ export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>(
 
         const disabled = !isZoomSupported || (zoomIn ? isMaxZoom : isMinZoom);
 
-        const onClick = () => publish(zoomIn ? "zoom-in" : "zoom-out");
+        const onClick = () => publish(zoomIn ? ACTION_ZOOM_IN : ACTION_ZOOM_OUT);
 
         const onFocus = React.useCallback(() => {
             wasFocused.current = true;

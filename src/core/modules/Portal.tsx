@@ -4,9 +4,12 @@ import * as ReactDOM from "react-dom";
 import { Component } from "../../types.js";
 import { LightboxDefaultProps } from "../../props.js";
 import { createModule } from "../config.js";
-import { clsx, cssClass, cssVar } from "../utils.js";
-import { useLatest, useMotionPreference } from "../hooks/index.js";
+import { clsx, composePrefix, cssClass, cssVar } from "../utils.js";
+import { useEventCallback, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
+import { ACTION_CLOSE, CLASS_NO_SCROLL_PADDING, MODULE_PORTAL } from "../consts.js";
+
+const cssPrefix = (value?: string) => composePrefix(MODULE_PORTAL, value);
 
 const setAttribute = (element: Element, attribute: string, value: string) => {
     const previousValue = element.getAttribute(attribute);
@@ -22,89 +25,99 @@ const setAttribute = (element: Element, attribute: string, value: string) => {
     };
 };
 
-export const Portal: Component = ({ children, ...props }) => {
+export const Portal: Component = ({ children, animation, styles, className, on, close }) => {
     const [mounted, setMounted] = React.useState(false);
     const [visible, setVisible] = React.useState(false);
 
     const cleanup = React.useRef<(() => void)[]>([]);
 
-    const latestProps = useLatest(props);
-    const latestAnimationDuration = useLatest(!useMotionPreference() ? props.animation.fade : 0);
-
     const { setTimeout } = useTimeouts();
     const { subscribe } = useEvents();
 
+    const fadeAnimationDuration = !useMotionPreference() ? animation.fade : 0;
+
     React.useEffect(() => {
         setMounted(true);
-        return () => setMounted(false);
+
+        return () => {
+            setMounted(false);
+            setVisible(false);
+        };
     }, []);
 
-    React.useEffect(
-        () =>
-            subscribe("close", () => {
-                setVisible(false);
+    const handleClose = useEventCallback(() => {
+        setVisible(false);
 
-                latestProps.current.on.exiting?.();
+        on.exiting?.();
 
-                setTimeout(() => {
-                    latestProps.current.on.exited?.();
+        setTimeout(() => {
+            on.exited?.();
 
-                    latestProps.current.close();
-                }, latestAnimationDuration.current);
-            }),
-        [setTimeout, subscribe, latestProps, latestAnimationDuration]
-    );
+            close();
+        }, fadeAnimationDuration);
+    });
 
-    const handlePortalRef = React.useCallback(
+    React.useEffect(() => subscribe(ACTION_CLOSE, handleClose), [subscribe, handleClose]);
+
+    const handleEnter = useEventCallback((node: HTMLDivElement) => {
+        // reflow
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        node.scrollTop;
+
+        setVisible(true);
+
+        on.entering?.();
+
+        const elements = node.parentNode?.children ?? [];
+        for (let i = 0; i < elements.length; i += 1) {
+            const element = elements[i];
+            if (["TEMPLATE", "SCRIPT", "STYLE"].indexOf(element.tagName) === -1 && element !== node) {
+                cleanup.current.push(setAttribute(element, "inert", "true"));
+                cleanup.current.push(setAttribute(element, "aria-hidden", "true"));
+            }
+        }
+
+        setTimeout(() => {
+            on.entered?.();
+        }, fadeAnimationDuration);
+    });
+
+    const handleExit = useEventCallback(() => {
+        cleanup.current.forEach((clean) => clean());
+        cleanup.current = [];
+    });
+
+    const handleRef = React.useCallback(
         (node: HTMLDivElement | null) => {
             if (node) {
-                // reflow
-                node.getBoundingClientRect();
-
-                setVisible(true);
-
-                latestProps.current.on.entering?.();
-
-                const elements = node.parentNode?.children ?? [];
-                for (let i = 0; i < elements.length; i += 1) {
-                    const element = elements[i];
-                    if (["TEMPLATE", "SCRIPT", "STYLE"].indexOf(element.tagName) === -1 && element !== node) {
-                        cleanup.current.push(setAttribute(element, "inert", "true"));
-                        cleanup.current.push(setAttribute(element, "aria-hidden", "true"));
-                    }
-                }
-
-                setTimeout(() => {
-                    latestProps.current.on.entered?.();
-                }, latestAnimationDuration.current);
+                handleEnter(node);
             } else {
-                cleanup.current.forEach((clean) => clean());
-                cleanup.current = [];
+                handleExit();
             }
         },
-        [setTimeout, latestProps, latestAnimationDuration]
+        [handleEnter, handleExit]
     );
 
     return mounted
         ? ReactDOM.createPortal(
               <div
-                  ref={handlePortalRef}
+                  ref={handleRef}
                   className={clsx(
-                      props.className,
+                      className,
                       cssClass("root"),
-                      cssClass("portal"),
-                      cssClass("no_scroll_padding"),
-                      visible && cssClass("portal_open")
+                      cssClass(cssPrefix()),
+                      cssClass(CLASS_NO_SCROLL_PADDING),
+                      visible && cssClass(cssPrefix("open"))
                   )}
                   role="presentation"
                   aria-live="polite"
                   style={{
-                      ...(props.animation.fade !== LightboxDefaultProps.animation.fade
+                      ...(animation.fade !== LightboxDefaultProps.animation.fade
                           ? {
-                                [cssVar("fade_animation_duration")]: `${Math.round(props.animation.fade)}ms`,
+                                [cssVar("fade_animation_duration")]: `${fadeAnimationDuration}ms`,
                             }
                           : null),
-                      ...props.styles.root,
+                      ...styles.root,
                   }}
               >
                   {children}
@@ -114,4 +127,4 @@ export const Portal: Component = ({ children, ...props }) => {
         : null;
 };
 
-export const PortalModule = createModule("portal", Portal);
+export const PortalModule = createModule(MODULE_PORTAL, Portal);

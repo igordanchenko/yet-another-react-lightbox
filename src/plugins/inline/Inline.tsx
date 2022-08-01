@@ -1,7 +1,15 @@
 import * as React from "react";
 
 import { Component, Plugin } from "../../types.js";
-import { clsx, createModule, cssClass } from "../../core/index.js";
+import {
+    ACTION_CLOSE,
+    clsx,
+    createModule,
+    cssClass,
+    MODULE_NO_SCROLL,
+    MODULE_PORTAL,
+    PLUGIN_INLINE,
+} from "../../core/index.js";
 
 /** Inline plugin container */
 const InlineContainer: Component = ({ inline: { className, ...rest } = {}, children }) => (
@@ -24,7 +32,7 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
             open: true,
             close: () => {},
             toolbar: {
-                buttons: buttons.filter((button) => button !== "close"),
+                buttons: buttons.filter((button) => button !== ACTION_CLOSE),
                 ...restToolbar,
             },
             inline: { style: { width: "100%", height: "100%" }, className },
@@ -34,6 +42,6 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
         })
     );
 
-    remove("no-scroll");
-    replace("portal", createModule("inline", InlineContainer));
+    remove(MODULE_NO_SCROLL);
+    replace(MODULE_PORTAL, createModule(PLUGIN_INLINE, InlineContainer));
 };

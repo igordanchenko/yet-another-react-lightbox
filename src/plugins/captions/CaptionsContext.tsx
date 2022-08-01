@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { isDefined, makeUseContext, useEvents } from "../../core/index.js";
+import { isDefined, isNumber, makeUseContext, useEvents } from "../../core/index.js";
 
 type CaptionsContextType = {
     toolbarWidth?: number;
@@ -19,7 +19,7 @@ export const CaptionsContextProvider: React.FC<React.PropsWithChildren> = ({ chi
     React.useEffect(
         () =>
             subscribe("toolbar-width", (event) => {
-                if (!isDefined(event) || typeof event === "number") {
+                if (!isDefined(event) || isNumber(event)) {
                     setToolbarWidth(event);
                 }
             }),

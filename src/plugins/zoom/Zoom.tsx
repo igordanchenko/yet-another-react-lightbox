@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Plugin } from "../../types.js";
-import { createModule } from "../../core/index.js";
+import { createModule, MODULE_CONTROLLER, PLUGIN_ZOOM } from "../../core/index.js";
 import { ZoomContextProvider } from "./ZoomContext.js";
 import { ZoomButtonsGroup } from "./ZoomButtonsGroup.js";
 import { ZoomWrapper } from "./ZoomWrapper.js";
@@ -22,7 +22,7 @@ export const defaultZoomProps = {
 export const Zoom: Plugin = ({ augment, append }) => {
     augment(({ toolbar: { buttons, ...restToolbar }, render, carousel, animation, zoom, ...restProps }) => ({
         toolbar: {
-            buttons: [<ZoomButtonsGroup key="zoom" labels={restProps.labels} render={render} />, ...buttons],
+            buttons: [<ZoomButtonsGroup key={PLUGIN_ZOOM} labels={restProps.labels} render={render} />, ...buttons],
             ...restToolbar,
         },
         render: {
@@ -48,5 +48,5 @@ export const Zoom: Plugin = ({ augment, append }) => {
         ...restProps,
     }));
 
-    append("controller", createModule("zoom", ZoomContextProvider));
+    append(MODULE_CONTROLLER, createModule(PLUGIN_ZOOM, ZoomContextProvider));
 };

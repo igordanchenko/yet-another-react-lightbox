@@ -1,17 +1,24 @@
 import * as React from "react";
 
 import { ImageFit, Render, SlideImage } from "../../types.js";
-import { clsx, cssClass, hasWindow } from "../utils.js";
-import { ContainerRect, useLatest } from "../hooks/index.js";
+import { clsx, cssClass, hasWindow, makeComposePrefix } from "../utils.js";
+import { ContainerRect, useEventCallback } from "../hooks/index.js";
 import { useEvents } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
 import {
     activeSlideStatus,
+    ELEMENT_ICON,
+    IMAGE_FIT_CONTAIN,
+    IMAGE_FIT_COVER,
     SLIDE_STATUS_COMPLETE,
     SLIDE_STATUS_ERROR,
     SLIDE_STATUS_LOADING,
+    SLIDE_STATUS_PLACEHOLDER,
     SlideStatus,
 } from "../consts.js";
+
+const slidePrefix = makeComposePrefix("slide");
+const slideImagePrefix = makeComposePrefix("slide_image");
 
 export type ImageSlideProps = {
     slide: SlideImage;
@@ -24,7 +31,6 @@ export type ImageSlideProps = {
 
 export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onClick }: ImageSlideProps) => {
     const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
-    const latestStatus = useLatest(status);
 
     const { publish } = useEvents();
 
@@ -36,23 +42,20 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
         }
     }, [offset, status, publish]);
 
-    const handleLoading = React.useCallback(
-        (img: HTMLImageElement) => {
-            if (latestStatus.current === SLIDE_STATUS_COMPLETE) {
-                return;
-            }
+    const handleLoading = useEventCallback((img: HTMLImageElement) => {
+        if (status === SLIDE_STATUS_COMPLETE) {
+            return;
+        }
 
-            ("decode" in img ? img.decode() : Promise.resolve())
-                .catch(() => {})
-                .then(() => {
-                    if (!img.parentNode) {
-                        return;
-                    }
-                    setStatus(SLIDE_STATUS_COMPLETE);
-                });
-        },
-        [latestStatus]
-    );
+        ("decode" in img ? img.decode() : Promise.resolve())
+            .catch(() => {})
+            .then(() => {
+                if (!img.parentNode) {
+                    return;
+                }
+                setStatus(SLIDE_STATUS_COMPLETE);
+            });
+    });
 
     const setImageRef = React.useCallback(
         (img: HTMLImageElement | null) => {
@@ -76,7 +79,8 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
         setStatus(SLIDE_STATUS_ERROR);
     }, []);
 
-    const cover = image.imageFit === "cover" || (image.imageFit !== "contain" && imageFit === "cover");
+    const cover =
+        image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
 
     const nonInfinite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
 
@@ -121,9 +125,9 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
                 onError={onError}
                 onClick={onClick}
                 className={clsx(
-                    cssClass("slide_image"),
-                    cover && cssClass("slide_image_cover"),
-                    status !== SLIDE_STATUS_COMPLETE && cssClass("slide_image_loading")
+                    cssClass(slideImagePrefix()),
+                    cover && cssClass(slideImagePrefix("cover")),
+                    status !== SLIDE_STATUS_COMPLETE && cssClass(slideImagePrefix("loading"))
                 )}
                 draggable={false}
                 alt={image.alt}
@@ -134,18 +138,22 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
             />
 
             {status !== SLIDE_STATUS_COMPLETE && (
-                <div className={cssClass("slide_placeholder")}>
+                <div className={cssClass(slidePrefix(SLIDE_STATUS_PLACEHOLDER))}>
                     {status === SLIDE_STATUS_LOADING &&
                         (render?.iconLoading ? (
                             render.iconLoading()
                         ) : (
-                            <LoadingIcon className={clsx(cssClass("icon"), cssClass("slide_loading"))} />
+                            <LoadingIcon
+                                className={clsx(cssClass(ELEMENT_ICON), cssClass(slidePrefix(SLIDE_STATUS_LOADING)))}
+                            />
                         ))}
                     {status === SLIDE_STATUS_ERROR &&
                         (render?.iconError ? (
                             render.iconError()
                         ) : (
-                            <ErrorIcon className={clsx(cssClass("icon"), cssClass("slide_error"))} />
+                            <ErrorIcon
+                                className={clsx(cssClass(ELEMENT_ICON), cssClass(slidePrefix(SLIDE_STATUS_ERROR)))}
+                            />
                         ))}
                 </div>
             )}

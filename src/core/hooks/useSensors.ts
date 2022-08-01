@@ -1,14 +1,22 @@
 import * as React from "react";
 
+import {
+    EVENT_ON_KEY_DOWN,
+    EVENT_ON_KEY_UP,
+    EVENT_ON_POINTER_CANCEL,
+    EVENT_ON_POINTER_DOWN,
+    EVENT_ON_POINTER_LEAVE,
+    EVENT_ON_POINTER_MOVE,
+    EVENT_ON_POINTER_UP,
+    EVENT_ON_WHEEL,
+} from "../consts.js";
+
 export type PointerEventType = "onPointerDown" | "onPointerMove" | "onPointerUp" | "onPointerLeave" | "onPointerCancel";
-export type TouchEventType = "onTouchStart" | "onTouchMove" | "onTouchEnd" | "onTouchCancel";
 export type KeyboardEventType = "onKeyDown" | "onKeyUp";
 export type WheelEventType = "onWheel";
-export type SupportedEventType = PointerEventType | TouchEventType | KeyboardEventType | WheelEventType;
+export type SupportedEventType = PointerEventType | KeyboardEventType | WheelEventType;
 
-export type ReactEventType<T, K> = K extends TouchEventType
-    ? React.TouchEvent<T>
-    : K extends KeyboardEventType
+export type ReactEventType<T, K> = K extends KeyboardEventType
     ? React.KeyboardEvent<T>
     : K extends WheelEventType
     ? React.WheelEvent<T>
@@ -16,10 +24,9 @@ export type ReactEventType<T, K> = K extends TouchEventType
     ? React.PointerEvent<T>
     : never;
 
-export type EventCallback<
-    T,
-    P extends React.PointerEvent<T> | React.TouchEvent<T> | React.KeyboardEvent<T> | React.WheelEvent<T>
-> = (event: P) => void;
+export type EventCallback<T, P extends React.PointerEvent<T> | React.KeyboardEvent<T> | React.WheelEvent<T>> = (
+    event: P
+) => void;
 
 export type SubscribeSensors<T> = <ET extends SupportedEventType>(
     type: ET,
@@ -27,7 +34,6 @@ export type SubscribeSensors<T> = <ET extends SupportedEventType>(
 ) => () => void;
 
 export type RegisterSensors<T> = Required<Pick<React.HTMLAttributes<T>, PointerEventType>> &
-    Required<Pick<React.HTMLAttributes<T>, TouchEventType>> &
     Required<Pick<React.HTMLAttributes<T>, KeyboardEventType>> &
     Required<Pick<React.HTMLAttributes<T>, WheelEventType>>;
 
@@ -48,18 +54,14 @@ export const useSensors = <T extends Element>(): UseSensors<T> => {
 
         return {
             registerSensors: {
-                onPointerDown: (event: React.PointerEvent<T>) => notifySubscribers("onPointerDown", event),
-                onPointerMove: (event: React.PointerEvent<T>) => notifySubscribers("onPointerMove", event),
-                onPointerUp: (event: React.PointerEvent<T>) => notifySubscribers("onPointerUp", event),
-                onPointerLeave: (event: React.PointerEvent<T>) => notifySubscribers("onPointerLeave", event),
-                onPointerCancel: (event: React.PointerEvent<T>) => notifySubscribers("onPointerCancel", event),
-                onTouchStart: (event: React.TouchEvent<T>) => notifySubscribers("onTouchStart", event),
-                onTouchMove: (event: React.TouchEvent<T>) => notifySubscribers("onTouchMove", event),
-                onTouchEnd: (event: React.TouchEvent<T>) => notifySubscribers("onTouchEnd", event),
-                onTouchCancel: (event: React.TouchEvent<T>) => notifySubscribers("onTouchCancel", event),
-                onKeyDown: (event: React.KeyboardEvent<T>) => notifySubscribers("onKeyDown", event),
-                onKeyUp: (event: React.KeyboardEvent<T>) => notifySubscribers("onKeyUp", event),
-                onWheel: (event: React.WheelEvent<T>) => notifySubscribers("onWheel", event),
+                onPointerDown: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_DOWN, event),
+                onPointerMove: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_MOVE, event),
+                onPointerUp: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_UP, event),
+                onPointerLeave: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_LEAVE, event),
+                onPointerCancel: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_CANCEL, event),
+                onKeyDown: (event: React.KeyboardEvent<T>) => notifySubscribers(EVENT_ON_KEY_DOWN, event),
+                onKeyUp: (event: React.KeyboardEvent<T>) => notifySubscribers(EVENT_ON_KEY_UP, event),
+                onWheel: (event: React.WheelEvent<T>) => notifySubscribers(EVENT_ON_WHEEL, event),
             },
             subscribeSensors: <ET extends SupportedEventType>(
                 type: ET,

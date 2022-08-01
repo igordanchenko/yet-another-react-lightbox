@@ -4,7 +4,7 @@ import { ImageFit, Slide } from "../../types.js";
 import { ContainerRect } from "../../core/index.js";
 import { Thumbnails } from "./Thumbnails.js";
 
-export type Position = "top" | "bottom" | "start" | "end";
+type Position = "top" | "bottom" | "start" | "end";
 
 declare module "../../types" {
     interface LightboxProps {

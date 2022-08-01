@@ -3,6 +3,9 @@ import * as React from "react";
 import { LightboxProps } from "../../types.js";
 import { Zoom } from "./Zoom.js";
 
+export const ACTION_ZOOM_IN = "zoom-in";
+export const ACTION_ZOOM_OUT = "zoom-out";
+
 /** Custom zoom button render function */
 type RenderZoomButton = ({
     ref,
