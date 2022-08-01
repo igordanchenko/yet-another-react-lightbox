@@ -5,8 +5,10 @@ import { ContainerRect } from "./core/hooks/useContainerRect.js";
 /** Image fit setting */
 export type ImageFit = "contain" | "cover";
 
+export interface GenericSlide {}
+
 /** Image slide properties */
-export interface SlideImage {
+export interface SlideImage extends GenericSlide {
     /** slide type */
     type?: "image";
     /** image URL */

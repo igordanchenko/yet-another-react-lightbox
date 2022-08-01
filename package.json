@@ -10,15 +10,15 @@
         ".": "./dist/index.js",
         "./core": "./dist/core/index.js",
         "./plugins": "./dist/plugins/index.js",
-        "./plugins/captions": "./dist/plugins/Captions.js",
-        "./plugins/captions.css": "./dist/plugins/captions.css",
-        "./plugins/fullscreen": "./dist/plugins/Fullscreen.js",
-        "./plugins/inline": "./dist/plugins/Inline.js",
-        "./plugins/slideshow": "./dist/plugins/Slideshow.js",
-        "./plugins/thumbnails": "./dist/plugins/Thumbnails.js",
-        "./plugins/thumbnails.css": "./dist/plugins/thumbnails.css",
-        "./plugins/video": "./dist/plugins/Video.js",
-        "./plugins/zoom": "./dist/plugins/Zoom.js",
+        "./plugins/captions": "./dist/plugins/captions/index.js",
+        "./plugins/captions.css": "./dist/plugins/captions/styles.css",
+        "./plugins/fullscreen": "./dist/plugins/fullscreen/index.js",
+        "./plugins/inline": "./dist/plugins/inline/index.js",
+        "./plugins/slideshow": "./dist/plugins/slideshow/index.js",
+        "./plugins/thumbnails": "./dist/plugins/thumbnails/index.js",
+        "./plugins/thumbnails.css": "./dist/plugins/thumbnails/styles.css",
+        "./plugins/video": "./dist/plugins/video/index.js",
+        "./plugins/zoom": "./dist/plugins/zoom/index.js",
         "./styles.css": "./dist/styles.css"
     },
     "types": "dist/index.d.ts",
@@ -34,25 +34,25 @@
                 "dist/plugins/index.d.ts"
             ],
             "plugins/captions": [
-                "dist/plugins/Captions.d.ts"
+                "dist/plugins/captions/index.d.ts"
             ],
             "plugins/fullscreen": [
-                "dist/plugins/Fullscreen.d.ts"
+                "dist/plugins/fullscreen/index.d.ts"
             ],
             "plugins/inline": [
-                "dist/plugins/Inline.d.ts"
+                "dist/plugins/inline/index.d.ts"
             ],
             "plugins/slideshow": [
-                "dist/plugins/Slideshow.d.ts"
+                "dist/plugins/slideshow/index.d.ts"
             ],
             "plugins/thumbnails": [
-                "dist/plugins/Thumbnails.d.ts"
+                "dist/plugins/thumbnails/index.d.ts"
             ],
             "plugins/video": [
-                "dist/plugins/Video.d.ts"
+                "dist/plugins/video/index.d.ts"
             ],
             "plugins/zoom": [
-                "dist/plugins/Zoom.d.ts"
+                "dist/plugins/zoom/index.d.ts"
             ]
         }
     },

@@ -1,4 +1,4 @@
-@import "../_common";
+@import "../../common";
 
 @function localVar($key, $default) {
     @return globalVar(thumbnails_ + $key, $default);

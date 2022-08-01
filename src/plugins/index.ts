@@ -1,7 +1,7 @@
-export * from "./Captions.js";
-export * from "./Fullscreen.js";
-export * from "./Inline.js";
-export * from "./Slideshow.js";
-export * from "./Thumbnails.js";
-export * from "./Video.js";
-export * from "./Zoom.js";
+export { default as Captions } from "./captions/index.js";
+export { default as Fullscreen } from "./fullscreen/index.js";
+export { default as Inline } from "./inline/index.js";
+export { default as Slideshow } from "./slideshow/index.js";
+export { default as Thumbnails } from "./thumbnails/index.js";
+export { default as Video } from "./video/index.js";
+export { default as Zoom } from "./zoom/index.js";

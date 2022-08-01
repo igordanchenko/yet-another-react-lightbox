@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component, DeepNonNullable, ImageFit, LightboxProps, Plugin, Render, Slide } from "../types.js";
+import { Component, DeepNonNullable, ImageFit, LightboxProps, Plugin, Render, Slide } from "../../types.js";
 import {
     clsx,
     ContainerRect,
@@ -15,69 +15,20 @@ import {
     useLayoutEffect,
     useMotionPreference,
     useRTL,
-} from "../core/index.js";
-
-export type Position = "top" | "bottom" | "start" | "end";
-
-declare module "../types.js" {
-    interface LightboxProps {
-        /** Thumbnails plugin settings */
-        thumbnails?: {
-            /** thumbnails position */
-            position?: Position;
-            /** thumbnail width */
-            width?: number;
-            /** thumbnail height */
-            height?: number;
-            /** thumbnail border width */
-            border?: number;
-            /** thumbnail border radius */
-            borderRadius?: number;
-            /** thumbnail inner padding */
-            padding?: number;
-            /** gap between thumbnails */
-            gap?: number;
-            /** `object-fit` setting */
-            imageFit?: ImageFit;
-        };
-    }
-
-    interface Render {
-        thumbnail?: ({
-            slide,
-            rect,
-            render,
-            imageFit,
-        }: {
-            slide: Slide;
-            rect: ContainerRect;
-            render: Render;
-            imageFit: ImageFit;
-        }) => React.ReactNode;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    interface SlotType {
-        /** thumbnail customization slot */
-        thumbnail: "thumbnail";
-        /** thumbnails track customization slot */
-        thumbnailsTrack: "thumbnailsTrack";
-        /** thumbnails container customization slot */
-        thumbnailsContainer: "thumbnailsContainer";
-    }
-}
+} from "../../core/index.js";
+import { Position } from "./index.js";
 
 type ThumbnailsInternal = DeepNonNullable<LightboxProps["thumbnails"]>;
 
-const defaultThumbnailsProps: ThumbnailsInternal = {
-    position: "bottom",
+const defaultThumbnailsProps = {
+    position: "bottom" as const,
     width: 120,
     height: 80,
     border: 1,
     borderRadius: 4,
     padding: 4,
     gap: 16,
-    imageFit: "contain",
+    imageFit: "contain" as const,
 };
 
 const VideoThumbnailIcon = createIcon(
@@ -504,6 +455,3 @@ export const Thumbnails: Plugin = ({ augment, contains, append, addParent }) => 
         addParent("controller", module);
     }
 };
-
-// noinspection JSUnusedGlobalSymbols
-export default Thumbnails;

@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { Plugin } from "../types.js";
 import {
     ACTIVE_SLIDE_COMPLETE,
     ACTIVE_SLIDE_ERROR,
@@ -19,44 +18,8 @@ import {
     useEvents,
     useLatest,
     useTimeouts,
-} from "../core/index.js";
-
-const defaultSlideshowProps = {
-    autoplay: false,
-    delay: 3000,
-};
-
-declare module "../types.js" {
-    interface LightboxProps {
-        /** Slideshow plugin settings */
-        slideshow?: {
-            /** if `true`, slideshow is turned on automatically when the lightbox opens */
-            autoplay?: boolean;
-            /** slideshow delay in milliseconds */
-            delay?: number;
-        };
-    }
-
-    interface Render {
-        /** render custom Slideshow Play icon */
-        iconSlideshowPlay?: () => React.ReactNode;
-        /** render custom Slideshow Pause icon */
-        iconSlideshowPause?: () => React.ReactNode;
-        /** render custom Slideshow button */
-        buttonSlideshow?: ({
-            playing,
-            togglePlaying,
-            disabled,
-        }: {
-            /** current slideshow autoplay status */
-            playing: boolean;
-            /** toggle slideshow autoplay status */
-            togglePlaying: () => void;
-            /** if `true`, the button is disabled */
-            disabled: boolean;
-        }) => React.ReactNode;
-    }
-}
+} from "../../core/index.js";
+import { defaultSlideshowProps } from "./Slideshow.js";
 
 const PlayIcon = createIcon("Play", <path d="M8 5v14l11-7z" />);
 
@@ -70,7 +33,7 @@ type SlideshowButtonRefs = {
     slidesCount: number;
 };
 
-const SlideshowButton: React.FC = () => {
+export const SlideshowButton: React.FC = () => {
     const { currentIndex, latestProps } = useController();
     const { setTimeout, clearTimeout } = useTimeouts();
     const { publish, subscribe } = useEvents();
@@ -176,21 +139,3 @@ const SlideshowButton: React.FC = () => {
         />
     );
 };
-
-/** Slideshow plugin */
-export const Slideshow: Plugin = ({ augment }) => {
-    augment(({ slideshow: originalSlideshow, toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
-        toolbar: {
-            buttons: [<SlideshowButton key="slideshow" />, ...buttons],
-            ...restToolbar,
-        },
-        slideshow: {
-            ...defaultSlideshowProps,
-            ...originalSlideshow,
-        },
-        ...restProps,
-    }));
-};
-
-// noinspection JSUnusedGlobalSymbols
-export default Slideshow;

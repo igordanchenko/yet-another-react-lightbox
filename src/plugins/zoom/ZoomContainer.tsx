@@ -1,259 +1,22 @@
 import * as React from "react";
 
-import { Component, DeepNonNullable, LightboxProps, Plugin, Slide } from "../types.js";
 import {
     cleanup,
     clsx,
     ContainerRect,
-    createIcon,
-    createModule,
     cssClass,
-    IconButton,
     ImageSlide,
     isImageSlide,
-    label,
-    makeUseContext,
     round,
     useContainerRect,
     useController,
     useEvents,
     useLayoutEffect,
     useMotionPreference,
-} from "../core/index.js";
-
-/** Custom zoom button render function */
-type RenderZoomButton = ({
-    ref,
-    labels,
-    disabled,
-    onClick,
-    onFocus,
-    onBlur,
-}: Pick<LightboxProps, "labels"> & {
-    ref: React.ForwardedRef<HTMLButtonElement>;
-    disabled: boolean;
-    onClick: () => void;
-    onFocus: () => void;
-    onBlur: () => void;
-}) => React.ReactNode;
-
-declare module "../types.js" {
-    interface LightboxProps {
-        /** Zoom plugin settings */
-        zoom?: {
-            /** ratio of image pixels to physical pixels at maximum zoom level */
-            maxZoomPixelRatio?: number;
-            /** zoom-in multiplier */
-            zoomInMultiplier?: number;
-            /** double-tap maximum time delay */
-            doubleTapDelay?: number;
-            /** double-click maximum time delay */
-            doubleClickDelay?: number;
-            /** maximum number of zoom-in stops via double-click or double-tap */
-            doubleClickMaxStops?: number;
-            /** keyboard move distance */
-            keyboardMoveDistance?: number;
-            /** wheel zoom distance factor */
-            wheelZoomDistanceFactor?: number;
-            /** pinch zoom distance factor */
-            pinchZoomDistanceFactor?: number;
-            /** if `true`, enables image zoom via scroll gestures for mouse and trackpad users */
-            scrollToZoom?: boolean;
-        };
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    interface AnimationSettings {
-        /** zoom animation duration */
-        zoom?: number;
-    }
-
-    interface Render {
-        /** render custom Zoom in button */
-        buttonZoomIn?: RenderZoomButton;
-        /** render custom Zoom in button */
-        buttonZoomOut?: RenderZoomButton;
-        /** render custom Zoom in icon */
-        iconZoomIn?: () => React.ReactNode;
-        /** render custom Zoom out icon */
-        iconZoomOut?: () => React.ReactNode;
-    }
-}
-
-type ZoomInternal = DeepNonNullable<LightboxProps["zoom"]>;
-
-const defaultZoomProps: ZoomInternal = {
-    maxZoomPixelRatio: 1,
-    zoomInMultiplier: 2,
-    doubleTapDelay: 300,
-    doubleClickDelay: 500,
-    doubleClickMaxStops: 2,
-    keyboardMoveDistance: 50,
-    wheelZoomDistanceFactor: 100,
-    pinchZoomDistanceFactor: 100,
-    scrollToZoom: false,
-};
-
-const ZoomInIcon = createIcon(
-    "ZoomIn",
-    <>
-        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-        <path d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z" />
-    </>
-);
-
-const ZoomOutIcon = createIcon(
-    "ZoomOut",
-    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" />
-);
-
-type ZoomContextType = {
-    isMinZoom: boolean;
-    isMaxZoom: boolean;
-    isZoomSupported: boolean;
-    setIsMinZoom: (value: boolean) => void;
-    setIsMaxZoom: (value: boolean) => void;
-    setIsZoomSupported: (value: boolean) => void;
-};
-
-const ZoomContext = React.createContext<ZoomContextType | null>(null);
-
-const useZoom = makeUseContext("useZoom", "ZoomContext", ZoomContext);
-
-const ZoomContextProvider: Component = ({ children }) => {
-    const [isMinZoom, setIsMinZoom] = React.useState(false);
-    const [isMaxZoom, setIsMaxZoom] = React.useState(false);
-    const [isZoomSupported, setIsZoomSupported] = React.useState(false);
-
-    const context = React.useMemo<ZoomContextType>(
-        () => ({
-            isMinZoom,
-            isMaxZoom,
-            isZoomSupported,
-            setIsMinZoom,
-            setIsMaxZoom,
-            setIsZoomSupported,
-        }),
-        [isMinZoom, isMaxZoom, isZoomSupported]
-    );
-
-    return <ZoomContext.Provider value={context}>{children}</ZoomContext.Provider>;
-};
-
-/** Zoom button props */
-type ZoomButtonProps = Pick<LightboxProps, "labels" | "render"> & {
-    zoomIn?: boolean;
-    onLoseFocus: () => void;
-};
-
-/** Zoom button */
-const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>(
-    ({ labels, render, zoomIn, onLoseFocus }, ref) => {
-        const wasEnabled = React.useRef(false);
-        const wasFocused = React.useRef(false);
-
-        const { isMinZoom, isMaxZoom, isZoomSupported } = useZoom();
-        const { publish } = useEvents();
-
-        const disabled = !isZoomSupported || (zoomIn ? isMaxZoom : isMinZoom);
-
-        const onClick = () => publish(zoomIn ? "zoom-in" : "zoom-out");
-
-        const onFocus = React.useCallback(() => {
-            wasFocused.current = true;
-        }, []);
-
-        const onBlur = React.useCallback(() => {
-            wasFocused.current = false;
-        }, []);
-
-        React.useEffect(() => {
-            if (disabled && wasEnabled.current && wasFocused.current) {
-                onLoseFocus();
-            }
-            if (!disabled) {
-                wasEnabled.current = true;
-            }
-        }, [disabled, onLoseFocus]);
-
-        if (zoomIn && render.buttonZoomIn)
-            return (
-                <>
-                    {render.buttonZoomIn({
-                        ref,
-                        labels,
-                        disabled,
-                        onClick,
-                        onFocus,
-                        onBlur,
-                    })}
-                </>
-            );
-
-        if (zoomIn && render.buttonZoomOut)
-            return (
-                <>
-                    {render.buttonZoomOut({
-                        ref,
-                        labels,
-                        disabled,
-                        onClick,
-                        onFocus,
-                        onBlur,
-                    })}
-                </>
-            );
-
-        return (
-            <IconButton
-                ref={ref}
-                label={label(labels, zoomIn ? "Zoom in" : "Zoom out")}
-                icon={zoomIn ? ZoomInIcon : ZoomOutIcon}
-                renderIcon={zoomIn ? render.iconZoomIn : render.iconZoomOut}
-                disabled={disabled}
-                onClick={onClick}
-                onFocus={onFocus}
-                onBlur={onBlur}
-            />
-        );
-    }
-);
-ZoomButton.displayName = "ZoomButton";
-
-const ZoomButtonsGroup: React.FC<Pick<LightboxProps, "labels" | "render">> = ({ labels, render }) => {
-    const zoomInRef = React.useRef<HTMLButtonElement>(null);
-    const zoomOutRef = React.useRef<HTMLButtonElement>(null);
-    const { transferFocus } = useController();
-
-    const focusSibling = React.useCallback(
-        (sibling: React.RefObject<HTMLButtonElement>) => {
-            if (!sibling.current?.disabled) {
-                sibling.current?.focus();
-            } else {
-                transferFocus();
-            }
-        },
-        [transferFocus]
-    );
-
-    const focusZoomIn = React.useCallback(() => focusSibling(zoomInRef), [focusSibling]);
-
-    const focusZoomOut = React.useCallback(() => focusSibling(zoomOutRef), [focusSibling]);
-
-    return (
-        <>
-            <ZoomButton
-                ref={zoomInRef}
-                key="zoomIn"
-                zoomIn
-                labels={labels}
-                render={render}
-                onLoseFocus={focusZoomOut}
-            />
-            <ZoomButton ref={zoomOutRef} key="zoomOut" labels={labels} render={render} onLoseFocus={focusZoomIn} />
-        </>
-    );
-};
+} from "../../core/index.js";
+import { DeepNonNullable, LightboxProps, Slide } from "../../types.js";
+import { useZoom } from "./ZoomContext.js";
+import { defaultZoomProps } from "./Zoom.js";
 
 const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, rect?: ContainerRect) => {
     let slideRect: ContainerRect = { width: 0, height: 0 };
@@ -318,11 +81,11 @@ type ZoomContainerRefs = {
     reduceMotion: boolean;
     activePointers: React.PointerEvent[];
     lastPointerDown: number;
-    zoomProps: ZoomInternal;
+    zoomProps: DeepNonNullable<LightboxProps["zoom"]>;
 };
 
 /** Zoom container */
-const ZoomContainer: React.FC<
+export const ZoomContainer: React.FC<
     Pick<LightboxProps, "render" | "carousel" | "zoom" | "animation"> & {
         slide: Slide;
         offset: number;
@@ -787,79 +550,3 @@ const ZoomContainer: React.FC<
         </div>
     ) : null;
 };
-
-/** Zoom slide wrapper */
-const ZoomWrapper: typeof ZoomContainer = ({ slide, offset, rect, render, carousel, animation, zoom }) => {
-    const { setIsZoomSupported, isZoomSupported } = useZoom();
-
-    const zoomSupported = isImageSlide(slide) && (Boolean(slide.srcSet) || Boolean(slide.width && slide.height));
-
-    React.useEffect(() => {
-        if (offset === 0 && zoomSupported !== isZoomSupported) {
-            setIsZoomSupported(zoomSupported);
-        }
-    }, [offset, zoomSupported, isZoomSupported, setIsZoomSupported]);
-
-    if (zoomSupported) {
-        return (
-            <ZoomContainer
-                slide={slide}
-                offset={offset}
-                rect={rect}
-                render={render}
-                carousel={carousel}
-                animation={animation}
-                zoom={zoom}
-            />
-        );
-    }
-
-    const rendered = render.slide?.(slide, offset, rect);
-    if (rendered) {
-        return <>{rendered}</>;
-    }
-
-    if (isImageSlide(slide)) {
-        return <ImageSlide slide={slide} offset={offset} rect={rect} render={render} imageFit={carousel.imageFit} />;
-    }
-
-    return null;
-};
-
-export const ZoomModule = createModule("zoom", ZoomContextProvider);
-
-/** Zoom plugin */
-export const Zoom: Plugin = ({ augment, append }) => {
-    augment(({ toolbar: { buttons, ...restToolbar }, render, carousel, animation, zoom, ...restProps }) => ({
-        toolbar: {
-            buttons: [<ZoomButtonsGroup key="zoom" labels={restProps.labels} render={render} />, ...buttons],
-            ...restToolbar,
-        },
-        render: {
-            ...render,
-            slide: (slide, offset, rect) => (
-                <ZoomWrapper
-                    slide={slide}
-                    offset={offset}
-                    rect={rect}
-                    render={render}
-                    carousel={carousel}
-                    animation={animation}
-                    zoom={zoom}
-                />
-            ),
-        },
-        zoom: {
-            ...defaultZoomProps,
-            ...zoom,
-        },
-        carousel,
-        animation,
-        ...restProps,
-    }));
-
-    append("controller", ZoomModule);
-};
-
-// noinspection JSUnusedGlobalSymbols
-export default Zoom;
