@@ -97,10 +97,6 @@
         height: localVar(thumbnail_height, 80px);
         box-sizing: content-box;
 
-        & > *:only-child {
-            flex: 1;
-        }
-
         &_active {
             border-color: localVar(thumbnail_active_border_color, $color-button-active);
         }
