@@ -13,7 +13,7 @@ import {
 
 /** Inline plugin container */
 const InlineContainer: Component = ({ inline: { className, ...rest } = {}, children }) => (
-    <div className={clsx(cssClass("root"), className)} {...rest}>
+    <div className={clsx(cssClass("root"), cssClass("relative"), className)} {...rest}>
         {children}
     </div>
 );

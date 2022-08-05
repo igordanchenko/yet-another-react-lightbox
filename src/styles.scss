@@ -12,6 +12,10 @@ $carousel-spacing: 30%;
         height: 100%;
     }
 
+    &_relative {
+        position: relative;
+    }
+
     &_portal {
         position: fixed;
         inset: 0;
