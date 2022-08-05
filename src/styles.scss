@@ -70,8 +70,6 @@ $carousel-spacing: 30%;
         }
 
         &_image {
-            display: block;
-            flex: 1;
             object-fit: contain;
             user-select: none;
             -webkit-user-select: none;

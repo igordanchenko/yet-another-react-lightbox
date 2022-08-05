@@ -101,7 +101,10 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
                   maxWidth: `min(${maxWidth}px, 100%)`,
                   maxHeight: `min(${maxHeight}px, 100%)`,
               }
-            : undefined;
+            : {
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+              };
 
     const srcSet = image.srcSet
         ?.sort((a, b) => a.width - b.width)
@@ -121,9 +124,7 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
     };
 
     const sizes =
-        srcSet && rect && hasWindow()
-            ? `${Math.ceil((Math.min(estimateActualWidth(), rect.width) / window.innerWidth) * 100)}vw`
-            : undefined;
+        srcSet && rect && hasWindow() ? `${Math.round(Math.min(estimateActualWidth(), rect.width))}px` : undefined;
 
     return (
         <>
