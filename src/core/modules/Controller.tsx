@@ -10,7 +10,7 @@ import {
     isNumber,
     makeComposePrefix,
     makeUseContext,
-    parseSpacing,
+    parseLengthPercentage,
 } from "../utils.js";
 import {
     ContainerRect,
@@ -172,7 +172,7 @@ export const Controller: Component = ({ children, ...props }) => {
         carouselSwipeAnimation.current = undefined;
 
         if (swipeAnimation && carouselRef.current && containerRect) {
-            const parsedSpacing = parseSpacing(carousel.spacing);
+            const parsedSpacing = parseLengthPercentage(carousel.spacing);
             const spacingValue =
                 (parsedSpacing.percent ? (parsedSpacing.percent * containerRect.width) / 100 : parsedSpacing.pixel) ||
                 0;

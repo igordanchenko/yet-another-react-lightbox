@@ -48,14 +48,14 @@ export const round = (value: number, decimals = 0) => {
 
 export const isImageSlide = (slide: Slide): slide is SlideImage => !isDefined(slide.type) || slide.type === "image";
 
-export const parseSpacing = (spacing: unknown) => {
-    if (typeof spacing === "number") {
-        return { pixel: spacing };
+export const parseLengthPercentage = (input: unknown) => {
+    if (typeof input === "number") {
+        return { pixel: input };
     }
 
-    if (typeof spacing === "string") {
-        const value = parseInt(spacing, 10);
-        return spacing.endsWith("%") ? { percent: value } : { pixel: value };
+    if (typeof input === "string") {
+        const value = parseInt(input, 10);
+        return input.endsWith("%") ? { percent: value } : { pixel: value };
     }
 
     return { pixel: 0 };

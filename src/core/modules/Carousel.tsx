@@ -2,9 +2,8 @@ import * as React from "react";
 
 import { Component, Slide } from "../../types.js";
 import { createModule } from "../config.js";
-import { LightboxDefaultProps } from "../../props.js";
 import { ContainerRect, useContainerRect } from "../hooks/index.js";
-import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseSpacing } from "../utils.js";
+import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller.js";
 import { useEvents } from "../contexts/Events.js";
@@ -14,8 +13,6 @@ import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL, YARL_EVENT_BACKDROP
 const cssPrefix = (value?: string) => composePrefix(MODULE_CAROUSEL, value);
 
 const cssSlidePrefix = (value?: string) => composePrefix("slide", value);
-
-const sanitize = (value: string | number) => (value === 0 || value === "0" ? "0px" : value);
 
 type CarouselSlideProps = {
     slide: Slide;
@@ -101,7 +98,8 @@ export const Carousel: Component = ({ slides, carousel: { finite, preload, paddi
 
     const { setCarouselRef } = useController();
 
-    const spacingValue = parseSpacing(spacing);
+    const spacingValue = parseLengthPercentage(spacing);
+    const paddingValue = parseLengthPercentage(padding);
 
     const items = [];
 
@@ -144,9 +142,8 @@ export const Carousel: Component = ({ slides, carousel: { finite, preload, paddi
                     [`${cssVar(cssPrefix("slides_count"))}`]: items.length,
                     [`${cssVar(cssPrefix("spacing_px"))}`]: spacingValue.pixel || 0,
                     [`${cssVar(cssPrefix("spacing_percent"))}`]: spacingValue.percent || 0,
-                    ...(padding !== LightboxDefaultProps.carousel.padding
-                        ? { [cssVar(cssPrefix("padding"))]: sanitize(padding) }
-                        : null),
+                    [`${cssVar(cssPrefix("padding_px"))}`]: paddingValue.pixel || 0,
+                    [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
                 } as React.CSSProperties
             }
         >

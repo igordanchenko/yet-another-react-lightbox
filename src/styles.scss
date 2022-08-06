@@ -3,9 +3,6 @@
 $toolbar-padding: 8px;
 $icon-button-padding: 8px;
 
-$carousel-padding: 16px;
-$carousel-spacing: 30%;
-
 .yarl_ {
     &_fullsize {
         width: 100%;
@@ -61,7 +58,7 @@ $carousel-spacing: 30%;
     &_slide {
         flex: 1;
         position: relative;
-        padding: globalVar(carousel_padding, $carousel-padding);
+        padding: calc(var(--yarl__carousel_padding_px, 0) * 1px + 100 / (100 * var(--yarl__carousel_slides_count, 0) + (var(--yarl__carousel_slides_count, 0) - 1) * var(--yarl__carousel_spacing_percent, 0)) * var(--yarl__carousel_padding_percent, 0) * 1%);
 
         [dir="rtl"] & {
             --yarl__direction: -1;
