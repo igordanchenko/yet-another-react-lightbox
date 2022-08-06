@@ -34,6 +34,7 @@ $icon-button-padding: 8px;
         outline: 0;
         user-select: none;
         touch-action: globalVar(controller_touch_action, none);
+        overscroll-behavior: globalVar(controller_overscroll-behavior, contain);
     }
 
     &_carousel {
