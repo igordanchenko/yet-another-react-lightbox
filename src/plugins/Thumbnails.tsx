@@ -38,6 +38,8 @@ declare module "../types.js" {
             gap?: number;
             /** `object-fit` setting */
             imageFit?: ImageFit;
+            /** vignette effect on the edges of the thumbnails track */
+            vignette?: boolean;
         };
     }
 
@@ -77,6 +79,7 @@ const defaultThumbnailsProps: ThumbnailsInternal = {
     padding: 4,
     gap: 16,
     imageFit: "contain",
+    vignette: true,
 };
 
 const VideoThumbnailIcon = createIcon(
@@ -369,7 +372,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
         }
     };
 
-    const { width, height, border, borderRadius, padding, gap, imageFit } = thumbnails;
+    const { width, height, border, borderRadius, padding, gap, imageFit, vignette } = thumbnails;
 
     return (
         <div
@@ -391,6 +394,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                     ? { [cssVar(cssThumbnailPrefix("padding"))]: `${padding}px` }
                     : null),
                 ...(gap !== defaultThumbnailsProps.gap ? { [cssVar(cssThumbnailPrefix("gap"))]: `${gap}px` } : null),
+                ...(!vignette ? { [cssVar(cssPrefix("vignette"))]: "none" } : null),
                 ...styles.thumbnailsContainer,
             }}
         >

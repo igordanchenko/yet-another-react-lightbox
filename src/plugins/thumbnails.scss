@@ -38,7 +38,7 @@
         -webkit-touch-callout: none;
 
         &::before, &::after {
-            content: "";
+            content: localVar(vignette, "");
             position: absolute;
             z-index: 1;
         }
