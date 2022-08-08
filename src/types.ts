@@ -54,8 +54,13 @@ export interface SlotType {
 /** Customization slots */
 export type Slot = SlotType[keyof SlotType];
 
+/** Customization slot CSS properties */
+interface SlotCSSProperties extends React.CSSProperties {
+    [key: `--yarl__${string}`]: string | number;
+}
+
 /** Customization slots styles */
-export type SlotStyles = { [key in Slot]?: React.CSSProperties };
+export type SlotStyles = { [key in Slot]?: SlotCSSProperties };
 
 /** Carousel settings */
 export interface CarouselSettings {
