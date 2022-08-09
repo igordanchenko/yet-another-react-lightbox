@@ -57,7 +57,7 @@ export const Controller: Component = ({ children, ...props }) => {
     const { state, dispatch } = useLightboxState();
 
     const [swipeState, setSwipeState] = React.useState(SwipeState.NONE);
-    const [swipeOffset, setSwipeOffset] = React.useState(0);
+    const swipeOffset = React.useRef(0);
     const swipeAnimationReset = React.useRef<number>();
 
     const { registerSensors, subscribeSensors } = useSensors<HTMLDivElement>();
@@ -86,6 +86,15 @@ export const Controller: Component = ({ children, ...props }) => {
                 ((rtl(offset) > 0 && state.currentIndex === 0) ||
                     (rtl(offset) < 0 && state.currentIndex === slides.length - 1))
             )
+    );
+
+    const setSwipeOffset = React.useCallback(
+        (offset: number) => {
+            swipeOffset.current = offset;
+
+            containerRef.current?.style.setProperty(cssVar("swipe_offset"), `${Math.round(offset)}px`);
+        },
+        [containerRef]
     );
 
     const swipe = useEventCallback(
@@ -141,6 +150,13 @@ export const Controller: Component = ({ children, ...props }) => {
                 }
             }
 
+            if (carouselRef.current) {
+                carouselSwipeAnimation.current = {
+                    rect: carouselRef.current.getBoundingClientRect(),
+                    index: state.globalIndex,
+                };
+            }
+
             newSwipeAnimationDuration = Math.round(newSwipeAnimationDuration);
 
             clearTimeout(swipeAnimationReset.current);
@@ -152,13 +168,6 @@ export const Controller: Component = ({ children, ...props }) => {
                     }
                 }, newSwipeAnimationDuration);
                 swipeAnimationReset.current = timeoutId;
-            }
-
-            if (carouselRef.current) {
-                carouselSwipeAnimation.current = {
-                    rect: carouselRef.current.getBoundingClientRect(),
-                    index: state.globalIndex,
-                };
             }
 
             setSwipeState(newSwipeState);
@@ -204,24 +213,19 @@ export const Controller: Component = ({ children, ...props }) => {
     useLayoutEffect(animateCarouselSwipe);
 
     const swipeParams = [
-        swipeState,
         subscribeSensors,
         isSwipeValid,
         containerRect?.width || 0,
         animation.swipe,
-        () => setSwipeState(SwipeState.SWIPE),
-        (offset: number, duration: number) => swipe({ offset, duration, count: 1 }),
-        (offset: number) => swipe({ offset, count: 0 }),
-        (offset: number) => {
-            if (swipeState === SwipeState.SWIPE) {
-                setSwipeOffset(offset);
-            }
-        },
+        () => setSwipeState(SwipeState.SWIPE), // onSwipeStart
+        (offset: number) => setSwipeOffset(offset), // onSwipeProgress
+        (offset: number, duration: number) => swipe({ offset, duration, count: 1 }), // onSwipeFinish
+        (offset: number) => swipe({ offset, count: 0 }), // onSwipeCancel
     ] as const;
 
     usePointerSwipe(...swipeParams);
 
-    useWheelSwipe(...swipeParams);
+    useWheelSwipe(swipeState, ...swipeParams);
 
     const focusOnMount = useEventCallback(() => {
         if (controller.focus) {
@@ -297,7 +301,7 @@ export const Controller: Component = ({ children, ...props }) => {
             className={clsx(cssClass(cssContainerPrefix()), cssClass(CLASS_FLEX_CENTER))}
             style={{
                 ...(swipeState === SwipeState.SWIPE
-                    ? { [cssVar("swipe_offset")]: `${Math.round(swipeOffset)}px` }
+                    ? { [cssVar("swipe_offset")]: `${Math.round(swipeOffset.current)}px` }
                     : null),
                 ...(controller.touchAction !== "none" ? {} : null),
                 ...styles.container,

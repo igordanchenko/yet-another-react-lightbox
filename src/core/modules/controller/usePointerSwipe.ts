@@ -3,8 +3,6 @@ import * as React from "react";
 import { cleanup } from "../../utils.js";
 import { UseSensors } from "../../hooks/useSensors.js";
 import { useEventCallback } from "../../hooks/useEventCallback.js";
-import { SwipeState } from "./index.js";
-import { useOffset } from "./useOffset.js";
 import {
     EVENT_ON_POINTER_CANCEL,
     EVENT_ON_POINTER_DOWN,
@@ -14,18 +12,16 @@ import {
 } from "../../consts.js";
 
 export const usePointerSwipe = <T extends Element = Element>(
-    swipeState: SwipeState,
     subscribeSensors: UseSensors<T>["subscribeSensors"],
     isSwipeValid: (offset: number) => boolean,
     containerWidth: number,
     swipeAnimationDuration: number,
     onSwipeStart: () => void,
+    onSwipeProgress: (offset: number) => void,
     onSwipeFinish: (offset: number, duration: number) => void,
-    onSwipeCancel: (offset: number) => void,
-    onChange: (offset: number) => void
+    onSwipeCancel: (offset: number) => void
 ) => {
-    const [offset, setOffset] = useOffset(onChange);
-
+    const offset = React.useRef<number>(0);
     const pointers = React.useRef<React.PointerEvent[]>([]);
     const activePointer = React.useRef<number>();
     const startTime = React.useRef<number>(0);
@@ -58,21 +54,21 @@ export const usePointerSwipe = <T extends Element = Element>(
 
     const onPointerUp = useEventCallback((event: React.PointerEvent) => {
         if (
-            swipeState === SwipeState.SWIPE &&
             pointers.current.find((x) => x.pointerId === event.pointerId) &&
             activePointer.current === event.pointerId
         ) {
             const duration = Date.now() - startTime.current;
+            const currentOffset = offset.current;
             if (
-                Math.abs(offset) > 0.3 * containerWidth ||
-                (Math.abs(offset) > 5 && duration < swipeAnimationDuration)
+                Math.abs(currentOffset) > 0.3 * containerWidth ||
+                (Math.abs(currentOffset) > 5 && duration < swipeAnimationDuration)
             ) {
-                onSwipeFinish(offset, duration);
+                onSwipeFinish(currentOffset, duration);
             } else {
-                onSwipeCancel(offset);
+                onSwipeCancel(currentOffset);
             }
 
-            setOffset(0);
+            offset.current = 0;
         }
 
         clearPointer(event);
@@ -84,16 +80,22 @@ export const usePointerSwipe = <T extends Element = Element>(
             const deltaX = event.clientX - pointer.clientX;
             const deltaY = event.clientY - pointer.clientY;
 
-            if (!swipeState) {
-                if (isSwipeValid(deltaX) && Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
-                    addPointer(event);
-                    activePointer.current = event.pointerId;
-                    startTime.current = Date.now();
+            if (
+                !activePointer.current &&
+                isSwipeValid(deltaX) &&
+                Math.abs(deltaX) > Math.abs(deltaY) &&
+                Math.abs(deltaX) > 30
+            ) {
+                addPointer(event);
 
-                    onSwipeStart();
-                }
+                activePointer.current = event.pointerId;
+                startTime.current = Date.now();
+
+                onSwipeStart();
             } else if (activePointer.current === event.pointerId) {
-                setOffset(deltaX);
+                offset.current = deltaX;
+
+                onSwipeProgress(deltaX);
             }
         }
     });

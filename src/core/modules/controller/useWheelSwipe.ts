@@ -3,50 +3,45 @@ import * as React from "react";
 import { useEventCallback, UseSensors } from "../../hooks/index.js";
 import { useTimeouts } from "../../contexts/index.js";
 import { SwipeState } from "./index.js";
-import { useOffset } from "./useOffset.js";
 import { EVENT_ON_WHEEL } from "../../consts.js";
 
 export const useWheelSwipe = <T extends Element = Element>(
-    swipeState: SwipeState | undefined,
+    swipeState: SwipeState,
     subscribeSensors: UseSensors<T>["subscribeSensors"],
     isSwipeValid: (offset: number) => boolean,
     containerWidth: number,
     swipeAnimationDuration: number,
     onSwipeStart: () => void,
+    onSwipeProgress: (offset: number) => void,
     onSwipeFinish: (offset: number, duration: number) => void,
-    onSwipeCancel: (offset: number) => void,
-    onChange: (offset: number) => void
+    onSwipeCancel: (offset: number) => void
 ) => {
-    const [offset, setOffset] = useOffset(onChange);
-
-    const swipeIntent = React.useRef(0);
-    const swipeIntentCleanup = React.useRef<number>();
-    const swipeResetCleanup = React.useRef<number>();
+    const offset = React.useRef(0);
+    const intent = React.useRef(0);
+    const intentCleanup = React.useRef<number>();
+    const resetCleanup = React.useRef<number>();
     const wheelResidualMomentum = React.useRef(0);
     const startTime = React.useRef(0);
 
     const { setTimeout, clearTimeout } = useTimeouts();
 
     const cancelSwipeIntentCleanup = React.useCallback(() => {
-        if (swipeIntentCleanup.current) {
-            clearTimeout(swipeIntentCleanup.current);
-            swipeIntentCleanup.current = undefined;
+        if (intentCleanup.current) {
+            clearTimeout(intentCleanup.current);
+            intentCleanup.current = undefined;
         }
     }, [clearTimeout]);
 
     const cancelSwipeResetCleanup = React.useCallback(() => {
-        if (swipeResetCleanup.current) {
-            clearTimeout(swipeResetCleanup.current);
-            swipeResetCleanup.current = undefined;
+        if (resetCleanup.current) {
+            clearTimeout(resetCleanup.current);
+            resetCleanup.current = undefined;
         }
     }, [clearTimeout]);
 
     const handleCleanup = useEventCallback(() => {
         if (swipeState !== SwipeState.SWIPE) {
-            if (offset !== 0) {
-                setOffset(0);
-            }
-
+            offset.current = 0;
             startTime.current = 0;
 
             cancelSwipeIntentCleanup();
@@ -57,10 +52,10 @@ export const useWheelSwipe = <T extends Element = Element>(
     React.useEffect(handleCleanup, [swipeState, handleCleanup]);
 
     const handleCancelSwipe = useEventCallback((currentSwipeOffset: number) => {
-        swipeResetCleanup.current = undefined;
+        resetCleanup.current = undefined;
 
-        if (swipeState === SwipeState.SWIPE && offset === currentSwipeOffset) {
-            onSwipeCancel(offset);
+        if (offset.current === currentSwipeOffset) {
+            onSwipeCancel(offset.current);
         }
     });
 
@@ -85,29 +80,31 @@ export const useWheelSwipe = <T extends Element = Element>(
                 return;
             }
 
-            swipeIntent.current += event.deltaX;
+            intent.current += event.deltaX;
 
             cancelSwipeIntentCleanup();
 
-            if (Math.abs(swipeIntent.current) > 30) {
-                swipeIntent.current = 0;
+            if (Math.abs(intent.current) > 30) {
+                intent.current = 0;
                 wheelResidualMomentum.current = 0;
                 startTime.current = Date.now();
 
                 onSwipeStart();
             } else {
-                const currentSwipeIntent = swipeIntent.current;
-                swipeIntentCleanup.current = setTimeout(() => {
-                    swipeIntentCleanup.current = undefined;
-                    if (currentSwipeIntent === swipeIntent.current) {
-                        swipeIntent.current = 0;
+                const currentSwipeIntent = intent.current;
+                intentCleanup.current = setTimeout(() => {
+                    intentCleanup.current = undefined;
+                    if (currentSwipeIntent === intent.current) {
+                        intent.current = 0;
                     }
                 }, swipeAnimationDuration);
             }
         } else if (swipeState === SwipeState.SWIPE) {
-            let newSwipeOffset = offset - event.deltaX;
+            let newSwipeOffset = offset.current - event.deltaX;
             newSwipeOffset = Math.min(Math.abs(newSwipeOffset), containerWidth) * Math.sign(newSwipeOffset);
-            setOffset(newSwipeOffset);
+            offset.current = newSwipeOffset;
+
+            onSwipeProgress(newSwipeOffset);
 
             cancelSwipeResetCleanup();
 
@@ -119,7 +116,7 @@ export const useWheelSwipe = <T extends Element = Element>(
                 return;
             }
 
-            swipeResetCleanup.current = setTimeout(() => handleCancelSwipe(newSwipeOffset), 2 * swipeAnimationDuration);
+            resetCleanup.current = setTimeout(() => handleCancelSwipe(newSwipeOffset), 2 * swipeAnimationDuration);
         } else {
             wheelResidualMomentum.current = event.deltaX;
         }
