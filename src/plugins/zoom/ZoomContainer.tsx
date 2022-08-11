@@ -22,12 +22,14 @@ import {
     useEventCallback,
     useEvents,
     useLayoutEffect,
+    useLightboxState,
     useMotionPreference,
 } from "../../core/index.js";
 import { LightboxProps, Slide } from "../../types.js";
 import { useZoom } from "./ZoomContext.js";
 import { defaultZoomProps } from "./Zoom.js";
 import { ACTION_ZOOM_IN, ACTION_ZOOM_OUT } from "./index.js";
+import { isResponsiveImageSlide, ResponsiveImage } from "./ResponsiveImage.js";
 
 const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, rect?: ContainerRect) => {
     let slideRect: ContainerRect = { width: 0, height: 0 };
@@ -73,17 +75,22 @@ const distance = (pointerA: React.MouseEvent, pointerB: React.MouseEvent) =>
 
 /** Zoom container */
 export const ZoomContainer: React.FC<
-    Pick<LightboxProps, "render" | "carousel" | "zoom" | "animation"> & {
+    Pick<LightboxProps, "render" | "carousel" | "zoom" | "animation" | "on"> & {
         slide: Slide;
         offset: number;
         rect: ContainerRect;
     }
-> = ({ slide, offset, rect, render, carousel, animation, zoom: originalZoomProps }) => {
+> = ({ slide, offset, rect, render, carousel, animation, zoom: originalZoomProps, on }) => {
     const zoomProps = { ...defaultZoomProps, ...originalZoomProps };
+
+    const {
+        state: { currentIndex },
+    } = useLightboxState();
 
     const [zoom, setZoom] = React.useState(1);
     const [offsetX, setOffsetX] = React.useState(0);
     const [offsetY, setOffsetY] = React.useState(0);
+    const [imageDimensions, setImageDimensions] = React.useState<ContainerRect>();
 
     const activePointers = React.useRef<React.PointerEvent[]>([]);
     const lastPointerDown = React.useRef(0);
@@ -98,7 +105,7 @@ export const ZoomContainer: React.FC<
     const reduceMotion = useMotionPreference();
 
     const { slideRect, maxSlideRect: currentMaxSlideRect } = getSlideRects(
-        slide,
+        { ...slide, ...imageDimensions },
         carousel.imageFit === "cover" || ("imageFit" in slide && slide.imageFit === "cover"),
         zoomProps.maxZoomPixelRatio,
         containerRect
@@ -444,8 +451,22 @@ export const ZoomContainer: React.FC<
     let rendered = render.slide?.(slide, offset, scaledRect);
 
     if (!rendered && isImageSlide(slide)) {
-        rendered = (
-            <ImageSlide slide={slide} offset={offset} rect={scaledRect} render={render} imageFit={carousel.imageFit} />
+        const slideProps = {
+            slide,
+            offset,
+            rect,
+            render,
+            imageFit: carousel.imageFit,
+            onClick: offset === 0 ? () => on.click?.(currentIndex) : undefined,
+        };
+
+        rendered = isResponsiveImageSlide(slide) ? (
+            <ResponsiveImage {...slideProps} slide={slide} />
+        ) : (
+            <ImageSlide
+                onLoad={(img) => setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })}
+                {...slideProps}
+            />
         );
     }
 

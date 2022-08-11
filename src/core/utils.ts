@@ -60,3 +60,7 @@ export const parseLengthPercentage = (input: unknown) => {
 
     return { pixel: 0 };
 };
+
+export const devicePixelRatio = () => {
+    return (typeof window !== "undefined" ? window?.devicePixelRatio : undefined) || 1;
+};

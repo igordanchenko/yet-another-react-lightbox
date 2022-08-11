@@ -27,9 +27,20 @@ export type ImageSlideProps = {
     rect?: ContainerRect;
     imageFit?: ImageFit;
     onClick?: () => void;
+    onLoad?: (image: HTMLImageElement) => void;
+    style?: React.CSSProperties;
 };
 
-export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onClick }: ImageSlideProps) => {
+export const ImageSlide = ({
+    slide: image,
+    offset,
+    render,
+    rect,
+    imageFit,
+    onClick,
+    onLoad,
+    style,
+}: ImageSlideProps) => {
     const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
 
     const { publish } = useEvents();
@@ -54,6 +65,7 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
                     return;
                 }
                 setStatus(SLIDE_STATUS_COMPLETE);
+                onLoad?.(img);
             });
     });
 
@@ -68,7 +80,7 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
         [handleLoading]
     );
 
-    const onLoad = React.useCallback(
+    const handleOnLoad = React.useCallback(
         (event: React.SyntheticEvent<HTMLImageElement>) => {
             handleLoading(event.currentTarget);
         },
@@ -94,7 +106,7 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
         imageRef.current?.naturalHeight || 0
     );
 
-    const style =
+    const defaultStyle =
         maxWidth && maxHeight
             ? {
                   maxWidth: `min(${maxWidth}px, 100%)`,
@@ -121,7 +133,7 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
             <img
                 ref={setImageRef}
-                onLoad={onLoad}
+                onLoad={handleOnLoad}
                 onError={onError}
                 onClick={onClick}
                 className={clsx(
@@ -131,7 +143,7 @@ export const ImageSlide = ({ slide: image, offset, render, rect, imageFit, onCli
                 )}
                 draggable={false}
                 alt={image.alt}
-                style={style}
+                style={{ ...defaultStyle, ...style }}
                 sizes={sizes}
                 srcSet={srcSet}
                 src={image.src}

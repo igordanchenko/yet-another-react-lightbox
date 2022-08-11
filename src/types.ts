@@ -5,6 +5,17 @@ import { ContainerRect } from "./core/hooks/useContainerRect.js";
 /** Image fit setting */
 export type ImageFit = "contain" | "cover";
 
+/** Image source */
+export interface ImageSource {
+    /** image URL */
+    src: string;
+    /** image width in pixels */
+    width: number;
+    /** image height in pixels */
+    height: number;
+}
+
+/** Generic slide */
 export interface GenericSlide {}
 
 /** Image slide properties */
@@ -22,14 +33,7 @@ export interface SlideImage extends GenericSlide {
     /** `object-fit` setting */
     imageFit?: ImageFit;
     /** alternative images to be passed to the 'srcSet' */
-    srcSet?: {
-        /** image URL */
-        src: string;
-        /** image width in pixels */
-        width: number;
-        /** image height in pixels */
-        height: number;
-    }[];
+    srcSet?: ImageSource[];
 }
 
 /** Supported slide types */

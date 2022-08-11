@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import { Plugin } from "../../types.js";
-import { createModule, MODULE_CONTROLLER, PLUGIN_ZOOM } from "../../core/index.js";
+import { createModule, isImageSlide, MODULE_CONTROLLER, PLUGIN_ZOOM } from "../../core/index.js";
 import { ZoomContextProvider } from "./ZoomContext.js";
 import { ZoomButtonsGroup } from "./ZoomButtonsGroup.js";
-import { ZoomWrapper } from "./ZoomWrapper.js";
+import { ZoomContainer } from "./ZoomContainer.js";
 
 export const defaultZoomProps = {
     maxZoomPixelRatio: 1,
@@ -20,24 +20,28 @@ export const defaultZoomProps = {
 
 /** Zoom plugin */
 export const Zoom: Plugin = ({ augment, append }) => {
-    augment(({ toolbar: { buttons, ...restToolbar }, render, carousel, animation, zoom, ...restProps }) => ({
+    augment(({ toolbar: { buttons, ...restToolbar }, render, carousel, animation, zoom, on, ...restProps }) => ({
         toolbar: {
             buttons: [<ZoomButtonsGroup key={PLUGIN_ZOOM} labels={restProps.labels} render={render} />, ...buttons],
             ...restToolbar,
         },
         render: {
             ...render,
-            slide: (slide, offset, rect) => (
-                <ZoomWrapper
-                    slide={slide}
-                    offset={offset}
-                    rect={rect}
-                    render={render}
-                    carousel={carousel}
-                    animation={animation}
-                    zoom={zoom}
-                />
-            ),
+            slide: (slide, offset, rect) =>
+                isImageSlide(slide) ? (
+                    <ZoomContainer
+                        slide={slide}
+                        offset={offset}
+                        rect={rect}
+                        render={render}
+                        carousel={carousel}
+                        animation={animation}
+                        zoom={zoom}
+                        on={on}
+                    />
+                ) : (
+                    render.slide?.(slide, offset, rect)
+                ),
         },
         zoom: {
             ...defaultZoomProps,
@@ -45,6 +49,7 @@ export const Zoom: Plugin = ({ augment, append }) => {
         },
         carousel,
         animation,
+        on,
         ...restProps,
     }));
 
