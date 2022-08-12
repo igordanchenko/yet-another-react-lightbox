@@ -1,24 +1,22 @@
 import * as React from "react";
 
-import { Component, Plugin } from "../types.js";
-import { clsx, createModule, cssClass } from "../core/index.js";
-
-declare module "../types.js" {
-    interface LightboxProps {
-        /** HTML div element attributes to be passed to the Inline plugin container */
-        inline?: React.HTMLAttributes<HTMLDivElement>;
-    }
-}
+import { Component, Plugin } from "../../types.js";
+import {
+    ACTION_CLOSE,
+    clsx,
+    createModule,
+    cssClass,
+    MODULE_NO_SCROLL,
+    MODULE_PORTAL,
+    PLUGIN_INLINE,
+} from "../../core/index.js";
 
 /** Inline plugin container */
-export const InlineContainer: Component = ({ inline: { className, ...rest } = {}, children }) => (
-    <div className={clsx(cssClass("root"), className)} {...rest}>
+const InlineContainer: Component = ({ inline: { className, ...rest } = {}, children }) => (
+    <div className={clsx(cssClass("root"), cssClass("relative"), className)} {...rest}>
         {children}
     </div>
 );
-
-/** Inline plugin module */
-export const InlineModule = createModule("inline", InlineContainer);
 
 /** Inline plugin */
 export const Inline: Plugin = ({ augment, replace, remove }) => {
@@ -34,7 +32,7 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
             open: true,
             close: () => {},
             toolbar: {
-                buttons: buttons.filter((button) => button !== "close"),
+                buttons: buttons.filter((button) => button !== ACTION_CLOSE),
                 ...restToolbar,
             },
             inline: { style: { width: "100%", height: "100%" }, className },
@@ -44,9 +42,6 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
         })
     );
 
-    remove("no-scroll");
-    replace("portal", InlineModule);
+    remove(MODULE_NO_SCROLL);
+    replace(MODULE_PORTAL, createModule(PLUGIN_INLINE, InlineContainer));
 };
-
-// noinspection JSUnusedGlobalSymbols
-export default Inline;

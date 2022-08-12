@@ -1,11 +1,9 @@
 import * as React from "react";
 
-import { useLayoutEffect } from "./useLayoutEffect.js";
-
 export const useMotionPreference = () => {
     const [reduceMotion, setReduceMotion] = React.useState(false);
 
-    useLayoutEffect(() => {
+    React.useEffect(() => {
         const mediaQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
         setReduceMotion(mediaQuery?.matches);
         const listener = () => setReduceMotion(mediaQuery.matches);

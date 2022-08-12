@@ -3,9 +3,8 @@ import * as React from "react";
 import { isDefined, makeUseContext } from "../utils.js";
 
 export type TimeoutsContextType = {
-    setTimeout: (func: () => void, time?: number) => number;
+    setTimeout: (fn: () => void, delay?: number) => number;
     clearTimeout: (id?: number) => void;
-    clearTimeouts: () => void;
 };
 
 const TimeoutsContext = React.createContext<TimeoutsContextType | null>(null);
@@ -13,40 +12,39 @@ const TimeoutsContext = React.createContext<TimeoutsContextType | null>(null);
 export const useTimeouts = makeUseContext("useTimeouts", "TimeoutsContext", TimeoutsContext);
 
 export const TimeoutsProvider = ({ children }: React.PropsWithChildren<{}>) => {
-    const timeouts = React.useRef<number[]>([]);
+    const [timeouts] = React.useState<number[]>([]);
 
-    const removeTimeout = (id: number) => {
-        timeouts.current.splice(0, timeouts.current.length, ...timeouts.current.filter((tid) => tid !== id));
-    };
+    React.useEffect(
+        () => () => {
+            timeouts.forEach((tid) => window.clearTimeout(tid));
+            timeouts.splice(0, timeouts.length);
+        },
+        [timeouts]
+    );
 
-    const setTimeout = (func: () => void, time?: number) => {
-        const id = window.setTimeout(() => {
-            removeTimeout(id);
-            func();
-        }, time);
-        timeouts.current.push(id);
-        return id;
-    };
+    const context = React.useMemo(() => {
+        const removeTimeout = (id: number) => {
+            timeouts.splice(0, timeouts.length, ...timeouts.filter((tid) => tid !== id));
+        };
 
-    const clearTimeout = (id?: number) => {
-        if (isDefined(id)) {
-            removeTimeout(id);
-            window.clearTimeout(id);
-        }
-    };
+        const setTimeout = (fn: () => void, delay?: number) => {
+            const id = window.setTimeout(() => {
+                removeTimeout(id);
+                fn();
+            }, delay);
+            timeouts.push(id);
+            return id;
+        };
 
-    const clearTimeouts = () => {
-        timeouts.current.forEach((tid) => window.clearTimeout(tid));
-        timeouts.current.splice(0, timeouts.current.length);
-    };
+        const clearTimeout = (id?: number) => {
+            if (isDefined(id)) {
+                removeTimeout(id);
+                window.clearTimeout(id);
+            }
+        };
 
-    React.useEffect(() => () => clearTimeouts(), []);
+        return { setTimeout, clearTimeout };
+    }, [timeouts]);
 
-    const context = React.useRef({
-        setTimeout,
-        clearTimeout,
-        clearTimeouts,
-    });
-
-    return <TimeoutsContext.Provider value={context.current}>{children}</TimeoutsContext.Provider>;
+    return <TimeoutsContext.Provider value={context}>{children}</TimeoutsContext.Provider>;
 };

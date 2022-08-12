@@ -3,13 +3,14 @@
 $toolbar-padding: 8px;
 $icon-button-padding: 8px;
 
-$carousel-padding: 16px;
-$carousel-spacing: 30%;
-
 .yarl_ {
     &_fullsize {
         width: 100%;
         height: 100%;
+    }
+
+    &_relative {
+        position: relative;
     }
 
     &_portal {
@@ -26,21 +27,26 @@ $carousel-spacing: 30%;
     }
 
     &_container {
-        user-select: none;
-        touch-action: globalVar(controller_touch_action, none);
-    }
-
-    &_container {
-        position: relative;
+        position: absolute;
+        inset: 0;
         overflow: hidden;
         background-color: globalVar(container_background_color, $color-backdrop);
         outline: 0;
+        user-select: none;
+        touch-action: globalVar(controller_touch_action, none);
+        overscroll-behavior: globalVar(controller_overscroll-behavior, contain);
     }
 
     &_carousel {
-        position: absolute;
-        overflow: hidden;
-        inset: 0;
+        display: flex;
+        flex: 0 0 auto;
+        height: 100%;
+        align-content: center;
+        justify-content: center;
+        align-items: stretch;
+        width: calc(100% + (var(--yarl__carousel_slides_count, 0) - 1) * (100% + var(--yarl__carousel_spacing_px, 0) * 1px + var(--yarl__carousel_spacing_percent, 0) * 1%));
+        column-gap: calc(var(--yarl__carousel_spacing_px, 0) * 1px + 100 / (100 * var(--yarl__carousel_slides_count, 0) + (var(--yarl__carousel_slides_count, 0) - 1) * var(--yarl__carousel_spacing_percent, 0)) * var(--yarl__carousel_spacing_percent, 0) * 1%);
+        transform: translateX(var(--yarl__swipe_offset, 0px));
     }
 
     &_flex_center {
@@ -51,32 +57,30 @@ $carousel-spacing: 30%;
     }
 
     &_slide {
-        position: absolute;
-        overflow: hidden;
-        inset: 0;
-
-        padding: globalVar(carousel_padding, $carousel-padding);
+        flex: 1;
+        position: relative;
+        padding: calc(var(--yarl__carousel_padding_px, 0) * 1px + 100 / (100 * var(--yarl__carousel_slides_count, 0) + (var(--yarl__carousel_slides_count, 0) - 1) * var(--yarl__carousel_spacing_percent, 0)) * var(--yarl__carousel_padding_percent, 0) * 1%);
 
         [dir="rtl"] & {
             --yarl__direction: -1;
         }
 
-        transform: translate3d(calc(globalVar(slide_offset, 0) * (100% + globalVar(carousel_spacing, $carousel-spacing)) * globalVar(direction, 1)), 0, 0);
-        transition: transform globalVar(swipe_animation_duration, 500ms) globalVar(swipe_animation_timing_function, ease-out);
-
-        .yarl__container_swipe & {
-            transform: translate3d(calc(globalVar(slide_offset, 0) * (100% + globalVar(carousel_spacing, $carousel-spacing)) * globalVar(direction, 1)), 0, 0) translate3d(globalVar(swipe_offset, 0px), 0, 0);
-            transition: unset;
-        }
-
         &_image {
+            max-width: 100%;
+            max-height: 100%;
             object-fit: contain;
+            pointer-events: none;
             user-select: none;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
 
             // workaround occasional image flickering in desktop Safari
-            transform: translate3d(0, 0, 0);
+            @media screen and (min-width: 800px) {
+                // noinspection CssUnknownProperty
+                -webkit-transform: translateZ(0);
+                -webkit-backface-visibility: hidden;
+                -webkit-transform-style: preserve-3d;
+            }
 
             &_cover {
                 width: 100%;
@@ -93,7 +97,7 @@ $carousel-spacing: 30%;
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate3d(-50%, -50%, 0);
+            transform: translateX(-50%) translateY(-50%);
             line-height: 0;
         }
 

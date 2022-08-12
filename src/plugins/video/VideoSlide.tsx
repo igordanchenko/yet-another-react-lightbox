@@ -1,85 +1,20 @@
 import * as React from "react";
 
-import { LightboxProps, Plugin } from "../types.js";
 import {
     ACTIVE_SLIDE_COMPLETE,
     ACTIVE_SLIDE_LOADING,
     ACTIVE_SLIDE_PLAYING,
+    CLASS_FLEX_CENTER,
     clsx,
     cssClass,
     useContainerRect,
     useController,
+    useEventCallback,
     useEvents,
-    useLatest,
-} from "../core/index.js";
-
-/** Video slide attributes */
-export interface SlideVideo {
-    /** video slide type marker */
-    type: "video";
-    /** video placeholder image */
-    poster?: string;
-    /** video width in pixels */
-    width?: number;
-    /** video height in pixels */
-    height?: number;
-    /** if `true`, the video automatically begins to play */
-    autoPlay?: boolean;
-    /** if `true`, the browser will offer controls to allow the user to control video playback */
-    controls?: boolean;
-    /** indicates what controls to show */
-    controlsList?: string;
-    /** indicates whether to use CORS to fetch the related video */
-    crossOrigin?: string;
-    /** video preload setting */
-    preload?: string;
-    /** if `true`, the browser will automatically seek back to the start upon reaching the end of the video */
-    loop?: boolean;
-    /** the default setting of the audio contained in the video */
-    muted?: boolean;
-    /** if `true`, the video is to be played "inline", that is within the element's playback area */
-    playsInline?: boolean;
-    /** prevents the browser from suggesting a Picture-in-Picture context menu */
-    disablePictureInPicture?: boolean;
-    /** disables the capability of remote playback */
-    disableRemotePlayback?: boolean;
-    /** an array of video files */
-    sources?: {
-        /** video source URL */
-        src: string;
-        /** video source type (e.g., `video/mp4`) */
-        type: string;
-    }[];
-}
-
-declare module "../types.js" {
-    interface SlideTypes {
-        /** video slide type */
-        SlideVideo: SlideVideo;
-    }
-
-    interface LightboxProps {
-        /** video plugin settings */
-        video?: Pick<
-            SlideVideo,
-            | "autoPlay"
-            | "controls"
-            | "controlsList"
-            | "crossOrigin"
-            | "preload"
-            | "loop"
-            | "muted"
-            | "playsInline"
-            | "disablePictureInPicture"
-            | "disableRemotePlayback"
-        >;
-    }
-}
-
-const defaultVideoProps: LightboxProps["video"] = {
-    controls: true,
-    playsInline: true,
-};
+} from "../../core/index.js";
+import { LightboxProps } from "../../types.js";
+import { SlideVideo } from "./index.js";
+import { defaultVideoProps } from "./Video.js";
 
 type VideoSlideProps = {
     slide: SlideVideo;
@@ -88,12 +23,11 @@ type VideoSlideProps = {
 
 /** Video slide */
 export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
-    const { latestProps } = useController();
     const { publish } = useEvents();
     const { setContainerRef, containerRect } = useContainerRect();
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
-    const video = latestProps.current.video ?? defaultVideoProps;
+    const video = { ...defaultVideoProps, ...useController().getLightboxProps().video };
 
     React.useEffect(() => {
         if (offset !== 0 && videoRef.current && !videoRef.current.paused) {
@@ -109,24 +43,21 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
         }
     }, [offset, video.autoPlay, slide.autoPlay, publish]);
 
-    const latestOffset = useLatest(offset);
-    const latestVideoAutoPlay = useLatest(video.autoPlay);
-    const latestSlideAutoPlay = useLatest(slide.autoPlay);
+    const handleVideoRef = useEventCallback((node: HTMLVideoElement) => {
+        if (offset === 0 && (video.autoPlay || slide.autoPlay) && node.paused) {
+            node.play().catch(() => {});
+        }
+    });
 
     const setVideoRef = React.useCallback(
-        (el: HTMLVideoElement | null) => {
-            videoRef.current = el;
+        (node: HTMLVideoElement | null) => {
+            videoRef.current = node;
 
-            if (
-                el &&
-                latestOffset.current === 0 &&
-                (latestVideoAutoPlay.current || latestSlideAutoPlay.current) &&
-                el.paused
-            ) {
-                el.play().catch(() => {});
+            if (node) {
+                handleVideoRef(node);
             }
         },
-        [latestOffset, latestVideoAutoPlay, latestSlideAutoPlay]
+        [handleVideoRef]
     );
 
     const { width, height, poster, sources } = slide;
@@ -172,7 +103,7 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
                         // even without devicePixelRatio adjustment
                         ...(width ? { maxWidth: `${width}px` } : null),
                     }}
-                    className={clsx(cssClass("video_container"), cssClass("flex_center"))}
+                    className={clsx(cssClass("video_container"), cssClass(CLASS_FLEX_CENTER))}
                 >
                     {containerRect && (
                         // eslint-disable-next-line jsx-a11y/media-has-caption
@@ -208,26 +139,3 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
         </>
     );
 };
-
-/** Video plugin */
-export const Video: Plugin = ({ augment }) => {
-    augment(({ render: { slide: renderSlide, ...restRender }, video: originalVideo, ...restProps }) => ({
-        render: {
-            slide: (slide, offset, rect) => {
-                if ("type" in slide && slide.type === "video") {
-                    return <VideoSlide slide={slide} offset={offset} />;
-                }
-                return renderSlide?.(slide, offset, rect);
-            },
-            ...restRender,
-        },
-        video: {
-            ...defaultVideoProps,
-            ...originalVideo,
-        },
-        ...restProps,
-    }));
-};
-
-// noinspection JSUnusedGlobalSymbols
-export default Video;

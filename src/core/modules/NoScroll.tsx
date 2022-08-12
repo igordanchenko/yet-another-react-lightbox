@@ -4,9 +4,10 @@ import { Component } from "../../types.js";
 import { createModule } from "../config.js";
 import { cssClass } from "../utils.js";
 import { useLayoutEffect, useRTL } from "../hooks/index.js";
+import { CLASS_NO_SCROLL, CLASS_NO_SCROLL_PADDING, MODULE_NO_SCROLL } from "../consts.js";
 
-const noScroll = cssClass("no_scroll");
-const noScrollPadding = cssClass("no_scroll_padding");
+const noScroll = cssClass(CLASS_NO_SCROLL);
+const noScrollPadding = cssClass(CLASS_NO_SCROLL_PADDING);
 
 const isHTMLElement = (element: Element): element is HTMLElement => "style" in element;
 
@@ -64,4 +65,4 @@ export const NoScroll: Component = ({ children }) => {
     return <>{children}</>;
 };
 
-export const NoScrollModule = createModule("no-scroll", NoScroll);
+export const NoScrollModule = createModule(MODULE_NO_SCROLL, NoScroll);

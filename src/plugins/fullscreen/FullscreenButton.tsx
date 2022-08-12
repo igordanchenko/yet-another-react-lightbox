@@ -1,82 +1,8 @@
 import * as React from "react";
 
-import { Component, LightboxProps, Plugin } from "../types.js";
-import {
-    clsx,
-    createIcon,
-    createModule,
-    cssClass,
-    IconButton,
-    label,
-    makeUseContext,
-    useLatest,
-} from "../core/index.js";
-
-declare module "../types.js" {
-    interface LightboxProps {
-        /** if `true`, enter fullscreen mode automatically when the lightbox opens */
-        fullscreen?: boolean;
-    }
-
-    interface Render {
-        /** render custom Enter/Exit Fullscreen button */
-        buttonFullscreen?: ({
-            fullscreen,
-            toggleFullscreen,
-        }: {
-            fullscreen: boolean;
-            toggleFullscreen: () => void;
-        }) => React.ReactNode;
-        /** render custom Enter Fullscreen icon */
-        iconEnterFullscreen?: () => React.ReactNode;
-        /** render custom Exit Fullscreen icon */
-        iconExitFullscreen?: () => React.ReactNode;
-    }
-}
-
-declare global {
-    // noinspection JSUnusedGlobalSymbols
-    interface Document {
-        webkitFullscreenEnabled?: boolean;
-        mozFullScreenEnabled?: boolean;
-        msFullscreenEnabled?: boolean;
-
-        webkitExitFullscreen?: () => void;
-        mozCancelFullScreen?: () => void;
-        msExitFullscreen?: () => void;
-
-        webkitFullscreenElement?: Element;
-        mozFullScreenElement?: Element;
-        msFullscreenElement?: Element;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    interface HTMLElement {
-        webkitRequestFullscreen?: () => void;
-        mozRequestFullScreen?: () => void;
-        msRequestFullscreen?: () => void;
-    }
-}
-
-type FullscreenContextType = {
-    containerRef: React.RefObject<HTMLDivElement>;
-};
-
-const FullscreenContext = React.createContext<FullscreenContextType | null>(null);
-
-const useFullscreen = makeUseContext("useFullscreen", "FullscreenContext", FullscreenContext);
-
-export const FullscreenContainer: Component = ({ children }) => {
-    const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-    const context = React.useMemo(() => ({ containerRef }), []);
-
-    return (
-        <div ref={containerRef} className={clsx(cssClass("fullscreen"), cssClass("fullsize"))}>
-            <FullscreenContext.Provider value={context}>{children}</FullscreenContext.Provider>
-        </div>
-    );
-};
+import { createIcon, IconButton, label, useEventCallback } from "../../core/index.js";
+import { LightboxProps } from "../../types.js";
+import { useFullscreen } from "./FullscreenContext.js";
 
 const EnterFullscreenIcon = createIcon(
     "EnterFullscreen",
@@ -97,9 +23,8 @@ export type FullscreenButtonProps = Pick<LightboxProps, "labels" | "render"> & {
 export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels, render }) => {
     const [mounted, setMounted] = React.useState(false);
     const [fullscreen, setFullscreen] = React.useState(false);
-    const latestAuto = useLatest(auto);
 
-    const { containerRef } = useFullscreen();
+    const containerRef = useFullscreen();
 
     const isFullscreenEnabled = () =>
         document.fullscreenEnabled ??
@@ -170,7 +95,10 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels
         }
     }, [containerRef, getFullscreenElement]);
 
-    React.useEffect(() => setMounted(true), []);
+    React.useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
 
     React.useEffect(() => {
         const events = ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"];
@@ -186,13 +114,19 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels
         };
     }, [fullscreenChangeListener]);
 
-    React.useEffect(() => () => exitFullscreen(), [exitFullscreen]);
-
-    React.useEffect(() => {
-        if (latestAuto.current) {
+    const handleAutoFullscreen = useEventCallback(() => {
+        if (auto) {
             requestFullscreen();
         }
-    }, [latestAuto, requestFullscreen]);
+    });
+
+    React.useEffect(() => {
+        handleAutoFullscreen();
+
+        return () => {
+            exitFullscreen();
+        };
+    }, [handleAutoFullscreen, exitFullscreen]);
 
     if (!mounted || !isFullscreenEnabled()) return null;
 
@@ -207,27 +141,3 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels
         />
     );
 };
-
-/** Fullscreen plugin */
-export const Fullscreen: Plugin = ({ augment, contains, addParent }) => {
-    augment(({ toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
-        toolbar: {
-            buttons: [
-                <FullscreenButton
-                    key="fullscreen"
-                    auto={Boolean(restProps.fullscreen)}
-                    labels={restProps.labels}
-                    render={restProps.render}
-                />,
-                ...buttons,
-            ],
-            ...restToolbar,
-        },
-        ...restProps,
-    }));
-
-    addParent(contains("thumbnails") ? "thumbnails" : "controller", createModule("fullscreen", FullscreenContainer));
-};
-
-// noinspection JSUnusedGlobalSymbols
-export default Fullscreen;

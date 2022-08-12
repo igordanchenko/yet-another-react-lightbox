@@ -2,11 +2,19 @@ import * as React from "react";
 
 import { Component, Labels } from "../../types.js";
 import { createModule } from "../config.js";
+import { useEventCallback, useRTL } from "../hooks/index.js";
 import { cssClass, label as translateLabel } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
-import { Publish, useEvents } from "../contexts/index.js";
+import { Publish, useEvents, useLightboxState } from "../contexts/index.js";
 import { useController } from "./Controller.js";
-import { useLatest, useRTL } from "../hooks/index.js";
+import {
+    ACTION_NEXT,
+    ACTION_PREV,
+    EVENT_ON_KEY_DOWN,
+    MODULE_NAVIGATION,
+    VK_ARROW_LEFT,
+    VK_ARROW_RIGHT,
+} from "../consts.js";
 
 export type NavigationButtonProps = {
     publish: Publish;
@@ -46,21 +54,22 @@ export const Navigation: Component = ({
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }) => {
-    const { currentIndex, subscribeSensors } = useController();
+    const {
+        state: { currentIndex },
+    } = useLightboxState();
+    const { subscribeSensors } = useController();
     const { publish } = useEvents();
-    const isRTL = useLatest(useRTL());
+    const isRTL = useRTL();
 
-    React.useEffect(
-        () =>
-            subscribeSensors("onKeyDown", (event) => {
-                if (event.key === "ArrowLeft") {
-                    publish(isRTL.current ? "next" : "prev");
-                } else if (event.key === "ArrowRight") {
-                    publish(isRTL.current ? "prev" : "next");
-                }
-            }),
-        [subscribeSensors, publish, isRTL]
-    );
+    const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+        if (event.key === VK_ARROW_LEFT) {
+            publish(isRTL ? ACTION_NEXT : ACTION_PREV);
+        } else if (event.key === VK_ARROW_RIGHT) {
+            publish(isRTL ? ACTION_PREV : ACTION_NEXT);
+        }
+    });
+
+    React.useEffect(() => subscribeSensors(EVENT_ON_KEY_DOWN, handleKeyDown), [subscribeSensors, handleKeyDown]);
 
     return (
         <>
@@ -69,7 +78,7 @@ export const Navigation: Component = ({
             ) : (
                 <NavigationButton
                     label="Previous"
-                    action="prev"
+                    action={ACTION_PREV}
                     icon={PreviousIcon}
                     renderIcon={iconPrev}
                     disabled={finite && currentIndex === 0}
@@ -83,7 +92,7 @@ export const Navigation: Component = ({
             ) : (
                 <NavigationButton
                     label="Next"
-                    action="next"
+                    action={ACTION_NEXT}
                     icon={NextIcon}
                     renderIcon={iconNext}
                     disabled={finite && currentIndex === slides.length - 1}
@@ -95,4 +104,4 @@ export const Navigation: Component = ({
     );
 };
 
-export const NavigationModule = createModule("navigation", Navigation);
+export const NavigationModule = createModule(MODULE_NAVIGATION, Navigation);

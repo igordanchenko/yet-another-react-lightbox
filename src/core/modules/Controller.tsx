@@ -1,258 +1,270 @@
 import * as React from "react";
 
-import { YARL_EVENT_BACKDROP_CLICK } from "../consts.js";
-import { Component, ComponentProps, LightboxDefaultProps } from "../../types.js";
-import { cleanup, clsx, cssClass, cssVar, makeUseContext } from "../utils.js";
+import { Component, ComponentProps } from "../../types.js";
 import { createModule } from "../config.js";
+import {
+    cleanup,
+    clsx,
+    cssClass,
+    cssVar,
+    isNumber,
+    makeComposePrefix,
+    makeUseContext,
+    parseLengthPercentage,
+} from "../utils.js";
 import {
     ContainerRect,
     SubscribeSensors,
     useContainerRect,
-    useLatest,
+    useEventCallback,
+    useForkRef,
     useLayoutEffect,
+    useMotionPreference,
     useRTL,
     useSensors,
 } from "../hooks/index.js";
-import { useEvents, useTimeouts } from "../contexts/index.js";
+import { useEvents, useLightboxState, useTimeouts } from "../contexts/index.js";
+import { SwipeState, usePointerSwipe, usePreventSwipeNavigation, useWheelSwipe } from "./controller/index.js";
+import {
+    ACTION_CLOSE,
+    ACTION_NEXT,
+    ACTION_PREV,
+    CLASS_FLEX_CENTER,
+    EVENT_ON_KEY_UP,
+    MODULE_CONTROLLER,
+    VK_ESCAPE,
+    YARL_EVENT_BACKDROP_CLICK,
+} from "../consts.js";
 
-const SWIPE_OFFSET_THRESHOLD = 30;
+const cssContainerPrefix = makeComposePrefix("container");
 
-type ControllerState = {
-    currentIndex: number;
-    globalIndex: number;
-};
-
-export type ControllerContextType = ControllerState & {
-    latestProps: React.MutableRefObject<ComponentProps>;
+export type ControllerContextType = {
+    getLightboxProps: () => ComponentProps;
     subscribeSensors: SubscribeSensors<HTMLDivElement>;
     transferFocus: () => void;
     containerRect: ContainerRect;
     containerRef: React.RefObject<HTMLDivElement>;
+    setCarouselRef: React.Ref<HTMLDivElement>;
 };
 
 const ControllerContext = React.createContext<ControllerContextType | null>(null);
 
 export const useController = makeUseContext("useController", "ControllerContext", ControllerContext);
 
-type ControllerRefs = {
-    state: ControllerState;
-    props: ComponentProps;
-    swipeState?: "swipe" | "swipe-animation";
-    swipeAnimationDuration: number;
-    swipeOffset: number;
-    swipeIntent: number;
-    swipeStartTime?: number;
-    swipeResetCleanup?: number;
-    swipeIntentCleanup?: number;
-    wheelResidualMomentum: number;
-    pointers: React.PointerEvent[];
-    activePointer?: number;
-};
-
 export const Controller: Component = ({ children, ...props }) => {
-    const { containerRef, setContainerRef, containerRect } = useContainerRect<HTMLDivElement>();
+    const { carousel, slides, animation, controller, on, styles } = props;
+
+    const { state, dispatch } = useLightboxState();
+
+    const [swipeState, setSwipeState] = React.useState(SwipeState.NONE);
+    const swipeOffset = React.useRef(0);
+    const swipeAnimationReset = React.useRef<number>();
+
     const { registerSensors, subscribeSensors } = useSensors<HTMLDivElement>();
     const { subscribe, publish } = useEvents();
     const { setTimeout, clearTimeout } = useTimeouts();
-    const isRTL = useLatest(useRTL());
 
-    const [state, setState] = React.useState<ControllerState>({
-        currentIndex: props.index,
-        globalIndex: props.index,
-    });
+    const { containerRef, setContainerRef, containerRect } = useContainerRect<HTMLDivElement>();
+    const handleContainerRef = useForkRef(usePreventSwipeNavigation(), setContainerRef);
 
-    const latestProps = useLatest(props);
+    const carouselRef = React.useRef<HTMLDivElement | null>(null);
+    const setCarouselRef = useForkRef(carouselRef, undefined);
 
-    const refs = React.useRef<ControllerRefs>({
-        state,
-        props,
-        swipeOffset: 0,
-        swipeIntent: 0,
-        swipeAnimationDuration: props.animation.swipe,
-        wheelResidualMomentum: 0,
-        pointers: [],
-    });
+    const carouselAnimation = React.useRef<Animation>();
+    const carouselSwipeAnimation = React.useRef<{ rect: DOMRect; index: number }>();
 
-    refs.current.state = state;
-    refs.current.props = props;
+    const reduceMotion = useMotionPreference();
 
-    // prevent browser back/forward navigation on touchpad left/right swipe
-    // this has to be done via non-passive native event handler
-    useLayoutEffect(() => {
-        const preventDefault = (event: WheelEvent) => {
-            if (Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.ctrlKey) {
-                event.preventDefault();
-            }
-        };
+    const isRTL = useRTL();
 
-        const node = containerRef.current;
-        if (node) {
-            node.addEventListener("wheel", preventDefault, { passive: false });
-        }
+    const rtl = useEventCallback((value?: number) => (isRTL ? -1 : 1) * (isNumber(value) ? value : 1));
 
-        return () => {
-            if (node) {
-                node.removeEventListener("wheel", preventDefault);
-            }
-        };
-    }, [containerRef]);
-
-    React.useEffect(() => {
-        if (refs.current.props.controller.focus) {
-            containerRef.current?.focus();
-        }
-    }, [containerRef, refs]);
-
-    React.useEffect(() => {
-        refs.current.props.on.view?.(state.currentIndex);
-    }, [state.currentIndex]);
-
-    const updateSwipeOffset = React.useCallback(() => {
-        const offsetVar = cssVar("swipe_offset");
-        if (refs.current.swipeOffset !== 0) {
-            containerRef.current?.style.setProperty(offsetVar, `${Math.round(refs.current.swipeOffset)}px`);
-        } else {
-            containerRef.current?.style.removeProperty(offsetVar);
-        }
-    }, [containerRef]);
-
-    useLayoutEffect(() => {
-        updateSwipeOffset();
-    });
-
-    const rerender = React.useCallback(() => {
-        setState((prev) => ({ ...prev }));
-    }, []);
-
-    const resetSwipe = React.useCallback(() => {
-        const { current } = refs;
-
-        current.swipeOffset = 0;
-        current.swipeIntent = 0;
-        current.swipeStartTime = undefined;
-
-        clearTimeout(current.swipeResetCleanup);
-        current.swipeResetCleanup = undefined;
-
-        clearTimeout(current.swipeIntentCleanup);
-        current.swipeIntentCleanup = undefined;
-    }, [clearTimeout]);
-
-    const rtl = React.useCallback(
-        (value?: number) => (isRTL.current ? -1 : 1) * (typeof value === "number" ? value : 1),
-        [isRTL]
-    );
-
-    const isSwipeValid = React.useCallback(
-        (offset: number) => {
-            const {
-                state: { currentIndex },
-                props: { carousel, slides },
-            } = refs.current;
-
-            return !(
+    const isSwipeValid = useEventCallback(
+        (offset: number) =>
+            !(
                 carousel.finite &&
-                ((rtl(offset) > 0 && currentIndex === 0) || (rtl(offset) < 0 && currentIndex === slides.length - 1))
-            );
-        },
-        [rtl]
+                ((rtl(offset) > 0 && state.currentIndex === 0) ||
+                    (rtl(offset) < 0 && state.currentIndex === slides.length - 1))
+            )
     );
 
-    const swipe = React.useCallback(
-        (direction?: "prev" | "next", count = 1) => {
-            const { current } = refs;
-            const slidesCount = current.props.slides.length;
-            const swipeAnimationDuration = current.props.animation.swipe;
-            const { currentIndex, globalIndex } = current.state;
-            const { swipeOffset } = current;
+    const setSwipeOffset = React.useCallback(
+        (offset: number) => {
+            swipeOffset.current = offset;
 
-            let newSwipeState: ControllerRefs["swipeState"] = "swipe-animation";
-            let newSwipeAnimationDuration = swipeAnimationDuration * count;
+            containerRef.current?.style.setProperty(cssVar("swipe_offset"), `${Math.round(offset)}px`);
+        },
+        [containerRef]
+    );
+
+    const swipe = useEventCallback(
+        (action: { direction?: "prev" | "next"; count?: number; offset?: number; duration?: number }) => {
+            const swipeDuration = animation.swipe;
+            const currentSwipeOffset = action.offset || 0;
+
+            let { direction } = action;
+            const count = action.count ?? 1;
+
+            let newSwipeState: SwipeState = SwipeState.ANIMATION;
+            let newSwipeAnimationDuration = swipeDuration * count;
 
             if (!direction) {
-                const containerWidth = containerRef.current?.clientWidth;
+                const containerWidth = containerRect?.width;
 
-                const elapsedTime = current.swipeStartTime ? Date.now() - current.swipeStartTime : 0;
+                const elapsedTime = action.duration || 0;
                 const expectedTime = containerWidth
-                    ? (swipeAnimationDuration / containerWidth) * Math.abs(swipeOffset)
-                    : swipeAnimationDuration;
+                    ? (swipeDuration / containerWidth) * Math.abs(currentSwipeOffset)
+                    : swipeDuration;
 
-                if (
-                    containerWidth &&
-                    ((swipeOffset !== 0 && elapsedTime < swipeAnimationDuration) ||
-                        Math.abs(swipeOffset) > 0.5 * containerWidth)
-                ) {
-                    newSwipeAnimationDuration =
-                        (swipeAnimationDuration / containerWidth) * (containerWidth - Math.abs(swipeOffset));
-
+                if (count !== 0) {
                     if (elapsedTime < expectedTime) {
                         newSwipeAnimationDuration =
                             (newSwipeAnimationDuration / expectedTime) * Math.max(elapsedTime, expectedTime / 5);
+                    } else if (containerWidth) {
+                        newSwipeAnimationDuration =
+                            (swipeDuration / containerWidth) * (containerWidth - Math.abs(currentSwipeOffset));
                     }
-
-                    // eslint-disable-next-line no-param-reassign
-                    direction = rtl(swipeOffset) > 0 ? "prev" : "next";
                 } else {
-                    newSwipeAnimationDuration = swipeAnimationDuration / 2;
+                    newSwipeAnimationDuration = swipeDuration / 2;
+                }
+
+                if (count !== 0) {
+                    direction = rtl(currentSwipeOffset) > 0 ? ACTION_PREV : ACTION_NEXT;
                 }
             }
 
-            const newState: Partial<ControllerState> = {};
-            if (direction === "prev") {
+            let increment: number | undefined;
+            if (direction === ACTION_PREV) {
                 if (isSwipeValid(rtl(1))) {
-                    newState.currentIndex = (currentIndex - count + slidesCount) % slidesCount;
-                    newState.globalIndex = globalIndex - count;
+                    increment = -count;
                 } else {
-                    newSwipeState = undefined;
-                    newSwipeAnimationDuration = swipeAnimationDuration;
+                    newSwipeState = SwipeState.NONE;
+                    newSwipeAnimationDuration = swipeDuration;
                 }
-            } else if (direction === "next") {
+            } else if (direction === ACTION_NEXT) {
                 if (isSwipeValid(rtl(-1))) {
-                    newState.currentIndex = (currentIndex + count) % slidesCount;
-                    newState.globalIndex = globalIndex + count;
+                    increment = count;
                 } else {
-                    newSwipeState = undefined;
-                    newSwipeAnimationDuration = swipeAnimationDuration;
+                    newSwipeState = SwipeState.NONE;
+                    newSwipeAnimationDuration = swipeDuration;
                 }
+            }
+
+            if (carouselRef.current) {
+                carouselSwipeAnimation.current = {
+                    rect: carouselRef.current.getBoundingClientRect(),
+                    index: state.globalIndex,
+                };
             }
 
             newSwipeAnimationDuration = Math.round(newSwipeAnimationDuration);
 
-            resetSwipe();
-
-            current.swipeState = newSwipeState;
-            current.swipeAnimationDuration = newSwipeAnimationDuration;
-
+            clearTimeout(swipeAnimationReset.current);
             if (newSwipeState) {
-                setTimeout(() => {
-                    current.swipeState = undefined;
-                    current.swipeAnimationDuration = current.props.animation.swipe;
-
-                    rerender();
+                const timeoutId = setTimeout(() => {
+                    if (swipeAnimationReset.current === timeoutId) {
+                        setSwipeOffset(0);
+                        setSwipeState(SwipeState.NONE);
+                    }
                 }, newSwipeAnimationDuration);
+                swipeAnimationReset.current = timeoutId;
             }
 
-            publish("controller-swipe", { ...newState, animationDuration: current.swipeAnimationDuration });
+            setSwipeState(newSwipeState);
 
-            setState((prev) => ({ ...prev, ...newState }));
-        },
-        [setTimeout, resetSwipe, isSwipeValid, rerender, containerRef, rtl, publish]
+            dispatch({ increment, animationDuration: newSwipeAnimationDuration });
+        }
     );
+
+    const animateCarouselSwipe = useEventCallback(() => {
+        const swipeAnimation = carouselSwipeAnimation.current;
+        carouselSwipeAnimation.current = undefined;
+
+        if (swipeAnimation && carouselRef.current && containerRect) {
+            const parsedSpacing = parseLengthPercentage(carousel.spacing);
+            const spacingValue =
+                (parsedSpacing.percent ? (parsedSpacing.percent * containerRect.width) / 100 : parsedSpacing.pixel) ||
+                0;
+
+            carouselAnimation.current?.cancel();
+
+            carouselAnimation.current = carouselRef.current.animate?.(
+                [
+                    {
+                        transform: `translateX(${
+                            rtl(state.globalIndex - swipeAnimation.index) * (containerRect.width + spacingValue) +
+                            swipeAnimation.rect.x -
+                            carouselRef.current.getBoundingClientRect().x
+                        }px)`,
+                    },
+                    { transform: "translateX(0)" },
+                ],
+                !reduceMotion ? state.animationDuration : 0
+            );
+
+            if (carouselAnimation.current) {
+                carouselAnimation.current.onfinish = () => {
+                    carouselAnimation.current = undefined;
+                };
+            }
+        }
+    });
+
+    useLayoutEffect(animateCarouselSwipe);
+
+    const swipeParams = [
+        subscribeSensors,
+        isSwipeValid,
+        containerRect?.width || 0,
+        animation.swipe,
+        () => setSwipeState(SwipeState.SWIPE), // onSwipeStart
+        (offset: number) => setSwipeOffset(offset), // onSwipeProgress
+        (offset: number, duration: number) => swipe({ offset, duration, count: 1 }), // onSwipeFinish
+        (offset: number) => swipe({ offset, count: 0 }), // onSwipeCancel
+    ] as const;
+
+    usePointerSwipe(...swipeParams);
+
+    useWheelSwipe(swipeState, ...swipeParams);
+
+    const focusOnMount = useEventCallback(() => {
+        if (controller.focus) {
+            containerRef.current?.focus();
+        }
+    });
+
+    React.useEffect(focusOnMount, [focusOnMount]);
+
+    const handleIndexChange = useEventCallback(() => {
+        on.view?.(state.currentIndex);
+    });
+
+    React.useEffect(handleIndexChange, [state.currentIndex, handleIndexChange]);
 
     React.useEffect(
         () =>
             cleanup(
-                subscribe("prev", (_, count) => swipe("prev", typeof count === "number" ? count : undefined)),
-                subscribe("next", (_, count) => swipe("next", typeof count === "number" ? count : undefined))
+                subscribe(ACTION_PREV, (count) =>
+                    swipe({
+                        direction: ACTION_PREV,
+                        count: isNumber(count) ? count : undefined,
+                    })
+                ),
+                subscribe(ACTION_NEXT, (count) =>
+                    swipe({
+                        direction: ACTION_NEXT,
+                        count: isNumber(count) ? count : undefined,
+                    })
+                )
             ),
         [subscribe, swipe]
     );
 
     React.useEffect(
         () =>
-            subscribeSensors("onKeyUp", (event: React.KeyboardEvent) => {
-                if (event.code === "Escape") {
-                    publish("close");
+            subscribeSensors(EVENT_ON_KEY_UP, (event: React.KeyboardEvent) => {
+                if (event.code === VK_ESCAPE) {
+                    publish(ACTION_CLOSE);
                 }
             }),
         [subscribeSensors, publish]
@@ -260,239 +272,47 @@ export const Controller: Component = ({ children, ...props }) => {
 
     React.useEffect(
         () =>
-            props.controller.closeOnBackdropClick
-                ? subscribe(YARL_EVENT_BACKDROP_CLICK, () => publish("close"))
+            controller.closeOnBackdropClick
+                ? subscribe(YARL_EVENT_BACKDROP_CLICK, () => publish(ACTION_CLOSE))
                 : () => {},
-        [props.controller.closeOnBackdropClick, publish, subscribe]
+        [controller.closeOnBackdropClick, publish, subscribe]
     );
 
-    const clearPointer = React.useCallback((event: React.PointerEvent) => {
-        const { current } = refs;
+    const transferFocus = useEventCallback(() => containerRef.current?.focus());
 
-        if (current.activePointer === event.pointerId) {
-            current.activePointer = undefined;
-        }
+    const getLightboxProps = useEventCallback(() => props);
 
-        current.pointers.splice(
-            0,
-            current.pointers.length,
-            ...current.pointers.filter((p) => p.pointerId !== event.pointerId)
-        );
-    }, []);
-
-    const addPointer = React.useCallback(
-        (event: React.PointerEvent) => {
-            clearPointer(event);
-            refs.current.pointers.push(event);
-        },
-        [clearPointer]
-    );
-
-    const onPointerDown = React.useCallback(
-        (event: React.PointerEvent) => {
-            addPointer(event);
-        },
-        [addPointer]
-    );
-
-    const onPointerMove = React.useCallback(
-        (event: React.PointerEvent) => {
-            const { current } = refs;
-            const original = current.pointers.find((p) => p.pointerId === event.pointerId);
-            if (original) {
-                const deltaX = event.clientX - original.clientX;
-                const deltaY = event.clientY - original.clientY;
-
-                if (!current.swipeState) {
-                    if (
-                        isSwipeValid(deltaX) &&
-                        Math.abs(deltaX) > Math.abs(deltaY) &&
-                        Math.abs(deltaX) > SWIPE_OFFSET_THRESHOLD
-                    ) {
-                        addPointer(event);
-
-                        current.activePointer = event.pointerId;
-                        current.swipeStartTime = Date.now();
-
-                        current.swipeState = "swipe";
-
-                        rerender();
-                    }
-                } else if (current.swipeState === "swipe") {
-                    if (event.pointerId === current.activePointer) {
-                        current.swipeOffset = deltaX;
-
-                        updateSwipeOffset();
-                    }
-                }
-            }
-        },
-        [addPointer, updateSwipeOffset, isSwipeValid, rerender]
-    );
-
-    const onPointerUp = React.useCallback(
-        (event: React.PointerEvent) => {
-            const { current } = refs;
-
-            if (
-                current.pointers.find((p) => p.pointerId === event.pointerId) &&
-                current.swipeState === "swipe" &&
-                current.activePointer === event.pointerId
-            ) {
-                swipe();
-            }
-
-            clearPointer(event);
-        },
-        [clearPointer, swipe]
-    );
-
-    React.useEffect(
-        () =>
-            cleanup(
-                subscribeSensors("onPointerDown", onPointerDown),
-                subscribeSensors("onPointerMove", onPointerMove),
-                subscribeSensors("onPointerUp", onPointerUp),
-                subscribeSensors("onPointerLeave", onPointerUp),
-                subscribeSensors("onPointerCancel", onPointerUp)
-            ),
-        [subscribeSensors, onPointerDown, onPointerMove, onPointerUp]
-    );
-
-    const onWheel = React.useCallback(
-        (event: React.WheelEvent) => {
-            if (event.ctrlKey) {
-                // zoom
-                return;
-            }
-
-            if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-                // pan-y
-                return;
-            }
-
-            const { current } = refs;
-            if (!current.swipeState) {
-                if (Math.abs(event.deltaX) <= 1.2 * Math.abs(current.wheelResidualMomentum)) {
-                    current.wheelResidualMomentum = event.deltaX;
-                    return;
-                }
-
-                if (!isSwipeValid(-event.deltaX)) {
-                    return;
-                }
-
-                current.swipeIntent += event.deltaX;
-                clearTimeout(current.swipeIntentCleanup);
-
-                if (Math.abs(current.swipeIntent) > SWIPE_OFFSET_THRESHOLD) {
-                    current.swipeStartTime = Date.now();
-                    current.swipeIntent = 0;
-                    current.wheelResidualMomentum = 0;
-
-                    current.swipeState = "swipe";
-
-                    rerender();
-                } else {
-                    current.swipeIntentCleanup = setTimeout(() => {
-                        current.swipeIntent = 0;
-                        current.swipeIntentCleanup = undefined;
-                    }, current.props.animation.swipe);
-                }
-            } else if (current.swipeState === "swipe") {
-                const containerWidth = containerRef.current?.clientWidth;
-
-                if (containerWidth) {
-                    current.swipeOffset -= event.deltaX;
-                    current.swipeOffset =
-                        Math.min(Math.abs(current.swipeOffset), containerWidth) * Math.sign(current.swipeOffset);
-
-                    updateSwipeOffset();
-
-                    clearTimeout(current.swipeResetCleanup);
-
-                    if (Math.abs(current.swipeOffset) > 0.2 * containerWidth) {
-                        current.wheelResidualMomentum = event.deltaX;
-                        swipe();
-                        return;
-                    }
-
-                    const currentSwipeOffset = current.swipeOffset;
-                    current.swipeResetCleanup = setTimeout(() => {
-                        current.swipeResetCleanup = undefined;
-                        if (current.swipeState === "swipe" && current.swipeOffset === currentSwipeOffset) {
-                            resetSwipe();
-
-                            current.swipeState = undefined;
-
-                            rerender();
-                        }
-                    }, 2 * current.props.animation.swipe);
-                }
-            } else {
-                current.wheelResidualMomentum = event.deltaX;
-            }
-        },
-        [updateSwipeOffset, setTimeout, clearTimeout, swipe, resetSwipe, rerender, isSwipeValid, containerRef]
-    );
-
-    React.useEffect(() => subscribeSensors("onWheel", onWheel), [subscribeSensors, onWheel]);
-
-    const transferFocus = React.useCallback(() => containerRef.current?.focus(), [containerRef]);
-
-    const context = React.useMemo(
+    const context = React.useMemo<ControllerContextType>(
         () => ({
-            latestProps,
-            currentIndex: state.currentIndex,
-            globalIndex: state.globalIndex,
+            getLightboxProps,
             subscribeSensors,
             transferFocus,
-            containerRect,
+            // we are not going to render context provider when containerRect is undefined
+            containerRect: containerRect || { width: 0, height: 0 },
             containerRef,
+            setCarouselRef,
         }),
-        [
-            latestProps,
-            state.currentIndex,
-            state.globalIndex,
-            subscribeSensors,
-            transferFocus,
-            containerRect,
-            containerRef,
-        ]
+        [getLightboxProps, subscribeSensors, transferFocus, containerRect, containerRef, setCarouselRef]
     );
 
     return (
         <div
-            ref={setContainerRef}
-            className={clsx(
-                cssClass("container"),
-                cssClass("fullsize"),
-                refs.current.swipeState === "swipe" && cssClass("container_swipe")
-            )}
+            ref={handleContainerRef}
+            className={clsx(cssClass(cssContainerPrefix()), cssClass(CLASS_FLEX_CENTER))}
             style={{
-                ...(refs.current.swipeAnimationDuration !== LightboxDefaultProps.animation.swipe
-                    ? {
-                          [cssVar("swipe_animation_duration")]: `${Math.round(refs.current.swipeAnimationDuration)}ms`,
-                      }
+                ...(swipeState === SwipeState.SWIPE
+                    ? { [cssVar("swipe_offset")]: `${Math.round(swipeOffset.current)}px` }
                     : null),
-                ...(props.controller.touchAction !== "none"
-                    ? {
-                          [cssVar("controller_touch_action")]: props.controller.touchAction,
-                      }
-                    : null),
-                ...props.styles.container,
+                ...(controller.touchAction !== "none" ? {} : null),
+                ...styles.container,
             }}
-            {...(props.controller.aria ? { role: "presentation", "aria-live": "polite" } : null)}
+            {...(controller.aria ? { role: "presentation", "aria-live": "polite" } : null)}
             tabIndex={-1}
             {...registerSensors}
         >
-            {containerRect && (
-                <ControllerContext.Provider value={context as ControllerContextType}>
-                    {children}
-                </ControllerContext.Provider>
-            )}
+            {containerRect && <ControllerContext.Provider value={context}>{children}</ControllerContext.Provider>}
         </div>
     );
 };
 
-export const ControllerModule = createModule("controller", Controller);
+export const ControllerModule = createModule(MODULE_CONTROLLER, Controller);

@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { clsx, cssClass } from "../utils.js";
 import { useController } from "../modules/Controller.js";
+import { ELEMENT_BUTTON, ELEMENT_ICON } from "../consts.js";
 
 export type IconButtonProps = Omit<
     React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
@@ -14,23 +15,19 @@ export type IconButtonProps = Omit<
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
     ({ label, className, icon: Icon, renderIcon, onClick, style, ...rest }, ref) => {
-        const {
-            latestProps: {
-                current: { styles },
-            },
-        } = useController();
+        const { styles } = useController().getLightboxProps();
 
         return (
             <button
                 ref={ref}
                 type="button"
                 aria-label={label}
-                className={clsx(cssClass("button"), className)}
+                className={clsx(cssClass(ELEMENT_BUTTON), className)}
                 onClick={onClick}
                 style={{ ...style, ...styles.button }}
                 {...rest}
             >
-                {renderIcon ? renderIcon() : <Icon className={cssClass("icon")} style={styles.icon} />}
+                {renderIcon ? renderIcon() : <Icon className={cssClass(ELEMENT_ICON)} style={styles.icon} />}
             </button>
         );
     }

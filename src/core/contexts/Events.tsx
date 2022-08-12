@@ -2,19 +2,13 @@ import * as React from "react";
 
 import { makeUseContext } from "../utils.js";
 
-export type Topic = string;
+export type Callback = (event?: unknown) => void;
 
-export type Callback = (topic: Topic, event?: unknown) => void;
+export type Subscribe = (topic: string, callback: Callback) => () => void;
 
-export type Events = {
-    [key: string]: Callback[];
-};
+export type Unsubscribe = (topic: string, callback: Callback) => void;
 
-export type Subscribe = (topic: Topic, callback: Callback) => () => void;
-
-export type Unsubscribe = (topic: Topic, callback: Callback) => void;
-
-export type Publish = (topic: Topic, event?: unknown) => void;
+export type Publish = (topic: string, event?: unknown) => void;
 
 export type EventsContextType = {
     subscribe: Subscribe;
@@ -26,40 +20,38 @@ const EventsContext = React.createContext<EventsContextType | null>(null);
 
 export const useEvents = makeUseContext("useEvents", "EventsContext", EventsContext);
 
-export const EventsProvider = ({ children }: React.PropsWithChildren<{}>) => {
-    const subscriptions = React.useRef<Events>({} as Events);
-
-    const unsubscribe = (topic: Topic, callback: Callback) => {
-        if (subscriptions.current[topic]) {
-            subscriptions.current[topic] = subscriptions.current[topic].filter((cb) => cb !== callback);
-        }
-    };
-
-    const subscribe = (topic: Topic, callback: Callback) => {
-        if (!subscriptions.current[topic]) {
-            subscriptions.current[topic] = [];
-        }
-        subscriptions.current[topic].push(callback);
-
-        return () => unsubscribe(topic, callback);
-    };
-
-    const publish = (topic: Topic, event?: unknown) => {
-        subscriptions.current[topic]?.forEach((callback) => callback(topic, event));
-    };
+export const EventsProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+    const [subscriptions] = React.useState<{ [key: string]: Callback[] }>({});
 
     React.useEffect(
         () => () => {
-            subscriptions.current = {} as Events;
+            Object.keys(subscriptions).forEach((key) => delete subscriptions[key]);
         },
-        []
+        [subscriptions]
     );
 
-    const context = React.useRef<EventsContextType>({
-        subscribe,
-        unsubscribe,
-        publish,
-    });
+    const context = React.useMemo<EventsContextType>(() => {
+        const unsubscribe = (topic: string, callback: Callback) => {
+            if (subscriptions[topic]) {
+                subscriptions[topic] = subscriptions[topic].filter((cb) => cb !== callback);
+            }
+        };
 
-    return <EventsContext.Provider value={context.current}>{children}</EventsContext.Provider>;
+        const subscribe = (topic: string, callback: Callback) => {
+            if (!subscriptions[topic]) {
+                subscriptions[topic] = [];
+            }
+            subscriptions[topic].push(callback);
+
+            return () => unsubscribe(topic, callback);
+        };
+
+        const publish = (topic: string, event?: unknown) => {
+            subscriptions[topic]?.forEach((callback) => callback(event));
+        };
+
+        return { publish, subscribe, unsubscribe };
+    }, [subscriptions]);
+
+    return <EventsContext.Provider value={context}>{children}</EventsContext.Provider>;
 };

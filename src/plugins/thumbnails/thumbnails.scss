@@ -1,4 +1,6 @@
-@import "../_common";
+@import "../../common";
+
+$vignette-size: 12%;
 
 @function localVar($key, $default) {
     @return globalVar(thumbnails_ + $key, $default);
@@ -6,89 +8,75 @@
 
 .yarl__thumbnails {
     display: flex;
+    height: 100%;
 
     &_top, &_bottom {
-        flex-flow: column nowrap;
-    }
-
-    &_top &_track, &_bottom &_track {
-        flex-flow: row nowrap;
-    }
-
-    &_start, &_end {
-        flex-flow: row nowrap;
+        flex-direction: column;
     }
 
     &_start &_track, &_end &_track {
-        flex-flow: column nowrap;
+        flex-direction: column;
     }
 
     &_wrapper {
-        flex-grow: 1;
+        flex: 1;
         position: relative;
     }
 
     &_container {
+        flex: 0 0 auto;
         background-color: localVar(container_background_color, $color-backdrop);
         padding: localVar(container_padding, 16px);
         position: relative;
         overflow: hidden;
-        z-index: 0;
         user-select: none;
         -webkit-touch-callout: none;
+    }
 
-        &::before, &::after {
-            content: localVar(vignette, "");
-            position: absolute;
-            z-index: 1;
+    &_vignette {
+        position: absolute;
+        pointer-events: none;
+        --yarl__thumbnails_vignette_size: 12%;
+    }
+
+    @media (min-width: 1200px) {
+        &_vignette {
+            --yarl__thumbnails_vignette_size: 8%;
         }
     }
 
-    &_top &_container::before, &_bottom &_container::before {
-        left: 0;
-        background: linear-gradient(to left, transparent, $color-backdrop);
+    @media (min-width: 2000px) {
+        &_vignette {
+            --yarl__thumbnails_vignette_size: 5%;
+        }
     }
 
-    &_top &_container::after, &_bottom &_container::after {
-        right: 0;
-        background: linear-gradient(to right, transparent, $color-backdrop);
-    }
-
-    &_top &_container::before, &_top &_container::after, &_bottom &_container::before, &_bottom &_container::after {
-        top: 0;
-        bottom: 0;
-        width: 60px;
-    }
-
-    &_start &_container::before, &_end &_container::before {
-        top: 0;
-        background: linear-gradient(to top, transparent, $color-backdrop);
-    }
-
-    &_start &_container::after, &_end &_container::after {
-        bottom: 0;
-        background: linear-gradient(to bottom, transparent, $color-backdrop);
-    }
-
-    &_start &_container::before, &_start &_container::after, &_end &_container::before, &_end &_container::after {
+    &_top &_vignette, &_bottom &_vignette  {
+        height: 100%;
         left: 0;
         right: 0;
-        height: 60px;
+        background: linear-gradient(to right, $color-backdrop 0px, transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)), $color-backdrop 100%);
+    }
+
+    &_start &_vignette, &_end &_vignette  {
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, $color-backdrop 0px, transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)), $color-backdrop 100%);
     }
 
     &_track {
-        display: flex;
         gap: localVar(thumbnail_gap, 16px);
     }
 
     &_thumbnail {
+        flex: 0 0 auto;
         cursor: pointer;
         appearance: none;
         background: localVar(thumbnail_background, $color-black);
         border: localVar(thumbnail_border, 1px solid $color-button);
         border-radius: localVar(thumbnail_border_radius, 4px);
         -webkit-tap-highlight-color: transparent;
-        flex-shrink: 0;
         position: relative;
         overflow: hidden;
         padding: localVar(thumbnail_padding, 4px);
@@ -123,7 +111,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate3d(-50%, -50%, 0);
+        transform: translateX(-50%) translateY(-50%);
         width: localVar(thumbnail_icon_size, 32px);
         height: localVar(thumbnail_icon_size, 32px);
     }
