@@ -11,6 +11,7 @@ export const defaultThumbnailsProps = {
     padding: 4,
     gap: 16,
     imageFit: "contain" as const,
+    vignette: true,
 };
 
 /** Thumbnails plugin */

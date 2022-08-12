@@ -26,6 +26,8 @@ declare module "../../types" {
             gap?: number;
             /** `object-fit` setting */
             imageFit?: ImageFit;
+            /** vignette effect on the edges of the thumbnails track */
+            vignette?: boolean;
         };
     }
 

@@ -166,7 +166,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
         }
     };
 
-    const { width, height, border, borderRadius, padding, gap, imageFit } = thumbnails;
+    const { width, height, border, borderRadius, padding, gap, imageFit, vignette } = thumbnails;
 
     return (
         <div
@@ -241,7 +241,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                     );
                 })}
             </nav>
-            <div className={cssClass(cssPrefix("vignette"))} />
+            {vignette && <div className={cssClass(cssPrefix("vignette"))} />}
         </div>
     );
 };
