@@ -461,7 +461,7 @@ export const ZoomContainer: React.FC<
         };
 
         rendered = isResponsiveImageSlide(slide) ? (
-            <ResponsiveImage {...slideProps} slide={slide} />
+            <ResponsiveImage {...slideProps} slide={slide} rect={scaledRect} />
         ) : (
             <ImageSlide
                 onLoad={(img) => setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })}
