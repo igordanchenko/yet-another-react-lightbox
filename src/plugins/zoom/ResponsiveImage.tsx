@@ -58,7 +58,7 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = (props) => {
 
     const style = {
         // workaround occasional flickering in mobile Safari
-        "-webkit-transform": "translateZ(0)",
+        WebkitTransform: "translateZ(0)",
         ...(rect.width / rect.height < width / height
             ? {
                   width: "100%",
