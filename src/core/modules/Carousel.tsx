@@ -136,7 +136,7 @@ export const Carousel: Component = ({ slides, carousel: { finite, preload, paddi
     return (
         <div
             ref={setCarouselRef}
-            className={cssClass(cssPrefix())}
+            className={clsx(cssClass(cssPrefix()), items.length > 0 && cssClass(cssPrefix("with_slides")))}
             style={
                 {
                     [`${cssVar(cssPrefix("slides_count"))}`]: items.length,
