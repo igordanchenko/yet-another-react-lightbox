@@ -1,7 +1,7 @@
 import * as React from "react";
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
-import { lightbox } from "../utils.js";
+import { lightbox, runAllTimers } from "../utils.js";
 import { Slideshow } from "../../src/plugins/index.js";
 import { isImageSlide } from "../../src/core/index.js";
 
@@ -31,10 +31,7 @@ describe("Inline", () => {
         );
 
         for (let i = 0; i < 10; i += 1) {
-            // eslint-disable-next-line @typescript-eslint/no-loop-func
-            act(() => {
-                jest.runAllTimers();
-            });
+            runAllTimers();
         }
 
         expect(onView).toHaveBeenCalledTimes(4);

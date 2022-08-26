@@ -1,6 +1,11 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 
-import { findCurrentImage, lightbox } from "./utils.js";
+import { expectCurrentImageToBe, findCurrentImage, findCurrentSlide, lightbox, runAllTimers } from "./utils.js";
+
+const fireWheelEvent = (element: Element, options: { deltaX?: number; deltaY?: number; ctrlKey?: boolean }) => {
+    // noinspection TypeScriptValidateJSTypes
+    fireEvent.wheel(element, options);
+};
 
 describe("Lightbox", () => {
     it("respects open prop", () => {
@@ -37,13 +42,13 @@ describe("Lightbox", () => {
     it("provides navigation buttons", () => {
         render(lightbox({ slides: [{ src: "image1" }, { src: "image2" }, { src: "image3" }] }));
 
-        expect(findCurrentImage()).toContain("image1");
+        expectCurrentImageToBe("image1");
 
         act(() => {
             screen.getByLabelText("Next").click();
         });
 
-        expect(findCurrentImage()).toContain("image2");
+        expectCurrentImageToBe("image2");
 
         act(() => {
             screen.getByLabelText("Previous").click();
@@ -52,6 +57,58 @@ describe("Lightbox", () => {
             screen.getByLabelText("Previous").click();
         });
 
-        expect(findCurrentImage()).toContain("image3");
+        expectCurrentImageToBe("image3");
+    });
+
+    it("supports wheel navigation", () => {
+        jest.useFakeTimers();
+
+        render(
+            lightbox({
+                slides: [{ src: "image1" }, { src: "image2" }, { src: "image3" }],
+                carousel: { finite: true },
+            })
+        );
+
+        expectCurrentImageToBe("image1");
+
+        const slide = findCurrentSlide()!;
+
+        // not a swipe
+        runAllTimers();
+        fireWheelEvent(slide, { deltaX: 1 });
+        fireWheelEvent(slide, { ctrlKey: true });
+        fireWheelEvent(slide, { deltaX: 100, deltaY: 200 });
+        fireWheelEvent(slide, { deltaX: 500, deltaY: 1000 });
+        runAllTimers();
+        expectCurrentImageToBe("image1");
+
+        // invalid swipe
+        runAllTimers();
+        fireWheelEvent(slide, { deltaX: -100 });
+        fireWheelEvent(slide, { deltaX: -1000 });
+        fireWheelEvent(slide, { deltaX: -1000 });
+        runAllTimers();
+        expectCurrentImageToBe("image1");
+
+        // insufficient swipe
+        runAllTimers();
+        fireWheelEvent(slide, { deltaX: 50 });
+        fireWheelEvent(slide, { deltaX: 100 });
+        runAllTimers();
+        expectCurrentImageToBe("image1");
+
+        // valid swipe
+        fireWheelEvent(slide, { deltaX: 10 });
+        fireWheelEvent(slide, { deltaX: 20 });
+        fireWheelEvent(slide, { deltaX: 30 });
+        fireWheelEvent(slide, { deltaX: 100 });
+        fireWheelEvent(slide, { deltaX: 300 });
+        fireWheelEvent(slide, { deltaX: 100 });
+        runAllTimers();
+        fireWheelEvent(slide, { deltaX: 50 });
+        expectCurrentImageToBe("image2");
+
+        jest.useRealTimers();
     });
 });

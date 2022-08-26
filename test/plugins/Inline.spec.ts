@@ -1,7 +1,7 @@
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { lightbox } from "../utils.js";
+import { lightbox, runAllTimers } from "../utils.js";
 import { Inline } from "../../src/plugins/index.js";
 
 describe("Inline", () => {
@@ -38,9 +38,7 @@ describe("Inline", () => {
 
         await user.keyboard("[Escape]");
 
-        act(() => {
-            jest.runAllTimers();
-        });
+        runAllTimers();
 
         testMainScenario();
 
