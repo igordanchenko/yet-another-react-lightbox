@@ -251,9 +251,11 @@ export type DeepPartial<T, K extends keyof T> = Omit<T, K> & {
 };
 
 /** Deep non-nullable utility type */
-export type DeepNonNullable<T> = NonNullable<{
-    [K in keyof T]-?: NonNullable<T[K]>;
-}>;
+export type DeepNonNullable<T> = T extends {}
+    ? {
+          [K in keyof T]-?: NonNullable<T[K]>;
+      }
+    : never;
 
 /** Lightbox external props */
 export type LightboxExternalProps = DeepPartial<
