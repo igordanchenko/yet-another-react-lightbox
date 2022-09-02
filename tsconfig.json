@@ -4,7 +4,7 @@
         "target": "ES2018",
         "module": "ES2015",
         "jsx": "react",
-        "lib": ["ES2018", "dom"],
+        "lib": ["ES2020", "dom"],
         "esModuleInterop": true,
         "moduleResolution": "node",
         "isolatedModules": true,
