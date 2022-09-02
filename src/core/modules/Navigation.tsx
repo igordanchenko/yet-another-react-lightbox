@@ -81,7 +81,7 @@ export const Navigation: Component = ({
                     action={ACTION_PREV}
                     icon={PreviousIcon}
                     renderIcon={iconPrev}
-                    disabled={finite && currentIndex === 0}
+                    disabled={slides.length === 0 || (finite && currentIndex === 0)}
                     labels={labels}
                     publish={publish}
                 />
@@ -95,7 +95,7 @@ export const Navigation: Component = ({
                     action={ACTION_NEXT}
                     icon={NextIcon}
                     renderIcon={iconNext}
-                    disabled={finite && currentIndex === slides.length - 1}
+                    disabled={slides.length === 0 || (finite && currentIndex === slides.length - 1)}
                     labels={labels}
                     publish={publish}
                 />

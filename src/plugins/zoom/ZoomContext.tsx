@@ -24,7 +24,9 @@ export const ZoomContextProvider: Component = ({ slides, children }) => {
         state: { currentIndex },
     } = useLightboxState();
 
-    const updateZoomSupported = useEventCallback(() => setIsZoomSupported(isImageSlide(slides[currentIndex])));
+    const updateZoomSupported = useEventCallback(() =>
+        setIsZoomSupported(slides.length > currentIndex && isImageSlide(slides[currentIndex]))
+    );
 
     useLayoutEffect(updateZoomSupported, [currentIndex, updateZoomSupported]);
 

@@ -56,7 +56,9 @@ export const SlideshowButton: React.FC = () => {
         scheduler.current = undefined;
     }, [clearTimeout]);
 
-    const reachedLastSlide = useEventCallback(() => finite && currentIndex === slidesCount - 1);
+    const reachedLastSlide = useEventCallback(
+        () => slides.length === 0 || (finite && currentIndex === slidesCount - 1)
+    );
 
     const scheduleNextSlide = useEventCallback(() => {
         cancelScheduler();
