@@ -71,7 +71,7 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = (props) => {
         <>
             {preload && preload !== current && (
                 <ImageSlide
-                    key={preload}
+                    key="preload"
                     {...props}
                     slide={{ ...image, src: preload, srcSet: undefined }}
                     style={{ position: "absolute", visibility: "hidden", ...style }}
@@ -86,7 +86,7 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = (props) => {
 
             {current && (
                 <ImageSlide
-                    key={current}
+                    key="current"
                     {...props}
                     slide={{ ...image, src: current, srcSet: undefined }}
                     style={style}
