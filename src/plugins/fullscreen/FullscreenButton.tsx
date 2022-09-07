@@ -130,14 +130,16 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = ({ auto, labels
 
     if (!mounted || !isFullscreenEnabled()) return null;
 
-    return render.buttonFullscreen ? (
-        <>{render.buttonFullscreen({ fullscreen, toggleFullscreen })}</>
-    ) : (
+    const customButton = render.buttonFullscreen?.({ fullscreen, toggleFullscreen });
+
+    return customButton === undefined ? (
         <IconButton
             label={fullscreen ? label(labels, "Exit Fullscreen") : label(labels, "Enter Fullscreen")}
             icon={fullscreen ? ExitFullscreenIcon : EnterFullscreenIcon}
             renderIcon={fullscreen ? render.iconExitFullscreen : render.iconEnterFullscreen}
             onClick={toggleFullscreen}
         />
+    ) : (
+        <>{customButton}</>
     );
 };
