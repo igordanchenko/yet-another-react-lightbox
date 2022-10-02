@@ -303,7 +303,9 @@ export const Controller: Component = ({ children, ...props }) => {
                 ...(swipeState === SwipeState.SWIPE
                     ? { [cssVar("swipe_offset")]: `${Math.round(swipeOffset.current)}px` }
                     : null),
-                ...(controller.touchAction !== "none" ? {} : null),
+                ...(controller.touchAction !== "none"
+                    ? { [cssVar("controller_touch_action")]: controller.touchAction }
+                    : null),
                 ...styles.container,
             }}
             {...(controller.aria ? { role: "presentation", "aria-live": "polite" } : null)}
