@@ -6,9 +6,9 @@ export const useMotionPreference = () => {
     React.useEffect(() => {
         const mediaQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
         setReduceMotion(mediaQuery?.matches);
-        const listener = () => setReduceMotion(mediaQuery.matches);
-        mediaQuery?.addEventListener("change", listener);
-        return () => mediaQuery?.removeEventListener("change", listener);
+        const listener = (event: MediaQueryListEvent) => setReduceMotion(event.matches);
+        mediaQuery?.addEventListener?.("change", listener);
+        return () => mediaQuery?.removeEventListener?.("change", listener);
     }, []);
 
     return reduceMotion;
