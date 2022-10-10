@@ -34,7 +34,9 @@ export const Description: React.FC<DescriptionProps> = ({
                 ...styles.captionsDescription,
             }}
         >
-            {description.split("\n").flatMap((line, index) => [...(index > 0 ? [<br key={index} />] : []), line])}
+            {typeof description === "string"
+                ? description.split("\n").flatMap((line, index) => [...(index > 0 ? [<br key={index} />] : []), line])
+                : description}
         </div>
     </div>
 );

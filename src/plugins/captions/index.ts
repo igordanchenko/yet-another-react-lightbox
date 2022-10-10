@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Captions } from "./Captions.js";
 
 type TextAlignment = "start" | "end" | "center";
@@ -5,9 +7,9 @@ type TextAlignment = "start" | "end" | "center";
 declare module "../../types" {
     interface GenericSlide {
         /** slide title */
-        title?: string;
+        title?: React.ReactNode;
         /** slide description */
-        description?: string;
+        description?: React.ReactNode;
     }
 
     interface LightboxProps {
