@@ -122,7 +122,8 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
 
     useLayoutEffect(handleIndexOffsetChange, [index, offset, handleIndexOffsetChange]);
 
-    const { finite, preload } = carousel;
+    const { finite } = carousel;
+    const preload = Math.max(Math.min(carousel.preload, slides.length - 1), 0);
 
     const items: { slide: Slide | null; index: number; placeholder?: boolean }[] = [];
 
