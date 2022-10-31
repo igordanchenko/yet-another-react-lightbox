@@ -66,8 +66,8 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
             const containerRect = container.current.getBoundingClientRect();
             const trackRect = track.current.getBoundingClientRect();
             animationOffset.current = isHorizontal(thumbnails.position)
-                ? trackRect.left - (containerRect.width - trackRect.width) / 2
-                : trackRect.top - (containerRect.height - trackRect.height) / 2;
+                ? trackRect.left - containerRect.left - (containerRect.width - trackRect.width) / 2
+                : trackRect.top - containerRect.top - (containerRect.height - trackRect.height) / 2;
         } else {
             animationOffset.current = 0;
         }
