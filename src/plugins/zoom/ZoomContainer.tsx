@@ -265,7 +265,7 @@ export const ZoomContainer: React.FC<
             changeZoom(zoomValue);
         };
 
-        const hasMeta = () => event.getModifierState("Meta") || event.getModifierState("OS");
+        const hasMeta = () => event.getModifierState("Meta");
 
         if (event.key === "+" || (event.key === "=" && hasMeta())) {
             handleChangeZoom(zoom * zoomInMultiplier);
