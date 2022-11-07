@@ -48,7 +48,7 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = (props) => {
         }
     });
 
-    useLayoutEffect(handleSourceChange, [rect?.width, rect?.height, pixelDensity, handleSourceChange]);
+    useLayoutEffect(handleSourceChange, [rect?.width, rect?.height, pixelDensity, image.src, handleSourceChange]);
 
     const handlePreload = useEventCallback((currentPreload: string) => {
         if (currentPreload === preload) {
