@@ -42,7 +42,7 @@ export const usePointerSwipe = <T extends Element = Element>(
     const addPointer = React.useCallback(
         (event: React.PointerEvent) => {
             clearPointer(event);
-
+            event.persist();
             pointers.current.push(event);
         },
         [clearPointer]

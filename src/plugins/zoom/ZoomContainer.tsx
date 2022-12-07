@@ -306,6 +306,7 @@ export const ZoomContainer: React.FC<
     const replacePointer = React.useCallback(
         (event: React.PointerEvent) => {
             clearPointer(event);
+            event.persist();
             activePointers.current.push(event);
         },
         [clearPointer]
