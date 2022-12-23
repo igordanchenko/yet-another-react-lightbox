@@ -77,6 +77,18 @@ export const usePointerSwipe = <T extends Element = Element>(
     const onPointerMove = useEventCallback((event: React.PointerEvent) => {
         const pointer = pointers.current.find((p) => p.pointerId === event.pointerId);
         if (pointer) {
+            const isCurrentPointer = activePointer.current === event.pointerId;
+
+            if (event.buttons === 0) {
+                // pointer must have been released while over an opaque element
+                if (isCurrentPointer && offset.current > 0) {
+                    onSwipeCancel(offset.current);
+                    offset.current = 0;
+                }
+                clearPointer(pointer);
+                return;
+            }
+
             const deltaX = event.clientX - pointer.clientX;
             const deltaY = event.clientY - pointer.clientY;
 
@@ -92,7 +104,7 @@ export const usePointerSwipe = <T extends Element = Element>(
                 startTime.current = Date.now();
 
                 onSwipeStart();
-            } else if (activePointer.current === event.pointerId) {
+            } else if (isCurrentPointer) {
                 offset.current = deltaX;
 
                 onSwipeProgress(deltaX);
