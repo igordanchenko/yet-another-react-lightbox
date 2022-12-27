@@ -14,7 +14,13 @@ export const Video: Plugin = ({ augment }) => {
         render: {
             slide: (slide, offset, rect) => {
                 if (slide.type === "video") {
-                    return <VideoSlide slide={slide} offset={offset} />;
+                    return (
+                        <VideoSlide
+                            key={`${slide.sources.map((source) => source.src).join(" ")}`}
+                            slide={slide}
+                            offset={offset}
+                        />
+                    );
                 }
                 return renderSlide?.(slide, offset, rect);
             },
