@@ -93,7 +93,7 @@ export const usePointerSwipe = <T extends Element = Element>(
             const deltaY = event.clientY - pointer.clientY;
 
             if (
-                !activePointer.current &&
+                activePointer.current === undefined &&
                 isSwipeValid(deltaX) &&
                 Math.abs(deltaX) > Math.abs(deltaY) &&
                 Math.abs(deltaX) > 30
