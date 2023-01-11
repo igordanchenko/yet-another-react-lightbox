@@ -80,12 +80,14 @@ export const usePointerSwipe = <T extends Element = Element>(
             const isCurrentPointer = activePointer.current === event.pointerId;
 
             if (event.buttons === 0) {
-                // pointer must have been released while over an opaque element
-                if (isCurrentPointer && offset.current > 0) {
-                    onSwipeCancel(offset.current);
-                    offset.current = 0;
+                // 2 known scenarios when we may end up here:
+                // 1) active pointer must have been released while over an opaque element (https://github.com/igordanchenko/yet-another-react-lightbox/issues/48)
+                // 2) out-of-order onpointermove / onpointerup events in Chrome (https://github.com/igordanchenko/yet-another-react-lightbox/issues/59)
+                if (isCurrentPointer && offset.current !== 0) {
+                    onPointerUp(event);
+                } else {
+                    clearPointer(pointer);
                 }
-                clearPointer(pointer);
                 return;
             }
 
