@@ -1,15 +1,5 @@
 {
-    "branches": [
-        "main",
-        {
-            "name": "next",
-            "prerelease": "rc"
-        },
-        {
-            "name": "next-major",
-            "prerelease": "rc"
-        }
-    ],
+    "branches": ["main", { "name": "next", "prerelease": "rc" }],
     "plugins": [
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",

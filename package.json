@@ -6,6 +6,7 @@
     "license": "MIT",
     "type": "module",
     "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "exports": {
         ".": "./dist/index.js",
         "./core": "./dist/core/index.js",
@@ -21,7 +22,6 @@
         "./plugins/zoom": "./dist/plugins/zoom/index.js",
         "./styles.css": "./dist/styles.css"
     },
-    "types": "dist/index.d.ts",
     "typesVersions": {
         "*": {
             "*": [
@@ -128,7 +128,10 @@
     "keywords": [
         "react",
         "image",
+        "photo",
         "lightbox",
-        "react lightbox"
+        "react lightbox",
+        "react image lightbox",
+        "react photo lightbox"
     ]
 }

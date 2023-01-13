@@ -2,7 +2,7 @@ name: Release
 
 on:
     push:
-        branches: [ main, next, next-major ]
+        branches: [ main, next ]
 
 jobs:
     release:
@@ -29,6 +29,9 @@ jobs:
 
             -   name: Build
                 run: npm run build
+
+            -   name: Cleanup
+                run: npm pkg delete scripts devDependencies
 
             -   name: Release
                 env:
