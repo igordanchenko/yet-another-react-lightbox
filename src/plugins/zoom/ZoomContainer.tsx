@@ -222,6 +222,14 @@ export const ZoomContainer: React.FC<
         }
     }, [offset, zoom, maxZoom, isMinZoom, isMaxZoom, setIsMinZoom, setIsMaxZoom]);
 
+    const onZoomCallback = useEventCallback(() => {
+        if (offset === 0) {
+            on.zoom?.(zoom);
+        }
+    });
+
+    useLayoutEffect(onZoomCallback, [zoom, onZoomCallback]);
+
     const translateCoordinates = React.useCallback(
         (event: React.MouseEvent) => {
             if (controllerRef.current) {

@@ -63,6 +63,10 @@ declare module "../../types" {
         /** render custom Zoom out icon */
         iconZoomOut?: () => React.ReactNode;
     }
+
+    interface Callbacks {
+        zoom?: (level: number) => void;
+    }
 }
 
 export default Zoom;
