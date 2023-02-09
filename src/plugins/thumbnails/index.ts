@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { ImageFit, Slide } from "../../types.js";
-import { ContainerRect } from "../../core/index.js";
+import { ImageFit, Slide, ContainerRect } from "../../types.js";
 import { Thumbnails } from "./Thumbnails.js";
 
 type Position = "top" | "bottom" | "start" | "end";

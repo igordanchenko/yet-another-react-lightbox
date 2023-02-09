@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component, ComponentProps } from "../../types.js";
+import { Component, ComponentProps, ContainerRect } from "../../types.js";
 import { createModule } from "../config.js";
 import {
     cleanup,
@@ -13,7 +13,6 @@ import {
     parseLengthPercentage,
 } from "../utils.js";
 import {
-    ContainerRect,
     SubscribeSensors,
     useContainerRect,
     useEventCallback,

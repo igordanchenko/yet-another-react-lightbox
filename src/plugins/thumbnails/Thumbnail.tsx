@@ -1,11 +1,10 @@
 import * as React from "react";
 
-import { ImageFit, LightboxProps, Render, Slide } from "../../types.js";
+import { ContainerRect, ImageFit, LightboxProps, Render, Slide } from "../../types.js";
 import {
     CLASS_FLEX_CENTER,
     CLASS_FULLSIZE,
     clsx,
-    ContainerRect,
     createIcon,
     cssClass,
     cssVar,

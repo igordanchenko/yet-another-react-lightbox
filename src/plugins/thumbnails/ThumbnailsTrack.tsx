@@ -5,7 +5,6 @@ import {
     ACTION_PREV,
     CLASS_FLEX_CENTER,
     clsx,
-    ContainerRect,
     cssClass,
     cssVar,
     useEventCallback,
@@ -15,7 +14,7 @@ import {
     useMotionPreference,
     useRTL,
 } from "../../core/index.js";
-import { DeepNonNullable, LightboxProps, Slide } from "../../types.js";
+import { ContainerRect, DeepNonNullable, LightboxProps, Slide } from "../../types.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
 import { defaultThumbnailsProps } from "./Thumbnails.js";

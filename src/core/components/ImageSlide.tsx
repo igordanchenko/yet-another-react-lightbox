@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { ImageFit, Render, SlideImage } from "../../types.js";
+import { ContainerRect, ImageFit, Render, SlideImage } from "../../types.js";
 import { clsx, cssClass, hasWindow, makeComposePrefix } from "../utils.js";
-import { ContainerRect, useEventCallback } from "../hooks/index.js";
+import { useEventCallback } from "../hooks/index.js";
 import { useEvents } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
 import {

@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { ContainerRect } from "./core/hooks/useContainerRect.js";
-
 /** Image fit setting */
 export type ImageFit = "contain" | "cover";
 
@@ -44,6 +42,12 @@ export interface SlideTypes {
 
 /** Slide */
 export type Slide = SlideTypes[keyof SlideTypes];
+
+/** Container rect */
+export type ContainerRect = {
+    width: number;
+    height: number;
+};
 
 /** Supported customization slots */
 export interface SlotType {

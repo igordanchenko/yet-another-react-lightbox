@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { Component, Slide } from "../../types.js";
+import { Component, Slide, ContainerRect } from "../../types.js";
 import { createModule } from "../config.js";
-import { ContainerRect, useContainerRect } from "../hooks/index.js";
+import { useContainerRect } from "../hooks/index.js";
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller.js";

@@ -5,7 +5,6 @@ import {
     CLASS_FULLSIZE,
     cleanup,
     clsx,
-    ContainerRect,
     cssClass,
     EVENT_ON_KEY_DOWN,
     EVENT_ON_POINTER_CANCEL,
@@ -25,7 +24,7 @@ import {
     useLightboxState,
     useMotionPreference,
 } from "../../core/index.js";
-import { LightboxProps, Slide } from "../../types.js";
+import { ContainerRect, LightboxProps, Slide } from "../../types.js";
 import { useZoom } from "./ZoomContext.js";
 import { defaultZoomProps } from "./Zoom.js";
 import { ACTION_ZOOM_IN, ACTION_ZOOM_OUT } from "./index.js";
