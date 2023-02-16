@@ -58,15 +58,19 @@ export const Navigation: Component = ({
     const { publish } = useEvents();
     const isRTL = useRTL();
 
+    const prevDisabled = slides.length === 0 || (finite && currentIndex === 0);
+    const nextDisabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
+
     const publishThrottled = useThrottle(
         (action: typeof ACTION_PREV | typeof ACTION_NEXT) => publish(action),
         swipe / 2
     );
 
     const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
-        if (event.key === VK_ARROW_LEFT) {
+        if (event.key === VK_ARROW_LEFT && !(isRTL ? nextDisabled : prevDisabled)) {
             publishThrottled(isRTL ? ACTION_NEXT : ACTION_PREV);
-        } else if (event.key === VK_ARROW_RIGHT) {
+        }
+        if (event.key === VK_ARROW_RIGHT && !(isRTL ? prevDisabled : nextDisabled)) {
             publishThrottled(isRTL ? ACTION_PREV : ACTION_NEXT);
         }
     });
@@ -83,7 +87,7 @@ export const Navigation: Component = ({
                     action={ACTION_PREV}
                     icon={PreviousIcon}
                     renderIcon={iconPrev}
-                    disabled={slides.length === 0 || (finite && currentIndex === 0)}
+                    disabled={prevDisabled}
                     labels={labels}
                     publish={publish}
                 />
@@ -97,7 +101,7 @@ export const Navigation: Component = ({
                     action={ACTION_NEXT}
                     icon={NextIcon}
                     renderIcon={iconNext}
-                    disabled={slides.length === 0 || (finite && currentIndex === slides.length - 1)}
+                    disabled={nextDisabled}
                     labels={labels}
                     publish={publish}
                 />
