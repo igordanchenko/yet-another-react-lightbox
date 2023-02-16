@@ -2,13 +2,19 @@ import * as React from "react";
 
 import { makeUseContext } from "../utils.js";
 
-export type Callback = (event?: unknown) => void;
+export interface EventTypes {}
 
-export type Subscribe = (topic: string, callback: Callback) => () => void;
+export type Topic = keyof EventTypes;
 
-export type Unsubscribe = (topic: string, callback: Callback) => void;
+export type Event<T extends Topic> = EventTypes[T];
 
-export type Publish = (topic: string, event?: unknown) => void;
+export type Callback<T extends Topic> = (event?: Event<T>) => void;
+
+export type Subscribe = <T extends Topic>(topic: T, callback: Callback<T>) => () => void;
+
+export type Unsubscribe = <T extends Topic>(topic: T, callback: Callback<T>) => void;
+
+export type Publish = <T extends Topic>(topic: T, event?: Event<T>) => void;
 
 export type EventsContextType = {
     subscribe: Subscribe;
@@ -21,32 +27,34 @@ const EventsContext = React.createContext<EventsContextType | null>(null);
 export const useEvents = makeUseContext("useEvents", "EventsContext", EventsContext);
 
 export const EventsProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-    const [subscriptions] = React.useState<{ [key: string]: Callback[] }>({});
+    const [subscriptions] = React.useState<{ [T in Topic]?: Callback<T>[] }>({});
 
     React.useEffect(
         () => () => {
-            Object.keys(subscriptions).forEach((key) => delete subscriptions[key]);
+            (Object.keys(subscriptions) as Topic[]).forEach((key) => delete subscriptions[key]);
         },
         [subscriptions]
     );
 
     const context = React.useMemo<EventsContextType>(() => {
-        const unsubscribe = (topic: string, callback: Callback) => {
-            if (subscriptions[topic]) {
-                subscriptions[topic] = subscriptions[topic].filter((cb) => cb !== callback);
-            }
+        const unsubscribe = <T extends Topic>(topic: T, callback: Callback<T>) => {
+            subscriptions[topic]?.splice(
+                0,
+                subscriptions[topic]!.length,
+                ...subscriptions[topic]!.filter((cb) => cb !== callback)
+            );
         };
 
-        const subscribe = (topic: string, callback: Callback) => {
+        const subscribe = <T extends Topic>(topic: T, callback: Callback<T>) => {
             if (!subscriptions[topic]) {
                 subscriptions[topic] = [];
             }
-            subscriptions[topic].push(callback);
+            subscriptions[topic]!.push(callback);
 
             return () => unsubscribe(topic, callback);
         };
 
-        const publish = (topic: string, event?: unknown) => {
+        const publish = <T extends Topic>(topic: T, event?: Event<T>) => {
             subscriptions[topic]?.forEach((callback) => callback(event));
         };
 

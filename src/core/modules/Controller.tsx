@@ -36,6 +36,17 @@ import {
     YARL_EVENT_BACKDROP_CLICK,
 } from "../consts.js";
 
+declare module "../" {
+    // noinspection JSUnusedGlobalSymbols
+    interface EventTypes {
+        [ACTION_PREV]: number;
+        [ACTION_NEXT]: number;
+        [ACTION_SWIPE]: LightboxStateAction;
+        [ACTION_CLOSE]: void;
+        [YARL_EVENT_BACKDROP_CLICK]: void;
+    }
+}
+
 const cssContainerPrefix = makeComposePrefix("container");
 
 export type ControllerContextType = {
@@ -224,19 +235,9 @@ export const Controller: Component = ({ children, ...props }) => {
     React.useEffect(
         () =>
             cleanup(
-                subscribe(ACTION_PREV, (count) =>
-                    swipe({
-                        direction: ACTION_PREV,
-                        count: isNumber(count) ? count : undefined,
-                    })
-                ),
-                subscribe(ACTION_NEXT, (count) =>
-                    swipe({
-                        direction: ACTION_NEXT,
-                        count: isNumber(count) ? count : undefined,
-                    })
-                ),
-                subscribe(ACTION_SWIPE, (action) => dispatch(action as LightboxStateAction))
+                subscribe(ACTION_PREV, (count) => swipe({ direction: ACTION_PREV, count })),
+                subscribe(ACTION_NEXT, (count) => swipe({ direction: ACTION_NEXT, count })),
+                subscribe(ACTION_SWIPE, (action) => dispatch(action))
             ),
         [subscribe, swipe, dispatch]
     );

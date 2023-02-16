@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { isDefined, isNumber, makeUseContext, useEvents } from "../../core/index.js";
+import { makeUseContext, useEvents, YARL_EVENT_TOOLBAR_WIDTH } from "../../core/index.js";
 
 type CaptionsContextType = {
     toolbarWidth?: number;
@@ -16,15 +16,7 @@ export const CaptionsContextProvider: React.FC<React.PropsWithChildren> = ({ chi
 
     const [toolbarWidth, setToolbarWidth] = React.useState<number>();
 
-    React.useEffect(
-        () =>
-            subscribe("toolbar-width", (event) => {
-                if (!isDefined(event) || isNumber(event)) {
-                    setToolbarWidth(event);
-                }
-            }),
-        [subscribe]
-    );
+    React.useEffect(() => subscribe(YARL_EVENT_TOOLBAR_WIDTH, (event) => setToolbarWidth(event)), [subscribe]);
 
     const context = React.useMemo(() => ({ toolbarWidth }), [toolbarWidth]);
 

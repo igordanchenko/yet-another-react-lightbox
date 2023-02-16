@@ -25,14 +25,15 @@ export type SlideStatus =
     | typeof SLIDE_STATUS_ERROR
     | typeof SLIDE_STATUS_COMPLETE;
 
-export const activeSlideStatus = (status: SlideStatus) => `active-slide-${status}`;
+export const activeSlideStatus = (status: SlideStatus): `active-slide-${SlideStatus}` => `active-slide-${status}`;
 
-export const ACTIVE_SLIDE_LOADING = activeSlideStatus(SLIDE_STATUS_LOADING);
-export const ACTIVE_SLIDE_PLAYING = activeSlideStatus(SLIDE_STATUS_PLAYING);
-export const ACTIVE_SLIDE_ERROR = activeSlideStatus(SLIDE_STATUS_ERROR);
-export const ACTIVE_SLIDE_COMPLETE = activeSlideStatus(SLIDE_STATUS_COMPLETE);
+export const ACTIVE_SLIDE_LOADING = activeSlideStatus(SLIDE_STATUS_LOADING) as "active-slide-loading";
+export const ACTIVE_SLIDE_PLAYING = activeSlideStatus(SLIDE_STATUS_PLAYING) as "active-slide-playing";
+export const ACTIVE_SLIDE_ERROR = activeSlideStatus(SLIDE_STATUS_ERROR) as "active-slide-error";
+export const ACTIVE_SLIDE_COMPLETE = activeSlideStatus(SLIDE_STATUS_COMPLETE) as "active-slide-complete";
 
 export const YARL_EVENT_BACKDROP_CLICK = "backdrop_click";
+export const YARL_EVENT_TOOLBAR_WIDTH = "toolbar-width";
 
 export const CLASS_FULLSIZE = "fullsize";
 export const CLASS_FLEX_CENTER = "flex_center";

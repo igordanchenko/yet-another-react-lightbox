@@ -1,5 +1,11 @@
 import { GenericSlide } from "../../types.js";
 import { Video } from "./Video.js";
+import {
+    ACTIVE_SLIDE_COMPLETE,
+    ACTIVE_SLIDE_ERROR,
+    ACTIVE_SLIDE_LOADING,
+    ACTIVE_SLIDE_PLAYING,
+} from "../../core/consts.js";
 
 /** Video slide attributes */
 export interface SlideVideo extends GenericSlide {
@@ -62,6 +68,16 @@ declare module "../../types" {
             | "disablePictureInPicture"
             | "disableRemotePlayback"
         >;
+    }
+}
+
+declare module "../../core" {
+    // noinspection JSUnusedGlobalSymbols
+    interface EventTypes {
+        [ACTIVE_SLIDE_LOADING]: void;
+        [ACTIVE_SLIDE_PLAYING]: void;
+        [ACTIVE_SLIDE_COMPLETE]: void;
+        [ACTIVE_SLIDE_ERROR]: void;
     }
 }
 

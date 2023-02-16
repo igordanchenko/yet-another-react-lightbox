@@ -6,7 +6,14 @@ import { composePrefix, cssClass, label } from "../utils.js";
 import { useEvents } from "../contexts/index.js";
 import { CloseIcon, IconButton } from "../components/index.js";
 import { useContainerRect } from "../hooks/useContainerRect.js";
-import { ACTION_CLOSE, MODULE_TOOLBAR } from "../consts.js";
+import { ACTION_CLOSE, MODULE_TOOLBAR, YARL_EVENT_TOOLBAR_WIDTH } from "../consts.js";
+
+declare module "../" {
+    // noinspection JSUnusedGlobalSymbols
+    interface EventTypes {
+        [YARL_EVENT_TOOLBAR_WIDTH]: number;
+    }
+}
 
 const cssPrefix = (value?: string) => composePrefix(MODULE_TOOLBAR, value);
 
@@ -16,7 +23,7 @@ export const Toolbar: Component = ({ toolbar: { buttons }, labels, render: { but
 
     React.useEffect(() => {
         if (containerRect?.width) {
-            publish("toolbar-width", containerRect.width);
+            publish(YARL_EVENT_TOOLBAR_WIDTH, containerRect.width);
         }
     }, [publish, containerRect?.width]);
 

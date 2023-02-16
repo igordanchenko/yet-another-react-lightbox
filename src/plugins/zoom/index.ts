@@ -64,8 +64,17 @@ declare module "../../types" {
         iconZoomOut?: () => React.ReactNode;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface Callbacks {
         zoom?: (level: number) => void;
+    }
+}
+
+declare module "../../core" {
+    // noinspection JSUnusedGlobalSymbols
+    interface EventTypes {
+        [ACTION_ZOOM_IN]: void;
+        [ACTION_ZOOM_OUT]: void;
     }
 }
 
