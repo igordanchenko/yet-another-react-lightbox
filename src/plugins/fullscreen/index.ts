@@ -12,9 +12,11 @@ declare module "../../types" {
         /** render custom Enter/Exit Fullscreen button */
         buttonFullscreen?: ({
             fullscreen,
+            fullscreenEnabled,
             toggleFullscreen,
         }: {
             fullscreen: boolean;
+            fullscreenEnabled: boolean | undefined;
             toggleFullscreen: () => void;
         }) => React.ReactNode;
         /** render custom Enter Fullscreen icon */

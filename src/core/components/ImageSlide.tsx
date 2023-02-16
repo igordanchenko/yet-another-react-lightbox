@@ -3,7 +3,7 @@ import * as React from "react";
 import { ContainerRect, ImageFit, Render, SlideImage } from "../../types.js";
 import { clsx, cssClass, hasWindow, makeComposePrefix } from "../utils.js";
 import { useEventCallback } from "../hooks/index.js";
-import { useEvents } from "../contexts/index.js";
+import { useEvents, useTimeouts } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
 import {
     activeSlideStatus,
@@ -44,6 +44,7 @@ export const ImageSlide = ({
     const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
 
     const { publish } = useEvents();
+    const { setTimeout } = useTimeouts();
 
     const imageRef = React.useRef<HTMLImageElement | null>(null);
 
@@ -65,7 +66,12 @@ export const ImageSlide = ({
                     return;
                 }
                 setStatus(SLIDE_STATUS_COMPLETE);
-                onLoad?.(img);
+
+                // this is a workaround for Zoom plugin's preload image swap
+                // otherwise the 'complete' status does not get published
+                setTimeout(() => {
+                    onLoad?.(img);
+                }, 0);
             });
     });
 

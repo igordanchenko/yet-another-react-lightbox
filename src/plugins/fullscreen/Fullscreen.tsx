@@ -8,18 +8,7 @@ import { FullscreenContextProvider } from "./FullscreenContext.js";
 /** Fullscreen plugin */
 export const Fullscreen: Plugin = ({ augment, contains, addParent }) => {
     augment(({ toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
-        toolbar: {
-            buttons: [
-                <FullscreenButton
-                    key={PLUGIN_FULLSCREEN}
-                    auto={Boolean(restProps.fullscreen)}
-                    labels={restProps.labels}
-                    render={restProps.render}
-                />,
-                ...buttons,
-            ],
-            ...restToolbar,
-        },
+        toolbar: { buttons: [<FullscreenButton key={PLUGIN_FULLSCREEN} />, ...buttons], ...restToolbar },
         ...restProps,
     }));
 
