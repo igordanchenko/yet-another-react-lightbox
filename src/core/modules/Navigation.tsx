@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Component, Labels } from "../../types.js";
 import { createModule } from "../config.js";
-import { useEventCallback, useRTL, useThrottle } from "../hooks/index.js";
+import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
 import { cssClass, label as translateLabel } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
 import { Publish, useEvents, useLightboxState } from "../contexts/index.js";
@@ -41,10 +41,8 @@ export const NavigationButton = ({
         renderIcon={renderIcon}
         className={cssClass(`navigation_${action}`)}
         disabled={disabled}
-        aria-disabled={disabled}
-        onClick={() => {
-            publish(action);
-        }}
+        onClick={() => publish(action)}
+        {...useLoseFocus(disabled)}
     />
 );
 
