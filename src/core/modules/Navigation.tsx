@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Component, Labels } from "../../types.js";
 import { createModule } from "../config.js";
-import { useEventCallback, useRTL } from "../hooks/index.js";
+import { useEventCallback, useRTL, useThrottle } from "../hooks/index.js";
 import { cssClass, label as translateLabel } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
 import { Publish, useEvents, useLightboxState } from "../contexts/index.js";
@@ -51,6 +51,7 @@ export const NavigationButton = ({
 export const Navigation: Component = ({
     slides,
     carousel: { finite },
+    animation: { swipe },
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }) => {
@@ -59,11 +60,16 @@ export const Navigation: Component = ({
     const { publish } = useEvents();
     const isRTL = useRTL();
 
+    const publishThrottled = useThrottle(
+        (action: typeof ACTION_PREV | typeof ACTION_NEXT) => publish(action),
+        swipe / 2
+    );
+
     const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
         if (event.key === VK_ARROW_LEFT) {
-            publish(isRTL ? ACTION_NEXT : ACTION_PREV);
+            publishThrottled(isRTL ? ACTION_NEXT : ACTION_PREV);
         } else if (event.key === VK_ARROW_RIGHT) {
-            publish(isRTL ? ACTION_PREV : ACTION_NEXT);
+            publishThrottled(isRTL ? ACTION_PREV : ACTION_NEXT);
         }
     });
 

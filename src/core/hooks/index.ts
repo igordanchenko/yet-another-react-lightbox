@@ -7,3 +7,4 @@ export * from "./useLayoutEffect.js";
 export * from "./useMotionPreference.js";
 export * from "./useRTL.js";
 export * from "./useSensors.js";
+export * from "./useThrottle.js";
