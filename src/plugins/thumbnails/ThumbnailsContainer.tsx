@@ -10,7 +10,6 @@ import { defaultThumbnailsProps } from "./Thumbnails.js";
 export const ThumbnailsComponent: Component = ({
     thumbnails: thumbnailsProps,
     slides,
-    index,
     carousel,
     animation,
     render,
@@ -29,7 +28,6 @@ export const ThumbnailsComponent: Component = ({
             carousel={carousel}
             animation={animation}
             render={render}
-            startingIndex={index}
             thumbnailRect={{ width: thumbnails.width, height: thumbnails.height }}
             styles={styles}
         />

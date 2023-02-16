@@ -14,20 +14,21 @@ import {
 } from "../utils.js";
 import {
     SubscribeSensors,
+    useAnimation,
     useContainerRect,
+    useDelay,
     useEventCallback,
     useForkRef,
-    useLayoutEffect,
-    useMotionPreference,
     useRTL,
     useSensors,
 } from "../hooks/index.js";
-import { useEvents, useLightboxState, useTimeouts } from "../contexts/index.js";
+import { LightboxStateAction, useEvents, useLightboxState } from "../contexts/index.js";
 import { SwipeState, usePointerSwipe, usePreventSwipeNavigation, useWheelSwipe } from "./controller/index.js";
 import {
     ACTION_CLOSE,
     ACTION_NEXT,
     ACTION_PREV,
+    ACTION_SWIPE,
     CLASS_FLEX_CENTER,
     EVENT_ON_KEY_UP,
     MODULE_CONTROLLER,
@@ -57,11 +58,12 @@ export const Controller: Component = ({ children, ...props }) => {
 
     const [swipeState, setSwipeState] = React.useState(SwipeState.NONE);
     const swipeOffset = React.useRef(0);
-    const swipeAnimationReset = React.useRef<number>();
 
     const { registerSensors, subscribeSensors } = useSensors<HTMLDivElement>();
     const { subscribe, publish } = useEvents();
-    const { setTimeout, clearTimeout } = useTimeouts();
+
+    const cleanupAnimationIncrement = useDelay();
+    const cleanupSwipeOffset = useDelay();
 
     const { containerRef, setContainerRef, containerRect } = useContainerRect<HTMLDivElement>();
     const handleContainerRef = useForkRef(usePreventSwipeNavigation(), setContainerRef);
@@ -69,32 +71,47 @@ export const Controller: Component = ({ children, ...props }) => {
     const carouselRef = React.useRef<HTMLDivElement | null>(null);
     const setCarouselRef = useForkRef(carouselRef, undefined);
 
-    const carouselAnimation = React.useRef<Animation>();
-    const carouselSwipeAnimation = React.useRef<{ rect: DOMRect; index: number }>();
-
-    const reduceMotion = useMotionPreference();
-
     const isRTL = useRTL();
 
-    const rtl = useEventCallback((value?: number) => (isRTL ? -1 : 1) * (isNumber(value) ? value : 1));
+    const rtl = (value?: number) => (isRTL ? -1 : 1) * (isNumber(value) ? value : 1);
 
-    const isSwipeValid = useEventCallback(
-        (offset: number) =>
-            !(
-                carousel.finite &&
-                ((rtl(offset) > 0 && state.currentIndex === 0) ||
-                    (rtl(offset) < 0 && state.currentIndex === slides.length - 1))
-            )
-    );
+    const isSwipeValid = (offset: number) =>
+        !(
+            carousel.finite &&
+            ((rtl(offset) > 0 && state.currentIndex === 0) ||
+                (rtl(offset) < 0 && state.currentIndex === slides.length - 1))
+        );
 
-    const setSwipeOffset = React.useCallback(
-        (offset: number) => {
-            swipeOffset.current = offset;
+    const setSwipeOffset = (offset: number) => {
+        swipeOffset.current = offset;
 
-            containerRef.current?.style.setProperty(cssVar("swipe_offset"), `${Math.round(offset)}px`);
-        },
-        [containerRef]
-    );
+        containerRef.current?.style.setProperty(cssVar("swipe_offset"), `${Math.round(offset)}px`);
+    };
+
+    const animate = useAnimation<{ rect: DOMRect; index: number }>(carouselRef, (snapshot, rect, translate) => {
+        if (carouselRef.current && containerRect && state.animation?.duration) {
+            const parsedSpacing = parseLengthPercentage(carousel.spacing);
+            const spacingValue =
+                (parsedSpacing.percent ? (parsedSpacing.percent * containerRect.width) / 100 : parsedSpacing.pixel) ||
+                0;
+
+            return {
+                keyframes: [
+                    {
+                        transform: `translateX(${
+                            rtl(state.globalIndex - snapshot.index) * (containerRect.width + spacingValue) +
+                            snapshot.rect.x -
+                            rect.x +
+                            translate.x
+                        }px)`,
+                    },
+                    { transform: "translateX(0)" },
+                ],
+                duration: state.animation.duration,
+            };
+        }
+        return undefined;
+    });
 
     const swipe = useEventCallback(
         (action: { direction?: "prev" | "next"; count?: number; offset?: number; duration?: number }) => {
@@ -104,7 +121,7 @@ export const Controller: Component = ({ children, ...props }) => {
             let { direction } = action;
             const count = action.count ?? 1;
 
-            let newSwipeState: SwipeState = SwipeState.ANIMATION;
+            let newSwipeState = SwipeState.ANIMATION;
             let newSwipeAnimationDuration = swipeDuration * count;
 
             if (!direction) {
@@ -132,7 +149,7 @@ export const Controller: Component = ({ children, ...props }) => {
                 }
             }
 
-            let increment: number | undefined;
+            let increment = 0;
             if (direction === ACTION_PREV) {
                 if (isSwipeValid(rtl(1))) {
                     increment = -count;
@@ -149,67 +166,31 @@ export const Controller: Component = ({ children, ...props }) => {
                 }
             }
 
-            if (carouselRef.current) {
-                carouselSwipeAnimation.current = {
-                    rect: carouselRef.current.getBoundingClientRect(),
-                    index: state.globalIndex,
-                };
-            }
-
             newSwipeAnimationDuration = Math.round(newSwipeAnimationDuration);
 
-            clearTimeout(swipeAnimationReset.current);
-            if (newSwipeState) {
-                const timeoutId = setTimeout(() => {
-                    if (swipeAnimationReset.current === timeoutId) {
-                        setSwipeOffset(0);
-                        setSwipeState(SwipeState.NONE);
-                    }
-                }, newSwipeAnimationDuration);
-                swipeAnimationReset.current = timeoutId;
+            cleanupSwipeOffset(() => {
+                setSwipeOffset(0);
+                setSwipeState(SwipeState.NONE);
+            }, newSwipeAnimationDuration);
+
+            if (carouselRef.current) {
+                animate({
+                    rect: carouselRef.current.getBoundingClientRect(),
+                    index: state.globalIndex,
+                });
             }
 
             setSwipeState(newSwipeState);
 
-            dispatch({ increment, animationDuration: newSwipeAnimationDuration });
+            publish(ACTION_SWIPE, { increment, duration: newSwipeAnimationDuration });
         }
     );
 
-    const animateCarouselSwipe = useEventCallback(() => {
-        const swipeAnimation = carouselSwipeAnimation.current;
-        carouselSwipeAnimation.current = undefined;
-
-        if (swipeAnimation && carouselRef.current && containerRect) {
-            const parsedSpacing = parseLengthPercentage(carousel.spacing);
-            const spacingValue =
-                (parsedSpacing.percent ? (parsedSpacing.percent * containerRect.width) / 100 : parsedSpacing.pixel) ||
-                0;
-
-            carouselAnimation.current?.cancel();
-
-            carouselAnimation.current = carouselRef.current.animate?.(
-                [
-                    {
-                        transform: `translateX(${
-                            rtl(state.globalIndex - swipeAnimation.index) * (containerRect.width + spacingValue) +
-                            swipeAnimation.rect.x -
-                            carouselRef.current.getBoundingClientRect().x
-                        }px)`,
-                    },
-                    { transform: "translateX(0)" },
-                ],
-                !reduceMotion ? state.animationDuration : 0
-            );
-
-            if (carouselAnimation.current) {
-                carouselAnimation.current.onfinish = () => {
-                    carouselAnimation.current = undefined;
-                };
-            }
+    React.useEffect(() => {
+        if (state.animation?.increment && state.animation?.duration) {
+            cleanupAnimationIncrement(() => dispatch({ increment: 0 }), state.animation.duration);
         }
-    });
-
-    useLayoutEffect(animateCarouselSwipe);
+    }, [state.animation, dispatch, cleanupAnimationIncrement]);
 
     const swipeParams = [
         subscribeSensors,
@@ -254,9 +235,10 @@ export const Controller: Component = ({ children, ...props }) => {
                         direction: ACTION_NEXT,
                         count: isNumber(count) ? count : undefined,
                     })
-                )
+                ),
+                subscribe(ACTION_SWIPE, (action) => dispatch(action as LightboxStateAction))
             ),
-        [subscribe, swipe]
+        [subscribe, swipe, dispatch]
     );
 
     React.useEffect(

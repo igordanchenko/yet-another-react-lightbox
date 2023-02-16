@@ -54,9 +54,7 @@ export const Navigation: Component = ({
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }) => {
-    const {
-        state: { currentIndex },
-    } = useLightboxState();
+    const { currentIndex } = useLightboxState().state;
     const { subscribeSensors } = useController();
     const { publish } = useEvents();
     const isRTL = useRTL();

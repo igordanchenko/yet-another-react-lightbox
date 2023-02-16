@@ -64,3 +64,8 @@ export const parseLengthPercentage = (input: unknown) => {
 export const devicePixelRatio = () => {
     return (typeof window !== "undefined" ? window?.devicePixelRatio : undefined) || 1;
 };
+
+export const getSlideIndex = (index: number, slidesCount: number) =>
+    ((index % slidesCount) + slidesCount) % slidesCount;
+
+export const getSlide = (slides: Slide[], index: number) => slides[getSlideIndex(index, slides.length)];

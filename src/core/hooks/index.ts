@@ -1,4 +1,6 @@
+export * from "./useAnimation.js";
 export * from "./useContainerRect.js";
+export * from "./useDelay.js";
 export * from "./useEventCallback.js";
 export * from "./useForkRef.js";
 export * from "./useLayoutEffect.js";

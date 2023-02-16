@@ -1,14 +1,17 @@
 import * as React from "react";
 
-import { makeUseContext } from "../utils.js";
+import { getSlideIndex, makeUseContext } from "../utils.js";
 
 export type LightboxState = {
     currentIndex: number;
     globalIndex: number;
+    // TODO v3: remove
+    /** @deprecated use `animation.duration` */
     animationDuration: number;
+    animation?: LightboxStateAction;
 };
 
-type LightboxStateAction = { increment?: number; animationDuration: number };
+export type LightboxStateAction = { increment: number; duration?: number } | undefined;
 
 const LightboxStateContext = React.createContext<{
     state: LightboxState;
@@ -18,15 +21,18 @@ const LightboxStateContext = React.createContext<{
 export const useLightboxState = makeUseContext("useLightboxState", "LightboxStateContext", LightboxStateContext);
 
 const reducer: (slidesCount: number) => React.Reducer<LightboxState, LightboxStateAction> =
-    (slidesCount: number) => (state, action) =>
-        action.increment !== undefined || action.animationDuration !== undefined
-            ? {
-                  currentIndex:
-                      (((state.currentIndex + (action.increment || 0)) % slidesCount) + slidesCount) % slidesCount,
-                  globalIndex: state.globalIndex + (action.increment || 0),
-                  animationDuration: action.animationDuration ?? state.animationDuration,
-              }
-            : state;
+    (slidesCount: number) => (state, action) => {
+        const increment = action?.increment || 0;
+        const globalIndex = state.globalIndex + increment;
+        const currentIndex = getSlideIndex(globalIndex, slidesCount);
+        const animationDuration = action?.duration || 0;
+        return {
+            globalIndex,
+            currentIndex,
+            animation: action,
+            animationDuration,
+        };
+    };
 
 type LightboxStateProviderProps = React.PropsWithChildren<{
     slidesCount: number;
@@ -38,7 +44,8 @@ export const LightboxStateProvider: React.FC<LightboxStateProviderProps> = ({
     slidesCount,
     children,
 }) => {
-    const [state, dispatch] = React.useReducer(reducer(slidesCount), {
+    const memoizedReducer = React.useMemo(() => reducer(slidesCount), [slidesCount]);
+    const [state, dispatch] = React.useReducer(memoizedReducer, {
         currentIndex: initialIndex,
         globalIndex: initialIndex,
         animationDuration: 0,

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component, Slide, ContainerRect } from "../../types.js";
+import { Component, ContainerRect, Slide } from "../../types.js";
 import { createModule } from "../config.js";
 import { useContainerRect } from "../hooks/index.js";
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
@@ -23,15 +23,12 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
     const { setContainerRef, containerRect, containerRef } = useContainerRect();
 
     const { publish } = useEvents();
-    const {
-        state: { currentIndex },
-    } = useLightboxState();
-    const { getLightboxProps } = useController();
+    const { currentIndex } = useLightboxState().state;
     const {
         render,
         carousel: { imageFit },
         on: { click: onClick },
-    } = getLightboxProps();
+    } = useController().getLightboxProps();
 
     const renderSlide = (rect: ContainerRect) => {
         let rendered = render.slide?.(slide, offset, rect);
@@ -92,9 +89,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
 const Placeholder: React.FC = () => <div className={cssClass("slide")} />;
 
 export const Carousel: Component = ({ slides, carousel: { finite, preload, padding, spacing } }) => {
-    const {
-        state: { currentIndex, globalIndex },
-    } = useLightboxState();
+    const { currentIndex, globalIndex } = useLightboxState().state;
 
     const { setCarouselRef } = useController();
 

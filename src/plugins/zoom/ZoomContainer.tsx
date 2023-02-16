@@ -82,9 +82,7 @@ export const ZoomContainer: React.FC<
 > = ({ slide, offset, rect, render, carousel, animation, zoom: originalZoomProps, on }) => {
     const zoomProps = { ...defaultZoomProps, ...originalZoomProps };
 
-    const {
-        state: { currentIndex },
-    } = useLightboxState();
+    const { currentIndex } = useLightboxState().state;
 
     const [zoom, setZoom] = React.useState(1);
     const [offsetX, setOffsetX] = React.useState(0);

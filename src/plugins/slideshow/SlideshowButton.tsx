@@ -28,9 +28,7 @@ const PlayIcon = createIcon("Play", <path d="M8 5v14l11-7z" />);
 const PauseIcon = createIcon("Pause", <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />);
 
 export const SlideshowButton: React.FC = () => {
-    const {
-        state: { currentIndex },
-    } = useLightboxState();
+    const { currentIndex } = useLightboxState().state;
     const { getLightboxProps } = useController();
     const { setTimeout, clearTimeout } = useTimeouts();
     const { publish, subscribe } = useEvents();

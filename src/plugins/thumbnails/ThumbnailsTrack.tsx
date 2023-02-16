@@ -3,15 +3,17 @@ import * as React from "react";
 import {
     ACTION_NEXT,
     ACTION_PREV,
+    ACTION_SWIPE,
     CLASS_FLEX_CENTER,
+    cleanup,
     clsx,
     cssClass,
     cssVar,
+    getSlide,
+    useAnimation,
     useEventCallback,
     useEvents,
-    useLayoutEffect,
     useLightboxState,
-    useMotionPreference,
     useRTL,
 } from "../../core/index.js";
 import { ContainerRect, DeepNonNullable, LightboxProps, Slide } from "../../types.js";
@@ -25,20 +27,16 @@ const isHorizontal = (position: NonNullable<NonNullable<LightboxProps["thumbnail
 const boxSize = (thumbnails: ThumbnailsInternal, dimension: number, includeGap?: boolean) =>
     dimension + 2 * (thumbnails.border + thumbnails.padding) + (includeGap ? thumbnails.gap : 0);
 
-const getSlide = (slides: Slide[], index: number) => slides[((index % slides.length) + slides.length) % slides.length];
-
 type ThumbnailsInternal = DeepNonNullable<LightboxProps["thumbnails"]>;
 
 type ThumbnailsTrackProps = Pick<LightboxProps, "slides" | "carousel" | "animation" | "render" | "styles"> & {
     container: React.RefObject<HTMLDivElement>;
     thumbnails: ThumbnailsInternal;
-    startingIndex: number;
     thumbnailRect: ContainerRect;
 };
 
 export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     container,
-    startingIndex,
     slides,
     carousel,
     render,
@@ -46,80 +44,51 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     thumbnailRect,
     styles,
 }) => {
-    const [index, setIndex] = React.useState(startingIndex);
-    const [offset, setOffset] = React.useState(0);
-
     const track = React.useRef<HTMLDivElement | null>(null);
-    const animationRef = React.useRef<Animation>();
-    const animationOffset = React.useRef(0);
 
-    const {
-        state: { globalIndex, animationDuration },
-    } = useLightboxState();
-    const { publish } = useEvents();
-    const reduceMotion = useMotionPreference();
+    const { globalIndex, animation } = useLightboxState().state;
+    const { publish, subscribe } = useEvents();
     const isRTL = useRTL();
 
+    const index = globalIndex;
+    const offset = animation?.increment || 0;
+    const animationDuration = animation?.duration || 0;
+
+    const animate = useAnimation<number>(track, (snapshot) => ({
+        keyframes: isHorizontal(thumbnails.position)
+            ? [
+                  {
+                      transform: `translateX(${
+                          (isRTL ? -1 : 1) * boxSize(thumbnails, thumbnails.width, true) * offset + snapshot
+                      }px)`,
+                  },
+                  { transform: "translateX(0)" },
+              ]
+            : [
+                  {
+                      transform: `translateY(${boxSize(thumbnails, thumbnails.height, true) * offset + snapshot}px)`,
+                  },
+                  { transform: "translateY(0)" },
+              ],
+        duration: animationDuration,
+    }));
+
     const handleControllerSwipe = useEventCallback(() => {
+        let animationOffset;
         if (container.current && track.current) {
             const containerRect = container.current.getBoundingClientRect();
             const trackRect = track.current.getBoundingClientRect();
-            animationOffset.current = isHorizontal(thumbnails.position)
+            animationOffset = isHorizontal(thumbnails.position)
                 ? trackRect.left - containerRect.left - (containerRect.width - trackRect.width) / 2
                 : trackRect.top - containerRect.top - (containerRect.height - trackRect.height) / 2;
         } else {
-            animationOffset.current = 0;
+            animationOffset = 0;
         }
 
-        setIndex(globalIndex);
-        setOffset(globalIndex - index);
+        animate(animationOffset);
     });
 
-    React.useEffect(handleControllerSwipe, [globalIndex, handleControllerSwipe]);
-
-    const getCurrentIndex = useEventCallback(() => index);
-
-    const handleIndexOffsetChange = useEventCallback(() => {
-        if (track.current && offset) {
-            animationRef.current?.cancel();
-
-            animationRef.current = track.current.animate?.(
-                isHorizontal(thumbnails.position)
-                    ? [
-                          {
-                              transform: `translateX(${
-                                  (isRTL ? -1 : 1) * boxSize(thumbnails, thumbnails.width, true) * offset +
-                                  animationOffset.current
-                              }px)`,
-                          },
-                          { transform: "translateX(0)" },
-                      ]
-                    : [
-                          {
-                              transform: `translateY(${
-                                  boxSize(thumbnails, thumbnails.height, true) * offset + animationOffset.current
-                              }px)`,
-                          },
-                          { transform: "translateY(0)" },
-                      ],
-                !reduceMotion ? animationDuration : 0
-            );
-
-            if (animationRef.current) {
-                animationRef.current.onfinish = () => {
-                    animationRef.current = undefined;
-
-                    if (getCurrentIndex() === index) {
-                        setOffset(0);
-                    }
-                };
-            }
-
-            animationOffset.current = 0;
-        }
-    });
-
-    useLayoutEffect(handleIndexOffsetChange, [index, offset, handleIndexOffsetChange]);
+    React.useEffect(() => cleanup(subscribe(ACTION_SWIPE, handleControllerSwipe)), [subscribe, handleControllerSwipe]);
 
     const { finite } = carousel;
     const preload = Math.max(Math.min(carousel.preload, slides.length - 1), 0);

@@ -41,6 +41,7 @@ export const CLASS_NO_SCROLL_PADDING = "no_scroll_padding";
 
 export const ACTION_PREV = "prev";
 export const ACTION_NEXT = "next";
+export const ACTION_SWIPE = "swipe";
 export const ACTION_CLOSE = "close";
 
 export const EVENT_ON_POINTER_DOWN = "onPointerDown";
