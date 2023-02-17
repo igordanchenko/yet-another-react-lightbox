@@ -15,7 +15,10 @@ $icon-button-padding: 8px;
 
     &_portal {
         position: fixed;
-        inset: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         opacity: 0;
         overflow: hidden;
         z-index: globalVar(portal_zindex, 9999);
@@ -28,7 +31,10 @@ $icon-button-padding: 8px;
 
     &_container {
         position: absolute;
-        inset: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         overflow: hidden;
         background-color: globalVar(container_background_color, $color-backdrop);
         outline: 0;
@@ -139,13 +145,19 @@ $icon-button-padding: 8px;
 
     &_toolbar {
         position: absolute;
-        inset: 0 0 auto auto;
+        top: 0;
+        right: 0;
+        bottom: auto;
+        left: auto;
         display: flex;
         justify-content: flex-end;
         padding: globalVar(toolbar_padding, $toolbar-padding);
 
         [dir="rtl"] & {
-            inset: 0 auto auto 0;
+            top: 0;
+            right: auto;
+            bottom: auto;
+            left: 0;
         }
     }
 
