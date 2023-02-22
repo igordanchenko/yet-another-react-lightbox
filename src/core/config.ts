@@ -28,9 +28,12 @@ const traverseNode = (node: Node, target: string, apply: (node: Node) => Node[] 
 const traverse = (nodes: Node[], target: string, apply: (node: Node) => Node[] | undefined): Node[] =>
     nodes.flatMap((node) => traverseNode(node, target, apply) ?? []);
 
-export const withPlugins = (root: Node[], plugins?: Plugin[]): { config: Node[]; augmentation: Augmentation } => {
+export const withPlugins = (
+    root: Node[],
+    plugins: Plugin[] = [],
+    augmentations: Augmentation[] = []
+): { config: Node[]; augmentation: Augmentation } => {
     let config = root;
-    const augmentations: Augmentation[] = [];
 
     const contains = (target: string) => {
         const nodes = [...config];
@@ -84,7 +87,7 @@ export const withPlugins = (root: Node[], plugins?: Plugin[]): { config: Node[];
         augmentations.push(augmentation);
     };
 
-    plugins?.forEach((plugin) => {
+    plugins.forEach((plugin) => {
         plugin({
             contains,
             addParent,

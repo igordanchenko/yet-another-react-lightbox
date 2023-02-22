@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { LightboxExternalProps, LightboxProps, Node } from "./types.js";
+import { Augmentation, LightboxExternalProps, LightboxProps, Node } from "./types.js";
 import { LightboxDefaultProps } from "./props.js";
 import {
     CarouselModule,
@@ -20,6 +20,12 @@ const renderNode = (node: Node, props: LightboxProps): React.ReactElement =>
         { key: node.module.name, ...props },
         node.children?.map((child) => renderNode(child, props))
     );
+
+const fixupIndex: Augmentation = ({ index, slides, ...rest }) => ({
+    index: index >= 0 && index < slides.length ? index : 0,
+    slides,
+    ...rest,
+});
 
 /** Lightbox component */
 export const Lightbox: React.FC<LightboxExternalProps> = (props) => {
@@ -46,7 +52,8 @@ export const Lightbox: React.FC<LightboxExternalProps> = (props) => {
                 ]),
             ]),
         ],
-        plugins
+        plugins,
+        [fixupIndex]
     );
 
     const augmentedProps = augmentation({
