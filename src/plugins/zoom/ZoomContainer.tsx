@@ -13,6 +13,7 @@ import {
     EVENT_ON_POINTER_MOVE,
     EVENT_ON_POINTER_UP,
     EVENT_ON_WHEEL,
+    IMAGE_FIT_COVER,
     ImageSlide,
     isImageSlide,
     round,
@@ -56,12 +57,12 @@ const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, 
 
             slideRect = cover
                 ? {
-                      width: Math.min(rect.width, maxSlideRect.width),
-                      height: Math.min(rect.height, maxSlideRect.height),
+                      width: Math.min(rect.width, maxSlideRect.width, width),
+                      height: Math.min(rect.height, maxSlideRect.height, height),
                   }
                 : {
-                      width: Math.round(Math.min(rect.width, (rect.height / height) * width)),
-                      height: Math.round(Math.min(rect.height, (rect.width / width) * height)),
+                      width: Math.round(Math.min(rect.width, (rect.height / height) * width, width)),
+                      height: Math.round(Math.min(rect.height, (rect.width / width) * height, height)),
                   };
         }
     }
@@ -101,14 +102,14 @@ export const ZoomContainer: React.FC<
     const { subscribe } = useEvents();
     const reduceMotion = useMotionPreference();
 
-    const { slideRect, maxSlideRect: currentMaxSlideRect } = getSlideRects(
+    const { slideRect, maxSlideRect } = getSlideRects(
         { ...slide, ...imageDimensions },
-        carousel.imageFit === "cover" || ("imageFit" in slide && slide.imageFit === "cover"),
+        carousel.imageFit === IMAGE_FIT_COVER || ("imageFit" in slide && slide.imageFit === IMAGE_FIT_COVER),
         zoomProps.maxZoomPixelRatio,
         containerRect
     );
 
-    const maxZoom = slideRect.width ? Math.max(round(currentMaxSlideRect.width / slideRect.width, 5), 1) : 1;
+    const maxZoom = slideRect.width ? Math.max(round(maxSlideRect.width / slideRect.width, 5), 1) : 1;
 
     const changeOffsets = useEventCallback((dx?: number, dy?: number, targetZoom?: number) => {
         const newZoom = targetZoom || zoom;
