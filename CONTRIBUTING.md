@@ -56,11 +56,10 @@ npm run start
 7. Link-install your locally built `yet-another-react-lightbox` version to your local project:
 
 ```shell
-# execute from yet-another-react-lightbox directory
-npm link
-
-# execute from your local project directory
-npm link yet-another-react-lightbox
+# specify relative or absolute path to yet-another-react-lightbox directory 
+YARL_HOME=../yet-another-react-lightbox
+npm link $YARL_HOME $YARL_HOME/node_modules/react $YARL_HOME/node_modules/react-dom
+rm -rf node_modules/.cache
 ```
 
 8. Make changes, run tests:
@@ -73,9 +72,9 @@ npm run test
 
 ```shell
 # execute from your local project directory
-npm unlink --no-save yet-another-react-lightbox
-
-npm unlink -g yet-another-react-lightbox
+npm install
+rm -rf node_modules/.cache
+npm rm -g yet-another-react-lightbox react react-dom
 ```
 
 10. Commit and push to your fork (make sure your commit message conforms to
