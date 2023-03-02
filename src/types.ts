@@ -92,6 +92,9 @@ export interface AnimationSettings {
     fade: number;
     /** swipe animation duration */
     swipe: number;
+    // TODO v3: consider decoupling `navigation` and `swipe` animation duration
+    /** override for `swipe` animation duration when using keyboard navigation or navigation buttons */
+    navigation?: number;
 }
 
 /** Controller settings */

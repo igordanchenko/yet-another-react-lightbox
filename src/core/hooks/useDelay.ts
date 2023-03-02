@@ -7,7 +7,7 @@ export const useDelay = () => {
     const { setTimeout, clearTimeout } = useTimeouts();
 
     return React.useCallback(
-        (callback: (...args: any[]) => void, delay: number) => {
+        (callback: () => void, delay: number) => {
             clearTimeout(timeoutId.current);
             timeoutId.current = setTimeout(callback, delay > 0 ? delay : 0);
         },

@@ -43,6 +43,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     thumbnails,
     thumbnailRect,
     styles,
+    animation: { navigation },
 }) => {
     const track = React.useRef<HTMLDivElement | null>(null);
 
@@ -51,8 +52,8 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     const isRTL = useRTL();
 
     const index = globalIndex;
-    const offset = animation?.increment || 0;
     const animationDuration = animation?.duration || 0;
+    const offset = (animationDuration > 0 && animation?.increment) || 0;
 
     const animate = useAnimation<number>(track, (snapshot) => ({
         keyframes: isHorizontal(thumbnails.position)
@@ -129,9 +130,9 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
 
     const handleClick = (slideIndex: number) => () => {
         if (slideIndex > index) {
-            publish(ACTION_NEXT, slideIndex - index);
+            publish(ACTION_NEXT, { count: slideIndex - index, animationDuration: navigation });
         } else if (slideIndex < index) {
-            publish(ACTION_PREV, index - slideIndex);
+            publish(ACTION_PREV, { count: index - slideIndex, animationDuration: navigation });
         }
     };
 

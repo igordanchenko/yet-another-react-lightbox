@@ -36,11 +36,16 @@ import {
     YARL_EVENT_BACKDROP_CLICK,
 } from "../consts.js";
 
+export type NavigationAction = {
+    count?: number;
+    animationDuration?: number;
+};
+
 declare module "../" {
     // noinspection JSUnusedGlobalSymbols
     interface EventTypes {
-        [ACTION_PREV]: number;
-        [ACTION_NEXT]: number;
+        [ACTION_PREV]: NavigationAction;
+        [ACTION_NEXT]: NavigationAction;
         [ACTION_SWIPE]: LightboxStateAction;
         [ACTION_CLOSE]: void;
         [YARL_EVENT_BACKDROP_CLICK]: void;
@@ -125,8 +130,14 @@ export const Controller: Component = ({ children, ...props }) => {
     });
 
     const swipe = useEventCallback(
-        (action: { direction?: "prev" | "next"; count?: number; offset?: number; duration?: number }) => {
-            const swipeDuration = animation.swipe;
+        (action: {
+            direction?: "prev" | "next";
+            count?: number;
+            offset?: number;
+            duration?: number;
+            animationDuration?: number;
+        }) => {
+            const swipeDuration = action.animationDuration ?? animation.swipe;
             const currentSwipeOffset = action.offset || 0;
 
             let { direction } = action;
@@ -235,8 +246,8 @@ export const Controller: Component = ({ children, ...props }) => {
     React.useEffect(
         () =>
             cleanup(
-                subscribe(ACTION_PREV, (count) => swipe({ direction: ACTION_PREV, count })),
-                subscribe(ACTION_NEXT, (count) => swipe({ direction: ACTION_NEXT, count })),
+                subscribe(ACTION_PREV, (action) => swipe({ direction: ACTION_PREV, ...action })),
+                subscribe(ACTION_NEXT, (action) => swipe({ direction: ACTION_NEXT, ...action })),
                 subscribe(ACTION_SWIPE, (action) => dispatch(action))
             ),
         [subscribe, swipe, dispatch]

@@ -5,7 +5,7 @@ import { createModule } from "../config.js";
 import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
 import { cssClass, label as translateLabel } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
-import { Publish, useEvents, useLightboxState } from "../contexts/index.js";
+import { useEvents, useLightboxState } from "../contexts/index.js";
 import { useController } from "./Controller.js";
 import {
     ACTION_NEXT,
@@ -17,22 +17,22 @@ import {
 } from "../consts.js";
 
 export type NavigationButtonProps = {
-    publish: Publish;
     labels?: Labels;
     label: string;
     icon: React.ElementType;
     renderIcon?: () => React.ReactNode;
     action: "prev" | "next";
+    onClick: () => void;
     disabled?: boolean;
 };
 
 export const NavigationButton = ({
-    publish,
     labels,
     label,
     icon,
     renderIcon,
     action,
+    onClick,
     disabled,
 }: NavigationButtonProps) => (
     <IconButton
@@ -41,7 +41,7 @@ export const NavigationButton = ({
         renderIcon={renderIcon}
         className={cssClass(`navigation_${action}`)}
         disabled={disabled}
-        onClick={() => publish(action)}
+        onClick={onClick}
         {...useLoseFocus(disabled)}
     />
 );
@@ -49,7 +49,7 @@ export const NavigationButton = ({
 export const Navigation: Component = ({
     slides,
     carousel: { finite },
-    animation: { swipe },
+    animation: { swipe, navigation },
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }) => {
@@ -61,9 +61,13 @@ export const Navigation: Component = ({
     const prevDisabled = slides.length === 0 || (finite && currentIndex === 0);
     const nextDisabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
 
+    const navigate = (action: typeof ACTION_PREV | typeof ACTION_NEXT) => {
+        publish(action, { animationDuration: navigation });
+    };
+
     const publishThrottled = useThrottle(
-        (action: typeof ACTION_PREV | typeof ACTION_NEXT) => publish(action),
-        swipe / 2
+        (action: typeof ACTION_PREV | typeof ACTION_NEXT) => navigate(action),
+        (navigation ?? swipe) / 2
     );
 
     const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -89,7 +93,7 @@ export const Navigation: Component = ({
                     renderIcon={iconPrev}
                     disabled={prevDisabled}
                     labels={labels}
-                    publish={publish}
+                    onClick={() => navigate(ACTION_PREV)}
                 />
             )}
 
@@ -103,7 +107,7 @@ export const Navigation: Component = ({
                     renderIcon={iconNext}
                     disabled={nextDisabled}
                     labels={labels}
-                    publish={publish}
+                    onClick={() => navigate(ACTION_NEXT)}
                 />
             )}
         </>
