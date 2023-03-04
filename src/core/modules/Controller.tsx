@@ -38,7 +38,6 @@ import {
 
 export type NavigationAction = {
     count?: number;
-    animationDuration?: number;
 };
 
 declare module "../" {
@@ -130,15 +129,9 @@ export const Controller: Component = ({ children, ...props }) => {
     });
 
     const swipe = useEventCallback(
-        (action: {
-            direction?: "prev" | "next";
-            count?: number;
-            offset?: number;
-            duration?: number;
-            animationDuration?: number;
-        }) => {
-            const swipeDuration = action.animationDuration ?? animation.swipe;
+        (action: { direction?: "prev" | "next"; count?: number; offset?: number; duration?: number }) => {
             const currentSwipeOffset = action.offset || 0;
+            const swipeDuration = (!currentSwipeOffset ? animation.navigation : undefined) ?? animation.swipe;
 
             let { direction } = action;
             const count = action.count ?? 1;

@@ -43,7 +43,6 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     thumbnails,
     thumbnailRect,
     styles,
-    animation: { navigation },
 }) => {
     const track = React.useRef<HTMLDivElement | null>(null);
 
@@ -130,9 +129,9 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
 
     const handleClick = (slideIndex: number) => () => {
         if (slideIndex > index) {
-            publish(ACTION_NEXT, { count: slideIndex - index, animationDuration: navigation });
+            publish(ACTION_NEXT, { count: slideIndex - index });
         } else if (slideIndex < index) {
-            publish(ACTION_PREV, { count: index - slideIndex, animationDuration: navigation });
+            publish(ACTION_PREV, { count: index - slideIndex });
         }
     };
 

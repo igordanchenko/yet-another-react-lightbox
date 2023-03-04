@@ -61,12 +61,8 @@ export const Navigation: Component = ({
     const prevDisabled = slides.length === 0 || (finite && currentIndex === 0);
     const nextDisabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
 
-    const navigate = (action: typeof ACTION_PREV | typeof ACTION_NEXT) => {
-        publish(action, { animationDuration: navigation });
-    };
-
     const publishThrottled = useThrottle(
-        (action: typeof ACTION_PREV | typeof ACTION_NEXT) => navigate(action),
+        (action: typeof ACTION_PREV | typeof ACTION_NEXT) => publish(action),
         (navigation ?? swipe) / 2
     );
 
@@ -93,7 +89,7 @@ export const Navigation: Component = ({
                     renderIcon={iconPrev}
                     disabled={prevDisabled}
                     labels={labels}
-                    onClick={() => navigate(ACTION_PREV)}
+                    onClick={() => publish(ACTION_PREV)}
                 />
             )}
 
@@ -107,7 +103,7 @@ export const Navigation: Component = ({
                     renderIcon={iconNext}
                     disabled={nextDisabled}
                     labels={labels}
-                    onClick={() => navigate(ACTION_NEXT)}
+                    onClick={() => publish(ACTION_NEXT)}
                 />
             )}
         </>
