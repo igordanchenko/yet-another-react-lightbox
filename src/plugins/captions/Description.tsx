@@ -25,10 +25,8 @@ export const Description: React.FC<DescriptionProps> = ({
                 ...(descriptionTextAlign !== defaultCaptionsProps.descriptionTextAlign ||
                 descriptionMaxLines !== defaultCaptionsProps.descriptionMaxLines
                     ? {
-                          style: {
-                              [cssVar("slide_description_text_align")]: descriptionTextAlign,
-                              [cssVar("slide_description_max_lines")]: descriptionMaxLines,
-                          },
+                          [cssVar("slide_description_text_align")]: descriptionTextAlign,
+                          [cssVar("slide_description_max_lines")]: descriptionMaxLines,
                       }
                     : null),
                 ...styles.captionsDescription,
