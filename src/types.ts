@@ -88,14 +88,25 @@ export interface CarouselSettings {
 
 /** Animation settings */
 export interface AnimationSettings {
-    /** fade-in / fade-out animation duration */
-    fade: number;
-    /** swipe animation duration */
-    swipe: number;
+    /** fade-in / fade-out animation settings */
+    fade: AnimationSpec;
+    /** swipe animation settings */
+    swipe: AnimationSpec;
     // TODO v3: consider decoupling `navigation` and `swipe` animation duration
-    /** override for `swipe` animation duration when using keyboard navigation or navigation buttons */
-    navigation?: number;
+    /** override for `swipe` animation settings when using keyboard navigation or navigation buttons */
+    navigation?: AnimationSpec;
 }
+
+/** Animation duration or animation settings */
+export type AnimationSpec =
+    | {
+          /** animation duration */
+          duration?: number;
+          /** animation easing function */
+          easing?: string;
+      }
+    /** animation duration */
+    | number;
 
 /** Controller settings */
 export interface ControllerSettings {

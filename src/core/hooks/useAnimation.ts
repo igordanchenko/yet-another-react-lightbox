@@ -1,10 +1,9 @@
-/* eslint-disable prefer-destructuring */
-
 import * as React from "react";
 
 import { useLayoutEffect } from "./useLayoutEffect.js";
 import { useMotionPreference } from "./useMotionPreference.js";
 
+/* eslint-disable prefer-destructuring */
 const currentTransformation = (node: HTMLElement) => {
     let x = 0;
     let y = 0;
@@ -25,13 +24,22 @@ const currentTransformation = (node: HTMLElement) => {
     return { x, y, z };
 };
 
+export type ComputeAnimation<T> = (
+    snapshot: T,
+    rect: DOMRect,
+    translate: { x: number; y: number; z: number }
+) =>
+    | {
+          keyframes: Keyframe[];
+          duration: number;
+          easing?: string;
+          onfinish?: () => void;
+      }
+    | undefined;
+
 export const useAnimation = <T>(
     nodeRef: React.RefObject<HTMLElement | null>,
-    computeAnimation: (
-        snapshot: T,
-        rect: DOMRect,
-        translate: { x: number; y: number; z: number }
-    ) => { keyframes: Keyframe[]; duration: number; onfinish?: () => void } | undefined
+    computeAnimation: ComputeAnimation<T>
 ) => {
     const snapshot = React.useRef<T>();
     const animation = React.useRef<Animation>();
@@ -40,7 +48,7 @@ export const useAnimation = <T>(
 
     useLayoutEffect(() => {
         if (nodeRef.current && snapshot.current !== undefined && !reduceMotion) {
-            const { keyframes, duration, onfinish } =
+            const { keyframes, duration, easing, onfinish } =
                 computeAnimation(
                     snapshot.current,
                     nodeRef.current.getBoundingClientRect(),
@@ -50,7 +58,7 @@ export const useAnimation = <T>(
             if (keyframes && duration) {
                 animation.current?.cancel();
 
-                animation.current = nodeRef.current.animate?.(keyframes, duration);
+                animation.current = nodeRef.current.animate?.(keyframes, { duration, easing });
 
                 if (animation.current) {
                     animation.current.onfinish = () => {

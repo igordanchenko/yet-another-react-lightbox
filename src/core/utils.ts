@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import { Labels, Slide, SlideImage } from "../types.js";
+import { AnimationDefaultProps } from "../props.js";
+import { AnimationSettings, AnimationSpec, Labels, Slide, SlideImage } from "../types.js";
 
 export const clsx = (...classes: (string | boolean | undefined)[]) =>
     [...classes].filter((cls) => Boolean(cls)).join(" ");
@@ -69,3 +70,19 @@ export const getSlideIndex = (index: number, slidesCount: number) =>
     ((index % slidesCount) + slidesCount) % slidesCount;
 
 export const getSlide = (slides: Slide[], index: number) => slides[getSlideIndex(index, slides.length)];
+
+export const getAnimationEasing = (animationSpec: AnimationSpec | undefined) =>
+    typeof animationSpec === "object" ? animationSpec.easing : undefined;
+
+export const getAnimationDuration = (animationSpec: AnimationSpec | undefined, defaultDuration: number) =>
+    (typeof animationSpec === "object" ? animationSpec.duration : animationSpec) ?? defaultDuration;
+
+export const getFadeAnimationDuration = (animation: AnimationSettings) =>
+    getAnimationDuration(animation.fade, AnimationDefaultProps.fade);
+
+export const getSwipeAnimationDuration = (animation: AnimationSettings) =>
+    getAnimationDuration(animation.swipe, AnimationDefaultProps.swipe);
+
+export const getNavigationAnimationDuration = (animation: AnimationSettings) => {
+    return getAnimationDuration(animation.navigation, getSwipeAnimationDuration(animation));
+};

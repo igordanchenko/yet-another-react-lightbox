@@ -11,7 +11,13 @@ export type LightboxState = {
     animation?: LightboxStateAction;
 };
 
-export type LightboxStateAction = { increment: number; duration?: number } | undefined;
+export type LightboxStateAction =
+    | {
+          increment: number;
+          duration?: number;
+          easing?: string;
+      }
+    | undefined;
 
 const LightboxStateContext = React.createContext<{
     state: LightboxState;

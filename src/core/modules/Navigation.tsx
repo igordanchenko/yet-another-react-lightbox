@@ -3,7 +3,7 @@ import * as React from "react";
 import { Component, Labels } from "../../types.js";
 import { createModule } from "../config.js";
 import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
-import { cssClass, label as translateLabel } from "../utils.js";
+import { cssClass, label as translateLabel, getNavigationAnimationDuration } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
 import { useEvents, useLightboxState } from "../contexts/index.js";
 import { useController } from "./Controller.js";
@@ -49,7 +49,7 @@ export const NavigationButton = ({
 export const Navigation: Component = ({
     slides,
     carousel: { finite },
-    animation: { swipe, navigation },
+    animation,
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }) => {
@@ -63,7 +63,7 @@ export const Navigation: Component = ({
 
     const publishThrottled = useThrottle(
         (action: typeof ACTION_PREV | typeof ACTION_NEXT) => publish(action),
-        (navigation ?? swipe) / 2
+        getNavigationAnimationDuration(animation) / 2
     );
 
     const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {

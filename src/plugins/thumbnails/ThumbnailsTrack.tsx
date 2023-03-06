@@ -71,6 +71,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
                   { transform: "translateY(0)" },
               ],
         duration: animationDuration,
+        easing: animation?.easing,
     }));
 
     const handleControllerSwipe = useEventCallback(() => {

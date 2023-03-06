@@ -7,6 +7,9 @@ import {
     clsx,
     cssClass,
     cssVar,
+    getAnimationEasing,
+    getNavigationAnimationDuration,
+    getSwipeAnimationDuration,
     isNumber,
     makeComposePrefix,
     makeUseContext,
@@ -123,6 +126,7 @@ export const Controller: Component = ({ children, ...props }) => {
                     { transform: "translateX(0)" },
                 ],
                 duration: state.animation.duration,
+                easing: state.animation.easing,
             };
         }
         return undefined;
@@ -131,7 +135,10 @@ export const Controller: Component = ({ children, ...props }) => {
     const swipe = useEventCallback(
         (action: { direction?: "prev" | "next"; count?: number; offset?: number; duration?: number }) => {
             const currentSwipeOffset = action.offset || 0;
-            const swipeDuration = (!currentSwipeOffset ? animation.navigation : undefined) ?? animation.swipe;
+            const swipeDuration = !currentSwipeOffset
+                ? getNavigationAnimationDuration(animation)
+                : getSwipeAnimationDuration(animation);
+            const swipeEasing = getAnimationEasing(!currentSwipeOffset ? animation.navigation : animation.swipe);
 
             let { direction } = action;
             const count = action.count ?? 1;
@@ -155,12 +162,10 @@ export const Controller: Component = ({ children, ...props }) => {
                         newSwipeAnimationDuration =
                             (swipeDuration / containerWidth) * (containerWidth - Math.abs(currentSwipeOffset));
                     }
+
+                    direction = rtl(currentSwipeOffset) > 0 ? ACTION_PREV : ACTION_NEXT;
                 } else {
                     newSwipeAnimationDuration = swipeDuration / 2;
-                }
-
-                if (count !== 0) {
-                    direction = rtl(currentSwipeOffset) > 0 ? ACTION_PREV : ACTION_NEXT;
                 }
             }
 
@@ -197,7 +202,7 @@ export const Controller: Component = ({ children, ...props }) => {
 
             setSwipeState(newSwipeState);
 
-            publish(ACTION_SWIPE, { increment, duration: newSwipeAnimationDuration });
+            publish(ACTION_SWIPE, { increment, duration: newSwipeAnimationDuration, easing: swipeEasing });
         }
     );
 
@@ -211,7 +216,7 @@ export const Controller: Component = ({ children, ...props }) => {
         subscribeSensors,
         isSwipeValid,
         containerRect?.width || 0,
-        animation.swipe,
+        getSwipeAnimationDuration(animation),
         () => setSwipeState(SwipeState.SWIPE), // onSwipeStart
         (offset: number) => setSwipeOffset(offset), // onSwipeProgress
         (offset: number, duration: number) => swipe({ offset, duration, count: 1 }), // onSwipeFinish

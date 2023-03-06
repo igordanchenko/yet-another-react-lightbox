@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Component } from "../../types.js";
 import { LightboxDefaultProps } from "../../props.js";
 import { createModule } from "../config.js";
-import { clsx, composePrefix, cssClass, cssVar } from "../utils.js";
+import { clsx, composePrefix, cssClass, cssVar, getAnimationEasing, getFadeAnimationDuration } from "../utils.js";
 import { useEventCallback, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 import { ACTION_CLOSE, CLASS_NO_SCROLL_PADDING, MODULE_PORTAL } from "../consts.js";
@@ -34,7 +34,9 @@ export const Portal: Component = ({ children, animation, styles, className, on, 
     const { setTimeout } = useTimeouts();
     const { subscribe } = useEvents();
 
-    const fadeAnimationDuration = !useMotionPreference() ? animation.fade : 0;
+    const reduceMotion = useMotionPreference();
+    const animationDuration = !reduceMotion ? getFadeAnimationDuration(animation) : 0;
+    const animationEasing = !reduceMotion ? getAnimationEasing(animation.fade) : undefined;
 
     React.useEffect(() => {
         setMounted(true);
@@ -54,7 +56,7 @@ export const Portal: Component = ({ children, animation, styles, className, on, 
             on.exited?.();
 
             close();
-        }, fadeAnimationDuration);
+        }, animationDuration);
     });
 
     React.useEffect(() => subscribe(ACTION_CLOSE, handleClose), [subscribe, handleClose]);
@@ -79,7 +81,7 @@ export const Portal: Component = ({ children, animation, styles, className, on, 
 
         setTimeout(() => {
             on.entered?.();
-        }, fadeAnimationDuration);
+        }, animationDuration);
     });
 
     const handleExit = useEventCallback(() => {
@@ -113,10 +115,9 @@ export const Portal: Component = ({ children, animation, styles, className, on, 
                   aria-live="polite"
                   style={{
                       ...(animation.fade !== LightboxDefaultProps.animation.fade
-                          ? {
-                                [cssVar("fade_animation_duration")]: `${fadeAnimationDuration}ms`,
-                            }
+                          ? { [cssVar("fade_animation_duration")]: `${animationDuration}ms` }
                           : null),
+                      ...(animationEasing ? { [cssVar("fade_animation_timing_function")]: animationEasing } : null),
                       ...styles.root,
                   }}
               >
