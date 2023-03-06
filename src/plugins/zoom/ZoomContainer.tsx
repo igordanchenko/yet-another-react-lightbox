@@ -163,13 +163,11 @@ export const ZoomContainer: React.FC<
             zoomAnimation.current = containerRef.current.animate?.(
                 [
                     { transform: zoomAnimationStart.current },
-                    {
-                        transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)`,
-                    },
+                    { transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)` },
                 ],
                 {
-                    duration: reduceMotion ? 0 : animation.zoom ?? 500,
-                    easing: zoomAnimation ? "ease-out" : "ease-in-out",
+                    duration: !reduceMotion ? animation.zoom ?? 500 : 0,
+                    easing: zoomAnimation.current ? "ease-out" : "ease-in-out",
                 }
             );
 
