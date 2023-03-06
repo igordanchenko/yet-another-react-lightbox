@@ -1,7 +1,6 @@
 name: Feature request
 description: Suggest an enhancement for this project
 labels: [ enhancement ]
-assignees: [ igordanchenko ]
 body:
     -   type: textarea
         attributes:
