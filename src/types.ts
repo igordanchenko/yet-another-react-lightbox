@@ -122,6 +122,7 @@ export interface ControllerSettings {
 
 /** Custom render functions. */
 export interface Render {
+    // TODO v3: convert arguments array to props object
     /** render custom slide type, or override the default image slide */
     slide?: (
         /** slide */
