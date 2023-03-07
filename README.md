@@ -49,7 +49,7 @@ import * as React from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
-const App = () => {
+export default function App() {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -69,9 +69,7 @@ const App = () => {
       />
     </>
   );
-};
-
-export default App;
+}
 ```
 
 ## Recommended Setup
@@ -86,7 +84,7 @@ import * as React from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
-const App = () => {
+export default function App() {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -117,9 +115,7 @@ const App = () => {
       />
     </>
   );
-};
-
-export default App;
+}
 ```
 
 You can also integrate 3rd-party image components (e.g., Next.js Image or Gatsby Image) via a custom render function.
