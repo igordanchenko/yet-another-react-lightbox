@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { makeUseContext, useEvents, YARL_EVENT_TOOLBAR_WIDTH } from "../../core/index.js";
 
-type CaptionsContextType = {
+export type CaptionsContextType = {
     toolbarWidth?: number;
 };
 
@@ -11,7 +11,7 @@ const CaptionsContext = React.createContext<CaptionsContextType | null>(null);
 export const useCaptions = makeUseContext("useCaptions", "CaptionsContext", CaptionsContext);
 
 /** Captions plugin context holder */
-export const CaptionsContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export function CaptionsContextProvider({ children }: React.PropsWithChildren) {
     const { subscribe } = useEvents();
 
     const [toolbarWidth, setToolbarWidth] = React.useState<number>();
@@ -21,4 +21,4 @@ export const CaptionsContextProvider: React.FC<React.PropsWithChildren> = ({ chi
     const context = React.useMemo(() => ({ toolbarWidth }), [toolbarWidth]);
 
     return <CaptionsContext.Provider value={context}>{children}</CaptionsContext.Provider>;
-};
+}

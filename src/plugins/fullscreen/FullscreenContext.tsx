@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component } from "../../types.js";
+import { ComponentProps } from "../../types.js";
 import {
     CLASS_FULLSIZE,
     clsx,
@@ -11,7 +11,7 @@ import {
     useLayoutEffect,
 } from "../../core/index.js";
 
-type FullscreenContextType = {
+export type FullscreenContextType = {
     fullscreen: boolean;
     fullscreenEnabled?: boolean;
     toggleFullscreen: () => void;
@@ -21,7 +21,7 @@ const FullscreenContext = React.createContext<FullscreenContextType | null>(null
 
 export const useFullscreen = makeUseContext("useFullscreen", "FullscreenContext", FullscreenContext);
 
-export const FullscreenContextProvider: Component = ({ fullscreen: auto, children }) => {
+export function FullscreenContextProvider({ fullscreen: auto, children }: ComponentProps) {
     const containerRef = React.useRef<HTMLDivElement | null>(null);
     const [fullscreen, setFullscreen] = React.useState(false);
     const [fullscreenEnabled, setFullscreenEnabled] = React.useState<boolean>();
@@ -140,4 +140,4 @@ export const FullscreenContextProvider: Component = ({ fullscreen: auto, childre
             <FullscreenContext.Provider value={context}>{children}</FullscreenContext.Provider>
         </div>
     );
-};
+}

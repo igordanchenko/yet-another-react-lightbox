@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { ContainerRect } from "../../types.js";
 
-export const useContainerRect = <T extends HTMLElement = HTMLElement>() => {
+export function useContainerRect<T extends HTMLElement = HTMLElement>() {
     const [containerRect, setContainerRect] = React.useState<ContainerRect>();
     const containerRef = React.useRef<T | null>(null);
     const observerRef = React.useRef<ResizeObserver>();
@@ -46,4 +46,4 @@ export const useContainerRect = <T extends HTMLElement = HTMLElement>() => {
         }),
         [setContainerRef, containerRef, containerRect]
     );
-};
+}

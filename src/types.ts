@@ -217,10 +217,10 @@ export interface ToolbarSettings {
 }
 
 /** Lightbox component properties */
-export type ComponentProps = Omit<LightboxProps, "plugins">;
+export type ComponentProps = React.PropsWithChildren<Omit<LightboxProps, "plugins">>;
 
 /** Lightbox component */
-export type Component = React.ComponentType<React.PropsWithChildren<ComponentProps>>;
+export type Component = React.ComponentType<ComponentProps>;
 
 /** Lightbox module */
 export type Module = {

@@ -11,19 +11,20 @@ import {
 } from "../../core/index.js";
 import { ImageSource, SlideImage } from "../../types.js";
 
-type ResponsiveImageSlide = Omit<SlideImage, "srcSet"> & {
+export type ResponsiveImageSlide = Omit<SlideImage, "srcSet"> & {
     srcSet: [ImageSource, ...ImageSource[]];
 };
 
-export const isResponsiveImageSlide = (slide: SlideImage): slide is ResponsiveImageSlide =>
-    (slide.srcSet?.length || 0) > 0;
+export function isResponsiveImageSlide(slide: SlideImage): slide is ResponsiveImageSlide {
+    return (slide.srcSet?.length || 0) > 0;
+}
 
-type ResponsiveImageProps = Omit<ImageSlideProps, "slide" | "rect"> &
+export type ResponsiveImageProps = Omit<ImageSlideProps, "slide" | "rect"> &
     Required<Pick<ImageSlideProps, "rect">> & {
         slide: ResponsiveImageSlide;
     };
 
-export const ResponsiveImage: React.FC<ResponsiveImageProps> = (props) => {
+export function ResponsiveImage(props: ResponsiveImageProps) {
     const [state, setState] = React.useState<{ current?: string; preload?: string }>({});
     const { current, preload } = state;
 
@@ -97,4 +98,4 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = (props) => {
             )}
         </>
     );
-};
+}

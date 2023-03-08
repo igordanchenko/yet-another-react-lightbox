@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useTimeouts } from "../contexts/Timeouts.js";
 
-export const useDelay = () => {
+export function useDelay() {
     const timeoutId = React.useRef<number>();
     const { setTimeout, clearTimeout } = useTimeouts();
 
@@ -13,4 +13,4 @@ export const useDelay = () => {
         },
         [setTimeout, clearTimeout]
     );
-};
+}

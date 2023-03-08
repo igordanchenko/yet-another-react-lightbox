@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component } from "../../types.js";
+import { ComponentProps } from "../../types.js";
 import { createModule } from "../config.js";
 import { composePrefix, cssClass, label } from "../utils.js";
 import { useEvents } from "../contexts/index.js";
@@ -15,9 +15,11 @@ declare module "../" {
     }
 }
 
-const cssPrefix = (value?: string) => composePrefix(MODULE_TOOLBAR, value);
+function cssPrefix(value?: string) {
+    return composePrefix(MODULE_TOOLBAR, value);
+}
 
-export const Toolbar: Component = ({ toolbar: { buttons }, labels, render: { buttonClose, iconClose } }) => {
+export function Toolbar({ toolbar: { buttons }, labels, render: { buttonClose, iconClose } }: ComponentProps) {
     const { publish } = useEvents();
     const { setContainerRef, containerRect } = useContainerRect();
 
@@ -45,6 +47,6 @@ export const Toolbar: Component = ({ toolbar: { buttons }, labels, render: { but
             {buttons?.map((button) => (button === ACTION_CLOSE ? renderCloseButton() : button))}
         </div>
     );
-};
+}
 
 export const ToolbarModule = createModule(MODULE_TOOLBAR, Toolbar);

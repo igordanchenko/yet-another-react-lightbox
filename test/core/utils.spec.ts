@@ -73,14 +73,13 @@ describe("utils", () => {
     });
 
     describe("makeUseContext", () => {
-        // eslint-disable-next-line react/jsx-no-constructed-context-values
         const context = {};
         const Context = React.createContext<typeof context | null>(null);
 
-        const Test = () => {
+        function Test() {
             const useContext = makeUseContext("useContext", "Context", Context);
             return React.createElement("div", null, useContext() === context ? "pass" : "fail");
-        };
+        }
 
         it("returns context", () => {
             render(React.createElement(Context.Provider, { value: context }, React.createElement(Test)));

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component, ComponentProps, ContainerRect } from "../../types.js";
+import { ComponentProps, ContainerRect } from "../../types.js";
 import { createModule } from "../config.js";
 import {
     cleanup,
@@ -69,7 +69,7 @@ const ControllerContext = React.createContext<ControllerContextType | null>(null
 
 export const useController = makeUseContext("useController", "ControllerContext", ControllerContext);
 
-export const Controller: Component = ({ children, ...props }) => {
+export function Controller({ children, ...props }: ComponentProps) {
     const { carousel, slides, animation, controller, on, styles } = props;
 
     const { state, dispatch } = useLightboxState();
@@ -306,6 +306,6 @@ export const Controller: Component = ({ children, ...props }) => {
             {containerRect && <ControllerContext.Provider value={context}>{children}</ControllerContext.Provider>}
         </div>
     );
-};
+}
 
 export const ControllerModule = createModule(MODULE_CONTROLLER, Controller);

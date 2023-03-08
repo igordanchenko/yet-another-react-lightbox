@@ -31,16 +31,7 @@ export type ImageSlideProps = {
     style?: React.CSSProperties;
 };
 
-export const ImageSlide = ({
-    slide: image,
-    offset,
-    render,
-    rect,
-    imageFit,
-    onClick,
-    onLoad,
-    style,
-}: ImageSlideProps) => {
+export function ImageSlide({ slide: image, offset, render, rect, imageFit, onClick, onLoad, style }: ImageSlideProps) {
     const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
 
     const { publish } = useEvents();
@@ -177,4 +168,4 @@ export const ImageSlide = ({
             )}
         </>
     );
-};
+}

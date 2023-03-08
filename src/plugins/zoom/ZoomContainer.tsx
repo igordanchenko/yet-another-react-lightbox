@@ -31,7 +31,7 @@ import { defaultZoomProps } from "./Zoom.js";
 import { ACTION_ZOOM_IN, ACTION_ZOOM_OUT } from "./index.js";
 import { isResponsiveImageSlide, ResponsiveImage } from "./ResponsiveImage.js";
 
-const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, rect?: ContainerRect) => {
+function getSlideRects(slide: Slide, cover: boolean, maxZoomPixelRatio: number, rect?: ContainerRect) {
     let slideRect: ContainerRect = { width: 0, height: 0 };
     let maxSlideRect: ContainerRect = { width: 0, height: 0 };
 
@@ -68,19 +68,29 @@ const getSlideRects = (slide: Slide, cover: boolean, maxZoomPixelRatio: number, 
     }
 
     return { slideRect, maxSlideRect };
+}
+
+function distance(pointerA: React.MouseEvent, pointerB: React.MouseEvent) {
+    return ((pointerA.clientX - pointerB.clientX) ** 2 + (pointerA.clientY - pointerB.clientY) ** 2) ** 0.5;
+}
+
+export type ZoomContainerProps = Pick<LightboxProps, "render" | "carousel" | "zoom" | "animation" | "on"> & {
+    slide: Slide;
+    offset: number;
+    rect: ContainerRect;
 };
 
-const distance = (pointerA: React.MouseEvent, pointerB: React.MouseEvent) =>
-    ((pointerA.clientX - pointerB.clientX) ** 2 + (pointerA.clientY - pointerB.clientY) ** 2) ** 0.5;
-
 /** Zoom container */
-export const ZoomContainer: React.FC<
-    Pick<LightboxProps, "render" | "carousel" | "zoom" | "animation" | "on"> & {
-        slide: Slide;
-        offset: number;
-        rect: ContainerRect;
-    }
-> = ({ slide, offset, rect, render, carousel, animation, zoom: originalZoomProps, on }) => {
+export function ZoomContainer({
+    slide,
+    offset,
+    rect,
+    render,
+    carousel,
+    animation,
+    zoom: originalZoomProps,
+    on,
+}: ZoomContainerProps) {
     const zoomProps = { ...defaultZoomProps, ...originalZoomProps };
 
     const { currentIndex } = useLightboxState().state;
@@ -486,4 +496,4 @@ export const ZoomContainer: React.FC<
             {rendered}
         </div>
     ) : null;
-};
+}

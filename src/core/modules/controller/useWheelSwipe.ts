@@ -5,7 +5,7 @@ import { useTimeouts } from "../../contexts/index.js";
 import { SwipeState } from "./index.js";
 import { EVENT_ON_WHEEL } from "../../consts.js";
 
-export const useWheelSwipe = <T extends Element = Element>(
+export function useWheelSwipe<T extends Element = Element>(
     swipeState: SwipeState,
     subscribeSensors: UseSensors<T>["subscribeSensors"],
     isSwipeValid: (offset: number) => boolean,
@@ -15,7 +15,7 @@ export const useWheelSwipe = <T extends Element = Element>(
     onSwipeProgress: (offset: number) => void,
     onSwipeFinish: (offset: number, duration: number) => void,
     onSwipeCancel: (offset: number) => void
-) => {
+) {
     const offset = React.useRef(0);
     const intent = React.useRef(0);
     const intentCleanup = React.useRef<number>();
@@ -123,4 +123,4 @@ export const useWheelSwipe = <T extends Element = Element>(
     });
 
     React.useEffect(() => subscribeSensors(EVENT_ON_WHEEL, onWheel), [subscribeSensors, onWheel]);
-};
+}

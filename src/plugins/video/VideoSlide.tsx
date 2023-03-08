@@ -16,13 +16,13 @@ import { LightboxProps } from "../../types.js";
 import { SlideVideo } from "./index.js";
 import { defaultVideoProps } from "./Video.js";
 
-type VideoSlideProps = {
+export type VideoSlideProps = {
     slide: SlideVideo;
     offset: number;
 };
 
 /** Video slide */
-export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
+export function VideoSlide({ slide, offset }: VideoSlideProps) {
     const { publish } = useEvents();
     const { setContainerRef, containerRect } = useContainerRect();
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
@@ -138,4 +138,4 @@ export const VideoSlide: React.FC<VideoSlideProps> = ({ slide, offset }) => {
             )}
         </>
     );
-};
+}

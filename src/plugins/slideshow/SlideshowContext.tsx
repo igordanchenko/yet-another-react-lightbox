@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component } from "../../types.js";
+import { ComponentProps } from "../../types.js";
 import {
     ACTION_NEXT,
     ACTIVE_SLIDE_COMPLETE,
@@ -21,7 +21,7 @@ import {
 } from "../../core/index.js";
 import { defaultSlideshowProps } from "./Slideshow.js";
 
-type SlideshowContextType = {
+export type SlideshowContextType = {
     playing: boolean;
     disabled: boolean;
 
@@ -32,7 +32,7 @@ const SlideshowContext = React.createContext<SlideshowContextType | null>(null);
 
 export const useSlideshow = makeUseContext("useSlideshow", "SlideshowContext", SlideshowContext);
 
-export const SlideshowContextProvider: Component = ({ slides, slideshow, carousel: { finite }, children }) => {
+export function SlideshowContextProvider({ slides, slideshow, carousel: { finite }, children }: ComponentProps) {
     const { autoplay, delay } = { ...defaultSlideshowProps, ...slideshow };
 
     const [playing, setPlaying] = React.useState(autoplay);
@@ -110,4 +110,4 @@ export const SlideshowContextProvider: Component = ({ slides, slideshow, carouse
     const context = React.useMemo(() => ({ playing, disabled, togglePlaying }), [playing, disabled, togglePlaying]);
 
     return <SlideshowContext.Provider value={context}>{children}</SlideshowContext.Provider>;
-};
+}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { Component } from "../../types.js";
+import { ComponentProps } from "../../types.js";
 import { LightboxDefaultProps } from "../../props.js";
 import { createModule } from "../config.js";
 import { clsx, composePrefix, cssClass, cssVar, getAnimationEasing, getFadeAnimationDuration } from "../utils.js";
@@ -9,9 +9,11 @@ import { useEventCallback, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 import { ACTION_CLOSE, CLASS_NO_SCROLL_PADDING, MODULE_PORTAL } from "../consts.js";
 
-const cssPrefix = (value?: string) => composePrefix(MODULE_PORTAL, value);
+function cssPrefix(value?: string) {
+    return composePrefix(MODULE_PORTAL, value);
+}
 
-const setAttribute = (element: Element, attribute: string, value: string) => {
+function setAttribute(element: Element, attribute: string, value: string) {
     const previousValue = element.getAttribute(attribute);
 
     element.setAttribute(attribute, value);
@@ -23,9 +25,9 @@ const setAttribute = (element: Element, attribute: string, value: string) => {
             element.removeAttribute(attribute);
         }
     };
-};
+}
 
-export const Portal: Component = ({ children, animation, styles, className, on, close }) => {
+export function Portal({ children, animation, styles, className, on, close }: ComponentProps) {
     const [mounted, setMounted] = React.useState(false);
     const [visible, setVisible] = React.useState(false);
 
@@ -126,6 +128,6 @@ export const Portal: Component = ({ children, animation, styles, className, on, 
               document.body
           )
         : null;
-};
+}
 
 export const PortalModule = createModule(MODULE_PORTAL, Portal);

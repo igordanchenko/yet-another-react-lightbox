@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useLayoutEffect } from "./useLayoutEffect.js";
 
-export const useRTL = () => {
+export function useRTL() {
     const [isRTL, setIsRTL] = React.useState(false);
 
     useLayoutEffect(() => {
@@ -10,4 +10,4 @@ export const useRTL = () => {
     }, []);
 
     return isRTL;
-};
+}

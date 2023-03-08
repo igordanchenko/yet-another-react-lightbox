@@ -3,7 +3,7 @@ import * as React from "react";
 import { useDelay } from "./useDelay.js";
 import { useEventCallback } from "./useEventCallback.js";
 
-export const useThrottle = (callback: (...args: any[]) => void, delay: number) => {
+export function useThrottle(callback: (...args: any[]) => void, delay: number) {
     const lastCallbackTime = React.useRef(0);
     const delayCallback = useDelay();
 
@@ -20,4 +20,4 @@ export const useThrottle = (callback: (...args: any[]) => void, delay: number) =
         },
         [delay, executeCallback, delayCallback]
     );
-};
+}

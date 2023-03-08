@@ -40,16 +40,12 @@ const reducer: (slidesCount: number) => React.Reducer<LightboxState, LightboxSta
         };
     };
 
-type LightboxStateProviderProps = React.PropsWithChildren<{
+export type LightboxStateProviderProps = React.PropsWithChildren<{
     slidesCount: number;
     initialIndex: number;
 }>;
 
-export const LightboxStateProvider: React.FC<LightboxStateProviderProps> = ({
-    initialIndex,
-    slidesCount,
-    children,
-}) => {
+export function LightboxStateProvider({ initialIndex, slidesCount, children }: LightboxStateProviderProps) {
     const memoizedReducer = React.useMemo(() => reducer(slidesCount), [slidesCount]);
     const [state, dispatch] = React.useReducer(memoizedReducer, {
         currentIndex: initialIndex,
@@ -60,4 +56,4 @@ export const LightboxStateProvider: React.FC<LightboxStateProviderProps> = ({
     const context = React.useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
     return <LightboxStateContext.Provider value={context}>{children}</LightboxStateContext.Provider>;
-};
+}

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export const useMotionPreference = () => {
+export function useMotionPreference() {
     const [reduceMotion, setReduceMotion] = React.useState(false);
 
     React.useEffect(() => {
@@ -12,4 +12,4 @@ export const useMotionPreference = () => {
     }, []);
 
     return reduceMotion;
-};
+}

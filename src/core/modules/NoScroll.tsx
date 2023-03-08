@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component } from "../../types.js";
+import { ComponentProps } from "../../types.js";
 import { createModule } from "../config.js";
 import { cssClass } from "../utils.js";
 import { useLayoutEffect, useRTL } from "../hooks/index.js";
@@ -9,9 +9,11 @@ import { CLASS_NO_SCROLL, CLASS_NO_SCROLL_PADDING, MODULE_NO_SCROLL } from "../c
 const noScroll = cssClass(CLASS_NO_SCROLL);
 const noScrollPadding = cssClass(CLASS_NO_SCROLL_PADDING);
 
-const isHTMLElement = (element: Element): element is HTMLElement => "style" in element;
+function isHTMLElement(element: Element): element is HTMLElement {
+    return "style" in element;
+}
 
-const padScrollbar = (element: HTMLElement, padding: number, rtl: boolean) => {
+function padScrollbar(element: HTMLElement, padding: number, rtl: boolean) {
     const styles = window.getComputedStyle(element);
     const property = rtl ? "padding-left" : "padding-right";
     const computedValue = rtl ? styles.paddingLeft : styles.paddingRight;
@@ -26,9 +28,9 @@ const padScrollbar = (element: HTMLElement, padding: number, rtl: boolean) => {
             element.style.removeProperty(property);
         }
     };
-};
+}
 
-export const NoScroll: Component = ({ children }) => {
+export function NoScroll({ children }: ComponentProps) {
     const rtl = useRTL();
 
     useLayoutEffect(() => {
@@ -63,6 +65,6 @@ export const NoScroll: Component = ({ children }) => {
     }, [rtl]);
 
     return <>{children}</>;
-};
+}
 
 export const NoScrollModule = createModule(MODULE_NO_SCROLL, NoScroll);

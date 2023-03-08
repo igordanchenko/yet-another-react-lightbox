@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ContainerRect, ImageFit, LightboxProps, Render, Slide } from "../../types.js";
+import { ContainerRect, ImageFit, LightboxProps, RenderThumbnailProps, Slide } from "../../types.js";
 import {
     CLASS_FLEX_CENTER,
     CLASS_FULLSIZE,
@@ -25,7 +25,7 @@ const UnknownThumbnailIcon = createIcon(
     <path d="M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.5 12.5l2.5 3.01L14.5 11l4.5 6H5l3.5-4.5z" />
 );
 
-const renderThumbnail: Render["thumbnail"] = ({ slide, render, rect, imageFit }) => {
+function renderThumbnail({ slide, render, rect, imageFit }: RenderThumbnailProps) {
     const customThumbnail = render.thumbnail?.({ slide, render, rect, imageFit });
     if (customThumbnail) {
         return customThumbnail;
@@ -53,14 +53,14 @@ const renderThumbnail: Render["thumbnail"] = ({ slide, render, rect, imageFit })
     }
 
     return <UnknownThumbnailIcon className={thumbnailIconClass} />;
-};
+}
 
-type FadeSettings = {
+export type FadeSettings = {
     duration: number;
     delay: number;
 };
 
-type ThumbnailProps = {
+export type ThumbnailProps = {
     rect: ContainerRect;
     slide: Slide | null;
     onClick: () => void;
@@ -81,7 +81,7 @@ const placeholderPrefix = makeComposePrefix("placeholder");
 const DELAY = "delay";
 const DURATION = "duration";
 
-export const Thumbnail: React.FC<ThumbnailProps> = ({
+export function Thumbnail({
     rect,
     slide,
     onClick,
@@ -92,34 +92,36 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
     render,
     imageFit,
     style,
-}) => (
-    <button
-        type="button"
-        className={clsx(
-            cssClass(CLASS_FLEX_CENTER),
-            cssClass(cssThumbnailPrefix()),
-            active && cssClass(cssThumbnailPrefix(activePrefix())),
-            fadeIn && cssClass(cssThumbnailPrefix(fadeInPrefix())),
-            fadeOut && cssClass(cssThumbnailPrefix(fadeOutPrefix())),
-            placeholder && cssClass(cssThumbnailPrefix(placeholderPrefix()))
-        )}
-        style={{
-            ...(fadeIn
-                ? {
-                      [cssVar(cssThumbnailPrefix(fadeInPrefix(DURATION)))]: `${fadeIn.duration}ms`,
-                      [cssVar(cssThumbnailPrefix(fadeInPrefix(DELAY)))]: `${fadeIn.delay}ms`,
-                  }
-                : null),
-            ...(fadeOut
-                ? {
-                      [cssVar(cssThumbnailPrefix(fadeOutPrefix(DURATION)))]: `${fadeOut.duration}ms`,
-                      [cssVar(cssThumbnailPrefix(fadeOutPrefix(DELAY)))]: `${fadeOut.delay}ms`,
-                  }
-                : null),
-            ...style,
-        }}
-        onClick={onClick}
-    >
-        {slide && renderThumbnail({ slide, render, rect, imageFit })}
-    </button>
-);
+}: ThumbnailProps) {
+    return (
+        <button
+            type="button"
+            className={clsx(
+                cssClass(CLASS_FLEX_CENTER),
+                cssClass(cssThumbnailPrefix()),
+                active && cssClass(cssThumbnailPrefix(activePrefix())),
+                fadeIn && cssClass(cssThumbnailPrefix(fadeInPrefix())),
+                fadeOut && cssClass(cssThumbnailPrefix(fadeOutPrefix())),
+                placeholder && cssClass(cssThumbnailPrefix(placeholderPrefix()))
+            )}
+            style={{
+                ...(fadeIn
+                    ? {
+                          [cssVar(cssThumbnailPrefix(fadeInPrefix(DURATION)))]: `${fadeIn.duration}ms`,
+                          [cssVar(cssThumbnailPrefix(fadeInPrefix(DELAY)))]: `${fadeIn.delay}ms`,
+                      }
+                    : null),
+                ...(fadeOut
+                    ? {
+                          [cssVar(cssThumbnailPrefix(fadeOutPrefix(DURATION)))]: `${fadeOut.duration}ms`,
+                          [cssVar(cssThumbnailPrefix(fadeOutPrefix(DELAY)))]: `${fadeOut.delay}ms`,
+                      }
+                    : null),
+                ...style,
+            }}
+            onClick={onClick}
+        >
+            {slide && renderThumbnail({ slide, render, rect, imageFit })}
+        </button>
+    );
+}

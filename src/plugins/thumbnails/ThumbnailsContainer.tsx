@@ -1,13 +1,13 @@
 import * as React from "react";
 
-import { Component } from "../../types.js";
+import { ComponentProps } from "../../types.js";
 import { clsx, cssClass } from "../../core/index.js";
 import { cssPrefix } from "./utils.js";
 import { ThumbnailsTrack } from "./ThumbnailsTrack.js";
 import { defaultThumbnailsProps } from "./Thumbnails.js";
 
 /** Thumbnails plugin component */
-export const ThumbnailsComponent: Component = ({
+export function ThumbnailsComponent({
     thumbnails: thumbnailsProps,
     slides,
     carousel,
@@ -15,7 +15,7 @@ export const ThumbnailsComponent: Component = ({
     render,
     styles,
     children,
-}) => {
+}: ComponentProps) {
     const thumbnails = { ...defaultThumbnailsProps, ...thumbnailsProps };
 
     const ref = React.useRef<HTMLDivElement | null>(null);
@@ -40,4 +40,4 @@ export const ThumbnailsComponent: Component = ({
             {(thumbnails.position === "end" || thumbnails.position === "bottom") && track}
         </div>
     );
-};
+}

@@ -2,12 +2,12 @@ import * as React from "react";
 
 import { useLayoutEffect } from "./useLayoutEffect.js";
 
-export const useEventCallback = <Args extends unknown[], Return>(
+export function useEventCallback<Args extends unknown[], Return>(
     fn: (...args: Args) => Return
-): ((...args: Args) => Return) => {
+): (...args: Args) => Return {
     const ref = React.useRef(fn);
     useLayoutEffect(() => {
         ref.current = fn;
     });
     return React.useCallback((...args: Args) => ref.current?.(...args), []);
-};
+}

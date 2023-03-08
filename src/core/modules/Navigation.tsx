@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { Component, Labels } from "../../types.js";
+import { ComponentProps, Labels } from "../../types.js";
 import { createModule } from "../config.js";
 import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
-import { cssClass, label as translateLabel, getNavigationAnimationDuration } from "../utils.js";
+import { cssClass, getNavigationAnimationDuration, label as translateLabel } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
 import { useEvents, useLightboxState } from "../contexts/index.js";
 import { useController } from "./Controller.js";
@@ -26,7 +26,7 @@ export type NavigationButtonProps = {
     disabled?: boolean;
 };
 
-export const NavigationButton = ({
+export function NavigationButton({
     labels,
     label,
     icon,
@@ -34,25 +34,27 @@ export const NavigationButton = ({
     action,
     onClick,
     disabled,
-}: NavigationButtonProps) => (
-    <IconButton
-        label={translateLabel(labels, label)}
-        icon={icon}
-        renderIcon={renderIcon}
-        className={cssClass(`navigation_${action}`)}
-        disabled={disabled}
-        onClick={onClick}
-        {...useLoseFocus(disabled)}
-    />
-);
+}: NavigationButtonProps) {
+    return (
+        <IconButton
+            label={translateLabel(labels, label)}
+            icon={icon}
+            renderIcon={renderIcon}
+            className={cssClass(`navigation_${action}`)}
+            disabled={disabled}
+            onClick={onClick}
+            {...useLoseFocus(disabled)}
+        />
+    );
+}
 
-export const Navigation: Component = ({
+export function Navigation({
     slides,
     carousel: { finite },
     animation,
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
-}) => {
+}: ComponentProps) {
     const { currentIndex } = useLightboxState().state;
     const { subscribeSensors } = useController();
     const { publish } = useEvents();
@@ -108,6 +110,6 @@ export const Navigation: Component = ({
             )}
         </>
     );
-};
+}
 
 export const NavigationModule = createModule(MODULE_NAVIGATION, Navigation);

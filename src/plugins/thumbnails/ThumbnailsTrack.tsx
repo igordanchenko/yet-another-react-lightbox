@@ -21,21 +21,23 @@ import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
 import { defaultThumbnailsProps } from "./Thumbnails.js";
 
-const isHorizontal = (position: NonNullable<NonNullable<LightboxProps["thumbnails"]>["position"]>) =>
-    ["top", "bottom"].includes(position);
+function isHorizontal(position: NonNullable<NonNullable<LightboxProps["thumbnails"]>["position"]>) {
+    return ["top", "bottom"].includes(position);
+}
 
-const boxSize = (thumbnails: ThumbnailsInternal, dimension: number, includeGap?: boolean) =>
-    dimension + 2 * (thumbnails.border + thumbnails.padding) + (includeGap ? thumbnails.gap : 0);
+function boxSize(thumbnails: ThumbnailsInternal, dimension: number, includeGap?: boolean) {
+    return dimension + 2 * (thumbnails.border + thumbnails.padding) + (includeGap ? thumbnails.gap : 0);
+}
 
-type ThumbnailsInternal = DeepNonNullable<LightboxProps["thumbnails"]>;
+export type ThumbnailsInternal = DeepNonNullable<LightboxProps["thumbnails"]>;
 
-type ThumbnailsTrackProps = Pick<LightboxProps, "slides" | "carousel" | "animation" | "render" | "styles"> & {
+export type ThumbnailsTrackProps = Pick<LightboxProps, "slides" | "carousel" | "animation" | "render" | "styles"> & {
     container: React.RefObject<HTMLDivElement>;
     thumbnails: ThumbnailsInternal;
     thumbnailRect: ContainerRect;
 };
 
-export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
+export function ThumbnailsTrack({
     container,
     slides,
     carousel,
@@ -43,7 +45,7 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
     thumbnails,
     thumbnailRect,
     styles,
-}) => {
+}: ThumbnailsTrackProps) {
     const track = React.useRef<HTMLDivElement | null>(null);
 
     const { globalIndex, animation } = useLightboxState().state;
@@ -214,4 +216,4 @@ export const ThumbnailsTrack: React.FC<ThumbnailsTrackProps> = ({
             {vignette && <div className={cssClass(cssPrefix("vignette"))} />}
         </div>
     );
-};
+}

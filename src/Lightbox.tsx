@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Augmentation, LightboxExternalProps, LightboxProps, Node } from "./types.js";
+import { LightboxExternalProps, LightboxProps, Node } from "./types.js";
 import { LightboxDefaultProps } from "./props.js";
 import {
     CarouselModule,
@@ -14,21 +14,24 @@ import {
     withPlugins,
 } from "./core/index.js";
 
-const renderNode = (node: Node, props: LightboxProps): React.ReactElement =>
-    React.createElement(
+function renderNode(node: Node, props: LightboxProps): React.ReactElement {
+    return React.createElement(
         node.module.component,
         { key: node.module.name, ...props },
         node.children?.map((child) => renderNode(child, props))
     );
+}
 
-const fixupIndex: Augmentation = ({ index, slides, ...rest }) => ({
-    index: index >= 0 && index < slides.length ? index : 0,
-    slides,
-    ...rest,
-});
+function fixupIndex({ index, slides, ...rest }: LightboxProps) {
+    return {
+        index: index >= 0 && index < slides.length ? index : 0,
+        slides,
+        ...rest,
+    };
+}
 
 /** Lightbox component */
-export const Lightbox: React.FC<LightboxExternalProps> = (props) => {
+export function Lightbox(props: LightboxExternalProps) {
     const { carousel, animation, render, toolbar, controller, on, plugins, ...restProps } = props;
     const {
         carousel: defaultCarousel,
@@ -70,4 +73,4 @@ export const Lightbox: React.FC<LightboxExternalProps> = (props) => {
     if (!augmentedProps.open) return null;
 
     return <>{renderNode(createNode(CoreModule, config), augmentedProps)}</>;
-};
+}

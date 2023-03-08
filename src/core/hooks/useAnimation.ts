@@ -4,7 +4,7 @@ import { useLayoutEffect } from "./useLayoutEffect.js";
 import { useMotionPreference } from "./useMotionPreference.js";
 
 /* eslint-disable prefer-destructuring */
-const currentTransformation = (node: HTMLElement) => {
+function currentTransformation(node: HTMLElement) {
     let x = 0;
     let y = 0;
     let z = 0;
@@ -22,7 +22,7 @@ const currentTransformation = (node: HTMLElement) => {
         }
     }
     return { x, y, z };
-};
+}
 
 export type ComputeAnimation<T> = (
     snapshot: T,
@@ -37,10 +37,7 @@ export type ComputeAnimation<T> = (
       }
     | undefined;
 
-export const useAnimation = <T>(
-    nodeRef: React.RefObject<HTMLElement | null>,
-    computeAnimation: ComputeAnimation<T>
-) => {
+export function useAnimation<T>(nodeRef: React.RefObject<HTMLElement | null>, computeAnimation: ComputeAnimation<T>) {
     const snapshot = React.useRef<T>();
     const animation = React.useRef<Animation>();
 
@@ -76,4 +73,4 @@ export const useAnimation = <T>(
     return (currentSnapshot: T | undefined) => {
         snapshot.current = currentSnapshot;
     };
-};
+}

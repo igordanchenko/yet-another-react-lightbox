@@ -4,15 +4,11 @@
     "parserOptions": { "project": "tsconfig.json" },
     "ignorePatterns": ["dist", "coverage"],
     "rules": {
-        "import/extensions": ["error", "always"],
-        "import/prefer-default-export": "off",
         "react/prop-types": "off",
         "react/require-default-props": "off",
         "react/jsx-props-no-spreading": "off",
-        "react/jsx-no-useless-fragment": ["error", { "allowExpressions": true }],
-        "react/function-component-definition": [
-            "warn",
-            { "namedComponents": "arrow-function", "unnamedComponents": "arrow-function" }
-        ]
+        "import/prefer-default-export": "off",
+        "import/extensions": ["error", "always"],
+        "react/jsx-no-useless-fragment": ["error", { "allowExpressions": true }]
     }
 }

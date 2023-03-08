@@ -1,3 +1,5 @@
 import { cssClass } from "../../core/index.js";
 
-export const cssPrefix = (className: string) => cssClass(`slide_${className}`);
+export function cssPrefix(className: string) {
+    return cssClass(`slide_${className}`);
+}

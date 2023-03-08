@@ -11,7 +11,7 @@ const TimeoutsContext = React.createContext<TimeoutsContextType | null>(null);
 
 export const useTimeouts = makeUseContext("useTimeouts", "TimeoutsContext", TimeoutsContext);
 
-export const TimeoutsProvider = ({ children }: React.PropsWithChildren<{}>) => {
+export function TimeoutsProvider({ children }: React.PropsWithChildren) {
     const [timeouts] = React.useState<number[]>([]);
 
     React.useEffect(
@@ -47,4 +47,4 @@ export const TimeoutsProvider = ({ children }: React.PropsWithChildren<{}>) => {
     }, [timeouts]);
 
     return <TimeoutsContext.Provider value={context}>{children}</TimeoutsContext.Provider>;
-};
+}

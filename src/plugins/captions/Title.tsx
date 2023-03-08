@@ -5,9 +5,9 @@ import { clsx, cssVar } from "../../core/index.js";
 import { useCaptions } from "./CaptionsContext.js";
 import { cssPrefix } from "./utils.js";
 
-type TitleProps = Pick<LightboxProps, "styles"> & Pick<Slide, "title">;
+export type TitleProps = Pick<LightboxProps, "styles"> & Pick<Slide, "title">;
 
-export const Title: React.FC<TitleProps> = ({ title, styles }) => {
+export function Title({ title, styles }: TitleProps) {
     const { toolbarWidth } = useCaptions();
 
     return (
@@ -24,4 +24,4 @@ export const Title: React.FC<TitleProps> = ({ title, styles }) => {
             </div>
         </div>
     );
-};
+}

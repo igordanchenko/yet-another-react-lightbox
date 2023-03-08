@@ -13,7 +13,7 @@ const ExitFullscreenIcon = createIcon(
 );
 
 /** Fullscreen button */
-export const FullscreenButton: React.FC = () => {
+export function FullscreenButton() {
     const { labels, render } = useController().getLightboxProps();
     const { fullscreen, fullscreenEnabled, toggleFullscreen } = useFullscreen();
 
@@ -30,4 +30,4 @@ export const FullscreenButton: React.FC = () => {
             onClick={toggleFullscreen}
         />
     );
-};
+}

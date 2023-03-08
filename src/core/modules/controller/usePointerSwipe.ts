@@ -11,7 +11,7 @@ import {
     EVENT_ON_POINTER_UP,
 } from "../../consts.js";
 
-export const usePointerSwipe = <T extends Element = Element>(
+export function usePointerSwipe<T extends Element = Element>(
     subscribeSensors: UseSensors<T>["subscribeSensors"],
     isSwipeValid: (offset: number) => boolean,
     containerWidth: number,
@@ -20,7 +20,7 @@ export const usePointerSwipe = <T extends Element = Element>(
     onSwipeProgress: (offset: number) => void,
     onSwipeFinish: (offset: number, duration: number) => void,
     onSwipeCancel: (offset: number) => void
-) => {
+) {
     const offset = React.useRef<number>(0);
     const pointers = React.useRef<React.PointerEvent[]>([]);
     const activePointer = React.useRef<number>();
@@ -125,4 +125,4 @@ export const usePointerSwipe = <T extends Element = Element>(
             ),
         [subscribeSensors, onPointerDown, onPointerMove, onPointerUp]
     );
-};
+}

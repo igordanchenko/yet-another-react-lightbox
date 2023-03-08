@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Component, Plugin } from "../../types.js";
+import { ComponentProps, Plugin } from "../../types.js";
 import {
     ACTION_CLOSE,
     clsx,
@@ -12,11 +12,13 @@ import {
 } from "../../core/index.js";
 
 /** Inline plugin container */
-const InlineContainer: Component = ({ inline: { className, ...rest } = {}, children }) => (
-    <div className={clsx(cssClass("root"), cssClass("relative"), className)} {...rest}>
-        {children}
-    </div>
-);
+function InlineContainer({ inline: { className, ...rest } = {}, children }: ComponentProps) {
+    return (
+        <div className={clsx(cssClass("root"), cssClass("relative"), className)} {...rest}>
+            {children}
+        </div>
+    );
+}
 
 /** Inline plugin */
 export const Inline: Plugin = ({ augment, replace, remove }) => {

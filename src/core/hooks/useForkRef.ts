@@ -1,22 +1,22 @@
 import * as React from "react";
 
-export const setRef = <T>(
+export function setRef<T>(
     ref: React.MutableRefObject<T | null> | ((instance: T | null) => void) | null | undefined,
     value: T | null
-): void => {
+): void {
     if (typeof ref === "function") {
         ref(value);
     } else if (ref) {
         // eslint-disable-next-line no-param-reassign
         ref.current = value;
     }
-};
+}
 
-export const useForkRef = <InstanceA, InstanceB>(
+export function useForkRef<InstanceA, InstanceB>(
     refA: React.Ref<InstanceA> | null | undefined,
     refB: React.Ref<InstanceB> | null | undefined
-): React.Ref<InstanceA & InstanceB> | null =>
-    React.useMemo(
+): React.Ref<InstanceA & InstanceB> | null {
+    return React.useMemo(
         () =>
             refA == null && refB == null
                 ? null
@@ -26,3 +26,4 @@ export const useForkRef = <InstanceA, InstanceB>(
                   },
         [refA, refB]
     );
+}

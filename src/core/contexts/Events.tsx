@@ -26,7 +26,7 @@ const EventsContext = React.createContext<EventsContextType | null>(null);
 
 export const useEvents = makeUseContext("useEvents", "EventsContext", EventsContext);
 
-export const EventsProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export function EventsProvider({ children }: React.PropsWithChildren) {
     const [subscriptions] = React.useState<{ [T in Topic]?: Callback<T>[] }>({});
 
     React.useEffect(
@@ -62,4 +62,4 @@ export const EventsProvider: React.FC<React.PropsWithChildren> = ({ children }) 
     }, [subscriptions]);
 
     return <EventsContext.Provider value={context}>{children}</EventsContext.Provider>;
-};
+}

@@ -7,7 +7,7 @@ import { ACTION_ZOOM_IN, ACTION_ZOOM_OUT } from "./index.js";
 
 type ZoomButtonsGroupProps = Pick<LightboxProps, "labels" | "render">;
 
-export const ZoomButtonsGroup: React.FC<ZoomButtonsGroupProps> = ({ labels, render }) => {
+export function ZoomButtonsGroup({ labels, render }: ZoomButtonsGroupProps) {
     const zoomInRef = React.useRef<HTMLButtonElement>(null);
     const zoomOutRef = React.useRef<HTMLButtonElement>(null);
     const { transferFocus } = useController();
@@ -46,4 +46,4 @@ export const ZoomButtonsGroup: React.FC<ZoomButtonsGroupProps> = ({ labels, rend
             />
         </>
     );
-};
+}

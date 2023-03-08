@@ -62,9 +62,7 @@ export const parseLengthPercentage = (input: unknown) => {
     return { pixel: 0 };
 };
 
-export const devicePixelRatio = () => {
-    return (typeof window !== "undefined" ? window?.devicePixelRatio : undefined) || 1;
-};
+export const devicePixelRatio = () => (typeof window !== "undefined" ? window?.devicePixelRatio : undefined) || 1;
 
 export const getSlideIndex = (index: number, slidesCount: number) =>
     ((index % slidesCount) + slidesCount) % slidesCount;
@@ -83,6 +81,5 @@ export const getFadeAnimationDuration = (animation: AnimationSettings) =>
 export const getSwipeAnimationDuration = (animation: AnimationSettings) =>
     getAnimationDuration(animation.swipe, AnimationDefaultProps.swipe);
 
-export const getNavigationAnimationDuration = (animation: AnimationSettings) => {
-    return getAnimationDuration(animation.navigation, getSwipeAnimationDuration(animation));
-};
+export const getNavigationAnimationDuration = (animation: AnimationSettings) =>
+    getAnimationDuration(animation.navigation, getSwipeAnimationDuration(animation));

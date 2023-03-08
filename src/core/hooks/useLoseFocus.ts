@@ -3,7 +3,7 @@ import * as React from "react";
 import { useLayoutEffect } from "./useLayoutEffect.js";
 import { useController } from "../modules/Controller.js";
 
-export const useLoseFocus = (disabled = false) => {
+export function useLoseFocus(disabled = false) {
     const focused = React.useRef(disabled);
 
     const { transferFocus } = useController();
@@ -23,4 +23,4 @@ export const useLoseFocus = (disabled = false) => {
     }, []);
 
     return { onFocus, onBlur };
-};
+}

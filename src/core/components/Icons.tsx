@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export const createIcon = (name: string, glyph: React.ReactNode) => {
+export function createIcon(name: string, glyph: React.ReactNode) {
     const icon = (props: React.SVGProps<SVGSVGElement>) => (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -19,7 +19,7 @@ export const createIcon = (name: string, glyph: React.ReactNode) => {
     );
     icon.displayName = name;
     return icon;
-};
+}
 
 export const CloseIcon = createIcon(
     "Close",

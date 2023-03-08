@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { Component } from "../../types.js";
+import { ComponentProps } from "../../types.js";
 import { isImageSlide, makeUseContext, useEventCallback, useLayoutEffect, useLightboxState } from "../../core/index.js";
 
-type ZoomContextType = {
+export type ZoomContextType = {
     isMinZoom: boolean;
     isMaxZoom: boolean;
     isZoomSupported: boolean;
@@ -15,7 +15,7 @@ const ZoomContext = React.createContext<ZoomContextType | null>(null);
 
 export const useZoom = makeUseContext("useZoom", "ZoomContext", ZoomContext);
 
-export const ZoomContextProvider: Component = ({ slides, children }) => {
+export function ZoomContextProvider({ slides, children }: ComponentProps) {
     const [isMinZoom, setIsMinZoom] = React.useState(false);
     const [isMaxZoom, setIsMaxZoom] = React.useState(false);
     const [isZoomSupported, setIsZoomSupported] = React.useState(false);
@@ -40,4 +40,4 @@ export const ZoomContextProvider: Component = ({ slides, children }) => {
     );
 
     return <ZoomContext.Provider value={context}>{children}</ZoomContext.Provider>;
-};
+}

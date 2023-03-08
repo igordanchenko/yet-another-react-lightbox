@@ -42,7 +42,7 @@ export type UseSensors<T> = {
     subscribeSensors: SubscribeSensors<T>;
 };
 
-export const useSensors = <T extends Element>(): UseSensors<T> => {
+export function useSensors<T extends Element>(): UseSensors<T> {
     const [subscribers] = React.useState<{ [K in SupportedEventType]?: EventCallback<T, ReactEventType<T, K>>[] }>({});
 
     return React.useMemo(() => {
@@ -81,4 +81,4 @@ export const useSensors = <T extends Element>(): UseSensors<T> => {
             },
         };
     }, [subscribers]);
-};
+}
