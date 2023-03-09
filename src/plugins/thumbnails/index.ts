@@ -1,6 +1,4 @@
-import * as React from "react";
-
-import { ContainerRect, ImageFit, Slide } from "../../types.js";
+import { ContainerRect, ImageFit, RenderFunction, Slide } from "../../types.js";
 import { Thumbnails } from "./Thumbnails.js";
 
 type Position = "top" | "bottom" | "start" | "end";
@@ -30,6 +28,7 @@ declare module "../../types" {
         };
     }
 
+    /** `render.thumbnail` render function props */
     export type RenderThumbnailProps = {
         slide: Slide;
         rect: ContainerRect;
@@ -38,7 +37,8 @@ declare module "../../types" {
     };
 
     interface Render {
-        thumbnail?: ({ slide, rect, render, imageFit }: RenderThumbnailProps) => React.ReactNode;
+        /** render custom thumbnail */
+        thumbnail?: RenderFunction<RenderThumbnailProps>;
     }
 
     // noinspection JSUnusedGlobalSymbols

@@ -1,5 +1,4 @@
-import * as React from "react";
-
+import { RenderFunction } from "../../types.js";
 import { Fullscreen } from "./Fullscreen.js";
 
 declare module "../../types" {
@@ -8,21 +7,20 @@ declare module "../../types" {
         fullscreen?: boolean;
     }
 
+    /** `render.buttonFullscreen` render function props */
+    export type RenderFullscreenButtonProps = {
+        fullscreen: boolean;
+        fullscreenEnabled: boolean | undefined;
+        toggleFullscreen: () => void;
+    };
+
     interface Render {
         /** render custom Enter/Exit Fullscreen button */
-        buttonFullscreen?: ({
-            fullscreen,
-            fullscreenEnabled,
-            toggleFullscreen,
-        }: {
-            fullscreen: boolean;
-            fullscreenEnabled: boolean | undefined;
-            toggleFullscreen: () => void;
-        }) => React.ReactNode;
+        buttonFullscreen?: RenderFunction<RenderFullscreenButtonProps>;
         /** render custom Enter Fullscreen icon */
-        iconEnterFullscreen?: () => React.ReactNode;
+        iconEnterFullscreen?: RenderFunction;
         /** render custom Exit Fullscreen icon */
-        iconExitFullscreen?: () => React.ReactNode;
+        iconExitFullscreen?: RenderFunction;
     }
 }
 

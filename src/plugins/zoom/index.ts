@@ -1,26 +1,10 @@
 import * as React from "react";
 
-import { LightboxProps } from "../../types.js";
+import { RenderFunction } from "../../types.js";
 import { Zoom } from "./Zoom.js";
 
 export const ACTION_ZOOM_IN = "zoom-in";
 export const ACTION_ZOOM_OUT = "zoom-out";
-
-/** Custom zoom button render function */
-type RenderZoomButton = ({
-    ref,
-    labels,
-    disabled,
-    onClick,
-    onFocus,
-    onBlur,
-}: Pick<LightboxProps, "labels"> & {
-    ref: React.ForwardedRef<HTMLButtonElement>;
-    disabled: boolean;
-    onClick: () => void;
-    onFocus: () => void;
-    onBlur: () => void;
-}) => React.ReactNode;
 
 declare module "../../types" {
     interface LightboxProps {
@@ -53,15 +37,24 @@ declare module "../../types" {
         zoom?: number;
     }
 
+    /** `render.buttonZoomIn` and `render.buttonZoomOut` render function props */
+    export type RenderZoomButtonProps = Pick<LightboxProps, "labels"> & {
+        ref: React.ForwardedRef<HTMLButtonElement>;
+        disabled: boolean;
+        onClick: () => void;
+        onFocus: () => void;
+        onBlur: () => void;
+    };
+
     interface Render {
         /** render custom Zoom in button */
-        buttonZoomIn?: RenderZoomButton;
+        buttonZoomIn?: RenderFunction<RenderZoomButtonProps>;
         /** render custom Zoom in button */
-        buttonZoomOut?: RenderZoomButton;
+        buttonZoomOut?: RenderFunction<RenderZoomButtonProps>;
         /** render custom Zoom in icon */
-        iconZoomIn?: () => React.ReactNode;
+        iconZoomIn?: RenderFunction;
         /** render custom Zoom out icon */
-        iconZoomOut?: () => React.ReactNode;
+        iconZoomOut?: RenderFunction;
     }
 
     // noinspection JSUnusedGlobalSymbols

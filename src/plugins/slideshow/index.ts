@@ -1,5 +1,4 @@
-import * as React from "react";
-
+import { RenderFunction } from "../../types.js";
 import { Slideshow } from "./Slideshow.js";
 
 declare module "../../types" {
@@ -13,24 +12,23 @@ declare module "../../types" {
         };
     }
 
+    /** `render.buttonSlideshow` render function props */
+    export type RenderSlideshowButtonProps = {
+        /** current slideshow autoplay status */
+        playing: boolean;
+        /** toggle slideshow autoplay status */
+        togglePlaying: () => void;
+        /** if `true`, the button is disabled */
+        disabled: boolean;
+    };
+
     interface Render {
         /** render custom Slideshow Play icon */
-        iconSlideshowPlay?: () => React.ReactNode;
+        iconSlideshowPlay?: RenderFunction;
         /** render custom Slideshow Pause icon */
-        iconSlideshowPause?: () => React.ReactNode;
+        iconSlideshowPause?: RenderFunction;
         /** render custom Slideshow button */
-        buttonSlideshow?: ({
-            playing,
-            togglePlaying,
-            disabled,
-        }: {
-            /** current slideshow autoplay status */
-            playing: boolean;
-            /** toggle slideshow autoplay status */
-            togglePlaying: () => void;
-            /** if `true`, the button is disabled */
-            disabled: boolean;
-        }) => React.ReactNode;
+        buttonSlideshow?: RenderFunction<RenderSlideshowButtonProps>;
     }
 }
 

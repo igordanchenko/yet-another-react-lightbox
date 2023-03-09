@@ -120,40 +120,55 @@ export interface ControllerSettings {
     closeOnBackdropClick: boolean;
 }
 
+/** Render function */
+export type RenderFunction<T = void> = (props: T) => React.ReactNode;
+
+/** `render.slide` render function props */
+export type RenderSlideProps = [
+    /** slide */
+    slide: Slide,
+    /** slide offset (`0` - current slide, `1` - next slide, `-1` - previous slide, etc.) */
+    offset: number,
+    /** container rect */
+    rect: ContainerRect
+];
+
+/** `render.slideHeader` render function props */
+export type RenderSlideHeaderProps = [slide: Slide];
+
+/** `render.slideFooter` render function props */
+export type RenderSlideFooterProps = [slide: Slide];
+
+/** `render.slideContainer` render function props */
+export type RenderSlideContainerProps = [slide: Slide, children: React.ReactNode];
+
 /** Custom render functions. */
 export interface Render {
     // TODO v3: convert arguments array to props object
     /** render custom slide type, or override the default image slide */
-    slide?: (
-        /** slide */
-        slide: Slide,
-        /** slide offset (`0` - current slide, `1` - next slide, `-1` - previous slide, etc.) */
-        offset: number,
-        /** container rect */
-        rect: ContainerRect
-    ) => React.ReactNode;
+    slide?: (...props: RenderSlideProps) => React.ReactNode;
     /** render custom slide header */
-    slideHeader?: (slide: Slide) => React.ReactNode;
+    slideHeader?: (...props: RenderSlideHeaderProps) => React.ReactNode;
     /** render custom slide footer */
-    slideFooter?: (slide: Slide) => React.ReactNode;
+    slideFooter?: (...props: RenderSlideFooterProps) => React.ReactNode;
     /** render custom slide container */
-    slideContainer?: (slide: Slide, children: React.ReactNode) => React.ReactNode;
+    slideContainer?: (...props: RenderSlideContainerProps) => React.ReactNode;
     /** render custom Prev icon */
-    iconPrev?: () => React.ReactNode;
+    iconPrev?: RenderFunction;
     /** render custom Next icon */
-    iconNext?: () => React.ReactNode;
+    iconNext?: RenderFunction;
     /** render custom Close icon */
-    iconClose?: () => React.ReactNode;
+    iconClose?: RenderFunction;
     /** render custom Loading icon */
-    iconLoading?: () => React.ReactNode;
+    iconLoading?: RenderFunction;
     /** render custom Error icon */
-    iconError?: () => React.ReactNode;
+    iconError?: RenderFunction;
     /** render custom Prev button */
-    buttonPrev?: () => React.ReactNode;
+    buttonPrev?: RenderFunction;
     /** render custom Next button */
-    buttonNext?: () => React.ReactNode;
+    buttonNext?: RenderFunction;
     /** render custom Close button */
-    buttonClose?: () => React.ReactNode;
+    buttonClose?: RenderFunction;
 }
 
 /** Lifecycle callbacks */
