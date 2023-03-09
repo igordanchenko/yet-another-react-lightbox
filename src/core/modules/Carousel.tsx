@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { ComponentProps, ContainerRect, Slide } from "../../types.js";
 import { createModule } from "../config.js";
-import { useContainerRect } from "../hooks/index.js";
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller.js";
@@ -21,10 +20,11 @@ function cssSlidePrefix(value?: string) {
 type CarouselSlideProps = {
     slide: Slide;
     offset: number;
+    rect: ContainerRect;
 };
 
-function CarouselSlide({ slide, offset }: CarouselSlideProps) {
-    const { setContainerRef, containerRect, containerRef } = useContainerRect();
+function CarouselSlide({ slide, offset, rect }: CarouselSlideProps) {
+    const containerRef = React.useRef<HTMLDivElement | null>(null);
 
     const { publish } = useEvents();
     const { currentIndex } = useLightboxState().state;
@@ -34,7 +34,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
         on: { click: onClick },
     } = useController().getLightboxProps();
 
-    const renderSlide = (rect: ContainerRect) => {
+    const renderSlide = () => {
         let rendered = render.slide?.(slide, offset, rect);
 
         if (!rendered && isImageSlide(slide)) {
@@ -77,7 +77,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     return (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
         <div
-            ref={setContainerRef}
+            ref={containerRef}
             className={clsx(
                 cssClass(cssSlidePrefix()),
                 offset === 0 && cssClass(cssSlidePrefix("current")),
@@ -85,7 +85,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
             )}
             onClick={handleBackdropClick}
         >
-            {containerRect && renderSlide(containerRect)}
+            {renderSlide()}
         </div>
     );
 }
@@ -96,11 +96,18 @@ function Placeholder() {
 
 export function Carousel({ slides, carousel: { finite, preload, padding, spacing } }: ComponentProps) {
     const { currentIndex, globalIndex } = useLightboxState().state;
-
-    const { setCarouselRef } = useController();
+    const { setCarouselRef, containerRect } = useController();
 
     const spacingValue = parseLengthPercentage(spacing);
     const paddingValue = parseLengthPercentage(padding);
+
+    const paddingPixels =
+        paddingValue.percent !== undefined ? (containerRect.width / 100) * paddingValue.percent : paddingValue.pixel;
+
+    const rect = {
+        width: Math.max(containerRect.width - 2 * paddingPixels, 0),
+        height: Math.max(containerRect.height - 2 * paddingPixels, 0),
+    };
 
     const items = [];
 
@@ -112,6 +119,7 @@ export function Carousel({ slides, carousel: { finite, preload, padding, spacing
                     <CarouselSlide
                         key={key}
                         slide={slides[(i + preload * slides.length) % slides.length]}
+                        rect={rect}
                         offset={i - currentIndex}
                     />
                 ) : (
@@ -120,13 +128,13 @@ export function Carousel({ slides, carousel: { finite, preload, padding, spacing
             );
         }
 
-        items.push(<CarouselSlide key={globalIndex} slide={slides[currentIndex]} offset={0} />);
+        items.push(<CarouselSlide key={globalIndex} slide={slides[currentIndex]} rect={rect} offset={0} />);
 
         for (let i = currentIndex + 1; i <= currentIndex + preload; i += 1) {
             const key = globalIndex + i - currentIndex;
             items.push(
                 !finite || i <= slides.length - 1 ? (
-                    <CarouselSlide key={key} slide={slides[i % slides.length]} offset={i - currentIndex} />
+                    <CarouselSlide key={key} slide={slides[i % slides.length]} rect={rect} offset={i - currentIndex} />
                 ) : (
                     <Placeholder key={key} />
                 )

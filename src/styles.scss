@@ -68,6 +68,7 @@ $icon-button-padding: 8px;
     &_slide {
         flex: 1;
         position: relative;
+        overflow: hidden;
         padding: calc(var(--yarl__carousel_padding_px, 0) * 1px + 100 / (100 * var(--yarl__carousel_slides_count) + (var(--yarl__carousel_slides_count) - 1) * var(--yarl__carousel_spacing_percent, 0)) * var(--yarl__carousel_padding_percent, 0) * 1%);
 
         [dir="rtl"] & {
