@@ -455,15 +455,7 @@ export function ZoomContainer({
         ]
     );
 
-    const scaledRect =
-        offset === 0
-            ? {
-                  width: rect.width * zoom,
-                  height: rect.height * zoom,
-              }
-            : rect;
-
-    let rendered = render.slide?.(slide, offset, scaledRect);
+    let rendered = render.slide?.(slide, offset, rect);
 
     if (!rendered && isImageSlide(slide)) {
         const slideProps = {
@@ -476,7 +468,11 @@ export function ZoomContainer({
         };
 
         rendered = isResponsiveImageSlide(slide) ? (
-            <ResponsiveImage {...slideProps} slide={slide} rect={scaledRect} />
+            <ResponsiveImage
+                {...slideProps}
+                slide={slide}
+                rect={offset === 0 ? { width: rect.width * zoom, height: rect.height * zoom } : rect}
+            />
         ) : (
             <ImageSlide
                 onLoad={(img) => setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })}
