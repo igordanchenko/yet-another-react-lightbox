@@ -13,8 +13,8 @@ import {
     EVENT_ON_POINTER_MOVE,
     EVENT_ON_POINTER_UP,
     EVENT_ON_WHEEL,
-    IMAGE_FIT_COVER,
     ImageSlide,
+    isImageFitCover,
     isImageSlide,
     round,
     useContainerRect,
@@ -114,7 +114,7 @@ export function ZoomContainer({
 
     const { slideRect, maxSlideRect } = getSlideRects(
         { ...slide, ...imageDimensions },
-        carousel.imageFit === IMAGE_FIT_COVER || ("imageFit" in slide && slide.imageFit === IMAGE_FIT_COVER),
+        isImageSlide(slide) && isImageFitCover(slide, carousel.imageFit),
         zoomProps.maxZoomPixelRatio,
         containerRect
     );

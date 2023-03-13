@@ -1,7 +1,8 @@
 import * as React from "react";
 
 import { AnimationDefaultProps } from "../props.js";
-import { AnimationSettings, AnimationSpec, Labels, Slide, SlideImage } from "../types.js";
+import { IMAGE_FIT_CONTAIN, IMAGE_FIT_COVER } from "./consts.js";
+import { AnimationSettings, AnimationSpec, Labels, LightboxProps, Slide, SlideImage } from "../types.js";
 
 export const clsx = (...classes: (string | boolean | undefined)[]) =>
     [...classes].filter((cls) => Boolean(cls)).join(" ");
@@ -48,6 +49,9 @@ export const round = (value: number, decimals = 0) => {
 };
 
 export const isImageSlide = (slide: Slide): slide is SlideImage => !isDefined(slide.type) || slide.type === "image";
+
+export const isImageFitCover = (image: SlideImage, imageFit?: LightboxProps["carousel"]["imageFit"]) =>
+    image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
 
 export const parseLengthPercentage = (input: unknown) => {
     if (typeof input === "number") {

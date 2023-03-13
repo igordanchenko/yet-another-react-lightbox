@@ -1,15 +1,13 @@
 import * as React from "react";
 
 import { ContainerRect, ImageFit, Render, SlideImage } from "../../types.js";
-import { clsx, cssClass, hasWindow, makeComposePrefix } from "../utils.js";
+import { clsx, cssClass, hasWindow, isImageFitCover, makeComposePrefix } from "../utils.js";
 import { useEventCallback } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
 import {
     activeSlideStatus,
     ELEMENT_ICON,
-    IMAGE_FIT_CONTAIN,
-    IMAGE_FIT_COVER,
     SLIDE_STATUS_COMPLETE,
     SLIDE_STATUS_ERROR,
     SLIDE_STATUS_LOADING,
@@ -88,8 +86,7 @@ export function ImageSlide({ slide: image, offset, render, rect, imageFit, onCli
         setStatus(SLIDE_STATUS_ERROR);
     }, []);
 
-    const cover =
-        image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
+    const cover = isImageFitCover(image, imageFit);
 
     const nonInfinite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
 

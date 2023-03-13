@@ -2,10 +2,9 @@ import * as React from "react";
 
 import {
     devicePixelRatio,
-    IMAGE_FIT_CONTAIN,
-    IMAGE_FIT_COVER,
     ImageSlide,
     ImageSlideProps,
+    isImageFitCover,
     useEventCallback,
     useLayoutEffect,
 } from "../../core/index.js";
@@ -33,8 +32,7 @@ export function ResponsiveImage(props: ResponsiveImageProps) {
     const srcSet = image.srcSet.sort((a, b) => a.width - b.width);
     const width = image.width ?? srcSet[srcSet.length - 1].width;
     const height = image.height ?? srcSet[srcSet.length - 1].height;
-    const cover =
-        image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
+    const cover = isImageFitCover(image, imageFit);
     const maxWidth = Math.max(...srcSet.map((x) => x.width));
     const targetWidth = Math.min((cover ? Math.max : Math.min)(rect.width, width * (rect.height / height)), maxWidth);
     const pixelDensity = devicePixelRatio();
