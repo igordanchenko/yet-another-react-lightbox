@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps, ContainerRect } from "../../types.js";
+import { Callback, ComponentProps, ContainerRect, NavigationAction } from "../../types.js";
 import { createModule } from "../config.js";
 import {
     cleanup,
@@ -39,10 +39,6 @@ import {
     YARL_EVENT_BACKDROP_CLICK,
 } from "../consts.js";
 
-export type NavigationAction = {
-    count?: number;
-};
-
 declare module "../" {
     // noinspection JSUnusedGlobalSymbols
     interface EventTypes {
@@ -57,9 +53,9 @@ declare module "../" {
 const cssContainerPrefix = makeComposePrefix("container");
 
 export type ControllerContextType = {
+    focus: Callback;
     getLightboxProps: () => ComponentProps;
     subscribeSensors: SubscribeSensors<HTMLDivElement>;
-    transferFocus: () => void;
     containerRect: ContainerRect;
     containerRef: React.RefObject<HTMLDivElement>;
     setCarouselRef: React.Ref<HTMLDivElement>;
@@ -274,21 +270,36 @@ export function Controller({ children, ...props }: ComponentProps) {
         [controller.closeOnBackdropClick, publish, subscribe]
     );
 
-    const transferFocus = useEventCallback(() => containerRef.current?.focus());
+    const focus = useEventCallback(() => containerRef.current?.focus());
 
     const getLightboxProps = useEventCallback(() => props);
 
+    const getLightboxState = useEventCallback(() => state);
+
     const context = React.useMemo<ControllerContextType>(
         () => ({
+            focus,
             getLightboxProps,
             subscribeSensors,
-            transferFocus,
             // we are not going to render context provider when containerRect is undefined
             containerRect: containerRect || { width: 0, height: 0 },
             containerRef,
             setCarouselRef,
         }),
-        [getLightboxProps, subscribeSensors, transferFocus, containerRect, containerRef, setCarouselRef]
+        [focus, getLightboxProps, subscribeSensors, containerRect, containerRef, setCarouselRef]
+    );
+
+    React.useImperativeHandle(
+        controller.ref,
+        () => ({
+            prev: (params) => publish(ACTION_PREV, params),
+            next: (params) => publish(ACTION_NEXT, params),
+            close: () => publish(ACTION_CLOSE),
+            focus,
+            getLightboxProps,
+            getLightboxState,
+        }),
+        [publish, focus, getLightboxProps, getLightboxState]
     );
 
     return (

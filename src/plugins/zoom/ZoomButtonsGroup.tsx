@@ -10,17 +10,17 @@ type ZoomButtonsGroupProps = Pick<LightboxProps, "labels" | "render">;
 export function ZoomButtonsGroup({ labels, render }: ZoomButtonsGroupProps) {
     const zoomInRef = React.useRef<HTMLButtonElement>(null);
     const zoomOutRef = React.useRef<HTMLButtonElement>(null);
-    const { transferFocus } = useController();
+    const { focus } = useController();
 
     const focusSibling = React.useCallback(
         (sibling: React.RefObject<HTMLButtonElement>) => {
             if (!sibling.current?.disabled) {
                 sibling.current?.focus();
             } else {
-                transferFocus();
+                focus();
             }
         },
-        [transferFocus]
+        [focus]
     );
 
     const focusZoomIn = React.useCallback(() => focusSibling(zoomInRef), [focusSibling]);
