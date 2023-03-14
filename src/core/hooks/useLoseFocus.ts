@@ -6,13 +6,13 @@ import { useController } from "../modules/Controller.js";
 export function useLoseFocus(disabled = false) {
     const focused = React.useRef(disabled);
 
-    const { transferFocus } = useController();
+    const { focus } = useController();
 
     useLayoutEffect(() => {
         if (disabled) {
-            transferFocus();
+            focus();
         }
-    }, [disabled, transferFocus]);
+    }, [disabled, focus]);
 
     const onFocus = React.useCallback(() => {
         focused.current = true;

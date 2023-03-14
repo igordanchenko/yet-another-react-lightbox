@@ -24,6 +24,7 @@ export const LightboxDefaultProps: LightboxProps = {
         imageFit: IMAGE_FIT_CONTAIN,
     },
     controller: {
+        ref: null,
         focus: true,
         aria: false,
         touchAction: "none",

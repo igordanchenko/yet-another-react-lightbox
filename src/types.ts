@@ -176,6 +176,8 @@ export type AnimationSpec =
 
 /** Controller settings */
 export interface ControllerSettings {
+    /** controller ref */
+    ref: React.ForwardedRef<ControllerRef>;
     /** if true, the lightbox captures focus when it opens */
     focus: boolean;
     /** controller `touch-action` */
@@ -184,6 +186,40 @@ export interface ControllerSettings {
     aria: boolean;
     /** if `true`, close the lightbox when the backdrop is clicked */
     closeOnBackdropClick: boolean;
+}
+
+/** Lightbox controller ref */
+export interface ControllerRef {
+    /** navigate to the previous slide */
+    prev: Callback<NavigationAction | void>;
+    /** navigate to the next slide */
+    next: Callback<NavigationAction | void>;
+    /** close the lightbox */
+    close: Callback;
+    /** transfer focus to the lightbox controller */
+    focus: Callback;
+    /** get lightbox props */
+    getLightboxProps: () => ComponentProps;
+    /** get lightbox state */
+    getLightboxState: () => LightboxState;
+}
+
+/** Lightbox navigation action */
+export interface NavigationAction {
+    /** navigate through the specified number of slides */
+    count?: number;
+}
+
+/** Lightbox state */
+export interface LightboxState {
+    /** lightbox slides */
+    slides: Slide[];
+    /** current slide index */
+    currentIndex: number;
+    /** current slide index in the (-∞, +∞) range */
+    globalIndex: number;
+    /** current animation */
+    animation?: { increment?: number; duration?: number; easing?: string };
 }
 
 /** Render function */
