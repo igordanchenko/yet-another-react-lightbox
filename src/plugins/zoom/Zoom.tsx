@@ -27,7 +27,7 @@ export const Zoom: Plugin = ({ augment, append }) => {
         },
         render: {
             ...render,
-            slide: (slide, offset, rect) =>
+            slide: ({ slide, offset, rect }) =>
                 isImageSlide(slide) ? (
                     <ZoomContainer
                         slide={slide}
@@ -40,7 +40,7 @@ export const Zoom: Plugin = ({ augment, append }) => {
                         on={on}
                     />
                 ) : (
-                    render.slide?.(slide, offset, rect)
+                    render.slide?.({ slide, offset, rect })
                 ),
         },
         zoom: {

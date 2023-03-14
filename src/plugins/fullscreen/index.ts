@@ -7,13 +7,6 @@ declare module "../../types" {
         fullscreen?: boolean;
     }
 
-    /** `render.buttonFullscreen` render function props */
-    export type RenderFullscreenButtonProps = {
-        fullscreen: boolean;
-        fullscreenEnabled: boolean | undefined;
-        toggleFullscreen: () => void;
-    };
-
     interface Render {
         /** render custom Enter/Exit Fullscreen button */
         buttonFullscreen?: RenderFunction<RenderFullscreenButtonProps>;
@@ -22,6 +15,13 @@ declare module "../../types" {
         /** render custom Exit Fullscreen icon */
         iconExitFullscreen?: RenderFunction;
     }
+
+    /** `render.buttonFullscreen` render function props */
+    export type RenderFullscreenButtonProps = {
+        fullscreen: boolean;
+        fullscreenEnabled: boolean | undefined;
+        toggleFullscreen: () => void;
+    };
 }
 
 declare global {

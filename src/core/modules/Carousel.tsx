@@ -35,7 +35,7 @@ function CarouselSlide({ slide, offset, rect }: CarouselSlideProps) {
     } = useController().getLightboxProps();
 
     const renderSlide = () => {
-        let rendered = render.slide?.(slide, offset, rect);
+        let rendered = render.slide?.({ slide, offset, rect });
 
         if (!rendered && isImageSlide(slide)) {
             rendered = (
@@ -45,16 +45,16 @@ function CarouselSlide({ slide, offset, rect }: CarouselSlideProps) {
                     render={render}
                     rect={rect}
                     imageFit={imageFit}
-                    onClick={offset === 0 ? () => onClick?.(currentIndex) : undefined}
+                    onClick={offset === 0 ? () => onClick?.({ index: currentIndex }) : undefined}
                 />
             );
         }
 
         return rendered ? (
             <>
-                {render.slideHeader?.(slide)}
-                {(render.slideContainer ?? ((_, x) => x))(slide, rendered)}
-                {render.slideFooter?.(slide)}
+                {render.slideHeader?.({ slide })}
+                {(render.slideContainer ?? (({ children }) => children))({ slide, children: rendered })}
+                {render.slideFooter?.({ slide })}
             </>
         ) : null;
     };

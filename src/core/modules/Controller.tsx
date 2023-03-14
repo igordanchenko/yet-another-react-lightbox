@@ -241,7 +241,7 @@ export function Controller({ children, ...props }: ComponentProps) {
     React.useEffect(focusOnMount, [focusOnMount]);
 
     const handleIndexChange = useEventCallback(() => {
-        on.view?.(state.currentIndex);
+        on.view?.({ index: state.currentIndex });
     });
 
     React.useEffect(handleIndexChange, [state.currentIndex, handleIndexChange]);

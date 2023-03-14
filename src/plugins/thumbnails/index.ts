@@ -28,6 +28,11 @@ declare module "../../types" {
         };
     }
 
+    interface Render {
+        /** render custom thumbnail */
+        thumbnail?: RenderFunction<RenderThumbnailProps>;
+    }
+
     /** `render.thumbnail` render function props */
     export type RenderThumbnailProps = {
         slide: Slide;
@@ -35,11 +40,6 @@ declare module "../../types" {
         render: Render;
         imageFit: ImageFit;
     };
-
-    interface Render {
-        /** render custom thumbnail */
-        thumbnail?: RenderFunction<RenderThumbnailProps>;
-    }
 
     // noinspection JSUnusedGlobalSymbols
     interface SlotType {
