@@ -25,7 +25,7 @@ import {
     useRTL,
     useSensors,
 } from "../hooks/index.js";
-import { LightboxStateAction, useEvents, useLightboxState } from "../contexts/index.js";
+import { LightboxStateSwipeAction, useEvents, useLightboxState } from "../contexts/index.js";
 import { SwipeState, usePointerSwipe, usePreventSwipeNavigation, useWheelSwipe } from "./controller/index.js";
 import {
     ACTION_CLOSE,
@@ -46,9 +46,9 @@ export type NavigationAction = {
 declare module "../" {
     // noinspection JSUnusedGlobalSymbols
     interface EventTypes {
-        [ACTION_PREV]: NavigationAction;
-        [ACTION_NEXT]: NavigationAction;
-        [ACTION_SWIPE]: LightboxStateAction;
+        [ACTION_PREV]: NavigationAction | void;
+        [ACTION_NEXT]: NavigationAction | void;
+        [ACTION_SWIPE]: LightboxStateSwipeAction;
         [ACTION_CLOSE]: void;
         [YARL_EVENT_BACKDROP_CLICK]: void;
     }
@@ -70,7 +70,7 @@ const ControllerContext = React.createContext<ControllerContextType | null>(null
 export const useController = makeUseContext("useController", "ControllerContext", ControllerContext);
 
 export function Controller({ children, ...props }: ComponentProps) {
-    const { carousel, slides, animation, controller, on, styles } = props;
+    const { carousel, animation, controller, on, styles } = props;
 
     const { state, dispatch } = useLightboxState();
 
@@ -97,7 +97,7 @@ export function Controller({ children, ...props }: ComponentProps) {
         !(
             carousel.finite &&
             ((rtl(offset) > 0 && state.currentIndex === 0) ||
-                (rtl(offset) < 0 && state.currentIndex === slides.length - 1))
+                (rtl(offset) < 0 && state.currentIndex === state.slides.length - 1))
         );
 
     const setSwipeOffset = (offset: number) => {
@@ -202,13 +202,18 @@ export function Controller({ children, ...props }: ComponentProps) {
 
             setSwipeState(newSwipeState);
 
-            publish(ACTION_SWIPE, { increment, duration: newSwipeAnimationDuration, easing: swipeEasing });
+            publish(ACTION_SWIPE, {
+                type: "swipe",
+                increment,
+                duration: newSwipeAnimationDuration,
+                easing: swipeEasing,
+            });
         }
     );
 
     React.useEffect(() => {
         if (state.animation?.increment && state.animation?.duration) {
-            cleanupAnimationIncrement(() => dispatch({ increment: 0 }), state.animation.duration);
+            cleanupAnimationIncrement(() => dispatch({ type: "swipe", increment: 0 }), state.animation.duration);
         }
     }, [state.animation, dispatch, cleanupAnimationIncrement]);
 

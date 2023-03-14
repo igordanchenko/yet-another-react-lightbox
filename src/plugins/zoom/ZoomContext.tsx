@@ -15,12 +15,12 @@ const ZoomContext = React.createContext<ZoomContextType | null>(null);
 
 export const useZoom = makeUseContext("useZoom", "ZoomContext", ZoomContext);
 
-export function ZoomContextProvider({ slides, children }: ComponentProps) {
+export function ZoomContextProvider({ children }: ComponentProps) {
     const [isMinZoom, setIsMinZoom] = React.useState(false);
     const [isMaxZoom, setIsMaxZoom] = React.useState(false);
     const [isZoomSupported, setIsZoomSupported] = React.useState(false);
 
-    const { currentIndex } = useLightboxState().state;
+    const { slides, currentIndex } = useLightboxState().state;
 
     const updateZoomSupported = useEventCallback(() =>
         setIsZoomSupported(slides.length > currentIndex && isImageSlide(slides[currentIndex]))

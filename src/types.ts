@@ -193,10 +193,7 @@ export interface LightboxProps {
     open: boolean;
     /** a callback to close the lightbox */
     close: () => void;
-    /**
-     * Starting slide index. The lightbox reads this property only when it opens.
-     * Changing this property while the lightbox is already open has no effect.
-     */
+    /** starting slide index */
     index: number;
     /** slides to display in the lightbox */
     slides: Slide[];
@@ -232,7 +229,7 @@ export interface ToolbarSettings {
 }
 
 /** Lightbox component properties */
-export type ComponentProps = React.PropsWithChildren<Omit<LightboxProps, "plugins">>;
+export type ComponentProps = React.PropsWithChildren<Omit<LightboxProps, "slides" | "index" | "plugins">>;
 
 /** Lightbox component */
 export type Component = React.ComponentType<ComponentProps>;
@@ -254,7 +251,7 @@ export type Node = {
 };
 
 /** Lightbox props augmentation */
-export type Augmentation = (props: LightboxProps) => LightboxProps;
+export type Augmentation = (props: ComponentProps) => ComponentProps;
 
 /** Plugin methods */
 export type PluginMethods = {

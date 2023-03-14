@@ -31,7 +31,7 @@ function boxSize(thumbnails: ThumbnailsInternal, dimension: number, includeGap?:
 
 export type ThumbnailsInternal = DeepNonNullable<LightboxProps["thumbnails"]>;
 
-export type ThumbnailsTrackProps = Pick<LightboxProps, "slides" | "carousel" | "animation" | "render" | "styles"> & {
+export type ThumbnailsTrackProps = Pick<LightboxProps, "carousel" | "animation" | "render" | "styles"> & {
     container: React.RefObject<HTMLDivElement>;
     thumbnails: ThumbnailsInternal;
     thumbnailRect: ContainerRect;
@@ -39,7 +39,6 @@ export type ThumbnailsTrackProps = Pick<LightboxProps, "slides" | "carousel" | "
 
 export function ThumbnailsTrack({
     container,
-    slides,
     carousel,
     render,
     thumbnails,
@@ -48,7 +47,7 @@ export function ThumbnailsTrack({
 }: ThumbnailsTrackProps) {
     const track = React.useRef<HTMLDivElement | null>(null);
 
-    const { globalIndex, animation } = useLightboxState().state;
+    const { slides, globalIndex, animation } = useLightboxState().state;
     const { publish, subscribe } = useEvents();
     const isRTL = useRTL();
 

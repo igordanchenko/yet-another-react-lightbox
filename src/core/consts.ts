@@ -1,9 +1,9 @@
 export const MODULE_CAROUSEL = "carousel";
 export const MODULE_CONTROLLER = "controller";
-export const MODULE_CORE = "core";
 export const MODULE_NAVIGATION = "navigation";
 export const MODULE_NO_SCROLL = "no-scroll";
 export const MODULE_PORTAL = "portal";
+export const MODULE_ROOT = "root";
 export const MODULE_TOOLBAR = "toolbar";
 
 export const PLUGIN_CAPTIONS = "captions";
