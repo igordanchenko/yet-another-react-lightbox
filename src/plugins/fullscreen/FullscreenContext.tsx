@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps } from "../../types.js";
+import { ComponentProps, FullscreenRef } from "../../types.js";
 import {
     CLASS_FULLSIZE,
     clsx,
@@ -10,29 +10,28 @@ import {
     useEventCallback,
     useLayoutEffect,
 } from "../../core/index.js";
+import { defaultFullscreenProps } from "./props.js";
 
-export type FullscreenContextType = {
-    fullscreen: boolean;
-    fullscreenEnabled?: boolean;
-    toggleFullscreen: () => void;
-};
-
-const FullscreenContext = React.createContext<FullscreenContextType | null>(null);
+const FullscreenContext = React.createContext<FullscreenRef | null>(null);
 
 export const useFullscreen = makeUseContext("useFullscreen", "FullscreenContext", FullscreenContext);
 
-export function FullscreenContextProvider({ fullscreen: auto, children }: ComponentProps) {
+export function FullscreenContextProvider({ fullscreen: fullscreenProp, children }: ComponentProps) {
+    const { auto, ref } = { ...defaultFullscreenProps, ...fullscreenProp };
+
     const containerRef = React.useRef<HTMLDivElement | null>(null);
     const [fullscreen, setFullscreen] = React.useState(false);
-    const [fullscreenEnabled, setFullscreenEnabled] = React.useState<boolean>();
+    const [disabled, setDisabled] = React.useState<boolean>();
 
     useLayoutEffect(() => {
-        setFullscreenEnabled(
-            document.fullscreenEnabled ??
+        setDisabled(
+            !(
+                document.fullscreenEnabled ??
                 document.webkitFullscreenEnabled ??
                 document.mozFullScreenEnabled ??
                 document.msFullscreenEnabled ??
                 false
+            )
         );
     }, []);
 
@@ -45,7 +44,7 @@ export function FullscreenContextProvider({ fullscreen: auto, children }: Compon
         []
     );
 
-    const requestFullscreen = React.useCallback(() => {
+    const enter = React.useCallback(() => {
         const container = containerRef.current;
         if (container) {
             try {
@@ -64,7 +63,7 @@ export function FullscreenContextProvider({ fullscreen: auto, children }: Compon
         }
     }, []);
 
-    const exitFullscreen = React.useCallback(() => {
+    const exit = React.useCallback(() => {
         if (getFullscreenElement()) {
             try {
                 if (document.exitFullscreen) {
@@ -81,14 +80,6 @@ export function FullscreenContextProvider({ fullscreen: auto, children }: Compon
             }
         }
     }, [getFullscreenElement]);
-
-    const toggleFullscreen = React.useCallback(() => {
-        if (fullscreen) {
-            exitFullscreen();
-        } else {
-            requestFullscreen();
-        }
-    }, [fullscreen, requestFullscreen, exitFullscreen]);
 
     const fullscreenChangeListener = React.useCallback(() => {
         if (getFullscreenElement() === containerRef.current) {
@@ -112,28 +103,24 @@ export function FullscreenContextProvider({ fullscreen: auto, children }: Compon
         };
     }, [fullscreenChangeListener]);
 
-    const handleAutoFullscreen = useEventCallback(() => {
-        if (auto) {
-            requestFullscreen();
-        }
-    });
+    const handleAutoFullscreen = useEventCallback(() => (auto ? enter : null)?.());
 
     React.useEffect(() => {
         handleAutoFullscreen();
-
-        return () => {
-            exitFullscreen();
-        };
-    }, [handleAutoFullscreen, exitFullscreen]);
+        return () => exit();
+    }, [handleAutoFullscreen, exit]);
 
     const context = React.useMemo(
         () => ({
             fullscreen,
-            fullscreenEnabled,
-            toggleFullscreen,
+            disabled,
+            enter,
+            exit,
         }),
-        [fullscreen, fullscreenEnabled, toggleFullscreen]
+        [fullscreen, disabled, enter, exit]
     );
+
+    React.useImperativeHandle(ref, () => context, [context]);
 
     return (
         <div ref={containerRef} className={clsx(cssClass(PLUGIN_FULLSCREEN), cssClass(CLASS_FULLSIZE))}>

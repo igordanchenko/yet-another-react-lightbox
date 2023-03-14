@@ -1,27 +1,39 @@
-import { RenderFunction } from "../../types.js";
+import * as React from "react";
+
+import { Callback, RenderFunction } from "../../types.js";
 import { Fullscreen } from "./Fullscreen.js";
 
 declare module "../../types" {
     interface LightboxProps {
-        /** if `true`, enter fullscreen mode automatically when the lightbox opens */
-        fullscreen?: boolean;
+        /** Fullscreen plugin settings */
+        fullscreen?: {
+            /** Fullscreen plugin ref */
+            ref?: React.ForwardedRef<FullscreenRef>;
+            /** if `true`, enter fullscreen mode automatically when the lightbox opens */
+            auto?: boolean;
+        };
     }
 
     interface Render {
         /** render custom Enter/Exit Fullscreen button */
-        buttonFullscreen?: RenderFunction<RenderFullscreenButtonProps>;
+        buttonFullscreen?: RenderFunction<FullscreenRef>;
         /** render custom Enter Fullscreen icon */
         iconEnterFullscreen?: RenderFunction;
         /** render custom Exit Fullscreen icon */
         iconExitFullscreen?: RenderFunction;
     }
 
-    /** `render.buttonFullscreen` render function props */
-    export type RenderFullscreenButtonProps = {
+    /** Fullscreen plugin ref */
+    export interface FullscreenRef {
+        /** current fullscreen status */
         fullscreen: boolean;
-        fullscreenEnabled: boolean | undefined;
-        toggleFullscreen: () => void;
-    };
+        /** if `true`, fullscreen features are not available */
+        disabled: boolean | undefined;
+        /** enter fullscreen mode */
+        enter: Callback;
+        /** exit fullscreen mode */
+        exit: Callback;
+    }
 }
 
 declare global {
