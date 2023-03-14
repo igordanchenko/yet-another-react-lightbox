@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps } from "../../types.js";
+import { ComponentProps, SlideshowRef } from "../../types.js";
 import {
     ACTION_NEXT,
     ACTIVE_SLIDE_COMPLETE,
@@ -19,21 +19,14 @@ import {
     useLightboxState,
     useTimeouts,
 } from "../../core/index.js";
-import { defaultSlideshowProps } from "./Slideshow.js";
+import { defaultSlideshowProps } from "./props.js";
 
-export type SlideshowContextType = {
-    playing: boolean;
-    disabled: boolean;
-
-    togglePlaying: () => void;
-};
-
-const SlideshowContext = React.createContext<SlideshowContextType | null>(null);
+const SlideshowContext = React.createContext<SlideshowRef | null>(null);
 
 export const useSlideshow = makeUseContext("useSlideshow", "SlideshowContext", SlideshowContext);
 
 export function SlideshowContextProvider({ slideshow, carousel: { finite }, children }: ComponentProps) {
-    const { autoplay, delay } = { ...defaultSlideshowProps, ...slideshow };
+    const { autoplay, delay, ref } = { ...defaultSlideshowProps, ...slideshow };
 
     const [playing, setPlaying] = React.useState(autoplay);
 
@@ -46,9 +39,17 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, chil
 
     const disabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
 
-    const togglePlaying = React.useCallback(() => {
-        setPlaying((prev) => !prev);
-    }, []);
+    const play = React.useCallback(() => {
+        if (!playing && !disabled) {
+            setPlaying(true);
+        }
+    }, [playing, disabled]);
+
+    const pause = React.useCallback(() => {
+        if (playing) {
+            setPlaying(false);
+        }
+    }, [playing]);
 
     const cancelScheduler = React.useCallback(() => {
         clearTimeout(scheduler.current);
@@ -107,7 +108,9 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, chil
         [subscribe, cancelScheduler, scheduleNextSlide]
     );
 
-    const context = React.useMemo(() => ({ playing, disabled, togglePlaying }), [playing, disabled, togglePlaying]);
+    const context = React.useMemo(() => ({ playing, disabled, play, pause }), [playing, disabled, play, pause]);
+
+    React.useImperativeHandle(ref, () => context, [context]);
 
     return <SlideshowContext.Provider value={context}>{children}</SlideshowContext.Provider>;
 }
