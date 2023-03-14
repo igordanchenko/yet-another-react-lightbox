@@ -49,13 +49,12 @@ export function NavigationButton({
 }
 
 export function Navigation({
-    slides,
     carousel: { finite },
     animation,
     labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }: ComponentProps) {
-    const { currentIndex } = useLightboxState().state;
+    const { slides, currentIndex } = useLightboxState().state;
     const { subscribeSensors } = useController();
     const { publish } = useEvents();
     const isRTL = useRTL();

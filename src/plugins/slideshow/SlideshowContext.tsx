@@ -32,7 +32,7 @@ const SlideshowContext = React.createContext<SlideshowContextType | null>(null);
 
 export const useSlideshow = makeUseContext("useSlideshow", "SlideshowContext", SlideshowContext);
 
-export function SlideshowContextProvider({ slides, slideshow, carousel: { finite }, children }: ComponentProps) {
+export function SlideshowContextProvider({ slideshow, carousel: { finite }, children }: ComponentProps) {
     const { autoplay, delay } = { ...defaultSlideshowProps, ...slideshow };
 
     const [playing, setPlaying] = React.useState(autoplay);
@@ -40,7 +40,7 @@ export function SlideshowContextProvider({ slides, slideshow, carousel: { finite
     const scheduler = React.useRef<number>();
     const slideStatus = React.useRef<SlideStatus | undefined>();
 
-    const { currentIndex } = useLightboxState().state;
+    const { slides, currentIndex } = useLightboxState().state;
     const { setTimeout, clearTimeout } = useTimeouts();
     const { publish, subscribe } = useEvents();
 

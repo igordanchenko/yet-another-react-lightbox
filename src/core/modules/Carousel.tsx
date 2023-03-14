@@ -94,8 +94,8 @@ function Placeholder() {
     return <div className={cssClass("slide")} />;
 }
 
-export function Carousel({ slides, carousel: { finite, preload, padding, spacing } }: ComponentProps) {
-    const { currentIndex, globalIndex } = useLightboxState().state;
+export function Carousel({ carousel: { finite, preload, padding, spacing } }: ComponentProps) {
+    const { slides, currentIndex, globalIndex } = useLightboxState().state;
     const { setCarouselRef, containerRect } = useController();
 
     const spacingValue = parseLengthPercentage(spacing);

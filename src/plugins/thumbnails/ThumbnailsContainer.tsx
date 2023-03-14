@@ -9,7 +9,6 @@ import { defaultThumbnailsProps } from "./Thumbnails.js";
 /** Thumbnails plugin component */
 export function ThumbnailsComponent({
     thumbnails: thumbnailsProps,
-    slides,
     carousel,
     animation,
     render,
@@ -23,7 +22,6 @@ export function ThumbnailsComponent({
     const track = (
         <ThumbnailsTrack
             container={ref}
-            slides={slides}
             thumbnails={thumbnails}
             carousel={carousel}
             animation={animation}

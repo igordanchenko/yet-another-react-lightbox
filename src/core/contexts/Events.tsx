@@ -8,13 +8,15 @@ export type Topic = keyof EventTypes;
 
 export type Event<T extends Topic> = EventTypes[T];
 
-export type Callback<T extends Topic> = (event?: Event<T>) => void;
+export type Callback<T extends Topic> = (...args: Event<T> extends void ? [] : [event: Event<T>]) => void;
 
 export type Subscribe = <T extends Topic>(topic: T, callback: Callback<T>) => () => void;
 
 export type Unsubscribe = <T extends Topic>(topic: T, callback: Callback<T>) => void;
 
-export type Publish = <T extends Topic>(topic: T, event?: Event<T>) => void;
+export type Publish = <T extends Topic>(
+    ...args: Event<T> extends void ? [topic: T] : [topic: T, event: Event<T>]
+) => void;
 
 export type EventsContextType = {
     subscribe: Subscribe;
@@ -31,7 +33,7 @@ export function EventsProvider({ children }: React.PropsWithChildren) {
 
     React.useEffect(
         () => () => {
-            (Object.keys(subscriptions) as Topic[]).forEach((key) => delete subscriptions[key]);
+            (Object.keys(subscriptions) as Topic[]).forEach((topic) => delete subscriptions[topic]);
         },
         [subscriptions]
     );
@@ -54,8 +56,9 @@ export function EventsProvider({ children }: React.PropsWithChildren) {
             return () => unsubscribe(topic, callback);
         };
 
-        const publish = <T extends Topic>(topic: T, event?: Event<T>) => {
-            subscriptions[topic]?.forEach((callback) => callback(event));
+        const publish = <T extends Topic>(...[topic, event]: Event<T> extends void ? [T] : [T, Event<T>]) => {
+            // most likely culprit - https://github.com/microsoft/TypeScript/issues/29131
+            subscriptions[topic]?.forEach((callback) => (callback as unknown as (event?: Event<T>) => void)(event));
         };
 
         return { publish, subscribe, unsubscribe };

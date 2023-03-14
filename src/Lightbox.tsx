@@ -1,20 +1,23 @@
 import * as React from "react";
 
-import { LightboxExternalProps, LightboxProps, Node } from "./types.js";
+import { ComponentProps, LightboxExternalProps, Node } from "./types.js";
 import { LightboxDefaultProps } from "./props.js";
 import {
     CarouselModule,
     ControllerModule,
-    CoreModule,
     createNode,
+    EventsProvider,
+    LightboxStateProvider,
     NavigationModule,
     NoScrollModule,
     PortalModule,
+    RootModule,
+    TimeoutsProvider,
     ToolbarModule,
     withPlugins,
 } from "./core/index.js";
 
-function renderNode(node: Node, props: LightboxProps): React.ReactElement {
+function renderNode(node: Node, props: ComponentProps): React.ReactElement {
     return React.createElement(
         node.module.component,
         { key: node.module.name, ...props },
@@ -22,17 +25,9 @@ function renderNode(node: Node, props: LightboxProps): React.ReactElement {
     );
 }
 
-function fixupIndex({ index, slides, ...rest }: LightboxProps) {
-    return {
-        index: index >= 0 && index < slides.length ? index : 0,
-        slides,
-        ...rest,
-    };
-}
-
 /** Lightbox component */
 export function Lightbox(props: LightboxExternalProps) {
-    const { carousel, animation, render, toolbar, controller, on, plugins, ...restProps } = props;
+    const { carousel, animation, render, toolbar, controller, on, plugins, slides, index, ...restProps } = props;
     const {
         carousel: defaultCarousel,
         animation: defaultAnimation,
@@ -40,6 +35,9 @@ export function Lightbox(props: LightboxExternalProps) {
         toolbar: defaultToolbar,
         controller: defaultController,
         on: defaultOn,
+        slides: defaultSlides,
+        index: defaultIndex,
+        plugins: defaultPlugins,
         ...restDefaultProps
     } = LightboxDefaultProps;
 
@@ -55,8 +53,7 @@ export function Lightbox(props: LightboxExternalProps) {
                 ]),
             ]),
         ],
-        plugins,
-        [fixupIndex]
+        plugins || defaultPlugins
     );
 
     const augmentedProps = augmentation({
@@ -72,5 +69,11 @@ export function Lightbox(props: LightboxExternalProps) {
 
     if (!augmentedProps.open) return null;
 
-    return <>{renderNode(createNode(CoreModule, config), augmentedProps)}</>;
+    return (
+        <LightboxStateProvider slides={slides || defaultSlides} index={index || defaultIndex}>
+            <TimeoutsProvider>
+                <EventsProvider>{renderNode(createNode(RootModule, config), augmentedProps)}</EventsProvider>
+            </TimeoutsProvider>
+        </LightboxStateProvider>
+    );
 }
