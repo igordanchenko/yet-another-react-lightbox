@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { createIcon, IconButton, label, useController } from "../../core/index.js";
 import { useFullscreen } from "./FullscreenContext.js";
 
@@ -14,20 +15,22 @@ const ExitFullscreenIcon = createIcon(
 
 /** Fullscreen button */
 export function FullscreenButton() {
+    const { fullscreen, disabled, enter, exit } = useFullscreen();
     const { labels, render } = useController().getLightboxProps();
-    const { fullscreen, fullscreenEnabled, toggleFullscreen } = useFullscreen();
 
-    if (!fullscreenEnabled) return null;
+    if (disabled) return null;
 
-    return render.buttonFullscreen ? (
-        <>{render.buttonFullscreen?.({ fullscreen, fullscreenEnabled, toggleFullscreen })}</>
-    ) : (
+    if (render.buttonFullscreen) {
+        return <>{render.buttonFullscreen?.({ fullscreen, disabled, enter, exit })}</>;
+    }
+
+    return (
         <IconButton
-            disabled={!fullscreenEnabled}
+            disabled={disabled}
             label={fullscreen ? label(labels, "Exit Fullscreen") : label(labels, "Enter Fullscreen")}
             icon={fullscreen ? ExitFullscreenIcon : EnterFullscreenIcon}
             renderIcon={fullscreen ? render.iconExitFullscreen : render.iconEnterFullscreen}
-            onClick={toggleFullscreen}
+            onClick={() => (fullscreen ? exit : enter)()}
         />
     );
 }

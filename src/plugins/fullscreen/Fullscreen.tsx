@@ -2,13 +2,15 @@ import * as React from "react";
 
 import { Plugin } from "../../types.js";
 import { createModule, MODULE_CONTROLLER, PLUGIN_FULLSCREEN, PLUGIN_THUMBNAILS } from "../../core/index.js";
+import { defaultFullscreenProps } from "./props.js";
 import { FullscreenButton } from "./FullscreenButton.js";
 import { FullscreenContextProvider } from "./FullscreenContext.js";
 
 /** Fullscreen plugin */
 export const Fullscreen: Plugin = ({ augment, contains, addParent }) => {
-    augment(({ toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
+    augment(({ fullscreen, toolbar: { buttons, ...restToolbar }, ...restProps }) => ({
         toolbar: { buttons: [<FullscreenButton key={PLUGIN_FULLSCREEN} />, ...buttons], ...restToolbar },
+        fullscreen: { ...defaultFullscreenProps, ...fullscreen },
         ...restProps,
     }));
 
