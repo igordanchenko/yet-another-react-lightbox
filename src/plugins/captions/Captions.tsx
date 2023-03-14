@@ -17,10 +17,12 @@ export const Captions: Plugin = ({ augment, addParent }) => {
 
     augment(({ render: { slideFooter: renderFooter, ...restRender }, captions, styles, ...restProps }) => ({
         render: {
-            slideFooter: (slide) => (
+            slideFooter: ({ slide }) => (
                 <>
-                    {renderFooter?.(slide)}
+                    {renderFooter?.({ slide })}
+
                     {slide.title && <Title styles={styles} title={slide.title} />}
+
                     {slide.description && (
                         <Description
                             styles={styles}

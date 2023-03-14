@@ -230,7 +230,7 @@ export function ZoomContainer({
 
     const onZoomCallback = useEventCallback(() => {
         if (offset === 0) {
-            on.zoom?.(zoom);
+            on.zoom?.({ zoom });
         }
     });
 
@@ -455,7 +455,7 @@ export function ZoomContainer({
         ]
     );
 
-    let rendered = render.slide?.(slide, offset, rect);
+    let rendered = render.slide?.({ slide, offset, rect, zoom, maxZoom });
 
     if (!rendered && isImageSlide(slide)) {
         const slideProps = {
@@ -464,7 +464,7 @@ export function ZoomContainer({
             rect,
             render,
             imageFit: carousel.imageFit,
-            onClick: offset === 0 ? () => on.click?.(currentIndex) : undefined,
+            onClick: offset === 0 ? () => on.click?.({ index: currentIndex }) : undefined,
         };
 
         rendered = isResponsiveImageSlide(slide) ? (

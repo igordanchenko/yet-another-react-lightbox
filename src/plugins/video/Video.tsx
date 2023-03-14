@@ -12,7 +12,7 @@ export const defaultVideoProps = {
 export const Video: Plugin = ({ augment }) => {
     augment(({ render: { slide: renderSlide, ...restRender }, video: videoProps, ...restProps }) => ({
         render: {
-            slide: (slide, offset, rect) => {
+            slide: ({ slide, offset, rect }) => {
                 if (slide.type === "video") {
                     return (
                         <VideoSlide
@@ -22,7 +22,7 @@ export const Video: Plugin = ({ augment }) => {
                         />
                     );
                 }
-                return renderSlide?.(slide, offset, rect);
+                return renderSlide?.({ slide, offset, rect });
             },
             ...restRender,
         },

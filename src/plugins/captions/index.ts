@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { Captions } from "./Captions.js";
 
-type TextAlignment = "start" | "end" | "center";
-
 declare module "../../types" {
+    export type TextAlignment = "start" | "end" | "center";
+
     interface GenericSlide {
         /** slide title */
         title?: React.ReactNode;

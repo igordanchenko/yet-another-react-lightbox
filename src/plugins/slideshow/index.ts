@@ -12,6 +12,15 @@ declare module "../../types" {
         };
     }
 
+    interface Render {
+        /** render custom Slideshow Play icon */
+        iconSlideshowPlay?: RenderFunction;
+        /** render custom Slideshow Pause icon */
+        iconSlideshowPause?: RenderFunction;
+        /** render custom Slideshow button */
+        buttonSlideshow?: RenderFunction<RenderSlideshowButtonProps>;
+    }
+
     /** `render.buttonSlideshow` render function props */
     export type RenderSlideshowButtonProps = {
         /** current slideshow autoplay status */
@@ -21,15 +30,6 @@ declare module "../../types" {
         /** if `true`, the button is disabled */
         disabled: boolean;
     };
-
-    interface Render {
-        /** render custom Slideshow Play icon */
-        iconSlideshowPlay?: RenderFunction;
-        /** render custom Slideshow Pause icon */
-        iconSlideshowPause?: RenderFunction;
-        /** render custom Slideshow button */
-        buttonSlideshow?: RenderFunction<RenderSlideshowButtonProps>;
-    }
 }
 
 export default Slideshow;

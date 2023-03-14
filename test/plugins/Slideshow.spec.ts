@@ -21,7 +21,7 @@ describe("Inline", () => {
             lightbox({
                 slides: [{ src: "image1" }, { src: "image2" }, { src: "image3" }, { src: "image4" }],
                 render: {
-                    slide: (slide) => (isImageSlide(slide) ? React.createElement("div", null, slide.src) : null),
+                    slide: ({ slide }) => (isImageSlide(slide) ? React.createElement("div", null, slide.src) : null),
                 },
                 on: { view: onView },
                 carousel: { finite: true },

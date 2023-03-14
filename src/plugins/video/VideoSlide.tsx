@@ -12,8 +12,7 @@ import {
     useEventCallback,
     useEvents,
 } from "../../core/index.js";
-import { LightboxProps } from "../../types.js";
-import { SlideVideo } from "./index.js";
+import { LightboxProps, SlideVideo } from "../../types.js";
 import { defaultVideoProps } from "./Video.js";
 
 export type VideoSlideProps = {

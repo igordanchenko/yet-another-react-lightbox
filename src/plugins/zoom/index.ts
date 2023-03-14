@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { RenderFunction } from "../../types.js";
+import { Callback, RenderFunction } from "../../types.js";
 import { Zoom } from "./Zoom.js";
 
 export const ACTION_ZOOM_IN = "zoom-in";
@@ -37,15 +37,6 @@ declare module "../../types" {
         zoom?: number;
     }
 
-    /** `render.buttonZoomIn` and `render.buttonZoomOut` render function props */
-    export type RenderZoomButtonProps = Pick<LightboxProps, "labels"> & {
-        ref: React.ForwardedRef<HTMLButtonElement>;
-        disabled: boolean;
-        onClick: () => void;
-        onFocus: () => void;
-        onBlur: () => void;
-    };
-
     interface Render {
         /** render custom Zoom in button */
         buttonZoomIn?: RenderFunction<RenderZoomButtonProps>;
@@ -57,9 +48,30 @@ declare module "../../types" {
         iconZoomOut?: RenderFunction;
     }
 
+    /** `render.buttonZoomIn` and `render.buttonZoomOut` render function props */
+    export type RenderZoomButtonProps = Pick<LightboxProps, "labels"> & {
+        ref: React.ForwardedRef<HTMLButtonElement>;
+        disabled: boolean;
+        onClick: () => void;
+        onFocus: () => void;
+        onBlur: () => void;
+    };
+
+    // noinspection JSUnusedGlobalSymbols
+    interface RenderSlideProps {
+        /** current zoom level */
+        zoom?: number;
+        /** maximum zoom level */
+        maxZoom?: number;
+    }
+
     // noinspection JSUnusedGlobalSymbols
     interface Callbacks {
-        zoom?: (level: number) => void;
+        zoom?: Callback<ZoomCallbackProps>;
+    }
+
+    export interface ZoomCallbackProps {
+        zoom: number;
     }
 }
 
