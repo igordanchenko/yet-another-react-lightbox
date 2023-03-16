@@ -10,14 +10,14 @@ import {
     useEventCallback,
     useLayoutEffect,
 } from "../../core/index.js";
-import { defaultFullscreenProps } from "./props.js";
+import { resolveFullscreenProps } from "./props.js";
 
-const FullscreenContext = React.createContext<FullscreenRef | null>(null);
+export const FullscreenContext = React.createContext<FullscreenRef | null>(null);
 
 export const useFullscreen = makeUseContext("useFullscreen", "FullscreenContext", FullscreenContext);
 
-export function FullscreenContextProvider({ fullscreen: fullscreenProp, children }: ComponentProps) {
-    const { auto, ref } = { ...defaultFullscreenProps, ...fullscreenProp };
+export function FullscreenContextProvider({ fullscreen: fullscreenProps, children }: ComponentProps) {
+    const { auto, ref } = resolveFullscreenProps(fullscreenProps);
 
     const containerRef = React.useRef<HTMLDivElement | null>(null);
     const [fullscreen, setFullscreen] = React.useState(false);

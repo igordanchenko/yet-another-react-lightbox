@@ -63,7 +63,7 @@ export type ControllerContextType = {
     setCarouselRef: React.Ref<HTMLDivElement>;
 };
 
-const ControllerContext = React.createContext<ControllerContextType | null>(null);
+export const ControllerContext = React.createContext<ControllerContextType | null>(null);
 
 export const useController = makeUseContext("useController", "ControllerContext", ControllerContext);
 
@@ -238,11 +238,11 @@ export function Controller({ children, ...props }: ComponentProps) {
 
     React.useEffect(focusOnMount, [focusOnMount]);
 
-    const handleIndexChange = useEventCallback(() => {
+    const onViewCallback = useEventCallback(() => {
         on.view?.({ index: state.currentIndex });
     });
 
-    React.useEffect(handleIndexChange, [state.currentIndex, handleIndexChange]);
+    React.useEffect(onViewCallback, [state.globalIndex, onViewCallback]);
 
     React.useEffect(
         () =>

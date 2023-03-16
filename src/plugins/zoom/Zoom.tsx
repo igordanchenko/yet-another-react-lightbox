@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Plugin } from "../../types.js";
 import { createModule, isImageSlide, MODULE_CONTROLLER, PLUGIN_ZOOM } from "../../core/index.js";
-import { resolveZoomProps } from "./hooks/index.js";
+import { resolveZoomProps } from "./props.js";
 import { ZoomContextProvider } from "./ZoomController.js";
 import { ZoomToolbarControl } from "./ZoomToolbarControl.js";
 import { ZoomWrapper } from "./ZoomWrapper.js";

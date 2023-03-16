@@ -1,27 +1,9 @@
-import * as React from "react";
-
-import { ComponentProps, Plugin } from "../../types.js";
-import {
-    ACTION_CLOSE,
-    clsx,
-    createModule,
-    cssClass,
-    MODULE_NO_SCROLL,
-    MODULE_PORTAL,
-    PLUGIN_INLINE,
-} from "../../core/index.js";
-
-/** Inline plugin container */
-function InlineContainer({ inline: { className, ...rest } = {}, children }: ComponentProps) {
-    return (
-        <div className={clsx(cssClass("root"), cssClass("relative"), className)} {...rest}>
-            {children}
-        </div>
-    );
-}
+import { PluginProps } from "../../types.js";
+import { ACTION_CLOSE, createModule, MODULE_NO_SCROLL, MODULE_PORTAL, PLUGIN_INLINE } from "../../core/index.js";
+import { InlineContainer } from "./InlineContainer.js";
 
 /** Inline plugin */
-export const Inline: Plugin = ({ augment, replace, remove }) => {
+export function Inline({ augment, replace, remove }: PluginProps) {
     augment(
         ({
             toolbar: { buttons, ...restToolbar },
@@ -46,4 +28,4 @@ export const Inline: Plugin = ({ augment, replace, remove }) => {
 
     remove(MODULE_NO_SCROLL);
     replace(MODULE_PORTAL, createModule(PLUGIN_INLINE, InlineContainer));
-};
+}

@@ -19,7 +19,7 @@ import {
 import { ContainerRect, DeepNonNullable, LightboxProps, Slide } from "../../types.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
-import { defaultThumbnailsProps } from "./Thumbnails.js";
+import { defaultThumbnailsProps } from "./props.js";
 
 function isHorizontal(position: NonNullable<NonNullable<LightboxProps["thumbnails"]>["position"]>) {
     return ["top", "bottom"].includes(position);

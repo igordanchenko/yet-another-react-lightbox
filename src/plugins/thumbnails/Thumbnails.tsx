@@ -1,26 +1,12 @@
-import { Plugin } from "../../types.js";
+import { PluginProps } from "../../types.js";
 import { createModule, MODULE_CONTROLLER, PLUGIN_FULLSCREEN, PLUGIN_THUMBNAILS } from "../../core/index.js";
+import { resolveThumbnailsProps } from "./props.js";
 import { ThumbnailsComponent } from "./ThumbnailsContainer.js";
 
-export const defaultThumbnailsProps = {
-    position: "bottom" as const,
-    width: 120,
-    height: 80,
-    border: 1,
-    borderRadius: 4,
-    padding: 4,
-    gap: 16,
-    imageFit: "contain" as const,
-    vignette: true,
-};
-
 /** Thumbnails plugin */
-export const Thumbnails: Plugin = ({ augment, contains, append, addParent }) => {
+export function Thumbnails({ augment, contains, append, addParent }: PluginProps) {
     augment(({ thumbnails, ...restProps }) => ({
-        thumbnails: {
-            ...defaultThumbnailsProps,
-            ...thumbnails,
-        },
+        thumbnails: resolveThumbnailsProps(thumbnails),
         ...restProps,
     }));
 
@@ -30,4 +16,4 @@ export const Thumbnails: Plugin = ({ augment, contains, append, addParent }) => 
     } else {
         addParent(MODULE_CONTROLLER, module);
     }
-};
+}

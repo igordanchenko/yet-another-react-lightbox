@@ -7,7 +7,7 @@ export type TimeoutsContextType = {
     clearTimeout: (id?: number) => void;
 };
 
-const TimeoutsContext = React.createContext<TimeoutsContextType | null>(null);
+export const TimeoutsContext = React.createContext<TimeoutsContextType | null>(null);
 
 export const useTimeouts = makeUseContext("useTimeouts", "TimeoutsContext", TimeoutsContext);
 

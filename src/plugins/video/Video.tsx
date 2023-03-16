@@ -1,16 +1,12 @@
 import * as React from "react";
 
-import { Plugin } from "../../types.js";
+import { PluginProps } from "../../types.js";
+import { resolveVideoProps } from "./props.js";
 import { VideoSlide } from "./VideoSlide.js";
 
-export const defaultVideoProps = {
-    controls: true,
-    playsInline: true,
-};
-
 /** Video plugin */
-export const Video: Plugin = ({ augment }) => {
-    augment(({ render: { slide: renderSlide, ...restRender }, video: videoProps, ...restProps }) => ({
+export function Video({ augment }: PluginProps) {
+    augment(({ render: { slide: renderSlide, ...restRender }, video, ...restProps }) => ({
         render: {
             slide: ({ slide, offset, rect }) => {
                 if (slide.type === "video") {
@@ -26,7 +22,7 @@ export const Video: Plugin = ({ augment }) => {
             },
             ...restRender,
         },
-        video: { ...defaultVideoProps, ...videoProps },
+        video: resolveVideoProps(video),
         ...restProps,
     }));
-};
+}
