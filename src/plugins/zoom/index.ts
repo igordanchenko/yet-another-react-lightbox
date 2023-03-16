@@ -1,15 +1,12 @@
-import * as React from "react";
-
 import { Callback, RenderFunction } from "../../types.js";
 import { Zoom } from "./Zoom.js";
-
-export const ACTION_ZOOM_IN = "zoom-in";
-export const ACTION_ZOOM_OUT = "zoom-out";
 
 declare module "../../types" {
     interface LightboxProps {
         /** Zoom plugin settings */
         zoom?: {
+            /** Zoom plugin ref */
+            ref?: React.ForwardedRef<ZoomRef>;
             /** ratio of image pixels to physical pixels at maximum zoom level */
             maxZoomPixelRatio?: number;
             /** zoom-in multiplier */
@@ -38,24 +35,13 @@ declare module "../../types" {
     }
 
     interface Render {
-        /** render custom Zoom in button */
-        buttonZoomIn?: RenderFunction<RenderZoomButtonProps>;
-        /** render custom Zoom in button */
-        buttonZoomOut?: RenderFunction<RenderZoomButtonProps>;
-        /** render custom Zoom in icon */
+        /** render custom Zoom control in the toolbar */
+        buttonZoom?: RenderFunction<ZoomRef>;
+        /** render custom Zoom In icon */
         iconZoomIn?: RenderFunction;
-        /** render custom Zoom out icon */
+        /** render custom Zoom Out icon */
         iconZoomOut?: RenderFunction;
     }
-
-    /** `render.buttonZoomIn` and `render.buttonZoomOut` render function props */
-    export type RenderZoomButtonProps = Pick<LightboxProps, "labels"> & {
-        ref: React.ForwardedRef<HTMLButtonElement>;
-        disabled: boolean;
-        onClick: () => void;
-        onFocus: () => void;
-        onBlur: () => void;
-    };
 
     // noinspection JSUnusedGlobalSymbols
     interface RenderSlideProps {
@@ -67,19 +53,32 @@ declare module "../../types" {
 
     // noinspection JSUnusedGlobalSymbols
     interface Callbacks {
+        /** zoom callback */
         zoom?: Callback<ZoomCallbackProps>;
     }
 
+    /** Zoom callback props */
     export interface ZoomCallbackProps {
+        /** current zoom level */
         zoom: number;
     }
-}
 
-declare module "../../core" {
-    // noinspection JSUnusedGlobalSymbols
-    interface EventTypes {
-        [ACTION_ZOOM_IN]: void;
-        [ACTION_ZOOM_OUT]: void;
+    /** Zoom plugin ref */
+    export interface ZoomRef {
+        /** current zoom level */
+        zoom: number;
+        /** maximum zoom level */
+        maxZoom: number;
+        /** horizontal offset */
+        offsetX: number;
+        /** vertical offset */
+        offsetY: number;
+        /** if `true`, zoom is unavailable for the current slide */
+        disabled: boolean;
+        /** increase zoom level using `zoomInMultiplier` */
+        zoomIn: Callback;
+        /** decrease zoom level using `zoomInMultiplier` */
+        zoomOut: Callback;
     }
 }
 

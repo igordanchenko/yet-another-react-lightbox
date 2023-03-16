@@ -5,6 +5,7 @@ import { createModule } from "../config.js";
 import {
     cleanup,
     clsx,
+    computeSlideRect,
     cssClass,
     cssVar,
     getAnimationEasing,
@@ -56,6 +57,7 @@ export type ControllerContextType = {
     focus: Callback;
     getLightboxProps: () => ComponentProps;
     subscribeSensors: SubscribeSensors<HTMLDivElement>;
+    slideRect: ContainerRect;
     containerRect: ContainerRect;
     containerRef: React.RefObject<HTMLDivElement>;
     setCarouselRef: React.Ref<HTMLDivElement>;
@@ -282,11 +284,12 @@ export function Controller({ children, ...props }: ComponentProps) {
             getLightboxProps,
             subscribeSensors,
             // we are not going to render context provider when containerRect is undefined
+            slideRect: containerRect ? computeSlideRect(containerRect, carousel.padding) : { width: 0, height: 0 },
             containerRect: containerRect || { width: 0, height: 0 },
             containerRef,
             setCarouselRef,
         }),
-        [focus, getLightboxProps, subscribeSensors, containerRect, containerRef, setCarouselRef]
+        [focus, getLightboxProps, subscribeSensors, containerRect, containerRef, setCarouselRef, carousel.padding]
     );
 
     React.useImperativeHandle(
