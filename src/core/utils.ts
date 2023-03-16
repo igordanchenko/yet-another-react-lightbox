@@ -5,6 +5,7 @@ import { IMAGE_FIT_CONTAIN, IMAGE_FIT_COVER } from "./consts.js";
 import {
     AnimationSettings,
     AnimationSpec,
+    ContainerRect,
     Labels,
     LengthOrPercentage,
     LightboxProps,
@@ -74,6 +75,16 @@ export const parseLengthPercentage = (input: LengthOrPercentage) => {
 
     return { pixel: 0 };
 };
+
+export function computeSlideRect(containerRect: ContainerRect, padding: LengthOrPercentage) {
+    const paddingValue = parseLengthPercentage(padding);
+    const paddingPixels =
+        paddingValue.percent !== undefined ? (containerRect.width / 100) * paddingValue.percent : paddingValue.pixel;
+    return {
+        width: Math.max(containerRect.width - 2 * paddingPixels, 0),
+        height: Math.max(containerRect.height - 2 * paddingPixels, 0),
+    };
+}
 
 export const devicePixelRatio = () => (typeof window !== "undefined" ? window?.devicePixelRatio : undefined) || 1;
 

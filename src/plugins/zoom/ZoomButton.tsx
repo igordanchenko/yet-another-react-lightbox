@@ -1,9 +1,7 @@
 import * as React from "react";
 
-import { LightboxProps } from "../../types.js";
-import { createIcon, IconButton, label, useEvents } from "../../core/index.js";
-import { useZoom } from "./ZoomContext.js";
-import { ACTION_ZOOM_IN, ACTION_ZOOM_OUT } from "./index.js";
+import { createIcon, IconButton, label, useController } from "../../core/index.js";
+import { useZoom } from "./ZoomController.js";
 
 const ZoomInIcon = createIcon(
     "ZoomIn",
@@ -19,81 +17,45 @@ const ZoomOutIcon = createIcon(
 );
 
 /** Zoom button props */
-type ZoomButtonProps = Pick<LightboxProps, "labels" | "render"> & {
+export type ZoomButtonProps = {
     zoomIn?: boolean;
     onLoseFocus: () => void;
 };
 
 /** Zoom button */
-export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>(
-    ({ labels, render, zoomIn, onLoseFocus }, ref) => {
-        const wasEnabled = React.useRef(false);
-        const wasFocused = React.useRef(false);
+export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>(({ zoomIn, onLoseFocus }, ref) => {
+    const wasEnabled = React.useRef(false);
+    const wasFocused = React.useRef(false);
 
-        const { isMinZoom, isMaxZoom, isZoomSupported } = useZoom();
-        const { publish } = useEvents();
+    const { zoom, maxZoom, zoomIn: zoomInCallback, zoomOut: zoomOutCallback, disabled: zoomDisabled } = useZoom();
+    const { render, labels } = useController().getLightboxProps();
 
-        const disabled = !isZoomSupported || (zoomIn ? isMaxZoom : isMinZoom);
+    const disabled = zoomDisabled || (zoomIn ? zoom >= maxZoom : zoom <= 1);
 
-        const onClick = () => publish(zoomIn ? ACTION_ZOOM_IN : ACTION_ZOOM_OUT);
+    React.useEffect(() => {
+        if (disabled && wasEnabled.current && wasFocused.current) {
+            onLoseFocus();
+        }
+        if (!disabled) {
+            wasEnabled.current = true;
+        }
+    }, [disabled, onLoseFocus]);
 
-        const onFocus = React.useCallback(() => {
-            wasFocused.current = true;
-        }, []);
-
-        const onBlur = React.useCallback(() => {
-            wasFocused.current = false;
-        }, []);
-
-        React.useEffect(() => {
-            if (disabled && wasEnabled.current && wasFocused.current) {
-                onLoseFocus();
-            }
-            if (!disabled) {
-                wasEnabled.current = true;
-            }
-        }, [disabled, onLoseFocus]);
-
-        if (zoomIn && render.buttonZoomIn)
-            return (
-                <>
-                    {render.buttonZoomIn({
-                        ref,
-                        labels,
-                        disabled,
-                        onClick,
-                        onFocus,
-                        onBlur,
-                    })}
-                </>
-            );
-
-        if (!zoomIn && render.buttonZoomOut)
-            return (
-                <>
-                    {render.buttonZoomOut({
-                        ref,
-                        labels,
-                        disabled,
-                        onClick,
-                        onFocus,
-                        onBlur,
-                    })}
-                </>
-            );
-
-        return (
-            <IconButton
-                ref={ref}
-                label={label(labels, zoomIn ? "Zoom in" : "Zoom out")}
-                icon={zoomIn ? ZoomInIcon : ZoomOutIcon}
-                renderIcon={zoomIn ? render.iconZoomIn : render.iconZoomOut}
-                disabled={disabled}
-                onClick={onClick}
-                onFocus={onFocus}
-                onBlur={onBlur}
-            />
-        );
-    }
-);
+    return (
+        <IconButton
+            ref={ref}
+            disabled={disabled}
+            label={label(labels, zoomIn ? "Zoom in" : "Zoom out")}
+            icon={zoomIn ? ZoomInIcon : ZoomOutIcon}
+            renderIcon={zoomIn ? render.iconZoomIn : render.iconZoomOut}
+            onClick={() => (zoomIn ? zoomInCallback : zoomOutCallback)()}
+            onFocus={() => {
+                wasFocused.current = true;
+            }}
+            onBlur={() => {
+                wasFocused.current = false;
+            }}
+        />
+    );
+});
 ZoomButton.displayName = "ZoomButton";

@@ -47,7 +47,7 @@ export function ResponsiveImage(props: ResponsiveImageProps) {
         }
     });
 
-    useLayoutEffect(handleSourceChange, [rect?.width, rect?.height, pixelDensity, image.src, handleSourceChange]);
+    useLayoutEffect(handleSourceChange, [rect.width, rect.height, pixelDensity, image.src, handleSourceChange]);
 
     const handlePreload = useEventCallback((currentPreload: string) => {
         if (currentPreload === preload) {

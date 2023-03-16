@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps, ContainerRect, Slide } from "../../types.js";
+import { ComponentProps, Slide } from "../../types.js";
 import { createModule } from "../config.js";
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
@@ -20,22 +20,22 @@ function cssSlidePrefix(value?: string) {
 type CarouselSlideProps = {
     slide: Slide;
     offset: number;
-    rect: ContainerRect;
 };
 
-function CarouselSlide({ slide, offset, rect }: CarouselSlideProps) {
+function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     const containerRef = React.useRef<HTMLDivElement | null>(null);
 
     const { publish } = useEvents();
     const { currentIndex } = useLightboxState().state;
+    const { getLightboxProps, slideRect } = useController();
     const {
         render,
         carousel: { imageFit },
         on: { click: onClick },
-    } = useController().getLightboxProps();
+    } = getLightboxProps();
 
     const renderSlide = () => {
-        let rendered = render.slide?.({ slide, offset, rect });
+        let rendered = render.slide?.({ slide, offset, rect: slideRect });
 
         if (!rendered && isImageSlide(slide)) {
             rendered = (
@@ -43,7 +43,7 @@ function CarouselSlide({ slide, offset, rect }: CarouselSlideProps) {
                     slide={slide}
                     offset={offset}
                     render={render}
-                    rect={rect}
+                    rect={slideRect}
                     imageFit={imageFit}
                     onClick={offset === 0 ? () => onClick?.({ index: currentIndex }) : undefined}
                 />
@@ -96,18 +96,10 @@ function Placeholder() {
 
 export function Carousel({ carousel: { finite, preload, padding, spacing } }: ComponentProps) {
     const { slides, currentIndex, globalIndex } = useLightboxState().state;
-    const { setCarouselRef, containerRect } = useController();
+    const { setCarouselRef } = useController();
 
     const spacingValue = parseLengthPercentage(spacing);
     const paddingValue = parseLengthPercentage(padding);
-
-    const paddingPixels =
-        paddingValue.percent !== undefined ? (containerRect.width / 100) * paddingValue.percent : paddingValue.pixel;
-
-    const rect = {
-        width: Math.max(containerRect.width - 2 * paddingPixels, 0),
-        height: Math.max(containerRect.height - 2 * paddingPixels, 0),
-    };
 
     const items = [];
 
@@ -119,7 +111,6 @@ export function Carousel({ carousel: { finite, preload, padding, spacing } }: Co
                     <CarouselSlide
                         key={key}
                         slide={slides[(i + preload * slides.length) % slides.length]}
-                        rect={rect}
                         offset={i - currentIndex}
                     />
                 ) : (
@@ -128,13 +119,13 @@ export function Carousel({ carousel: { finite, preload, padding, spacing } }: Co
             );
         }
 
-        items.push(<CarouselSlide key={globalIndex} slide={slides[currentIndex]} rect={rect} offset={0} />);
+        items.push(<CarouselSlide key={globalIndex} slide={slides[currentIndex]} offset={0} />);
 
         for (let i = currentIndex + 1; i <= currentIndex + preload; i += 1) {
             const key = globalIndex + i - currentIndex;
             items.push(
                 !finite || i <= slides.length - 1 ? (
-                    <CarouselSlide key={key} slide={slides[i % slides.length]} rect={rect} offset={i - currentIndex} />
+                    <CarouselSlide key={key} slide={slides[i % slides.length]} offset={i - currentIndex} />
                 ) : (
                     <Placeholder key={key} />
                 )
