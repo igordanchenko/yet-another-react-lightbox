@@ -1,3 +1,5 @@
+import { LightboxProps } from "../../types.js";
+
 export const defaultZoomProps = {
     maxZoomPixelRatio: 1,
     zoomInMultiplier: 2,
@@ -9,3 +11,8 @@ export const defaultZoomProps = {
     pinchZoomDistanceFactor: 100,
     scrollToZoom: false,
 };
+
+export const resolveZoomProps = (zoom: LightboxProps["zoom"]) => ({
+    ...defaultZoomProps,
+    ...zoom,
+});

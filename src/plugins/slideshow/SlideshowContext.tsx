@@ -19,14 +19,14 @@ import {
     useLightboxState,
     useTimeouts,
 } from "../../core/index.js";
-import { defaultSlideshowProps } from "./props.js";
+import { resolveSlideshowProps } from "./props.js";
 
-const SlideshowContext = React.createContext<SlideshowRef | null>(null);
+export const SlideshowContext = React.createContext<SlideshowRef | null>(null);
 
 export const useSlideshow = makeUseContext("useSlideshow", "SlideshowContext", SlideshowContext);
 
 export function SlideshowContextProvider({ slideshow, carousel: { finite }, children }: ComponentProps) {
-    const { autoplay, delay, ref } = { ...defaultSlideshowProps, ...slideshow };
+    const { autoplay, delay, ref } = resolveSlideshowProps(slideshow);
 
     const [playing, setPlaying] = React.useState(autoplay);
 

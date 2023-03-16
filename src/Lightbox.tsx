@@ -26,8 +26,18 @@ function renderNode(node: Node, props: ComponentProps): React.ReactElement {
 }
 
 /** Lightbox component */
-export function Lightbox(props: LightboxExternalProps) {
-    const { carousel, animation, render, toolbar, controller, on, plugins, slides, index, ...restProps } = props;
+export function Lightbox({
+    carousel,
+    animation,
+    render,
+    toolbar,
+    controller,
+    on,
+    plugins,
+    slides,
+    index,
+    ...restProps
+}: LightboxExternalProps) {
     const {
         carousel: defaultCarousel,
         animation: defaultAnimation,
@@ -56,7 +66,7 @@ export function Lightbox(props: LightboxExternalProps) {
         plugins || defaultPlugins
     );
 
-    const augmentedProps = augmentation({
+    const props = augmentation({
         carousel: { ...defaultCarousel, ...carousel },
         animation: { ...defaultAnimation, ...animation },
         render: { ...defaultRender, ...render },
@@ -67,12 +77,12 @@ export function Lightbox(props: LightboxExternalProps) {
         ...restProps,
     });
 
-    if (!augmentedProps.open) return null;
+    if (!props.open) return null;
 
     return (
         <LightboxStateProvider slides={slides || defaultSlides} index={index || defaultIndex}>
             <TimeoutsProvider>
-                <EventsProvider>{renderNode(createNode(RootModule, config), augmentedProps)}</EventsProvider>
+                <EventsProvider>{renderNode(createNode(RootModule, config), props)}</EventsProvider>
             </TimeoutsProvider>
         </LightboxStateProvider>
     );

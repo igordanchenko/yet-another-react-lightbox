@@ -18,7 +18,7 @@ export type LightboxStateUpdateAction = {
 
 export type LightboxStateAction = LightboxStateSwipeAction | LightboxStateUpdateAction;
 
-const LightboxStateContext = React.createContext<{
+export const LightboxStateContext = React.createContext<{
     state: LightboxState;
     dispatch: React.Dispatch<LightboxStateAction>;
 } | null>(null);

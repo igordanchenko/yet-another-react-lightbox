@@ -1,15 +1,16 @@
 import * as React from "react";
 
 import { LightboxProps, Slide } from "../../types.js";
-import { clsx, cssVar } from "../../core/index.js";
-import { defaultCaptionsProps } from "./Captions.js";
+import { clsx, cssVar, useController } from "../../core/index.js";
+import { defaultCaptionsProps, resolveCaptionsProps } from "./props.js";
 import { cssPrefix } from "./utils.js";
 
-export type DescriptionProps = Pick<LightboxProps, "styles"> &
-    Required<Pick<Slide, "description">> &
-    Required<LightboxProps["captions"]>;
+export type DescriptionProps = Required<Pick<Slide, "description">> & Pick<LightboxProps, "styles">;
 
-export function Description({ description, descriptionTextAlign, descriptionMaxLines, styles }: DescriptionProps) {
+export function Description({ description, styles }: DescriptionProps) {
+    const { captions } = useController().getLightboxProps();
+    const { descriptionTextAlign, descriptionMaxLines } = resolveCaptionsProps(captions);
+
     // noinspection SuspiciousTypeOfGuard
     return (
         <div

@@ -8,12 +8,11 @@ import {
     clsx,
     cssClass,
     useContainerRect,
-    useController,
     useEventCallback,
     useEvents,
 } from "../../core/index.js";
 import { LightboxProps, SlideVideo } from "../../types.js";
-import { defaultVideoProps } from "./Video.js";
+import { useVideoProps } from "./props.js";
 
 export type VideoSlideProps = {
     slide: SlideVideo;
@@ -22,11 +21,10 @@ export type VideoSlideProps = {
 
 /** Video slide */
 export function VideoSlide({ slide, offset }: VideoSlideProps) {
+    const video = useVideoProps();
     const { publish } = useEvents();
     const { setContainerRef, containerRect } = useContainerRect();
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
-
-    const video = { ...defaultVideoProps, ...useController().getLightboxProps().video };
 
     React.useEffect(() => {
         if (offset !== 0 && videoRef.current && !videoRef.current.paused) {

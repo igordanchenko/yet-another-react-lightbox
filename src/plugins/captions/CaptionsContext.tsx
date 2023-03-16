@@ -6,7 +6,7 @@ export type CaptionsContextType = {
     toolbarWidth?: number;
 };
 
-const CaptionsContext = React.createContext<CaptionsContextType | null>(null);
+export const CaptionsContext = React.createContext<CaptionsContextType | null>(null);
 
 export const useCaptions = makeUseContext("useCaptions", "CaptionsContext", CaptionsContext);
 

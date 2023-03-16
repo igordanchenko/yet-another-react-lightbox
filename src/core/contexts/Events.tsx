@@ -24,7 +24,7 @@ export type EventsContextType = {
     publish: Publish;
 };
 
-const EventsContext = React.createContext<EventsContextType | null>(null);
+export const EventsContext = React.createContext<EventsContextType | null>(null);
 
 export const useEvents = makeUseContext("useEvents", "EventsContext", EventsContext);
 

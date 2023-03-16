@@ -1,16 +1,14 @@
 import { Augmentation, Component, Module, Node, Plugin } from "../types.js";
 
-export const createModule = (name: string, component: Component): Module => ({
-    name,
-    component,
-});
+export function createModule(name: string, component: Component): Module {
+    return { name, component };
+}
 
-export const createNode = (module: Module, children?: Node[]): Node => ({
-    module,
-    children,
-});
+export function createNode(module: Module, children?: Node[]): Node {
+    return { module, children };
+}
 
-const traverseNode = (node: Node, target: string, apply: (node: Node) => Node[] | undefined): Node[] | undefined => {
+function traverseNode(node: Node, target: string, apply: (node: Node) => Node[] | undefined): Node[] | undefined {
     if (node.module.name === target) {
         return apply(node);
     }
@@ -23,16 +21,17 @@ const traverseNode = (node: Node, target: string, apply: (node: Node) => Node[] 
         ];
     }
     return [node];
-};
+}
 
-const traverse = (nodes: Node[], target: string, apply: (node: Node) => Node[] | undefined): Node[] =>
-    nodes.flatMap((node) => traverseNode(node, target, apply) ?? []);
+function traverse(nodes: Node[], target: string, apply: (node: Node) => Node[] | undefined): Node[] {
+    return nodes.flatMap((node) => traverseNode(node, target, apply) ?? []);
+}
 
-export const withPlugins = (
+export function withPlugins(
     root: Node[],
     plugins: Plugin[] = [],
     augmentations: Augmentation[] = []
-): { config: Node[]; augmentation: Augmentation } => {
+): { config: Node[]; augmentation: Augmentation } {
     let config = root;
 
     const contains = (target: string) => {
@@ -104,4 +103,4 @@ export const withPlugins = (
         config,
         augmentation: (props) => augmentations.reduce((acc, augmentation) => augmentation(acc), props),
     };
-};
+}

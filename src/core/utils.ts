@@ -52,17 +52,17 @@ export const isDefined = <T = any>(x: T | undefined): x is T => typeof x !== "un
 
 export const isNumber = (value: any): value is number => typeof value === "number";
 
-export const round = (value: number, decimals = 0) => {
+export function round(value: number, decimals = 0) {
     const factor = 10 ** decimals;
     return Math.round((value + Number.EPSILON) * factor) / factor;
-};
+}
 
 export const isImageSlide = (slide: Slide): slide is SlideImage => !isDefined(slide.type) || slide.type === "image";
 
 export const isImageFitCover = (image: SlideImage, imageFit?: LightboxProps["carousel"]["imageFit"]) =>
     image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
 
-export const parseLengthPercentage = (input: LengthOrPercentage) => {
+export function parseLengthPercentage(input: LengthOrPercentage) {
     if (typeof input === "number") {
         return { pixel: input };
     }
@@ -74,7 +74,7 @@ export const parseLengthPercentage = (input: LengthOrPercentage) => {
     }
 
     return { pixel: 0 };
-};
+}
 
 export function computeSlideRect(containerRect: ContainerRect, padding: LengthOrPercentage) {
     const paddingValue = parseLengthPercentage(padding);

@@ -13,7 +13,7 @@ export type ZoomControllerContextType = ZoomRef & {
     setZoomWrapper: React.Dispatch<React.SetStateAction<ActiveZoomWrapper | undefined>>;
 };
 
-const ZoomControllerContext = React.createContext<ZoomControllerContextType | null>(null);
+export const ZoomControllerContext = React.createContext<ZoomControllerContextType | null>(null);
 
 export const useZoom = makeUseContext("useZoom", "ZoomControllerContext", ZoomControllerContext);
 

@@ -4,7 +4,7 @@ import { ComponentProps } from "../../types.js";
 import { clsx, cssClass } from "../../core/index.js";
 import { cssPrefix } from "./utils.js";
 import { ThumbnailsTrack } from "./ThumbnailsTrack.js";
-import { defaultThumbnailsProps } from "./Thumbnails.js";
+import { resolveThumbnailsProps } from "./props.js";
 
 /** Thumbnails plugin component */
 export function ThumbnailsComponent({
@@ -15,7 +15,7 @@ export function ThumbnailsComponent({
     styles,
     children,
 }: ComponentProps) {
-    const thumbnails = { ...defaultThumbnailsProps, ...thumbnailsProps };
+    const thumbnails = resolveThumbnailsProps(thumbnailsProps);
 
     const ref = React.useRef<HTMLDivElement | null>(null);
 
