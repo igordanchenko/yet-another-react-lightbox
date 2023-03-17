@@ -325,6 +325,8 @@ export interface PluginProps {
     addChild: (target: string, module: Module, precede?: boolean) => void;
     /** add module as a sibling */
     addSibling: (target: string, module: Module, precede?: boolean) => void;
+    /** append module to the Controller module */
+    addModule: (module: Module) => void;
     /** replace module */
     replace: (target: string, module: Module) => void;
     /** add module as a child and inherit all existing children */

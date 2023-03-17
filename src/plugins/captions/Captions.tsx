@@ -1,16 +1,14 @@
 import * as React from "react";
 
 import { PluginProps } from "../../types.js";
-import { createModule, MODULE_CONTROLLER, PLUGIN_CAPTIONS } from "../../core/index.js";
+import { createModule, PLUGIN_CAPTIONS } from "../../core/index.js";
 import { resolveCaptionsProps } from "./props.js";
 import { CaptionsContextProvider } from "./CaptionsContext.js";
 import { Description } from "./Description.js";
 import { Title } from "./Title.js";
 
 /** Captions plugin */
-export function Captions({ augment, addParent }: PluginProps) {
-    addParent(MODULE_CONTROLLER, createModule(PLUGIN_CAPTIONS, CaptionsContextProvider));
-
+export function Captions({ augment, addModule }: PluginProps) {
     augment(({ render: { slideFooter: renderFooter, ...restRender }, captions, styles, ...restProps }) => {
         return {
             render: {
@@ -30,4 +28,6 @@ export function Captions({ augment, addParent }: PluginProps) {
             ...restProps,
         };
     });
+
+    addModule(createModule(PLUGIN_CAPTIONS, CaptionsContextProvider));
 }
