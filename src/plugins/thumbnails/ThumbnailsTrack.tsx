@@ -13,15 +13,16 @@ import {
     useAnimation,
     useEventCallback,
     useEvents,
+    useLightboxProps,
     useLightboxState,
     useRTL,
 } from "../../core/index.js";
-import { ContainerRect, DeepNonNullable, LightboxProps, Slide } from "../../types.js";
+import { DeepNonNullable, LightboxProps, Slide } from "../../types.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
-import { defaultThumbnailsProps } from "./props.js";
+import { defaultThumbnailsProps, useThumbnailsProps } from "./props.js";
 
-function isHorizontal(position: NonNullable<NonNullable<LightboxProps["thumbnails"]>["position"]>) {
+function isHorizontal(position: ThumbnailsInternal["position"]) {
     return ["top", "bottom"].includes(position);
 }
 
@@ -31,43 +32,38 @@ function boxSize(thumbnails: ThumbnailsInternal, dimension: number, includeGap?:
 
 export type ThumbnailsInternal = DeepNonNullable<LightboxProps["thumbnails"]>;
 
-export type ThumbnailsTrackProps = Pick<LightboxProps, "carousel" | "animation" | "render" | "styles"> & {
-    container: React.RefObject<HTMLDivElement>;
-    thumbnails: ThumbnailsInternal;
-    thumbnailRect: ContainerRect;
+export type ThumbnailsTrackProps = {
+    containerRef: React.RefObject<HTMLDivElement>;
 };
 
-export function ThumbnailsTrack({
-    container,
-    carousel,
-    render,
-    thumbnails,
-    thumbnailRect,
-    styles,
-}: ThumbnailsTrackProps) {
+export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
     const track = React.useRef<HTMLDivElement | null>(null);
 
+    const { carousel, styles } = useLightboxProps();
     const { slides, globalIndex, animation } = useLightboxState().state;
     const { publish, subscribe } = useEvents();
     const isRTL = useRTL();
+
+    const thumbnails = useThumbnailsProps();
+    const { position, width, height, border, borderRadius, padding, gap, vignette } = thumbnails;
 
     const index = globalIndex;
     const animationDuration = animation?.duration || 0;
     const offset = (animationDuration > 0 && animation?.increment) || 0;
 
     const animate = useAnimation<number>(track, (snapshot) => ({
-        keyframes: isHorizontal(thumbnails.position)
+        keyframes: isHorizontal(position)
             ? [
                   {
                       transform: `translateX(${
-                          (isRTL ? -1 : 1) * boxSize(thumbnails, thumbnails.width, true) * offset + snapshot
+                          (isRTL ? -1 : 1) * boxSize(thumbnails, width, true) * offset + snapshot
                       }px)`,
                   },
                   { transform: "translateX(0)" },
               ]
             : [
                   {
-                      transform: `translateY(${boxSize(thumbnails, thumbnails.height, true) * offset + snapshot}px)`,
+                      transform: `translateY(${boxSize(thumbnails, height, true) * offset + snapshot}px)`,
                   },
                   { transform: "translateY(0)" },
               ],
@@ -77,10 +73,10 @@ export function ThumbnailsTrack({
 
     const handleControllerSwipe = useEventCallback(() => {
         let animationOffset;
-        if (container.current && track.current) {
-            const containerRect = container.current.getBoundingClientRect();
+        if (containerRef.current && track.current) {
+            const containerRect = containerRef.current.getBoundingClientRect();
             const trackRect = track.current.getBoundingClientRect();
-            animationOffset = isHorizontal(thumbnails.position)
+            animationOffset = isHorizontal(position)
                 ? trackRect.left - containerRect.left - (containerRect.width - trackRect.width) / 2
                 : trackRect.top - containerRect.top - (containerRect.height - trackRect.height) / 2;
         } else {
@@ -136,8 +132,6 @@ export function ThumbnailsTrack({
             publish(ACTION_PREV, { count: index - slideIndex });
         }
     };
-
-    const { width, height, border, borderRadius, padding, gap, imageFit, vignette } = thumbnails;
 
     return (
         <div
@@ -198,16 +192,12 @@ export function ThumbnailsTrack({
                     return (
                         <Thumbnail
                             key={slideIndex}
-                            rect={thumbnailRect}
                             slide={slide}
-                            imageFit={imageFit}
-                            render={render}
                             active={slideIndex === index}
                             fadeIn={fadeIn}
                             fadeOut={fadeOut}
                             placeholder={Boolean(placeholder)}
                             onClick={handleClick(slideIndex)}
-                            style={styles.thumbnail}
                         />
                     );
                 })}
