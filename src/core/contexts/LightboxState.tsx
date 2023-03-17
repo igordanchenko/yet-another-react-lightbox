@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { LightboxProps, LightboxState, Slide } from "../../types.js";
 import { getSlideIndex, makeUseContext } from "../utils.js";
+import { UNKNOWN_ACTION_TYPE } from "../consts.js";
 
 export type LightboxStateSwipeAction = {
     type: "swipe";
@@ -51,7 +52,7 @@ function reducer(state: LightboxState, action: LightboxStateAction): LightboxSta
                 globalIndex: action.index,
             };
         default:
-            throw new Error("Unknown action type");
+            throw new Error(UNKNOWN_ACTION_TYPE);
     }
 }
 
