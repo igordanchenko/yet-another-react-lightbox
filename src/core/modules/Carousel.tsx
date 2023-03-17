@@ -5,8 +5,7 @@ import { createModule } from "../config.js";
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller.js";
-import { useEvents } from "../contexts/Events.js";
-import { useLightboxState } from "../contexts/LightboxState.js";
+import { useEvents, useLightboxProps, useLightboxState } from "../contexts/index.js";
 import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL, YARL_EVENT_BACKDROP_CLICK } from "../consts.js";
 
 function cssPrefix(value?: string) {
@@ -27,12 +26,12 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
 
     const { publish } = useEvents();
     const { currentIndex } = useLightboxState().state;
-    const { getLightboxProps, slideRect } = useController();
+    const { slideRect } = useController();
     const {
         render,
         carousel: { imageFit },
         on: { click: onClick },
-    } = getLightboxProps();
+    } = useLightboxProps();
 
     const renderSlide = () => {
         let rendered = render.slide?.({ slide, offset, rect: slideRect });

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useController, useEventCallback, useLayoutEffect, useMotionPreference } from "../../../core/index.js";
+import { useEventCallback, useLayoutEffect, useLightboxProps, useMotionPreference } from "../../../core/index.js";
 
 export function useZoomAnimation(
     zoom: number,
@@ -11,7 +11,7 @@ export function useZoomAnimation(
     const zoomAnimation = React.useRef<Animation>();
     const zoomAnimationStart = React.useRef<CSSStyleDeclaration["transform"]>();
 
-    const { zoom: zoomAnimationDuration } = useController().getLightboxProps().animation;
+    const { zoom: zoomAnimationDuration } = useLightboxProps().animation;
     const reduceMotion = useMotionPreference();
 
     const playZoomAnimation = useEventCallback(() => {

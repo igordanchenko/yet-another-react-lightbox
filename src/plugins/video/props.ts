@@ -1,4 +1,4 @@
-import { useController } from "../../core/index.js";
+import { useLightboxProps } from "../../core/index.js";
 import { LightboxProps } from "../../types.js";
 
 export const defaultVideoProps = {
@@ -12,6 +12,6 @@ export const resolveVideoProps = (video: LightboxProps["video"]) => ({
 });
 
 export function useVideoProps() {
-    const { video } = useController().getLightboxProps();
+    const { video } = useLightboxProps();
     return resolveVideoProps(video);
 }
