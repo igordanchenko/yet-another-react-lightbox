@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Callback, ComponentProps, ContainerRect, NavigationAction } from "../../types.js";
+import { Callback, ComponentProps, ContainerRect, ControllerRef, NavigationAction } from "../../types.js";
 import { createModule } from "../config.js";
 import {
     cleanup,
@@ -37,7 +37,6 @@ import {
     EVENT_ON_KEY_UP,
     MODULE_CONTROLLER,
     VK_ESCAPE,
-    YARL_EVENT_BACKDROP_CLICK,
 } from "../consts.js";
 
 declare module "../" {
@@ -47,19 +46,20 @@ declare module "../" {
         [ACTION_NEXT]: NavigationAction | void;
         [ACTION_SWIPE]: LightboxStateSwipeAction;
         [ACTION_CLOSE]: void;
-        [YARL_EVENT_BACKDROP_CLICK]: void;
     }
 }
 
 const cssContainerPrefix = makeComposePrefix("container");
 
-export type ControllerContextType = {
+export type ControllerContextType = Pick<ControllerRef, "prev" | "next" | "close"> & {
     focus: Callback;
     slideRect: ContainerRect;
     containerRect: ContainerRect;
     subscribeSensors: SubscribeSensors<HTMLDivElement>;
     containerRef: React.RefObject<HTMLDivElement>;
     setCarouselRef: React.Ref<HTMLDivElement>;
+    toolbarWidth: number | undefined;
+    setToolbarWidth: (width: number | undefined) => void;
 };
 
 export const ControllerContext = React.createContext<ControllerContextType | null>(null);
@@ -68,6 +68,8 @@ export const useController = makeUseContext("useController", "ControllerContext"
 
 export function Controller({ children, ...props }: ComponentProps) {
     const { carousel, animation, controller, on, styles } = props;
+
+    const [toolbarWidth, setToolbarWidth] = React.useState<number>();
 
     const { state, dispatch } = useLightboxState();
 
@@ -89,6 +91,15 @@ export function Controller({ children, ...props }: ComponentProps) {
     const isRTL = useRTL();
 
     const rtl = (value?: number) => (isRTL ? -1 : 1) * (isNumber(value) ? value : 1);
+
+    const focus = useEventCallback(() => containerRef.current?.focus());
+
+    const getLightboxProps = useEventCallback(() => props);
+    const getLightboxState = useEventCallback(() => state);
+
+    const prev: ControllerRef["prev"] = React.useCallback((params) => publish(ACTION_PREV, params), [publish]);
+    const next: ControllerRef["next"] = React.useCallback((params) => publish(ACTION_NEXT, params), [publish]);
+    const close: ControllerRef["close"] = React.useCallback(() => publish(ACTION_CLOSE), [publish]);
 
     const isSwipeValid = (offset: number) =>
         !(
@@ -257,50 +268,53 @@ export function Controller({ children, ...props }: ComponentProps) {
         () =>
             subscribeSensors(EVENT_ON_KEY_UP, (event: React.KeyboardEvent) => {
                 if (event.code === VK_ESCAPE) {
-                    publish(ACTION_CLOSE);
+                    close();
                 }
             }),
-        [subscribeSensors, publish]
+        [subscribeSensors, close]
     );
-
-    React.useEffect(
-        () =>
-            controller.closeOnBackdropClick
-                ? subscribe(YARL_EVENT_BACKDROP_CLICK, () => publish(ACTION_CLOSE))
-                : () => {},
-        [controller.closeOnBackdropClick, publish, subscribe]
-    );
-
-    const focus = useEventCallback(() => containerRef.current?.focus());
-
-    const getLightboxProps = useEventCallback(() => props);
-
-    const getLightboxState = useEventCallback(() => state);
 
     const context = React.useMemo<ControllerContextType>(
         () => ({
+            prev,
+            next,
+            close,
             focus,
-            slideRect: containerRect ? computeSlideRect(containerRect, carousel.padding) : { width: 0, height: 0 },
             // we are not going to render context provider when containerRect is undefined
+            slideRect: containerRect ? computeSlideRect(containerRect, carousel.padding) : { width: 0, height: 0 },
             containerRect: containerRect || { width: 0, height: 0 },
             subscribeSensors,
             containerRef,
             setCarouselRef,
+            toolbarWidth,
+            setToolbarWidth,
         }),
-        [focus, subscribeSensors, containerRect, containerRef, setCarouselRef, carousel.padding]
+        [
+            prev,
+            next,
+            close,
+            focus,
+            subscribeSensors,
+            containerRect,
+            containerRef,
+            setCarouselRef,
+            toolbarWidth,
+            setToolbarWidth,
+            carousel.padding,
+        ]
     );
 
     React.useImperativeHandle(
         controller.ref,
         () => ({
-            prev: (params) => publish(ACTION_PREV, params),
-            next: (params) => publish(ACTION_NEXT, params),
-            close: () => publish(ACTION_CLOSE),
+            prev,
+            next,
+            close,
             focus,
             getLightboxProps,
             getLightboxState,
         }),
-        [publish, focus, getLightboxProps, getLightboxState]
+        [prev, next, close, focus, getLightboxProps, getLightboxState]
     );
 
     return (

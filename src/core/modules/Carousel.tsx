@@ -5,8 +5,8 @@ import { createModule } from "../config.js";
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller.js";
-import { useEvents, useLightboxProps, useLightboxState } from "../contexts/index.js";
-import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL, YARL_EVENT_BACKDROP_CLICK } from "../consts.js";
+import { useLightboxProps, useLightboxState } from "../contexts/index.js";
+import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
     return composePrefix(MODULE_CAROUSEL, value);
@@ -24,13 +24,13 @@ type CarouselSlideProps = {
 function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-    const { publish } = useEvents();
     const { currentIndex } = useLightboxState().state;
-    const { slideRect } = useController();
+    const { slideRect, close } = useController();
     const {
         render,
         carousel: { imageFit },
         on: { click: onClick },
+        controller: { closeOnBackdropClick },
     } = useLightboxProps();
 
     const renderSlide = () => {
@@ -62,6 +62,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
         const container = containerRef.current;
         const target = event.target instanceof HTMLElement ? event.target : undefined;
         if (
+            closeOnBackdropClick &&
             target &&
             container &&
             (target === container ||
@@ -69,7 +70,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
                 (Array.from(container.children).find((x) => x === target) &&
                     target.classList.contains(cssClass(CLASS_FULLSIZE))))
         ) {
-            publish(YARL_EVENT_BACKDROP_CLICK);
+            close();
         }
     };
 

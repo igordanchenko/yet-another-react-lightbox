@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { ComponentProps, Labels } from "../../types.js";
+import { ComponentProps, RenderFunction } from "../../types.js";
 import { createModule } from "../config.js";
 import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
 import { cssClass, getNavigationAnimationDuration, label as translateLabel } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
-import { useEvents, useLightboxState } from "../contexts/index.js";
+import { useLightboxProps, useLightboxState } from "../contexts/index.js";
 import { useController } from "./Controller.js";
 import {
     ACTION_NEXT,
@@ -17,24 +17,17 @@ import {
 } from "../consts.js";
 
 export type NavigationButtonProps = {
-    labels?: Labels;
     label: string;
     icon: React.ElementType;
-    renderIcon?: () => React.ReactNode;
+    renderIcon?: RenderFunction;
     action: "prev" | "next";
     onClick: () => void;
     disabled?: boolean;
 };
 
-export function NavigationButton({
-    labels,
-    label,
-    icon,
-    renderIcon,
-    action,
-    onClick,
-    disabled,
-}: NavigationButtonProps) {
+export function NavigationButton({ label, icon, renderIcon, action, onClick, disabled }: NavigationButtonProps) {
+    const { labels } = useLightboxProps();
+
     return (
         <IconButton
             label={translateLabel(labels, label)}
@@ -51,28 +44,25 @@ export function NavigationButton({
 export function Navigation({
     carousel: { finite },
     animation,
-    labels,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }: ComponentProps) {
     const { slides, currentIndex } = useLightboxState().state;
-    const { subscribeSensors } = useController();
-    const { publish } = useEvents();
+    const { prev, next, subscribeSensors } = useController();
     const isRTL = useRTL();
 
     const prevDisabled = slides.length === 0 || (finite && currentIndex === 0);
     const nextDisabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
 
-    const publishThrottled = useThrottle(
-        (action: typeof ACTION_PREV | typeof ACTION_NEXT) => publish(action),
-        getNavigationAnimationDuration(animation) / 2
-    );
+    const throttle = getNavigationAnimationDuration(animation) / 2;
+    const prevThrottled = useThrottle(prev, throttle);
+    const nextThrottled = useThrottle(next, throttle);
 
     const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
         if (event.key === VK_ARROW_LEFT && !(isRTL ? nextDisabled : prevDisabled)) {
-            publishThrottled(isRTL ? ACTION_NEXT : ACTION_PREV);
+            (isRTL ? nextThrottled : prevThrottled)();
         }
         if (event.key === VK_ARROW_RIGHT && !(isRTL ? prevDisabled : nextDisabled)) {
-            publishThrottled(isRTL ? ACTION_PREV : ACTION_NEXT);
+            (isRTL ? prevThrottled : nextThrottled)();
         }
     });
 
@@ -89,8 +79,7 @@ export function Navigation({
                     icon={PreviousIcon}
                     renderIcon={iconPrev}
                     disabled={prevDisabled}
-                    labels={labels}
-                    onClick={() => publish(ACTION_PREV)}
+                    onClick={prev}
                 />
             )}
 
@@ -103,8 +92,7 @@ export function Navigation({
                     icon={NextIcon}
                     renderIcon={iconNext}
                     disabled={nextDisabled}
-                    labels={labels}
-                    onClick={() => publish(ACTION_NEXT)}
+                    onClick={next}
                 />
             )}
         </>

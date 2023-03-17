@@ -3,31 +3,22 @@ import * as React from "react";
 import { ComponentProps } from "../../types.js";
 import { createModule } from "../config.js";
 import { composePrefix, cssClass, label } from "../utils.js";
-import { useEvents } from "../contexts/index.js";
 import { CloseIcon, IconButton } from "../components/index.js";
 import { useContainerRect } from "../hooks/useContainerRect.js";
-import { ACTION_CLOSE, MODULE_TOOLBAR, YARL_EVENT_TOOLBAR_WIDTH } from "../consts.js";
-
-declare module "../" {
-    // noinspection JSUnusedGlobalSymbols
-    interface EventTypes {
-        [YARL_EVENT_TOOLBAR_WIDTH]: number;
-    }
-}
+import { useController } from "./Controller.js";
+import { ACTION_CLOSE, MODULE_TOOLBAR } from "../consts.js";
 
 function cssPrefix(value?: string) {
     return composePrefix(MODULE_TOOLBAR, value);
 }
 
 export function Toolbar({ toolbar: { buttons }, labels, render: { buttonClose, iconClose } }: ComponentProps) {
-    const { publish } = useEvents();
+    const { close, setToolbarWidth } = useController();
     const { setContainerRef, containerRect } = useContainerRect();
 
     React.useEffect(() => {
-        if (containerRect?.width) {
-            publish(YARL_EVENT_TOOLBAR_WIDTH, containerRect.width);
-        }
-    }, [publish, containerRect?.width]);
+        setToolbarWidth(containerRect?.width);
+    }, [setToolbarWidth, containerRect?.width]);
 
     const renderCloseButton = () =>
         buttonClose ? (
@@ -38,7 +29,7 @@ export function Toolbar({ toolbar: { buttons }, labels, render: { buttonClose, i
                 label={label(labels, "Close")}
                 icon={CloseIcon}
                 renderIcon={iconClose}
-                onClick={() => publish(ACTION_CLOSE)}
+                onClick={() => close()}
             />
         );
 
