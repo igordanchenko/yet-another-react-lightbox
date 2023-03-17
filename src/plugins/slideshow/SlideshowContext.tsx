@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { ComponentProps, SlideshowRef } from "../../types.js";
 import {
-    ACTION_NEXT,
     ACTIVE_SLIDE_COMPLETE,
     ACTIVE_SLIDE_ERROR,
     ACTIVE_SLIDE_LOADING,
@@ -14,6 +13,7 @@ import {
     SLIDE_STATUS_LOADING,
     SLIDE_STATUS_PLAYING,
     SlideStatus,
+    useController,
     useEventCallback,
     useEvents,
     useLightboxState,
@@ -35,7 +35,8 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, chil
 
     const { slides, currentIndex } = useLightboxState().state;
     const { setTimeout, clearTimeout } = useTimeouts();
-    const { publish, subscribe } = useEvents();
+    const { subscribe } = useEvents();
+    const { next } = useController();
 
     const disabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
 
@@ -71,7 +72,7 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, chil
         scheduler.current = setTimeout(() => {
             if (playing) {
                 slideStatus.current = undefined;
-                publish(ACTION_NEXT);
+                next();
             }
         }, delay);
     });

@@ -6,7 +6,6 @@ export const MODULE_PORTAL = "portal";
 export const MODULE_ROOT = "root";
 export const MODULE_TOOLBAR = "toolbar";
 
-export const PLUGIN_CAPTIONS = "captions";
 export const PLUGIN_FULLSCREEN = "fullscreen";
 export const PLUGIN_INLINE = "inline";
 export const PLUGIN_SLIDESHOW = "slideshow";
@@ -31,9 +30,6 @@ export const ACTIVE_SLIDE_LOADING = activeSlideStatus(SLIDE_STATUS_LOADING) as "
 export const ACTIVE_SLIDE_PLAYING = activeSlideStatus(SLIDE_STATUS_PLAYING) as "active-slide-playing";
 export const ACTIVE_SLIDE_ERROR = activeSlideStatus(SLIDE_STATUS_ERROR) as "active-slide-error";
 export const ACTIVE_SLIDE_COMPLETE = activeSlideStatus(SLIDE_STATUS_COMPLETE) as "active-slide-complete";
-
-export const YARL_EVENT_BACKDROP_CLICK = "backdrop_click";
-export const YARL_EVENT_TOOLBAR_WIDTH = "toolbar-width";
 
 export const CLASS_FULLSIZE = "fullsize";
 export const CLASS_FLEX_CENTER = "flex_center";

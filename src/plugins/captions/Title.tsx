@@ -1,14 +1,13 @@
 import * as React from "react";
 
 import { LightboxProps, Slide } from "../../types.js";
-import { clsx, cssVar } from "../../core/index.js";
-import { useCaptions } from "./CaptionsContext.js";
+import { clsx, cssVar, useController } from "../../core/index.js";
 import { cssPrefix } from "./utils.js";
 
 export type TitleProps = Pick<LightboxProps, "styles"> & Pick<Slide, "title">;
 
 export function Title({ title, styles }: TitleProps) {
-    const { toolbarWidth } = useCaptions();
+    const { toolbarWidth } = useController();
 
     return (
         <div
