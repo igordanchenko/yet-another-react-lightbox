@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, IconButton, label, useController } from "../../core/index.js";
+import { createIcon, IconButton, label, useLightboxProps } from "../../core/index.js";
 import { useZoom } from "./ZoomController.js";
 
 const ZoomInIcon = createIcon(
@@ -28,7 +28,7 @@ export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>((
     const wasFocused = React.useRef(false);
 
     const { zoom, maxZoom, zoomIn: zoomInCallback, zoomOut: zoomOutCallback, disabled: zoomDisabled } = useZoom();
-    const { render, labels } = useController().getLightboxProps();
+    const { render, labels } = useLightboxProps();
 
     const disabled = zoomDisabled || (zoomIn ? zoom >= maxZoom : zoom <= 1);
 

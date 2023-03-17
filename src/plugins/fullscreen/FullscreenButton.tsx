@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, IconButton, label, useController } from "../../core/index.js";
+import { createIcon, IconButton, label, useLightboxProps } from "../../core/index.js";
 import { useFullscreen } from "./FullscreenContext.js";
 
 const EnterFullscreenIcon = createIcon(
@@ -16,7 +16,7 @@ const ExitFullscreenIcon = createIcon(
 /** Fullscreen button */
 export function FullscreenButton() {
     const { fullscreen, disabled, enter, exit } = useFullscreen();
-    const { labels, render } = useController().getLightboxProps();
+    const { labels, render } = useLightboxProps();
 
     if (disabled) return null;
 

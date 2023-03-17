@@ -1,5 +1,5 @@
 import { ContainerRect } from "../../../types.js";
-import { isImageFitCover, isImageSlide, round, useController, useLightboxState } from "../../../core/index.js";
+import { isImageFitCover, isImageSlide, round, useLightboxProps, useLightboxState } from "../../../core/index.js";
 import { useZoomProps } from "./useZoomProps.js";
 
 export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: ContainerRect) {
@@ -7,7 +7,7 @@ export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: Con
     let maxImageRect: ContainerRect = { width: 0, height: 0 };
 
     const { slides, currentIndex } = useLightboxState().state;
-    const { imageFit } = useController().getLightboxProps().carousel;
+    const { imageFit } = useLightboxProps().carousel;
     const { maxZoomPixelRatio } = useZoomProps();
 
     if (slideRect && currentIndex < slides.length) {

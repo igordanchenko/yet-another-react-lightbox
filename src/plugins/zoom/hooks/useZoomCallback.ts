@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { useController, useEventCallback } from "../../../core/index.js";
+import { useEventCallback, useLightboxProps } from "../../../core/index.js";
 
 export function useZoomCallback(zoom: number, disabled: boolean) {
-    const { on } = useController().getLightboxProps();
+    const { on } = useLightboxProps();
 
     const onZoomCallback = useEventCallback(() => {
         if (!disabled) {

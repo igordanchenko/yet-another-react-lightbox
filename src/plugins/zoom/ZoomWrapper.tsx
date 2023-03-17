@@ -7,8 +7,8 @@ import {
     cssClass,
     ImageSlide,
     isImageSlide,
-    useController,
     useLayoutEffect,
+    useLightboxProps,
     useLightboxState,
 } from "../../core/index.js";
 import { ContainerRect, LightboxProps, RenderSlideProps } from "../../types.js";
@@ -25,7 +25,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
 
     const { zoom, maxZoom, offsetX, offsetY, setZoomWrapper } = useZoom();
 
-    const { carousel, on } = useController().getLightboxProps();
+    const { carousel, on } = useLightboxProps();
     const { currentIndex } = useLightboxState().state;
 
     useLayoutEffect(() => {

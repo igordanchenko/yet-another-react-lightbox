@@ -18,10 +18,12 @@ export type LightboxStateUpdateAction = {
 
 export type LightboxStateAction = LightboxStateSwipeAction | LightboxStateUpdateAction;
 
-export const LightboxStateContext = React.createContext<{
+export type LightboxStateContextType = {
     state: LightboxState;
     dispatch: React.Dispatch<LightboxStateAction>;
-} | null>(null);
+};
+
+export const LightboxStateContext = React.createContext<LightboxStateContextType | null>(null);
 
 export const useLightboxState = makeUseContext("useLightboxState", "LightboxStateContext", LightboxStateContext);
 

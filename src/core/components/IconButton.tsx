@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { clsx, cssClass } from "../utils.js";
-import { useController } from "../modules/Controller.js";
+import { useLightboxProps } from "../contexts/index.js";
 import { ELEMENT_BUTTON, ELEMENT_ICON } from "../consts.js";
 
 export type IconButtonProps = Omit<
@@ -15,7 +15,7 @@ export type IconButtonProps = Omit<
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
     ({ label, className, icon: Icon, renderIcon, onClick, style, ...rest }, ref) => {
-        const { styles } = useController().getLightboxProps();
+        const { styles } = useLightboxProps();
 
         return (
             <button

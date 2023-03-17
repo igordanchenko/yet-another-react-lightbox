@@ -55,10 +55,9 @@ const cssContainerPrefix = makeComposePrefix("container");
 
 export type ControllerContextType = {
     focus: Callback;
-    getLightboxProps: () => ComponentProps;
-    subscribeSensors: SubscribeSensors<HTMLDivElement>;
     slideRect: ContainerRect;
     containerRect: ContainerRect;
+    subscribeSensors: SubscribeSensors<HTMLDivElement>;
     containerRef: React.RefObject<HTMLDivElement>;
     setCarouselRef: React.Ref<HTMLDivElement>;
 };
@@ -281,15 +280,14 @@ export function Controller({ children, ...props }: ComponentProps) {
     const context = React.useMemo<ControllerContextType>(
         () => ({
             focus,
-            getLightboxProps,
-            subscribeSensors,
-            // we are not going to render context provider when containerRect is undefined
             slideRect: containerRect ? computeSlideRect(containerRect, carousel.padding) : { width: 0, height: 0 },
+            // we are not going to render context provider when containerRect is undefined
             containerRect: containerRect || { width: 0, height: 0 },
+            subscribeSensors,
             containerRef,
             setCarouselRef,
         }),
-        [focus, getLightboxProps, subscribeSensors, containerRect, containerRef, setCarouselRef, carousel.padding]
+        [focus, subscribeSensors, containerRect, containerRef, setCarouselRef, carousel.padding]
     );
 
     React.useImperativeHandle(

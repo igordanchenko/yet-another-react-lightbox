@@ -20,7 +20,8 @@ export const useZoom = makeUseContext("useZoom", "ZoomControllerContext", ZoomCo
 export function ZoomContextProvider({ children }: ComponentProps) {
     const [zoomWrapper, setZoomWrapper] = React.useState<ActiveZoomWrapper>();
 
-    const { imageRect, maxZoom } = useZoomImageRect(useController().slideRect, zoomWrapper?.imageDimensions);
+    const { slideRect } = useController();
+    const { imageRect, maxZoom } = useZoomImageRect(slideRect, zoomWrapper?.imageDimensions);
 
     const { zoom, offsetX, offsetY, disabled, changeZoom, changeOffsets, zoomIn, zoomOut } = useZoomState(
         imageRect,

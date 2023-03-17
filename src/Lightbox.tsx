@@ -7,6 +7,7 @@ import {
     ControllerModule,
     createNode,
     EventsProvider,
+    LightboxPropsProvider,
     LightboxStateProvider,
     NavigationModule,
     NoScrollModule,
@@ -80,10 +81,12 @@ export function Lightbox({
     if (!props.open) return null;
 
     return (
-        <LightboxStateProvider slides={slides || defaultSlides} index={index || defaultIndex}>
-            <TimeoutsProvider>
-                <EventsProvider>{renderNode(createNode(RootModule, config), props)}</EventsProvider>
-            </TimeoutsProvider>
-        </LightboxStateProvider>
+        <LightboxPropsProvider {...props}>
+            <LightboxStateProvider slides={slides || defaultSlides} index={index || defaultIndex}>
+                <TimeoutsProvider>
+                    <EventsProvider>{renderNode(createNode(RootModule, config), props)}</EventsProvider>
+                </TimeoutsProvider>
+            </LightboxStateProvider>
+        </LightboxPropsProvider>
     );
 }
