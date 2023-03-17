@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ContainerRect, ImageFit, LightboxProps, RenderThumbnailProps, Slide } from "../../types.js";
+import { RenderThumbnailProps, Slide } from "../../types.js";
 import {
     CLASS_FLEX_CENTER,
     CLASS_FULLSIZE,
@@ -12,8 +12,10 @@ import {
     ImageSlide,
     isImageSlide,
     makeComposePrefix,
+    useLightboxProps,
 } from "../../core/index.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
+import { useThumbnailsProps } from "./props.js";
 
 const VideoThumbnailIcon = createIcon(
     "VideoThumbnail",
@@ -55,24 +57,6 @@ function renderThumbnail({ slide, render, rect, imageFit }: RenderThumbnailProps
     return <UnknownThumbnailIcon className={thumbnailIconClass} />;
 }
 
-export type FadeSettings = {
-    duration: number;
-    delay: number;
-};
-
-export type ThumbnailProps = {
-    rect: ContainerRect;
-    slide: Slide | null;
-    onClick: () => void;
-    active: boolean;
-    fadeIn?: FadeSettings;
-    fadeOut?: FadeSettings;
-    placeholder: boolean;
-    render: LightboxProps["render"];
-    imageFit: ImageFit;
-    style?: React.CSSProperties;
-};
-
 const activePrefix = makeComposePrefix("active");
 const fadeInPrefix = makeComposePrefix("fadein");
 const fadeOutPrefix = makeComposePrefix("fadeout");
@@ -81,18 +65,25 @@ const placeholderPrefix = makeComposePrefix("placeholder");
 const DELAY = "delay";
 const DURATION = "duration";
 
-export function Thumbnail({
-    rect,
-    slide,
-    onClick,
-    active,
-    fadeIn,
-    fadeOut,
-    placeholder,
-    render,
-    imageFit,
-    style,
-}: ThumbnailProps) {
+export type FadeSettings = {
+    duration: number;
+    delay: number;
+};
+
+export type ThumbnailProps = {
+    slide: Slide | null;
+    onClick: () => void;
+    active: boolean;
+    fadeIn?: FadeSettings;
+    fadeOut?: FadeSettings;
+    placeholder: boolean;
+};
+
+export function Thumbnail({ slide, onClick, active, fadeIn, fadeOut, placeholder }: ThumbnailProps) {
+    const { render, styles } = useLightboxProps();
+    const { width, height, imageFit } = useThumbnailsProps();
+    const rect = { width, height };
+
     return (
         <button
             type="button"
@@ -117,7 +108,7 @@ export function Thumbnail({
                           [cssVar(cssThumbnailPrefix(fadeOutPrefix(DELAY)))]: `${fadeOut.delay}ms`,
                       }
                     : null),
-                ...style,
+                ...styles.thumbnail,
             }}
             onClick={onClick}
         >

@@ -1,3 +1,4 @@
+import { useLightboxProps } from "../../core/index.js";
 import { LightboxProps } from "../../types.js";
 
 export const defaultThumbnailsProps = {
@@ -16,3 +17,8 @@ export const resolveThumbnailsProps = (thumbnails: LightboxProps["thumbnails"]) 
     ...defaultThumbnailsProps,
     ...thumbnails,
 });
+
+export function useThumbnailsProps() {
+    const { thumbnails } = useLightboxProps();
+    return resolveThumbnailsProps(thumbnails);
+}

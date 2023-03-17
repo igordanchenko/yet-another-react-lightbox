@@ -1,7 +1,7 @@
 import { PluginProps } from "../../types.js";
 import { createModule, MODULE_CONTROLLER, PLUGIN_FULLSCREEN, PLUGIN_THUMBNAILS } from "../../core/index.js";
 import { resolveThumbnailsProps } from "./props.js";
-import { ThumbnailsComponent } from "./ThumbnailsContainer.js";
+import { ThumbnailsContainer } from "./ThumbnailsContainer.js";
 
 /** Thumbnails plugin */
 export function Thumbnails({ augment, contains, append, addParent }: PluginProps) {
@@ -10,7 +10,7 @@ export function Thumbnails({ augment, contains, append, addParent }: PluginProps
         ...restProps,
     }));
 
-    const module = createModule(PLUGIN_THUMBNAILS, ThumbnailsComponent);
+    const module = createModule(PLUGIN_THUMBNAILS, ThumbnailsContainer);
     if (contains(PLUGIN_FULLSCREEN)) {
         append(PLUGIN_FULLSCREEN, module);
     } else {
