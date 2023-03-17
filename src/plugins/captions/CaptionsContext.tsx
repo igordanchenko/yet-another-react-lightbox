@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { ComponentProps } from "../../types.js";
 import { makeUseContext, useEvents, YARL_EVENT_TOOLBAR_WIDTH } from "../../core/index.js";
 
 export type CaptionsContextType = {
@@ -11,7 +12,7 @@ export const CaptionsContext = React.createContext<CaptionsContextType | null>(n
 export const useCaptions = makeUseContext("useCaptions", "CaptionsContext", CaptionsContext);
 
 /** Captions plugin context holder */
-export function CaptionsContextProvider({ children }: React.PropsWithChildren) {
+export function CaptionsContextProvider({ children }: ComponentProps) {
     const { subscribe } = useEvents();
 
     const [toolbarWidth, setToolbarWidth] = React.useState<number>();

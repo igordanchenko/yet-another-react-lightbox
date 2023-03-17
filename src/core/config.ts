@@ -1,4 +1,5 @@
 import { Augmentation, Component, Module, Node, Plugin } from "../types.js";
+import { MODULE_CONTROLLER } from "./consts.js";
 
 export function createModule(name: string, component: Component): Module {
     return { name, component };
@@ -74,6 +75,10 @@ export function withPlugins(
         ]);
     };
 
+    const addModule = (module: Module) => {
+        append(MODULE_CONTROLLER, module);
+    };
+
     const replace = (target: string, module: Module) => {
         config = traverse(config, target, (node) => [createNode(module, node.children)]);
     };
@@ -93,6 +98,7 @@ export function withPlugins(
             append,
             addChild,
             addSibling,
+            addModule,
             replace,
             remove,
             augment,
