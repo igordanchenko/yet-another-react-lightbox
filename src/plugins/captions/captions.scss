@@ -11,6 +11,10 @@
         right: localVar(captions_container_right, 0);
         padding: localVar(captions_container_padding, 16px);
         background: localVar(captions_container_background, rgba(0, 0, 0, .5));
+
+        // workaround occasional image flickering in mobile Safari
+        // noinspection CssUnknownProperty
+        -webkit-transform: translateZ(0);
     }
 
     &_title {
