@@ -44,10 +44,6 @@ export function ImageSlide({ slide: image, offset, render, rect, imageFit, onCli
     }, [offset, status, publish]);
 
     const handleLoading = useEventCallback((img: HTMLImageElement) => {
-        if (status === SLIDE_STATUS_COMPLETE) {
-            return;
-        }
-
         ("decode" in img ? img.decode() : Promise.resolve())
             .catch(() => {})
             .then(() => {

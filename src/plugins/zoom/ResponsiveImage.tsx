@@ -5,6 +5,7 @@ import {
     ImageSlide,
     ImageSlideProps,
     isImageFitCover,
+    UNKNOWN_ACTION_TYPE,
     useEventCallback,
     useLayoutEffect,
 } from "../../core/index.js";
@@ -23,9 +24,38 @@ export type ResponsiveImageProps = Omit<ImageSlideProps, "slide" | "rect"> &
         slide: ResponsiveImageSlide;
     };
 
+type ResponsiveImageState = {
+    current?: string;
+    preload?: string;
+};
+
+type ResponsiveImageStateAction = {
+    type: "fetch" | "done";
+    source: string;
+};
+
+function reducer(
+    { current, preload }: ResponsiveImageState,
+    { type, source }: ResponsiveImageStateAction
+): ResponsiveImageState {
+    switch (type) {
+        case "fetch":
+            if (!current) {
+                return { current: source };
+            }
+            return { current, preload: source };
+        case "done":
+            if (source === preload) {
+                return { current: source };
+            }
+            return { current, preload };
+        default:
+            throw new Error(UNKNOWN_ACTION_TYPE);
+    }
+}
+
 export function ResponsiveImage(props: ResponsiveImageProps) {
-    const [state, setState] = React.useState<{ current?: string; preload?: string }>({});
-    const { current, preload } = state;
+    const [{ current, preload }, dispatch] = React.useReducer(reducer, {});
 
     const { slide: image, rect, imageFit, render } = props;
 
@@ -37,23 +67,19 @@ export function ResponsiveImage(props: ResponsiveImageProps) {
     const targetWidth = Math.min((cover ? Math.max : Math.min)(rect.width, width * (rect.height / height)), maxWidth);
     const pixelDensity = devicePixelRatio();
 
-    const handleSourceChange = useEventCallback(() => {
+    const handleResize = useEventCallback(() => {
         const targetSource = srcSet.find((x) => x.width >= targetWidth * pixelDensity) ?? srcSet[srcSet.length - 1];
 
-        if (!current) {
-            setState((prev) => ({ ...prev, current: targetSource.src }));
-        } else if (srcSet.findIndex((x) => x.src === current) < srcSet.findIndex((x) => x === targetSource)) {
-            setState((prev) => ({ ...prev, preload: targetSource.src }));
+        if (!current || srcSet.findIndex((x) => x.src === current) < srcSet.findIndex((x) => x === targetSource)) {
+            dispatch({ type: "fetch", source: targetSource.src });
         }
     });
 
-    useLayoutEffect(handleSourceChange, [rect.width, rect.height, pixelDensity, image.src, handleSourceChange]);
+    useLayoutEffect(handleResize, [rect.width, rect.height, pixelDensity, handleResize]);
 
-    const handlePreload = useEventCallback((currentPreload: string) => {
-        if (currentPreload === preload) {
-            setState((prev) => ({ ...prev, current: preload, preload: undefined }));
-        }
-    });
+    const handlePreload = useEventCallback((currentPreload: string) =>
+        dispatch({ type: "done", source: currentPreload })
+    );
 
     const style = {
         // workaround occasional flickering in mobile Safari

@@ -59,3 +59,5 @@ export const ELEMENT_ICON = "icon";
 
 export const IMAGE_FIT_CONTAIN = "contain";
 export const IMAGE_FIT_COVER = "cover";
+
+export const UNKNOWN_ACTION_TYPE = "Unknown action type";
