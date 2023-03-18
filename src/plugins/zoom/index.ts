@@ -1,7 +1,7 @@
 import { Callback, RenderFunction } from "../../types.js";
 import { Zoom } from "./Zoom.js";
 
-declare module "../../types" {
+declare module "../../types.js" {
     interface LightboxProps {
         /** Zoom plugin settings */
         zoom?: {

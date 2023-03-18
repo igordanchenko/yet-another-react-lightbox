@@ -7,7 +7,7 @@ import {
     ACTIVE_SLIDE_PLAYING,
 } from "../../core/consts.js";
 
-declare module "../../types" {
+declare module "../../types.js" {
     // noinspection JSUnusedGlobalSymbols
     interface SlideTypes {
         /** video slide type */
@@ -71,7 +71,7 @@ declare module "../../types" {
     }
 }
 
-declare module "../../core" {
+declare module "../../core/index.js" {
     // noinspection JSUnusedGlobalSymbols
     interface EventTypes {
         [ACTIVE_SLIDE_LOADING]: void;
