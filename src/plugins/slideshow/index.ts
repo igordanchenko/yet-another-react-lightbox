@@ -1,7 +1,7 @@
 import { Callback, RenderFunction } from "../../types.js";
 import { Slideshow } from "./Slideshow.js";
 
-declare module "../../types" {
+declare module "../../types.js" {
     interface LightboxProps {
         /** Slideshow plugin settings */
         slideshow?: {

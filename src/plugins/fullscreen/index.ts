@@ -3,7 +3,7 @@ import * as React from "react";
 import { Callback, RenderFunction } from "../../types.js";
 import { Fullscreen } from "./Fullscreen.js";
 
-declare module "../../types" {
+declare module "../../types.js" {
     interface LightboxProps {
         /** Fullscreen plugin settings */
         fullscreen?: {

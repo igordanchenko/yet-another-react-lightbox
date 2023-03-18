@@ -3,7 +3,7 @@ import { Thumbnails } from "./Thumbnails.js";
 
 type Position = "top" | "bottom" | "start" | "end";
 
-declare module "../../types" {
+declare module "../../types.js" {
     interface LightboxProps {
         /** Thumbnails plugin settings */
         thumbnails?: {

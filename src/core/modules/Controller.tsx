@@ -39,7 +39,7 @@ import {
     VK_ESCAPE,
 } from "../consts.js";
 
-declare module "../" {
+declare module "../index.js" {
     // noinspection JSUnusedGlobalSymbols
     interface EventTypes {
         [ACTION_PREV]: NavigationAction | void;
