@@ -254,12 +254,14 @@ export interface RenderSlideContainerProps extends React.PropsWithChildren {
 export interface Render {
     /** render custom slide type, or override the default image slide */
     slide?: RenderFunction<RenderSlideProps>;
-    /** render custom slide header */
+    /** render custom slide header (use absolute positioning) */
     slideHeader?: RenderFunction<RenderSlideHeaderProps>;
-    /** render custom slide footer */
+    /** render custom slide footer (use absolute positioning) */
     slideFooter?: RenderFunction<RenderSlideFooterProps>;
     /** render custom slide container */
     slideContainer?: RenderFunction<RenderSlideContainerProps>;
+    /** render custom controls or additional elements in the lightbox (use absolute positioning) */
+    controls?: RenderFunction;
     /** render custom Prev icon */
     iconPrev?: RenderFunction;
     /** render custom Next icon */

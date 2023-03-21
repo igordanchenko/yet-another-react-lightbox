@@ -67,7 +67,7 @@ export const ControllerContext = React.createContext<ControllerContextType | nul
 export const useController = makeUseContext("useController", "ControllerContext", ControllerContext);
 
 export function Controller({ children, ...props }: ComponentProps) {
-    const { carousel, animation, controller, on, styles } = props;
+    const { carousel, animation, controller, on, styles, render } = props;
 
     const [toolbarWidth, setToolbarWidth] = React.useState<number>();
 
@@ -334,7 +334,12 @@ export function Controller({ children, ...props }: ComponentProps) {
             tabIndex={-1}
             {...registerSensors}
         >
-            {containerRect && <ControllerContext.Provider value={context}>{children}</ControllerContext.Provider>}
+            {containerRect && (
+                <ControllerContext.Provider value={context}>
+                    {children}
+                    {render.controls?.()}
+                </ControllerContext.Provider>
+            )}
         </div>
     );
 }
