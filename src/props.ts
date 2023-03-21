@@ -1,11 +1,6 @@
 import { LightboxProps } from "./types.js";
 import { ACTION_CLOSE, IMAGE_FIT_CONTAIN } from "./core/consts.js";
 
-export const AnimationDefaultProps = {
-    fade: 330,
-    swipe: 500,
-};
-
 export const LightboxDefaultProps: LightboxProps = {
     open: false,
     close: () => {},
@@ -15,7 +10,15 @@ export const LightboxDefaultProps: LightboxProps = {
     plugins: [],
     toolbar: { buttons: [ACTION_CLOSE] },
     labels: {},
-    animation: AnimationDefaultProps,
+    animation: {
+        fade: 250,
+        swipe: 500,
+        easing: {
+            fade: "ease",
+            swipe: "ease-out",
+            navigation: "ease-in-out",
+        },
+    },
     carousel: {
         finite: false,
         preload: 2,

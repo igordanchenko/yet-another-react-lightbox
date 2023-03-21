@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { ComponentProps } from "../../types.js";
 import { LightboxDefaultProps } from "../../props.js";
 import { createModule } from "../config.js";
-import { clsx, composePrefix, cssClass, cssVar, getAnimationEasing, getFadeAnimationDuration } from "../utils.js";
+import { clsx, composePrefix, cssClass, cssVar } from "../utils.js";
 import { useEventCallback, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 import { ACTION_CLOSE, CLASS_NO_SCROLL_PADDING, MODULE_PORTAL } from "../consts.js";
@@ -37,8 +37,7 @@ export function Portal({ children, animation, styles, className, on, close }: Co
     const { subscribe } = useEvents();
 
     const reduceMotion = useMotionPreference();
-    const animationDuration = !reduceMotion ? getFadeAnimationDuration(animation) : 0;
-    const animationEasing = !reduceMotion ? getAnimationEasing(animation.fade) : undefined;
+    const animationDuration = !reduceMotion ? animation.fade : 0;
 
     React.useEffect(() => {
         setMounted(true);
@@ -119,7 +118,9 @@ export function Portal({ children, animation, styles, className, on, close }: Co
                       ...(animation.fade !== LightboxDefaultProps.animation.fade
                           ? { [cssVar("fade_animation_duration")]: `${animationDuration}ms` }
                           : null),
-                      ...(animationEasing ? { [cssVar("fade_animation_timing_function")]: animationEasing } : null),
+                      ...(animation.easing.fade !== LightboxDefaultProps.animation.easing.fade
+                          ? { [cssVar("fade_animation_timing_function")]: animation.easing.fade }
+                          : null),
                       ...styles.root,
                   }}
               >

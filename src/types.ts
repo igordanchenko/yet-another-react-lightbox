@@ -1,10 +1,7 @@
 import * as React from "react";
 
 /** Lightbox external props */
-export type LightboxExternalProps = DeepPartial<
-    Partial<LightboxProps>,
-    "carousel" | "animation" | "controller" | "toolbar"
->;
+export type LightboxExternalProps = DeepPartial<LightboxProps, "carousel" | "animation" | "controller" | "toolbar">;
 
 /** Lightbox properties */
 export interface LightboxProps {
@@ -156,23 +153,21 @@ export type LengthOrPercentage = `${number}px` | `${number}%` | number;
 /** Animation settings */
 export interface AnimationSettings {
     /** fade-in / fade-out animation settings */
-    fade: AnimationSpec;
+    fade: number;
     /** swipe animation settings */
-    swipe: AnimationSpec;
+    swipe: number;
     /** override for `swipe` animation settings when using keyboard navigation or navigation buttons */
-    navigation?: AnimationSpec;
+    navigation?: number;
+    /** animation timing function settings */
+    easing: {
+        /** fade-in / fade-out animation timing function */
+        fade: string;
+        /** slide swipe animation timing function */
+        swipe: string;
+        /** slide navigation animation timing function (when using keyboard navigation or navigation buttons) */
+        navigation: string;
+    };
 }
-
-/** Animation duration or animation settings */
-export type AnimationSpec =
-    /** animation duration */
-    | number
-    | {
-          /** animation duration */
-          duration?: number;
-          /** animation easing function */
-          easing?: string;
-      };
 
 /** Controller settings */
 export interface ControllerSettings {
@@ -343,9 +338,19 @@ export interface PluginProps {
 export type Plugin = (props: PluginProps) => void;
 
 /** Deep partial utility type */
-export type DeepPartial<T, K extends keyof T> = Omit<T, K> & {
-    [P in keyof Pick<T, K>]?: Partial<Pick<T, K>[P]>;
+export type DeepPartial<T extends {}, K extends keyof T> = Omit<Partial<T>, K> & {
+    [P in K]?: DeepPartialValue<T[P]>;
 };
+
+export type DeepPartialValue<T> = T extends any[]
+    ? T
+    : T extends (...props: any[]) => any
+    ? T
+    : T extends {}
+    ? {
+          [P in keyof T]?: P extends "ref" ? T[P] : DeepPartialValue<T[P]>;
+      }
+    : T;
 
 /** Deep non-nullable utility type */
 export type DeepNonNullable<T> = T extends {}

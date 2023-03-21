@@ -16,18 +16,24 @@ export function useZoomAnimation(
 
     const playZoomAnimation = useEventCallback(() => {
         zoomAnimation.current?.cancel();
+        zoomAnimation.current = undefined;
 
         if (zoomAnimationStart.current && zoomWrapperRef?.current) {
-            zoomAnimation.current = zoomWrapperRef.current.animate?.(
-                [
-                    { transform: zoomAnimationStart.current },
-                    { transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)` },
-                ],
-                {
-                    duration: !reduceMotion ? zoomAnimationDuration ?? 500 : 0,
-                    easing: zoomAnimation.current ? "ease-out" : "ease-in-out",
-                }
-            );
+            try {
+                zoomAnimation.current = zoomWrapperRef.current.animate?.(
+                    [
+                        { transform: zoomAnimationStart.current },
+                        { transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)` },
+                    ],
+                    {
+                        duration: !reduceMotion ? zoomAnimationDuration ?? 500 : 0,
+                        easing: zoomAnimation.current ? "ease-out" : "ease-in-out",
+                    }
+                );
+            } catch (err) {
+                // eslint-disable-next-line no-console
+                console.error(err);
+            }
 
             zoomAnimationStart.current = undefined;
 

@@ -3,7 +3,7 @@ import * as React from "react";
 import { ComponentProps, RenderFunction } from "../../types.js";
 import { createModule } from "../config.js";
 import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
-import { cssClass, getNavigationAnimationDuration, label as translateLabel } from "../utils.js";
+import { cssClass, label as translateLabel } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
 import { useLightboxProps, useLightboxState } from "../contexts/index.js";
 import { useController } from "./Controller.js";
@@ -53,7 +53,7 @@ export function Navigation({
     const prevDisabled = slides.length === 0 || (finite && currentIndex === 0);
     const nextDisabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
 
-    const throttle = getNavigationAnimationDuration(animation) / 2;
+    const throttle = (animation.navigation ?? animation.swipe) / 2;
     const prevThrottled = useThrottle(prev, throttle);
     const nextThrottled = useThrottle(next, throttle);
 

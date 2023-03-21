@@ -1,17 +1,6 @@
 import * as React from "react";
-
-import { AnimationDefaultProps } from "../props.js";
 import { IMAGE_FIT_CONTAIN, IMAGE_FIT_COVER } from "./consts.js";
-import {
-    AnimationSettings,
-    AnimationSpec,
-    ContainerRect,
-    Labels,
-    LengthOrPercentage,
-    LightboxProps,
-    Slide,
-    SlideImage,
-} from "../types.js";
+import { ContainerRect, Labels, LengthOrPercentage, LightboxProps, Slide, SlideImage } from "../types.js";
 
 export const clsx = (...classes: (string | boolean | undefined)[]) =>
     [...classes].filter((cls) => Boolean(cls)).join(" ");
@@ -92,18 +81,3 @@ export const getSlideIndex = (index: number, slidesCount: number) =>
     ((index % slidesCount) + slidesCount) % slidesCount;
 
 export const getSlide = (slides: Slide[], index: number) => slides[getSlideIndex(index, slides.length)];
-
-export const getAnimationEasing = (animationSpec: AnimationSpec | undefined) =>
-    typeof animationSpec === "object" ? animationSpec.easing : undefined;
-
-export const getAnimationDuration = (animationSpec: AnimationSpec | undefined, defaultDuration: number) =>
-    (typeof animationSpec === "object" ? animationSpec.duration : animationSpec) ?? defaultDuration;
-
-export const getFadeAnimationDuration = (animation: AnimationSettings) =>
-    getAnimationDuration(animation.fade, AnimationDefaultProps.fade);
-
-export const getSwipeAnimationDuration = (animation: AnimationSettings) =>
-    getAnimationDuration(animation.swipe, AnimationDefaultProps.swipe);
-
-export const getNavigationAnimationDuration = (animation: AnimationSettings) =>
-    getAnimationDuration(animation.navigation, getSwipeAnimationDuration(animation));

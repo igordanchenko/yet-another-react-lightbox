@@ -54,8 +54,14 @@ export function useAnimation<T>(nodeRef: React.RefObject<HTMLElement | null>, co
 
             if (keyframes && duration) {
                 animation.current?.cancel();
+                animation.current = undefined;
 
-                animation.current = nodeRef.current.animate?.(keyframes, { duration, easing });
+                try {
+                    animation.current = nodeRef.current.animate?.(keyframes, { duration, easing });
+                } catch (err) {
+                    // eslint-disable-next-line no-console
+                    console.error(err);
+                }
 
                 if (animation.current) {
                     animation.current.onfinish = () => {
@@ -70,7 +76,10 @@ export function useAnimation<T>(nodeRef: React.RefObject<HTMLElement | null>, co
         snapshot.current = undefined;
     });
 
-    return (currentSnapshot: T | undefined) => {
-        snapshot.current = currentSnapshot;
+    return {
+        prepareAnimation: (currentSnapshot: T | undefined) => {
+            snapshot.current = currentSnapshot;
+        },
+        isAnimationPlaying: () => animation.current?.playState === "running",
     };
 }

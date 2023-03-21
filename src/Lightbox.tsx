@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps, LightboxExternalProps, Node } from "./types.js";
+import { AnimationSettings, ComponentProps, LightboxExternalProps, DeepPartialValue, Node } from "./types.js";
 import { LightboxDefaultProps } from "./props.js";
 import {
     CarouselModule,
@@ -26,6 +26,16 @@ function renderNode(node: Node, props: ComponentProps): React.ReactElement {
     );
 }
 
+function mergeAnimation(defaultAnimation: AnimationSettings, animation: DeepPartialValue<AnimationSettings> = {}) {
+    const { easing: defaultAnimationEasing, ...restDefaultAnimation } = defaultAnimation;
+    const { easing, ...restAnimation } = animation;
+    return {
+        easing: { ...defaultAnimationEasing, ...easing },
+        ...restDefaultAnimation,
+        ...restAnimation,
+    };
+}
+
 /** Lightbox component */
 export function Lightbox({
     carousel,
@@ -40,8 +50,8 @@ export function Lightbox({
     ...restProps
 }: LightboxExternalProps) {
     const {
-        carousel: defaultCarousel,
         animation: defaultAnimation,
+        carousel: defaultCarousel,
         render: defaultRender,
         toolbar: defaultToolbar,
         controller: defaultController,
@@ -68,8 +78,8 @@ export function Lightbox({
     );
 
     const props = augmentation({
+        animation: mergeAnimation(defaultAnimation, animation),
         carousel: { ...defaultCarousel, ...carousel },
-        animation: { ...defaultAnimation, ...animation },
         render: { ...defaultRender, ...render },
         toolbar: { ...defaultToolbar, ...toolbar },
         controller: { ...defaultController, ...controller },

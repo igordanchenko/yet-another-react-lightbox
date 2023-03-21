@@ -51,7 +51,7 @@ export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
     const animationDuration = animation?.duration || 0;
     const offset = (animationDuration > 0 && animation?.increment) || 0;
 
-    const animate = useAnimation<number>(track, (snapshot) => ({
+    const { prepareAnimation } = useAnimation<number>(track, (snapshot) => ({
         keyframes: isHorizontal(position)
             ? [
                   {
@@ -83,7 +83,7 @@ export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
             animationOffset = 0;
         }
 
-        animate(animationOffset);
+        prepareAnimation(animationOffset);
     });
 
     React.useEffect(() => cleanup(subscribe(ACTION_SWIPE, handleControllerSwipe)), [subscribe, handleControllerSwipe]);
