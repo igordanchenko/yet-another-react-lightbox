@@ -223,7 +223,7 @@ export interface LightboxState {
 }
 
 /** Render function */
-export type RenderFunction<T = void> = (props: T) => React.ReactNode;
+export type RenderFunction<T = void> = [T] extends [void] ? () => React.ReactNode : (props: T) => React.ReactNode;
 
 /** `render.slide` render function props */
 export interface RenderSlideProps {
@@ -278,7 +278,7 @@ export interface Render {
     buttonClose?: RenderFunction;
 }
 
-export type Callback<T = void> = (props: T) => void;
+export type Callback<T = void> = [T] extends [void] ? () => void : (props: T) => void;
 
 export interface ViewCallbackProps {
     index: number;
