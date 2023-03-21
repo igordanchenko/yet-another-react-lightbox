@@ -8,9 +8,6 @@ import {
     computeSlideRect,
     cssClass,
     cssVar,
-    getAnimationEasing,
-    getNavigationAnimationDuration,
-    getSwipeAnimationDuration,
     isNumber,
     makeComposePrefix,
     makeUseContext,
@@ -114,39 +111,42 @@ export function Controller({ children, ...props }: ComponentProps) {
         containerRef.current?.style.setProperty(cssVar("swipe_offset"), `${Math.round(offset)}px`);
     };
 
-    const animate = useAnimation<{ rect: DOMRect; index: number }>(carouselRef, (snapshot, rect, translate) => {
-        if (carouselRef.current && containerRect && state.animation?.duration) {
-            const parsedSpacing = parseLengthPercentage(carousel.spacing);
-            const spacingValue =
-                (parsedSpacing.percent ? (parsedSpacing.percent * containerRect.width) / 100 : parsedSpacing.pixel) ||
-                0;
+    const { prepareAnimation, isAnimationPlaying } = useAnimation<{ rect: DOMRect; index: number }>(
+        carouselRef,
+        (snapshot, rect, translate) => {
+            if (carouselRef.current && containerRect && state.animation?.duration) {
+                const parsedSpacing = parseLengthPercentage(carousel.spacing);
+                const spacingValue =
+                    (parsedSpacing.percent
+                        ? (parsedSpacing.percent * containerRect.width) / 100
+                        : parsedSpacing.pixel) || 0;
 
-            return {
-                keyframes: [
-                    {
-                        transform: `translateX(${
-                            rtl(state.globalIndex - snapshot.index) * (containerRect.width + spacingValue) +
-                            snapshot.rect.x -
-                            rect.x +
-                            translate.x
-                        }px)`,
-                    },
-                    { transform: "translateX(0)" },
-                ],
-                duration: state.animation.duration,
-                easing: state.animation.easing,
-            };
+                return {
+                    keyframes: [
+                        {
+                            transform: `translateX(${
+                                rtl(state.globalIndex - snapshot.index) * (containerRect.width + spacingValue) +
+                                snapshot.rect.x -
+                                rect.x +
+                                translate.x
+                            }px)`,
+                        },
+                        { transform: "translateX(0)" },
+                    ],
+                    duration: state.animation.duration,
+                    easing: state.animation.easing,
+                };
+            }
+            return undefined;
         }
-        return undefined;
-    });
+    );
 
     const swipe = useEventCallback(
         (action: { direction?: "prev" | "next"; count?: number; offset?: number; duration?: number }) => {
             const currentSwipeOffset = action.offset || 0;
-            const swipeDuration = !currentSwipeOffset
-                ? getNavigationAnimationDuration(animation)
-                : getSwipeAnimationDuration(animation);
-            const swipeEasing = getAnimationEasing(!currentSwipeOffset ? animation.navigation : animation.swipe);
+            const swipeDuration = !currentSwipeOffset ? animation.navigation ?? animation.swipe : animation.swipe;
+            const swipeEasing =
+                !currentSwipeOffset && !isAnimationPlaying() ? animation.easing.navigation : animation.easing.swipe;
 
             let { direction } = action;
             const count = action.count ?? 1;
@@ -202,7 +202,7 @@ export function Controller({ children, ...props }: ComponentProps) {
             }, newSwipeAnimationDuration);
 
             if (carouselRef.current) {
-                animate({
+                prepareAnimation({
                     rect: carouselRef.current.getBoundingClientRect(),
                     index: state.globalIndex,
                 });
@@ -229,7 +229,7 @@ export function Controller({ children, ...props }: ComponentProps) {
         subscribeSensors,
         isSwipeValid,
         containerRect?.width || 0,
-        getSwipeAnimationDuration(animation),
+        animation.swipe,
         () => setSwipeState(SwipeState.SWIPE), // onSwipeStart
         (offset: number) => setSwipeOffset(offset), // onSwipeProgress
         (offset: number, duration: number) => swipe({ offset, duration, count: 1 }), // onSwipeFinish
