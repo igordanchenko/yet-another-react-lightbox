@@ -36,21 +36,24 @@ export interface LightboxProps {
 }
 
 /** Slide */
-export type Slide = SlideTypes[keyof SlideTypes];
+export type Slide = SlideTypes[SlideTypeKey];
 
 /** Supported slide types */
 export interface SlideTypes {
     /** image slide type */
-    SlideImage: SlideImage;
+    image: SlideImage;
 }
 
+/** Slide type key */
+export type SlideTypeKey = keyof SlideTypes;
+
 /** Generic slide */
-export interface GenericSlide {}
+export interface GenericSlide {
+    type?: SlideTypeKey;
+}
 
 /** Image slide properties */
 export interface SlideImage extends GenericSlide {
-    /** slide type */
-    type?: "image";
     /** image URL */
     src: string;
     /** image 'alt' attribute */
