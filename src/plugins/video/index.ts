@@ -11,13 +11,11 @@ declare module "../../types.js" {
     // noinspection JSUnusedGlobalSymbols
     interface SlideTypes {
         /** video slide type */
-        SlideVideo: SlideVideo;
+        video: SlideVideo;
     }
 
     /** Video slide attributes */
     export interface SlideVideo extends GenericSlide {
-        /** video slide type marker */
-        type: "video";
         /** video placeholder image */
         poster?: string;
         /** video width in pixels */
