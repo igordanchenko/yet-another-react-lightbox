@@ -8,7 +8,6 @@ import {
     computeSlideRect,
     cssClass,
     cssVar,
-    isNumber,
     makeComposePrefix,
     makeUseContext,
     parseLengthPercentage,
@@ -87,7 +86,7 @@ export function Controller({ children, ...props }: ComponentProps) {
 
     const isRTL = useRTL();
 
-    const rtl = (value?: number) => (isRTL ? -1 : 1) * (isNumber(value) ? value : 1);
+    const rtl = (value?: number) => (isRTL ? -1 : 1) * (typeof value === "number" ? value : 1);
 
     const focus = useEventCallback(() => containerRef.current?.focus());
 

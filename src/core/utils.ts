@@ -37,16 +37,12 @@ export const makeUseContext =
 
 export const hasWindow = () => typeof window !== "undefined";
 
-export const isDefined = <T = any>(x: T | undefined): x is T => typeof x !== "undefined";
-
-export const isNumber = (value: any): value is number => typeof value === "number";
-
 export function round(value: number, decimals = 0) {
     const factor = 10 ** decimals;
     return Math.round((value + Number.EPSILON) * factor) / factor;
 }
 
-export const isImageSlide = (slide: Slide): slide is SlideImage => !isDefined(slide.type) || slide.type === "image";
+export const isImageSlide = (slide: Slide): slide is SlideImage => slide.type === undefined || slide.type === "image";
 
 export const isImageFitCover = (image: SlideImage, imageFit?: LightboxProps["carousel"]["imageFit"]) =>
     image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
@@ -75,7 +71,7 @@ export function computeSlideRect(containerRect: ContainerRect, padding: LengthOr
     };
 }
 
-export const devicePixelRatio = () => (typeof window !== "undefined" ? window?.devicePixelRatio : undefined) || 1;
+export const devicePixelRatio = () => (hasWindow() ? window?.devicePixelRatio : undefined) || 1;
 
 export const getSlideIndex = (index: number, slidesCount: number) =>
     ((index % slidesCount) + slidesCount) % slidesCount;
