@@ -29,6 +29,10 @@ import {
     ACTION_NEXT,
     ACTION_PREV,
     ACTION_SWIPE,
+    ACTIVE_SLIDE_COMPLETE,
+    ACTIVE_SLIDE_ERROR,
+    ACTIVE_SLIDE_LOADING,
+    ACTIVE_SLIDE_PLAYING,
     CLASS_FLEX_CENTER,
     EVENT_ON_KEY_UP,
     MODULE_CONTROLLER,
@@ -42,6 +46,11 @@ declare module "../index.js" {
         [ACTION_NEXT]: NavigationAction | void;
         [ACTION_SWIPE]: LightboxStateSwipeAction;
         [ACTION_CLOSE]: void;
+
+        [ACTIVE_SLIDE_LOADING]: void;
+        [ACTIVE_SLIDE_PLAYING]: void;
+        [ACTIVE_SLIDE_COMPLETE]: void;
+        [ACTIVE_SLIDE_ERROR]: void;
     }
 }
 
