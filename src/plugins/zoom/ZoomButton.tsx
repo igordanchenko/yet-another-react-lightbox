@@ -48,7 +48,7 @@ export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>((
             label={label(labels, zoomIn ? "Zoom in" : "Zoom out")}
             icon={zoomIn ? ZoomInIcon : ZoomOutIcon}
             renderIcon={zoomIn ? render.iconZoomIn : render.iconZoomOut}
-            onClick={() => (zoomIn ? zoomInCallback : zoomOutCallback)()}
+            onClick={zoomIn ? zoomInCallback : zoomOutCallback}
             onFocus={() => {
                 wasFocused.current = true;
             }}

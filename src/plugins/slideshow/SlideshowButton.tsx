@@ -18,10 +18,10 @@ export function SlideshowButton() {
 
     return (
         <IconButton
-            label={playing ? label(labels, "Pause") : label(labels, "Play")}
+            label={label(labels, playing ? "Pause" : "Play")}
             icon={playing ? PauseIcon : PlayIcon}
             renderIcon={playing ? render.iconSlideshowPause : render.iconSlideshowPlay}
-            onClick={() => (playing ? pause : play)()}
+            onClick={playing ? pause : play}
             disabled={disabled}
             {...focusListeners}
         />

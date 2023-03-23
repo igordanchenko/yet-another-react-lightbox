@@ -27,10 +27,10 @@ export function FullscreenButton() {
     return (
         <IconButton
             disabled={disabled}
-            label={fullscreen ? label(labels, "Exit Fullscreen") : label(labels, "Enter Fullscreen")}
+            label={label(labels, fullscreen ? "Exit Fullscreen" : "Enter Fullscreen")}
             icon={fullscreen ? ExitFullscreenIcon : EnterFullscreenIcon}
             renderIcon={fullscreen ? render.iconExitFullscreen : render.iconEnterFullscreen}
-            onClick={() => (fullscreen ? exit : enter)()}
+            onClick={fullscreen ? exit : enter}
         />
     );
 }
