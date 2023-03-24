@@ -1,8 +1,5 @@
 @import "./_common";
 
-$toolbar-padding: 8px;
-$icon-button-padding: 8px;
-
 .yarl_ {
     &_fullsize {
         width: 100%;
@@ -163,7 +160,6 @@ $icon-button-padding: 8px;
     }
 
     &_icon {
-        $icon-size: 32px;
         width: globalVar(icon_size, $icon-size);
         height: globalVar(icon_size, $icon-size);
     }
@@ -178,7 +174,7 @@ $icon-button-padding: 8px;
         line-height: 0;
         padding: globalVar(button_padding, $icon-button-padding);
         color: $color-button;
-        filter: globalVar(button_filter, drop-shadow(2px 2px 2px rgba(0, 0, 0, .8)));
+        filter: globalVar(button_filter, $filter-drop-shadow);
         -webkit-tap-highlight-color: transparent;
 
         &:focus {

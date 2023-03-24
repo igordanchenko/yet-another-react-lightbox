@@ -6,6 +6,7 @@ export const MODULE_PORTAL = "portal";
 export const MODULE_ROOT = "root";
 export const MODULE_TOOLBAR = "toolbar";
 
+export const PLUGIN_COUNTER = "counter";
 export const PLUGIN_FULLSCREEN = "fullscreen";
 export const PLUGIN_INLINE = "inline";
 export const PLUGIN_SLIDESHOW = "slideshow";

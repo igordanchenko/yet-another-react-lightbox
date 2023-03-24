@@ -107,13 +107,13 @@ $vignette-size: 12%;
 
     &_thumbnail_icon {
         color: localVar(thumbnail_icon_color, $color-button);
-        filter: localVar(thumbnail_icon_filter, drop-shadow(2px 2px 2px rgba($color-black, .8)));
+        filter: localVar(thumbnail_icon_filter, $filter-drop-shadow);
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
-        width: localVar(thumbnail_icon_size, 32px);
-        height: localVar(thumbnail_icon_size, 32px);
+        width: localVar(thumbnail_icon_size, $icon-size);
+        height: localVar(thumbnail_icon_size, $icon-size);
     }
 
     &_contain_image {

@@ -129,6 +129,7 @@ The following plugins come bundled in the package:
 
 - [Captions](https://yet-another-react-lightbox.com/plugins/captions) - adds support for slide title and
   description
+- [Counter](https://yet-another-react-lightbox.com/plugins/counter) - adds slides counter
 - [Fullscreen](https://yet-another-react-lightbox.com/plugins/fullscreen) - adds support for fullscreen mode
 - [Inline](https://yet-another-react-lightbox.com/plugins/inline) - adds support for inline rendering mode
 - [Slideshow](https://yet-another-react-lightbox.com/plugins/slideshow) - adds slideshow autoplay feature

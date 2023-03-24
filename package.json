@@ -25,6 +25,11 @@
             "types": "./dist/plugins/captions/index.d.ts",
             "default": "./dist/plugins/captions/index.js"
         },
+        "./plugins/counter.css": "./dist/plugins/counter/counter.css",
+        "./plugins/counter": {
+            "types": "./dist/plugins/counter/index.d.ts",
+            "default": "./dist/plugins/counter/index.js"
+        },
         "./plugins/fullscreen": {
             "types": "./dist/plugins/fullscreen/index.d.ts",
             "default": "./dist/plugins/fullscreen/index.js"
@@ -65,6 +70,9 @@
             ],
             "plugins/captions": [
                 "dist/plugins/captions/index.d.ts"
+            ],
+            "plugins/counter": [
+                "dist/plugins/counter/index.d.ts"
             ],
             "plugins/fullscreen": [
                 "dist/plugins/fullscreen/index.d.ts"

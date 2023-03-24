@@ -1,0 +1,19 @@
+@import "../../common";
+
+@function localVar($key, $default) {
+    @return globalVar(counter_ + $key, $default);
+}
+
+.yarl__counter {
+    position: localVar(position, absolute);
+    top: localVar(top, 0);
+    left: localVar(left, 0);
+    bottom: localVar(bottom, unset);
+    right: localVar(right, unset);
+    color: localVar(color, $color-button);
+    filter: localVar(filter, $filter-drop-shadow);
+    margin: localVar(margin, globalVar(toolbar_padding, $toolbar-padding));
+    padding: localVar(padding, globalVar(button_padding, $icon-button-padding));
+    line-height: localVar(line_height, globalVar(icon_size, $icon-size));
+    user-select: localVar(user_select, none);
+}
