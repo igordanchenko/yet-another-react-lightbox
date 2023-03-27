@@ -17,20 +17,19 @@ import {
     useLightboxState,
     useRTL,
 } from "../../core/index.js";
-import { DeepNonNullable, LightboxProps, Slide } from "../../types.js";
+import { Slide } from "../../types.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
 import { defaultThumbnailsProps, useThumbnailsProps } from "./props.js";
+import { useThumbnails } from "./ThumbnailsContext.js";
 
-function isHorizontal(position: ThumbnailsInternal["position"]) {
+function isHorizontal(position: ReturnType<typeof useThumbnailsProps>["position"]) {
     return ["top", "bottom"].includes(position);
 }
 
-function boxSize(thumbnails: ThumbnailsInternal, dimension: number, includeGap?: boolean) {
+function boxSize(thumbnails: ReturnType<typeof useThumbnailsProps>, dimension: number, includeGap?: boolean) {
     return dimension + 2 * (thumbnails.border + thumbnails.padding) + (includeGap ? thumbnails.gap : 0);
 }
-
-export type ThumbnailsInternal = DeepNonNullable<LightboxProps["thumbnails"]>;
 
 export type ThumbnailsTrackProps = {
     containerRef: React.RefObject<HTMLDivElement>;
@@ -39,6 +38,7 @@ export type ThumbnailsTrackProps = {
 export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
     const track = React.useRef<HTMLDivElement | null>(null);
 
+    const { visible } = useThumbnails();
     const { carousel, styles } = useLightboxProps();
     const { slides, globalIndex, animation } = useLightboxState().state;
     const { publish, subscribe } = useEvents();
@@ -137,6 +137,7 @@ export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
         <div
             className={clsx(cssClass(cssPrefix("container")), cssClass(CLASS_FLEX_CENTER))}
             style={{
+                ...(!visible ? { display: "none" } : null),
                 ...(width !== defaultThumbnailsProps.width
                     ? { [cssVar(cssThumbnailPrefix("width"))]: `${boxSize(thumbnails, width)}px` }
                     : null),

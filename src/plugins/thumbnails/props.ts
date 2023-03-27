@@ -2,6 +2,7 @@ import { useLightboxProps } from "../../core/index.js";
 import { LightboxProps } from "../../types.js";
 
 export const defaultThumbnailsProps = {
+    ref: null,
     position: "bottom" as const,
     width: 120,
     height: 80,

@@ -1,4 +1,4 @@
-import { ContainerRect, ImageFit, RenderFunction, Slide } from "../../types.js";
+import { Callback, ContainerRect, ImageFit, RenderFunction, Slide } from "../../types.js";
 import { Thumbnails } from "./Thumbnails.js";
 
 type Position = "top" | "bottom" | "start" | "end";
@@ -7,6 +7,8 @@ declare module "../../types.js" {
     interface LightboxProps {
         /** Thumbnails plugin settings */
         thumbnails?: {
+            /** Thumbnails plugin ref */
+            ref?: React.ForwardedRef<ThumbnailsRef>;
             /** thumbnails position */
             position?: Position;
             /** thumbnail width */
@@ -23,14 +25,22 @@ declare module "../../types.js" {
             gap?: number;
             /** `object-fit` setting */
             imageFit?: ImageFit;
-            /** vignette effect on the edges of the thumbnails track */
+            /** if `true`, show the vignette effect on the edges of the thumbnails track */
             vignette?: boolean;
+            /** if `true`, show the Toggle Thumbnails button in the toolbar */
+            showToggle?: boolean;
         };
     }
 
     interface Render {
         /** render custom thumbnail */
         thumbnail?: RenderFunction<RenderThumbnailProps>;
+        /** render custom Thumbnails Visible icon */
+        iconThumbnailsVisible?: RenderFunction;
+        /** render custom Thumbnails Hidden icon */
+        iconThumbnailsHidden?: RenderFunction;
+        /** render custom Thumbnails button */
+        buttonThumbnails?: RenderFunction<ThumbnailsRef>;
     }
 
     /** `render.thumbnail` render function props */
@@ -49,6 +59,16 @@ declare module "../../types.js" {
         thumbnailsTrack: "thumbnailsTrack";
         /** thumbnails container customization slot */
         thumbnailsContainer: "thumbnailsContainer";
+    }
+
+    /** Thumbnails plugin ref */
+    export interface ThumbnailsRef {
+        /** if `true`, thumbnails are visible */
+        visible: boolean;
+        /** show thumbnails */
+        show: Callback;
+        /** hide thuumbnails */
+        hide: Callback;
     }
 }
 
