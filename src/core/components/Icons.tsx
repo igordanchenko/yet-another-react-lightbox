@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export function createIcon(name: string, glyph: React.ReactNode) {
+function svgIcon(name: string, children: React.ReactNode) {
     const icon = (props: React.SVGProps<SVGSVGElement>) => (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -11,14 +11,40 @@ export function createIcon(name: string, glyph: React.ReactNode) {
             focusable="false"
             {...props}
         >
-            <g fill="currentColor">
-                <path d="M0 0h24v24H0z" fill="none" />
-                {glyph}
-            </g>
+            {children}
         </svg>
     );
     icon.displayName = name;
     return icon;
+}
+
+export function createIcon(name: string, glyph: React.ReactNode) {
+    return svgIcon(
+        name,
+        <g fill="currentColor">
+            <path d="M0 0h24v24H0z" fill="none" />
+            {glyph}
+        </g>
+    );
+}
+
+export function createIconDisabled(name: string, glyph: React.ReactNode) {
+    return svgIcon(
+        name,
+        <>
+            <defs>
+                <mask id="strike">
+                    <path d="M0 0h24v24H0z" fill="white" />
+                    <path d="M0 0L24 24" stroke="black" strokeWidth={4} />
+                </mask>
+            </defs>
+            <path d="M0.70707 2.121320L21.878680 23.292883" stroke="currentColor" strokeWidth={2} />
+            <g fill="currentColor" mask="url(#strike)">
+                <path d="M0 0h24v24H0z" fill="none" />
+                {glyph}
+            </g>
+        </>
+    );
 }
 
 export const CloseIcon = createIcon(
