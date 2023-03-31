@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, createIconDisabled, IconButton, label, useLightboxProps } from "../../core/index.js";
+import { createIcon, createIconDisabled, IconButton, useLightboxProps } from "../../core/index.js";
 import { useThumbnails } from "./ThumbnailsContext.js";
 
 const thumbnailsIcon = () => (
@@ -16,7 +16,7 @@ const ThumbnailsHidden = createIconDisabled("ThumbnailsHidden", thumbnailsIcon()
 
 export function ThumbnailsButton() {
     const { visible, show, hide } = useThumbnails();
-    const { render, labels } = useLightboxProps();
+    const { render } = useLightboxProps();
 
     if (render.buttonThumbnails) {
         return <>{render.buttonThumbnails({ visible, show, hide })}</>;
@@ -24,7 +24,7 @@ export function ThumbnailsButton() {
 
     return (
         <IconButton
-            label={label(labels, visible ? "Hide thumbnails" : "Show thumbnails")}
+            label={visible ? "Hide thumbnails" : "Show thumbnails"}
             icon={visible ? ThumbnailsVisible : ThumbnailsHidden}
             renderIcon={visible ? render.iconThumbnailsVisible : render.iconThumbnailsHidden}
             onClick={visible ? hide : show}

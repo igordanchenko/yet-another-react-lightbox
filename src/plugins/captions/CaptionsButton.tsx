@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, createIconDisabled, IconButton, label, useLightboxProps } from "../../core/index.js";
+import { createIcon, createIconDisabled, IconButton, useLightboxProps } from "../../core/index.js";
 import { useCaptions } from "./CaptionsContext.js";
 
 const captionsIcon = () => (
@@ -16,7 +16,7 @@ const CaptionsHidden = createIconDisabled("CaptionsVisible", captionsIcon());
 
 export function CaptionsButton() {
     const { visible, show, hide } = useCaptions();
-    const { render, labels } = useLightboxProps();
+    const { render } = useLightboxProps();
 
     if (render.buttonCaptions) {
         return <>{render.buttonCaptions({ visible, show, hide })}</>;
@@ -24,7 +24,7 @@ export function CaptionsButton() {
 
     return (
         <IconButton
-            label={label(labels, visible ? "Hide captions" : "Show captions")}
+            label={visible ? "Hide captions" : "Show captions"}
             icon={visible ? CaptionsVisible : CaptionsHidden}
             renderIcon={visible ? render.iconCaptionsVisible : render.iconCaptionsHidden}
             onClick={visible ? hide : show}

@@ -3,9 +3,9 @@ import * as React from "react";
 import { ComponentProps, RenderFunction } from "../../types.js";
 import { createModule } from "../config.js";
 import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
-import { cssClass, label as translateLabel } from "../utils.js";
+import { cssClass } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
-import { useLightboxProps, useLightboxState } from "../contexts/index.js";
+import { useLightboxState } from "../contexts/index.js";
 import { useController } from "./Controller.js";
 import {
     ACTION_NEXT,
@@ -26,11 +26,9 @@ export type NavigationButtonProps = {
 };
 
 export function NavigationButton({ label, icon, renderIcon, action, onClick, disabled }: NavigationButtonProps) {
-    const { labels } = useLightboxProps();
-
     return (
         <IconButton
-            label={translateLabel(labels, label)}
+            label={label}
             icon={icon}
             renderIcon={renderIcon}
             className={cssClass(`navigation_${action}`)}
