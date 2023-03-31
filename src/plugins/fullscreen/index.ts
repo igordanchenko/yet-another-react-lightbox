@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { Callback, RenderFunction } from "../../types.js";
+import { PLUGIN_FULLSCREEN } from "../../core/index.js";
 import { Fullscreen } from "./Fullscreen.js";
 
 declare module "../../types.js" {
@@ -21,6 +22,11 @@ declare module "../../types.js" {
         iconEnterFullscreen?: RenderFunction;
         /** render custom Exit Fullscreen icon */
         iconExitFullscreen?: RenderFunction;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    interface ToolbarButtonKeys {
+        [PLUGIN_FULLSCREEN]: null;
     }
 
     /** Fullscreen plugin ref */

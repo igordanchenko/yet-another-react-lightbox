@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { Callback, RenderFunction } from "../../types.js";
+import { PLUGIN_CAPTIONS } from "../../core/index.js";
 import { Captions } from "./Captions.js";
 
 declare module "../../types.js" {
@@ -11,6 +12,11 @@ declare module "../../types.js" {
         title?: React.ReactNode;
         /** slide description */
         description?: React.ReactNode;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    interface ToolbarButtonKeys {
+        [PLUGIN_CAPTIONS]: null;
     }
 
     interface LightboxProps {

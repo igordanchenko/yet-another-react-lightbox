@@ -1,4 +1,5 @@
 import { Callback, RenderFunction } from "../../types.js";
+import { PLUGIN_ZOOM } from "../../core/index.js";
 import { Zoom } from "./Zoom.js";
 
 declare module "../../types.js" {
@@ -61,6 +62,11 @@ declare module "../../types.js" {
     export interface ZoomCallbackProps {
         /** current zoom level */
         zoom: number;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    interface ToolbarButtonKeys {
+        [PLUGIN_ZOOM]: null;
     }
 
     /** Zoom plugin ref */

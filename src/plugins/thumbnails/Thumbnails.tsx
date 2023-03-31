@@ -1,20 +1,23 @@
 import * as React from "react";
 
 import { PluginProps } from "../../types.js";
-import { createModule, MODULE_CONTROLLER, PLUGIN_FULLSCREEN, PLUGIN_THUMBNAILS } from "../../core/index.js";
+import {
+    addToolbarButton,
+    createModule,
+    MODULE_CONTROLLER,
+    PLUGIN_FULLSCREEN,
+    PLUGIN_THUMBNAILS,
+} from "../../core/index.js";
 import { resolveThumbnailsProps } from "./props.js";
 import { ThumbnailsContextProvider } from "./ThumbnailsContext.js";
 import { ThumbnailsButton } from "./ThumbnailsButton.js";
 
 /** Thumbnails plugin */
 export function Thumbnails({ augment, contains, append, addParent }: PluginProps) {
-    augment(({ thumbnails: thumbnailsProps, toolbar: { buttons, ...restToolbar }, ...restProps }) => {
+    augment(({ thumbnails: thumbnailsProps, toolbar, ...restProps }) => {
         const thumbnails = resolveThumbnailsProps(thumbnailsProps);
         return {
-            toolbar: {
-                buttons: [...(thumbnails.showToggle ? [<ThumbnailsButton key={PLUGIN_THUMBNAILS} />] : []), ...buttons],
-                ...restToolbar,
-            },
+            toolbar: addToolbarButton(toolbar, PLUGIN_THUMBNAILS, thumbnails.showToggle ? <ThumbnailsButton /> : null),
             thumbnails,
             ...restProps,
         };

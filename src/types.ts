@@ -312,7 +312,13 @@ export type Labels = {
 /** Toolbar settings */
 export interface ToolbarSettings {
     /** buttons to render in the toolbar */
-    buttons: ("close" | React.ReactNode)[];
+    buttons: (ToolbarButtonKey | React.ReactNode)[];
+}
+
+export type ToolbarButtonKey = keyof ToolbarButtonKeys;
+
+export interface ToolbarButtonKeys {
+    close: null;
 }
 
 /** Plugin methods */

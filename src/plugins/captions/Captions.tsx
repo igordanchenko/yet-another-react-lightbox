@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { PluginProps } from "../../types.js";
-import { createModule, PLUGIN_CAPTIONS } from "../../core/index.js";
+import { addToolbarButton, createModule, PLUGIN_CAPTIONS } from "../../core/index.js";
 import { Title } from "./Title.js";
 import { Description } from "./Description.js";
 import { CaptionsButton } from "./CaptionsButton.js";
@@ -11,12 +11,7 @@ import { resolveCaptionsProps } from "./props.js";
 /** Captions plugin */
 export function Captions({ augment, addModule }: PluginProps) {
     augment(
-        ({
-            render: { slideFooter: renderFooter, ...restRender },
-            toolbar: { buttons, ...restToolbar },
-            captions: captionsProps,
-            ...restProps
-        }) => {
+        ({ captions: captionsProps, render: { slideFooter: renderFooter, ...restRender }, toolbar, ...restProps }) => {
             const captions = resolveCaptionsProps(captionsProps);
             return {
                 render: {
@@ -31,10 +26,7 @@ export function Captions({ augment, addModule }: PluginProps) {
                     ),
                     ...restRender,
                 },
-                toolbar: {
-                    buttons: [...(captions.showToggle ? [<CaptionsButton key={PLUGIN_CAPTIONS} />] : []), ...buttons],
-                    ...restToolbar,
-                },
+                toolbar: addToolbarButton(toolbar, PLUGIN_CAPTIONS, captions.showToggle ? <CaptionsButton /> : null),
                 captions,
                 ...restProps,
             };

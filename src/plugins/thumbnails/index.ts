@@ -1,4 +1,5 @@
 import { Callback, ContainerRect, ImageFit, RenderFunction, Slide } from "../../types.js";
+import { PLUGIN_THUMBNAILS } from "../../core/index.js";
 import { Thumbnails } from "./Thumbnails.js";
 
 type Position = "top" | "bottom" | "start" | "end";
@@ -59,6 +60,11 @@ declare module "../../types.js" {
         thumbnailsTrack: "thumbnailsTrack";
         /** thumbnails container customization slot */
         thumbnailsContainer: "thumbnailsContainer";
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    interface ToolbarButtonKeys {
+        [PLUGIN_THUMBNAILS]: null;
     }
 
     /** Thumbnails plugin ref */

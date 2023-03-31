@@ -1,6 +1,14 @@
 import * as React from "react";
 import { IMAGE_FIT_CONTAIN, IMAGE_FIT_COVER } from "./consts.js";
-import { ContainerRect, Labels, LengthOrPercentage, LightboxProps, Slide, SlideImage } from "../types.js";
+import {
+    ContainerRect,
+    Labels,
+    LengthOrPercentage,
+    LightboxProps,
+    Slide,
+    SlideImage,
+    ToolbarSettings,
+} from "../types.js";
 
 export const clsx = (...classes: (string | boolean | undefined)[]) =>
     [...classes].filter((cls) => Boolean(cls)).join(" ");
@@ -77,3 +85,19 @@ export const getSlideIndex = (index: number, slidesCount: number) =>
     ((index % slidesCount) + slidesCount) % slidesCount;
 
 export const getSlide = (slides: Slide[], index: number) => slides[getSlideIndex(index, slides.length)];
+
+export function addToolbarButton(toolbar: ToolbarSettings, key: string, button: React.ReactNode) {
+    if (!button) return toolbar;
+
+    const { buttons, ...restToolbar } = toolbar;
+    const index = buttons.findIndex((item) => item === key);
+    const buttonWithKey = React.isValidElement(button) ? React.cloneElement(button, { key }, null) : button;
+
+    if (index >= 0) {
+        const result = [...buttons];
+        result.splice(index, 1, buttonWithKey);
+        return { buttons: result, ...restToolbar };
+    }
+
+    return { buttons: [buttonWithKey, ...buttons], ...restToolbar };
+}
