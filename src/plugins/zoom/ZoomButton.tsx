@@ -23,7 +23,10 @@ export type ZoomButtonProps = {
 };
 
 /** Zoom button */
-export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>(({ zoomIn, onLoseFocus }, ref) => {
+export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>(function ZoomButton(
+    { zoomIn, onLoseFocus },
+    ref
+) {
     const wasEnabled = React.useRef(false);
     const wasFocused = React.useRef(false);
 
@@ -58,4 +61,3 @@ export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>((
         />
     );
 });
-ZoomButton.displayName = "ZoomButton";
