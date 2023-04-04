@@ -44,7 +44,7 @@ export function Navigation({
     animation,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
 }: ComponentProps) {
-    const { slides, currentIndex } = useLightboxState().state;
+    const { slides, currentIndex } = useLightboxState();
     const { prev, next, subscribeSensors } = useController();
     const isRTL = useRTL();
 

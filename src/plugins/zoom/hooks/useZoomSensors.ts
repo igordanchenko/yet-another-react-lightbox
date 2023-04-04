@@ -32,7 +32,7 @@ export function useZoomSensors(
     const lastPointerDown = React.useRef(0);
     const pinchZoomDistance = React.useRef<number>();
 
-    const { globalIndex } = useLightboxState().state;
+    const { globalIndex } = useLightboxState();
     const { containerRef, subscribeSensors } = useController();
     const {
         keyboardMoveDistance,

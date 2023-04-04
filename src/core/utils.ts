@@ -82,9 +82,14 @@ export function computeSlideRect(containerRect: ContainerRect, padding: LengthOr
 export const devicePixelRatio = () => (hasWindow() ? window?.devicePixelRatio : undefined) || 1;
 
 export const getSlideIndex = (index: number, slidesCount: number) =>
-    ((index % slidesCount) + slidesCount) % slidesCount;
+    slidesCount > 0 ? ((index % slidesCount) + slidesCount) % slidesCount : 0;
 
-export const getSlide = (slides: Slide[], index: number) => slides[getSlideIndex(index, slides.length)];
+export const hasSlides = (slides: Slide[]): slides is [Slide, ...Slide[]] => slides.length > 0;
+
+export const getSlide = (slides: [Slide, ...Slide[]], index: number) => slides[getSlideIndex(index, slides.length)];
+
+export const getSlideIfPresent = (slides: Slide[], index: number) =>
+    hasSlides(slides) ? getSlide(slides, index) : undefined;
 
 export function addToolbarButton(toolbar: ToolbarSettings, key: string, button: React.ReactNode) {
     if (!button) return toolbar;

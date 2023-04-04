@@ -24,7 +24,7 @@ type CarouselSlideProps = {
 function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-    const { currentIndex } = useLightboxState().state;
+    const { currentIndex } = useLightboxState();
     const { slideRect, close } = useController();
     const {
         render,
@@ -95,7 +95,7 @@ function Placeholder() {
 }
 
 export function Carousel({ carousel: { finite, preload, padding, spacing } }: ComponentProps) {
-    const { slides, currentIndex, globalIndex } = useLightboxState().state;
+    const { slides, currentIndex, globalIndex } = useLightboxState();
     const { setCarouselRef } = useController();
 
     const spacingValue = parseLengthPercentage(spacing);

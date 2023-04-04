@@ -26,7 +26,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
     const { zoom, maxZoom, offsetX, offsetY, setZoomWrapper } = useZoom();
 
     const { carousel, on } = useLightboxProps();
-    const { currentIndex } = useLightboxState().state;
+    const { currentIndex } = useLightboxState();
 
     useLayoutEffect(() => {
         if (offset === 0) {

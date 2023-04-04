@@ -10,6 +10,7 @@ import {
     cssClass,
     cssVar,
     getSlide,
+    hasSlides,
     useAnimation,
     useEventCallback,
     useEvents,
@@ -40,7 +41,7 @@ export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
 
     const { visible } = useThumbnails();
     const { carousel, styles } = useLightboxProps();
-    const { slides, globalIndex, animation } = useLightboxState().state;
+    const { slides, globalIndex, animation } = useLightboxState();
     const { publish, subscribe } = useEvents();
     const isRTL = useRTL();
 
@@ -93,7 +94,7 @@ export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
 
     const items: { slide: Slide | null; index: number; placeholder?: boolean }[] = [];
 
-    if (slides.length > 0) {
+    if (hasSlides(slides)) {
         if (offset < 0) {
             for (let i = index - preload + offset; i < index - preload; i += 1) {
                 items.push({ slide: null, index: i, placeholder: true });

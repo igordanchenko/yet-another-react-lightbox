@@ -6,7 +6,7 @@ export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: Con
     let imageRect: ContainerRect = { width: 0, height: 0 };
     let maxImageRect: ContainerRect = { width: 0, height: 0 };
 
-    const { slides, currentIndex } = useLightboxState().state;
+    const { slides, currentIndex } = useLightboxState();
     const { imageFit } = useLightboxProps().carousel;
     const { maxZoomPixelRatio } = useZoomProps();
 

@@ -4,7 +4,7 @@ import { ComponentProps, PluginProps } from "../../types.js";
 import { clsx, createModule, cssClass, MODULE_CONTROLLER, PLUGIN_COUNTER, useLightboxState } from "../../core/index.js";
 
 export function CounterComponent({ counter: { className, ...rest } = {} }: ComponentProps) {
-    const { slides, currentIndex } = useLightboxState().state;
+    const { slides, currentIndex } = useLightboxState();
 
     if (slides.length === 0) return null;
 

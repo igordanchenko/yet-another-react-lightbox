@@ -216,6 +216,8 @@ export interface LightboxState {
     currentIndex: number;
     /** current slide index in the (-∞, +∞) range */
     globalIndex: number;
+    /** current slide */
+    currentSlide: Slide | undefined;
     /** current animation */
     animation?: { increment?: number; duration?: number; easing?: string };
 }

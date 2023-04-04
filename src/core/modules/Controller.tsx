@@ -22,7 +22,7 @@ import {
     useRTL,
     useSensors,
 } from "../hooks/index.js";
-import { LightboxStateSwipeAction, useEvents, useLightboxState } from "../contexts/index.js";
+import { LightboxStateSwipeAction, useEvents, useLightboxDispatch, useLightboxState } from "../contexts/index.js";
 import { SwipeState, usePointerSwipe, usePreventSwipeNavigation, useWheelSwipe } from "./controller/index.js";
 import {
     ACTION_CLOSE,
@@ -76,7 +76,8 @@ export function Controller({ children, ...props }: ComponentProps) {
 
     const [toolbarWidth, setToolbarWidth] = React.useState<number>();
 
-    const { state, dispatch } = useLightboxState();
+    const { state } = useLightboxState();
+    const dispatch = useLightboxDispatch();
 
     const [swipeState, setSwipeState] = React.useState(SwipeState.NONE);
     const swipeOffset = React.useRef(0);

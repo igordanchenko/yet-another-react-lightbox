@@ -33,7 +33,7 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, chil
     const scheduler = React.useRef<number>();
     const slideStatus = React.useRef<SlideStatus | undefined>();
 
-    const { slides, currentIndex } = useLightboxState().state;
+    const { slides, currentIndex } = useLightboxState();
     const { setTimeout, clearTimeout } = useTimeouts();
     const { subscribe } = useEvents();
     const { next } = useController();

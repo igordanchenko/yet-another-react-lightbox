@@ -31,7 +31,7 @@ export function useZoomState(
 
     const animate = useZoomAnimation(zoom, offsetX, offsetY, zoomWrapperRef);
 
-    const { slides, currentIndex, globalIndex } = useLightboxState().state;
+    const { slides, currentIndex, globalIndex } = useLightboxState();
 
     const { containerRect, slideRect } = useController();
 
