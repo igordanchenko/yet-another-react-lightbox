@@ -8,6 +8,7 @@ export const MODULE_TOOLBAR = "toolbar";
 
 export const PLUGIN_CAPTIONS = "captions";
 export const PLUGIN_COUNTER = "counter";
+export const PLUGIN_DOWNLOAD = "download";
 export const PLUGIN_FULLSCREEN = "fullscreen";
 export const PLUGIN_INLINE = "inline";
 export const PLUGIN_SLIDESHOW = "slideshow";

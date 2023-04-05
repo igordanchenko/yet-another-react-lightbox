@@ -1,5 +1,6 @@
 export { default as Captions } from "./captions/index.js";
 export { default as Counter } from "./counter/index.js";
+export { default as Download } from "./download/index.js";
 export { default as Fullscreen } from "./fullscreen/index.js";
 export { default as Inline } from "./inline/index.js";
 export { default as Slideshow } from "./slideshow/index.js";

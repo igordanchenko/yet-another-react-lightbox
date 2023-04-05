@@ -30,6 +30,10 @@
             "types": "./dist/plugins/counter/index.d.ts",
             "default": "./dist/plugins/counter/index.js"
         },
+        "./plugins/download": {
+            "types": "./dist/plugins/download/index.d.ts",
+            "default": "./dist/plugins/download/index.js"
+        },
         "./plugins/fullscreen": {
             "types": "./dist/plugins/fullscreen/index.d.ts",
             "default": "./dist/plugins/fullscreen/index.js"
@@ -73,6 +77,9 @@
             ],
             "plugins/counter": [
                 "dist/plugins/counter/index.d.ts"
+            ],
+            "plugins/download": [
+                "dist/plugins/download/index.d.ts"
             ],
             "plugins/fullscreen": [
                 "dist/plugins/fullscreen/index.d.ts"
