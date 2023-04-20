@@ -10,6 +10,7 @@ jobs:
         runs-on: ubuntu-latest
 
         permissions:
+            issues: write
             id-token: write
 
         steps:
