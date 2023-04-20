@@ -27,7 +27,7 @@ function setAttribute(element: Element, attribute: string, value: string) {
     };
 }
 
-export function Portal({ children, animation, styles, className, on, close }: ComponentProps) {
+export function Portal({ children, animation, styles, className, on, portal, close }: ComponentProps) {
     const [mounted, setMounted] = React.useState(false);
     const [visible, setVisible] = React.useState(false);
 
@@ -126,7 +126,7 @@ export function Portal({ children, animation, styles, className, on, close }: Co
               >
                   {children}
               </div>,
-              document.body
+              portal.root || document.body
           )
         : null;
 }

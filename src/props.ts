@@ -33,6 +33,7 @@ export const LightboxDefaultProps: LightboxProps = {
         touchAction: "none",
         closeOnBackdropClick: false,
     },
+    portal: {},
     on: {},
     styles: {},
     className: "",

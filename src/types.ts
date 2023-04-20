@@ -27,6 +27,8 @@ export interface LightboxProps {
     animation: AnimationSettings;
     /** controller settings */
     controller: ControllerSettings;
+    /** portal settings */
+    portal: PortalSettings;
     /** lifecycle callbacks */
     on: Callbacks;
     /** customization styles */
@@ -200,6 +202,12 @@ export interface ControllerRef {
     getLightboxProps: () => ComponentProps;
     /** get lightbox state */
     getLightboxState: () => LightboxState;
+}
+
+/** Portal settings */
+export interface PortalSettings {
+    /** portal mount point */
+    root?: DocumentFragment | Element | null;
 }
 
 /** Lightbox navigation action */
