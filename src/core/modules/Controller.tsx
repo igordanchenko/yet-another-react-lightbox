@@ -76,7 +76,7 @@ export function Controller({ children, ...props }: ComponentProps) {
 
     const [toolbarWidth, setToolbarWidth] = React.useState<number>();
 
-    const { state } = useLightboxState();
+    const state = useLightboxState();
     const dispatch = useLightboxDispatch();
 
     const [swipeState, setSwipeState] = React.useState(SwipeState.NONE);
