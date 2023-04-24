@@ -25,9 +25,10 @@ export const SlideshowContext = React.createContext<SlideshowRef | null>(null);
 
 export const useSlideshow = makeUseContext("useSlideshow", "SlideshowContext", SlideshowContext);
 
-export function SlideshowContextProvider({ slideshow, carousel: { finite }, children }: ComponentProps) {
+export function SlideshowContextProvider({ slideshow, carousel: { finite }, on, children }: ComponentProps) {
     const { autoplay, delay, ref } = resolveSlideshowProps(slideshow);
 
+    const wasPlaying = React.useRef(autoplay);
     const [playing, setPlaying] = React.useState(autoplay);
 
     const scheduler = React.useRef<number>();
@@ -84,6 +85,20 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, chil
             setPlaying(false);
         }
     }, [currentIndex, playing, disabled]);
+
+    const onSlideshowStart = useEventCallback(() => on.slideshowStart?.());
+
+    const onSlideshowStop = useEventCallback(() => on.slideshowStop?.());
+
+    React.useEffect(() => {
+        if (playing) {
+            onSlideshowStart();
+        } else if (wasPlaying.current) {
+            onSlideshowStop();
+        }
+
+        wasPlaying.current = playing;
+    }, [playing, onSlideshowStart, onSlideshowStop]);
 
     React.useEffect(
         () =>

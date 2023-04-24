@@ -17,7 +17,9 @@ declare module "../../types.js" {
         iconDownload?: RenderFunction;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface Callbacks {
+        /** a callback called on slide download */
         download?: Callback<DownloadCallbackProps>;
     }
 

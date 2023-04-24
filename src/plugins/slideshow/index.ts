@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Callback, RenderFunction } from "../../types.js";
 import { PLUGIN_SLIDESHOW } from "../../core/index.js";
 import { Slideshow } from "./Slideshow.js";
@@ -22,6 +24,14 @@ declare module "../../types.js" {
         iconSlideshowPause?: RenderFunction;
         /** render custom Slideshow button */
         buttonSlideshow?: RenderFunction<SlideshowRef>;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    interface Callbacks {
+        /** a callback called on slideshow playback start */
+        slideshowStart?: Callback;
+        /** a callback called on slideshow playback stop */
+        slideshowStop?: Callback;
     }
 
     // noinspection JSUnusedGlobalSymbols
