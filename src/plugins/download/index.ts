@@ -1,4 +1,4 @@
-import { RenderFunction } from "../../types.js";
+import { Callback, RenderFunction } from "../../types.js";
 import { PLUGIN_DOWNLOAD } from "../../core/index.js";
 import { Download } from "./Download.js";
 
@@ -15,6 +15,14 @@ declare module "../../types.js" {
         buttonDownload?: RenderFunction;
         /** render custom Download icon */
         iconDownload?: RenderFunction;
+    }
+
+    interface Callbacks {
+        download?: Callback<DownloadCallbackProps>;
+    }
+
+    export interface DownloadCallbackProps {
+        index: number;
     }
 
     // noinspection JSUnusedGlobalSymbols

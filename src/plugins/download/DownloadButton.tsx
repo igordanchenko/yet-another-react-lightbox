@@ -9,8 +9,8 @@ const DownloadIcon = createIcon(
 );
 
 export function DownloadButton() {
-    const { render } = useLightboxProps();
-    const { currentSlide } = useLightboxState();
+    const { render, on } = useLightboxProps();
+    const { currentSlide, currentIndex } = useLightboxState();
 
     if (render.buttonDownload) {
         return <>{render.buttonDownload()}</>;
@@ -28,6 +28,8 @@ export function DownloadButton() {
             onClick={() => {
                 if (downloadUrl) {
                     saveAs(downloadUrl, currentSlide?.downloadFilename);
+
+                    on.download?.({ index: currentIndex });
                 }
             }}
         />
