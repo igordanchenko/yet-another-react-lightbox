@@ -60,17 +60,25 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
     const { width, height, poster, sources } = slide;
 
     const scaleWidthAndHeight = () => {
-        if (!width || !height || !containerRect) return null;
+        const scalingProps: React.ComponentProps<"video"> = {};
 
-        const widthBound = width / height > containerRect.width / containerRect.height;
-        const elementWidth = widthBound ? containerRect.width : Math.round((containerRect.height / height) * width);
-        const elementHeight = !widthBound ? containerRect.height : Math.round((containerRect.width / width) * height);
+        // to prevent video element overflow from its container
+        scalingProps.style = { maxWidth: "100%", maxHeight: "100%" };
 
-        return {
-            width: elementWidth,
-            height: elementHeight,
-            style: { width: elementWidth, height: elementHeight, maxWidth: "100%", maxHeight: "100%" },
-        };
+        if (width && height && containerRect) {
+            const widthBound = width / height > containerRect.width / containerRect.height;
+            const elementWidth = widthBound ? containerRect.width : Math.round((containerRect.height / height) * width);
+            const elementHeight = !widthBound
+                ? containerRect.height
+                : Math.round((containerRect.width / width) * height);
+
+            scalingProps.width = elementWidth;
+            scalingProps.height = elementHeight;
+            scalingProps.style.width = elementWidth;
+            scalingProps.style.height = elementHeight;
+        }
+
+        return scalingProps;
     };
 
     const resolveBoolean = (attr: keyof Required<Pick<LightboxProps, "video">>["video"]) => {
