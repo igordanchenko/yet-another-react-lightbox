@@ -10,9 +10,11 @@ jobs:
         runs-on: ubuntu-latest
 
         permissions:
-            issues: write
             contents: write
             id-token: write
+            issues: write
+            discussions: write
+            pull-requests: write
 
         steps:
             -   name: Checkout
