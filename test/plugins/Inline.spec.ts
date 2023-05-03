@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { lightbox, runAllTimers } from "../utils.js";
+import { lightbox, withFakeTimers } from "../utils.js";
 import { Inline } from "../../src/plugins/index.js";
 
 describe("Inline", () => {
@@ -29,19 +29,16 @@ describe("Inline", () => {
         testMainScenario();
     });
 
-    it("doesn't close", async () => {
-        const user = userEvent.setup({ delay: null });
+    it("doesn't close", () =>
+        withFakeTimers(async ({ runAllTimers }) => {
+            const user = userEvent.setup({ delay: null });
 
-        jest.useFakeTimers();
+            render(lightbox({ plugins: [Inline] }));
 
-        render(lightbox({ plugins: [Inline] }));
+            await user.keyboard("[Escape]");
 
-        await user.keyboard("[Escape]");
+            runAllTimers();
 
-        runAllTimers();
-
-        testMainScenario();
-
-        jest.useRealTimers();
-    });
+            testMainScenario();
+        }));
 });

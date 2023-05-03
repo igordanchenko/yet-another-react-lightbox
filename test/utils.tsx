@@ -1,22 +1,52 @@
 import * as React from "react";
 import { act, screen } from "@testing-library/react";
+import { vi } from "vitest";
 
 import Lightbox from "../src/index.js";
 
-export const lightbox = (props?: Parameters<typeof Lightbox>[0]) => <Lightbox open {...props} />;
+export function lightbox(props?: Parameters<typeof Lightbox>[0]) {
+    return <Lightbox open {...props} />;
+}
 
-export const querySelector = (selector: string) => screen.getByRole("presentation").querySelector(selector);
+export function querySelector(selector: string) {
+    return screen.getByRole("presentation").querySelector(selector);
+}
 
-export const findCurrentSlide = () => querySelector("div.yarl__slide_current");
+export function findCurrentSlide() {
+    return querySelector("div.yarl__slide_current");
+}
 
-export const findCurrentImage = () => findCurrentSlide()?.querySelector("img")?.src;
+export function findCurrentImage() {
+    return findCurrentSlide()?.querySelector("img")?.src;
+}
 
-export const expectCurrentImageToBe = (source: string) => {
+export function expectCurrentImageToBe(source: string) {
     expect(findCurrentImage()).toContain(source);
-};
+}
 
-export const runAllTimers = () => {
-    act(() => {
-        jest.runAllTimers();
-    });
-};
+// Workaround for @testing-library/user-event fake timers bug
+// https://github.com/testing-library/react-testing-library/issues/1197
+export async function withFakeTimers(callback: (props: { runAllTimers: () => void }) => void) {
+    const jestCopy = globalThis.jest;
+
+    globalThis.jest = {
+        ...globalThis.jest,
+        advanceTimersByTime: vi.advanceTimersByTime.bind(vi),
+    };
+
+    try {
+        vi.useFakeTimers();
+
+        await callback({
+            runAllTimers: () => {
+                act(() => {
+                    vi.runAllTimers();
+                });
+            },
+        });
+    } finally {
+        vi.useRealTimers();
+
+        globalThis.jest = jestCopy;
+    }
+}

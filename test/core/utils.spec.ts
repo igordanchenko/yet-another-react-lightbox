@@ -1,5 +1,6 @@
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
+import { vi } from "vitest";
 
 import { cleanup, clsx, cssClass, cssVar, label, makeUseContext } from "../../src/core/utils.js";
 
@@ -36,7 +37,7 @@ describe("utils", () => {
             expect(label(undefined, "label")).toBe("label");
         });
 
-        it("handles absent tranlsation correctly", () => {
+        it("handles absent translation correctly", () => {
             expect(label(labels, "label1")).toBe("label1");
         });
 
@@ -64,7 +65,7 @@ describe("utils", () => {
         });
 
         it("calls cleanup methods", () => {
-            const cleaners: (() => void)[] = Array.from({ length: 3 }).map(() => jest.fn());
+            const cleaners: (() => void)[] = Array.from({ length: 3 }).map(() => vi.fn());
             cleanup(...cleaners)();
             cleaners.forEach((cleaner) => {
                 expect(cleaner).toHaveBeenCalledTimes(1);

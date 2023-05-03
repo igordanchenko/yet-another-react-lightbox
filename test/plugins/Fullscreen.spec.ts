@@ -84,10 +84,10 @@ describe("Fullscreen", () => {
 
     const testMainScenario = (requestFullscreen = "requestFullscreen", exitFullscreen = "exitFullscreen") => {
         // @ts-ignore
-        const requestFullscreenSpy = jest.spyOn(Element.prototype, requestFullscreen);
+        const requestFullscreenSpy = vi.spyOn(Element.prototype, requestFullscreen);
 
         // @ts-ignore
-        const exitFullscreenSpy = jest.spyOn(document, exitFullscreen);
+        const exitFullscreenSpy = vi.spyOn(document, exitFullscreen);
 
         const { unmount } = render(lightbox({ plugins: [Fullscreen] }));
 
