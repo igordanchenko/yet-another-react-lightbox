@@ -73,15 +73,13 @@ export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
     }));
 
     const handleControllerSwipe = useEventCallback(() => {
-        let animationOffset;
+        let animationOffset = 0;
         if (containerRef.current && track.current) {
             const containerRect = containerRef.current.getBoundingClientRect();
             const trackRect = track.current.getBoundingClientRect();
             animationOffset = isHorizontal(position)
                 ? trackRect.left - containerRect.left - (containerRect.width - trackRect.width) / 2
                 : trackRect.top - containerRect.top - (containerRect.height - trackRect.height) / 2;
-        } else {
-            animationOffset = 0;
         }
 
         prepareAnimation(animationOffset);

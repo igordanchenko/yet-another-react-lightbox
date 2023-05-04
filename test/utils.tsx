@@ -24,6 +24,24 @@ export function expectCurrentImageToBe(source: string) {
     expect(findCurrentImage()).toContain(source);
 }
 
+export function clickButton(name: string) {
+    act(() => {
+        screen.getByRole("button", { name }).click();
+    });
+}
+
+export function queryButton(name: string) {
+    return screen.queryByRole("button", { name });
+}
+
+export function expectToContainButton(name: string) {
+    expect(queryButton(name)).toBeInTheDocument();
+}
+
+export function expectNotToContainButton(name: string) {
+    expect(queryButton(name)).not.toBeInTheDocument();
+}
+
 // Workaround for @testing-library/user-event fake timers bug
 // https://github.com/testing-library/react-testing-library/issues/1197
 export async function withFakeTimers(callback: (props: { runAllTimers: () => void }) => void) {
