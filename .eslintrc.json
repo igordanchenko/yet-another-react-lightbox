@@ -8,7 +8,7 @@
         "react/require-default-props": "off",
         "react/jsx-props-no-spreading": "off",
         "import/prefer-default-export": "off",
-        "import/extensions": ["error", "always"],
+        "import/extensions": ["error", "ignorePackages"],
         "react/jsx-no-useless-fragment": ["error", { "allowExpressions": true }]
     }
 }

@@ -132,7 +132,8 @@
         "build:scss": "sass src --no-source-map",
         "start": "npm-run-all clean --parallel \"build:* -- -w\"",
         "lint": "eslint .",
-        "test": "vitest run --coverage"
+        "test": "vitest run --coverage",
+        "dev": "vite --config dev/vite.config.ts"
     },
     "peerDependencies": {
         "react": ">=16.8.0",
@@ -173,6 +174,7 @@
         "rimraf": "^5.0.0",
         "sass": "^1.62.1",
         "typescript": "^5.0.4",
+        "vite": "^4.3.4",
         "vitest": "^0.31.0"
     },
     "keywords": [
