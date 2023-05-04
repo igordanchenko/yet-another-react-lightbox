@@ -3,7 +3,14 @@ import "@testing-library/jest-dom";
 Object.defineProperties(window.HTMLElement.prototype, {
     clientWidth: {
         get() {
-            return ((this.className || "") as string).includes("yarl__container") ? window.innerWidth : 0;
+            const className = (this.className || "") as string;
+            if (className.includes("yarl__container")) {
+                return window.innerWidth;
+            }
+            if (className.includes("yarl__toolbar")) {
+                return 240;
+            }
+            return 0;
         },
     },
 });

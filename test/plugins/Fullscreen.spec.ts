@@ -1,79 +1,86 @@
 import * as React from "react";
-import { act, render, screen } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
+import { vi } from "vitest";
 
-import { lightbox } from "../utils.js";
-import { Fullscreen } from "../../src/plugins/index.js";
+import { clickButton, expectNotToContainButton, expectToContainButton, lightbox } from "../utils.js";
+import { Fullscreen, Thumbnails } from "../../src/plugins/index.js";
+import { LightboxExternalProps } from "../../src/index.js";
+
+function renderLightbox(props?: LightboxExternalProps) {
+    return render(lightbox({ plugins: [Fullscreen], ...props }));
+}
+
+function dispatchFullscreenChangeEvent() {
+    act(() => {
+        document.dispatchEvent(new Event("fullscreenchange"));
+    });
+}
+
+function init(
+    define = true,
+    fullscreenEnabled = "fullscreenEnabled",
+    fullscreenElement = "fullscreenElement",
+    requestFullscreen = "requestFullscreen",
+    exitFullscreen = "exitFullscreen"
+) {
+    let element: HTMLElement | null = null;
+
+    Object.defineProperty(document, fullscreenEnabled, {
+        get: define ? () => true : undefined,
+        configurable: true,
+    });
+
+    Object.defineProperty(document, fullscreenElement, {
+        get: define ? () => element : undefined,
+        configurable: true,
+    });
+
+    Object.defineProperty(Element.prototype, requestFullscreen, {
+        value: define
+            ? // eslint-disable-next-line func-names
+              function (this: HTMLElement) {
+                  element = this;
+                  dispatchFullscreenChangeEvent();
+                  return Promise.resolve();
+              }
+            : undefined,
+        writable: true,
+    });
+
+    Object.defineProperty(document, exitFullscreen, {
+        value: define
+            ? () => {
+                  element = null;
+                  dispatchFullscreenChangeEvent();
+                  return Promise.resolve();
+              }
+            : undefined,
+        writable: true,
+    });
+}
+
+const ENTER_FULLSCREEN = "Enter Fullscreen";
+const EXIT_FULLSCREEN = "Exit Fullscreen";
+
+function clickEnterFullscreenButton() {
+    clickButton(ENTER_FULLSCREEN);
+}
+
+function clickExitFullscreenButton() {
+    clickButton(EXIT_FULLSCREEN);
+}
+
+function expectToBeFullscreen() {
+    expectNotToContainButton(ENTER_FULLSCREEN);
+    expectToContainButton(EXIT_FULLSCREEN);
+}
+
+function expectNotToBeFullscreen() {
+    expectToContainButton(ENTER_FULLSCREEN);
+    expectNotToContainButton(EXIT_FULLSCREEN);
+}
 
 describe("Fullscreen", () => {
-    const dispatchFullscreenChangeEvent = () => {
-        act(() => {
-            document.dispatchEvent(new Event("fullscreenchange"));
-        });
-    };
-
-    const init = (
-        define = true,
-        fullscreenEnabled = "fullscreenEnabled",
-        fullscreenElement = "fullscreenElement",
-        requestFullscreen = "requestFullscreen",
-        exitFullscreen = "exitFullscreen"
-    ) => {
-        let element: HTMLElement | null = null;
-
-        Object.defineProperty(document, fullscreenEnabled, {
-            get: define ? () => true : undefined,
-            configurable: true,
-        });
-
-        Object.defineProperty(document, fullscreenElement, {
-            get: define ? () => element : undefined,
-            configurable: true,
-        });
-
-        Object.defineProperty(Element.prototype, requestFullscreen, {
-            value: define
-                ? // eslint-disable-next-line func-names
-                  function (this: HTMLElement) {
-                      element = this;
-                      dispatchFullscreenChangeEvent();
-                      return Promise.resolve();
-                  }
-                : undefined,
-            writable: true,
-        });
-
-        Object.defineProperty(document, exitFullscreen, {
-            value: define
-                ? () => {
-                      element = null;
-                      dispatchFullscreenChangeEvent();
-                      return Promise.resolve();
-                  }
-                : undefined,
-            writable: true,
-        });
-    };
-
-    const getEnterFullscreenButton = () => screen.getByRole("button", { name: "Enter Fullscreen" });
-
-    const queryEnterFullscreenButton = () => screen.queryByRole("button", { name: "Enter Fullscreen" });
-
-    const getExitFullscreenButton = () => screen.getByRole("button", { name: "Exit Fullscreen" });
-
-    const queryExitFullscreenButton = () => screen.queryByRole("button", { name: "Exit Fullscreen" });
-
-    // const findExitFullscreenButton = () => screen.findByRole("button", { name: "Exit Fullscreen" });
-
-    function expectToBeFullscreen() {
-        expect(queryEnterFullscreenButton()).not.toBeInTheDocument();
-        expect(queryExitFullscreenButton()).toBeInTheDocument();
-    }
-
-    function expectNotToBeFullscreen() {
-        expect(queryEnterFullscreenButton()).toBeInTheDocument();
-        expect(queryExitFullscreenButton()).not.toBeInTheDocument();
-    }
-
     beforeEach(() => {
         init();
     });
@@ -89,15 +96,15 @@ describe("Fullscreen", () => {
         // @ts-ignore
         const exitFullscreenSpy = vi.spyOn(document, exitFullscreen);
 
-        const { unmount } = render(lightbox({ plugins: [Fullscreen] }));
+        const { unmount } = renderLightbox();
 
         expectNotToBeFullscreen();
 
-        getEnterFullscreenButton().click();
+        clickEnterFullscreenButton();
         expect(requestFullscreenSpy).toHaveBeenCalledTimes(1);
         expectToBeFullscreen();
 
-        getExitFullscreenButton().click();
+        clickExitFullscreenButton();
         expect(exitFullscreenSpy).toHaveBeenCalledTimes(1);
         expectNotToBeFullscreen();
 
@@ -108,19 +115,20 @@ describe("Fullscreen", () => {
         testMainScenario();
     });
 
-    // it("auto opens", async () => {
-    //     render(lightbox({ plugins: [Fullscreen], fullscreen: true }));
-    //
-    //     expect(await findExitFullscreenButton()).toBeInTheDocument();
-    // });
+    it("works with Thumbnails", () => {
+        // Thumbnails plugin must be listed first
+        render(lightbox({ plugins: [Thumbnails, Fullscreen] }));
+
+        expectNotToBeFullscreen();
+    });
 
     it("doesn't render when fullscreen is not supported", () => {
         init(false);
 
-        render(lightbox({ plugins: [Fullscreen] }));
+        renderLightbox();
 
-        expect(queryEnterFullscreenButton()).not.toBeInTheDocument();
-        expect(queryExitFullscreenButton()).not.toBeInTheDocument();
+        expectNotToContainButton(ENTER_FULLSCREEN);
+        expectNotToContainButton(EXIT_FULLSCREEN);
     });
 
     it("supports vendor-specific methods", () => {
@@ -167,40 +175,45 @@ describe("Fullscreen", () => {
     });
 
     it("it handles requestFullscreen rejection", () => {
-        Object.defineProperty(Element.prototype, "requestFullscreen", {
-            value: () => Promise.reject(),
-            writable: true,
+        [
+            () => Promise.reject(),
+            () => {
+                throw new Error("Not implemented");
+            },
+        ].forEach((value) => {
+            Object.defineProperty(Element.prototype, "requestFullscreen", { value, writable: true });
+
+            renderLightbox();
+
+            clickEnterFullscreenButton();
+            expectNotToBeFullscreen();
         });
-
-        render(lightbox({ plugins: [Fullscreen] }));
-
-        getEnterFullscreenButton().click();
-        expectNotToBeFullscreen();
     });
 
     it("it handles exitFullscreen rejection", () => {
-        Object.defineProperty(document, "exitFullscreen", {
-            value: () => Promise.reject(),
-            writable: true,
+        [
+            () => Promise.reject(),
+            () => {
+                throw new Error("Not implemented");
+            },
+        ].forEach((value) => {
+            Object.defineProperty(document, "exitFullscreen", { value, writable: true });
+
+            renderLightbox();
+
+            clickEnterFullscreenButton();
+            expectToBeFullscreen();
+
+            clickExitFullscreenButton();
+            expectToBeFullscreen();
         });
-
-        render(lightbox({ plugins: [Fullscreen] }));
-
-        getEnterFullscreenButton().click();
-        expectToBeFullscreen();
-
-        getExitFullscreenButton().click();
-        expectToBeFullscreen();
     });
 
     it("supports custom button rendering", () => {
-        render(
-            lightbox({
-                plugins: [Fullscreen],
-                render: { buttonFullscreen: () => React.createElement("button", { type: "button" }, "Custom button") },
-            })
-        );
+        renderLightbox({
+            render: { buttonFullscreen: () => React.createElement("button", { type: "button" }, "Custom button") },
+        });
 
-        expect(screen.queryByRole("button", { name: "Custom button" })).toBeInTheDocument();
+        expectToContainButton("Custom button");
     });
 });

@@ -14,6 +14,7 @@ export function Inline({ augment, replace, remove }: PluginProps) {
             ...restProps
         }) => ({
             open: true,
+            /* c8 ignore next */
             close: () => {},
             toolbar: {
                 buttons: buttons.filter((button) => button !== ACTION_CLOSE),
