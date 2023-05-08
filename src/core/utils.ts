@@ -106,3 +106,11 @@ export function addToolbarButton(toolbar: ToolbarSettings, key: string, button: 
 
     return { buttons: [buttonWithKey, ...buttons], ...restToolbar };
 }
+
+export function stopNavigationEventsPropagation() {
+    const stopPropagation = (event: React.PointerEvent | React.KeyboardEvent | React.WheelEvent) => {
+        event.stopPropagation();
+    };
+
+    return { onPointerDown: stopPropagation, onKeyDown: stopPropagation, onWheel: stopPropagation };
+}
