@@ -1,5 +1,11 @@
-import { PluginProps } from "../../types.js";
-import { ACTION_CLOSE, createModule, MODULE_NO_SCROLL, MODULE_PORTAL, PLUGIN_INLINE } from "../../core/index.js";
+import {
+    ACTION_CLOSE,
+    createModule,
+    MODULE_NO_SCROLL,
+    MODULE_PORTAL,
+    PLUGIN_INLINE,
+    PluginProps,
+} from "../../index.js";
 import { InlineContainer } from "./InlineContainer.js";
 
 /** Inline plugin */

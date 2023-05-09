@@ -11,14 +11,14 @@ import {
     cssVar,
     getSlide,
     hasSlides,
+    Slide,
     useAnimation,
     useEventCallback,
     useEvents,
     useLightboxProps,
     useLightboxState,
     useRTL,
-} from "../../core/index.js";
-import { Slide } from "../../types.js";
+} from "../../index.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
 import { defaultThumbnailsProps, useThumbnailsProps } from "./props.js";

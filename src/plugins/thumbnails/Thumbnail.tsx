@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { RenderThumbnailProps, Slide } from "../../types.js";
 import {
     CLASS_FLEX_CENTER,
     CLASS_FULLSIZE,
@@ -12,8 +11,10 @@ import {
     ImageSlide,
     isImageSlide,
     makeComposePrefix,
+    RenderThumbnailProps,
+    Slide,
     useLightboxProps,
-} from "../../core/index.js";
+} from "../../index.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { useThumbnailsProps } from "./props.js";
 

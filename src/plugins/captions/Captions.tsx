@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { PluginProps } from "../../types.js";
-import { addToolbarButton, createModule, PLUGIN_CAPTIONS } from "../../core/index.js";
+import { PluginProps, addToolbarButton, createModule, PLUGIN_CAPTIONS } from "../../index.js";
 import { Title } from "./Title.js";
 import { Description } from "./Description.js";
 import { CaptionsButton } from "./CaptionsButton.js";

@@ -1,14 +1,15 @@
 import * as React from "react";
 
-import { ContainerRect, Slide } from "../../../types.js";
 import {
+    ContainerRect,
     isImageSlide,
     round,
+    Slide,
     useController,
     useEventCallback,
     useLayoutEffect,
     useLightboxState,
-} from "../../../core/index.js";
+} from "../../../index.js";
 import { useZoomProps } from "./useZoomProps.js";
 import { useZoomAnimation } from "./useZoomAnimation.js";
 

@@ -1,8 +1,8 @@
-import { Callback, RenderFunction } from "../../types.js";
-import { PLUGIN_DOWNLOAD } from "../../core/index.js";
+import { Callback, PLUGIN_DOWNLOAD, RenderFunction } from "../../index.js";
 import { Download } from "./Download.js";
 
 declare module "../../types.js" {
+    // noinspection JSUnusedGlobalSymbols
     interface GenericSlide {
         /** download url */
         downloadUrl?: string;
@@ -10,6 +10,7 @@ declare module "../../types.js" {
         downloadFilename?: string;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface Render {
         /** render custom Download button */
         buttonDownload?: RenderFunction;

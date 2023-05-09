@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useEventCallback, useLayoutEffect, useLightboxProps, useMotionPreference } from "../../../core/index.js";
+import { useEventCallback, useLayoutEffect, useLightboxProps, useMotionPreference } from "../../../index.js";
 
 export function useZoomAnimation(
     zoom: number,

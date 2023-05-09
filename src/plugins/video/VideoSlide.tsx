@@ -7,11 +7,12 @@ import {
     CLASS_FLEX_CENTER,
     clsx,
     cssClass,
+    LightboxProps,
+    SlideVideo,
     useContainerRect,
     useEventCallback,
     useEvents,
-} from "../../core/index.js";
-import { LightboxProps, SlideVideo } from "../../types.js";
+} from "../../index.js";
 import { useVideoProps } from "./props.js";
 
 export type VideoSlideProps = {

@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { Callback, RenderFunction } from "../../types.js";
-import { PLUGIN_SLIDESHOW } from "../../core/index.js";
+import { Callback, RenderFunction, PLUGIN_SLIDESHOW } from "../../index.js";
 import { Slideshow } from "./Slideshow.js";
 
 declare module "../../types.js" {

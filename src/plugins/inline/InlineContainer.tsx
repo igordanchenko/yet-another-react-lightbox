@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps } from "../../types.js";
-import { clsx, cssClass } from "../../core/index.js";
+import { clsx, ComponentProps, cssClass } from "../../index.js";
 
 /** Inline plugin container */
 export function InlineContainer({ inline: { className, ...rest } = {}, children }: ComponentProps) {

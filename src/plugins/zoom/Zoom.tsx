@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { Plugin } from "../../types.js";
-import { addToolbarButton, createModule, isImageSlide, PLUGIN_ZOOM } from "../../core/index.js";
+import { addToolbarButton, createModule, isImageSlide, Plugin, PLUGIN_ZOOM } from "../../index.js";
 import { resolveZoomProps } from "./props.js";
 import { ZoomContextProvider } from "./ZoomController.js";
 import { ZoomToolbarControl } from "./ZoomToolbarControl.js";

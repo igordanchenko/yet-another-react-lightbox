@@ -1,12 +1,13 @@
 import * as React from "react";
 
-import { Callback, RenderFunction } from "../../types.js";
-import { PLUGIN_CAPTIONS } from "../../core/index.js";
+import { Callback, PLUGIN_CAPTIONS, RenderFunction } from "../../index.js";
+
 import { Captions } from "./Captions.js";
 
 declare module "../../types.js" {
     export type TextAlignment = "start" | "end" | "center";
 
+    // noinspection JSUnusedGlobalSymbols
     interface GenericSlide {
         /** slide title */
         title?: React.ReactNode;
@@ -45,6 +46,7 @@ declare module "../../types.js" {
         captionsDescriptionContainer: "captionsDescriptionContainer";
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface Render {
         /** render custom Captions Visible icon */
         iconCaptionsVisible?: RenderFunction;

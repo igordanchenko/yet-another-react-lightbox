@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useController } from "../../core/index.js";
+import { useController } from "../../index.js";
 import { ZoomButton } from "./ZoomButton.js";
 
 export default function ZoomButtonsGroup() {

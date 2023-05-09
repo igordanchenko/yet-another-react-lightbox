@@ -1,21 +1,8 @@
 import * as React from "react";
 
-import { LightboxProps, LightboxState, Slide } from "../../types.js";
+import { LightboxProps, LightboxState, LightboxStateSwipeAction, LightboxStateUpdateAction } from "../types.js";
 import { getSlideIfPresent, getSlideIndex, makeUseContext } from "../utils.js";
 import { UNKNOWN_ACTION_TYPE } from "../consts.js";
-
-export type LightboxStateSwipeAction = {
-    type: "swipe";
-    increment: number;
-    duration?: number;
-    easing?: string;
-};
-
-export type LightboxStateUpdateAction = {
-    type: "update";
-    slides: Slide[];
-    index: number;
-};
 
 export type LightboxStateAction = LightboxStateSwipeAction | LightboxStateUpdateAction;
 

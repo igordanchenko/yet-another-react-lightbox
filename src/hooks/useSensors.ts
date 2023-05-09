@@ -24,13 +24,13 @@ export type ReactEventType<T, K> = K extends KeyboardEventType
     ? React.PointerEvent<T>
     : never;
 
-export type EventCallback<T, P extends React.PointerEvent<T> | React.KeyboardEvent<T> | React.WheelEvent<T>> = (
+export type SensorCallback<T, P extends React.PointerEvent<T> | React.KeyboardEvent<T> | React.WheelEvent<T>> = (
     event: P
 ) => void;
 
 export type SubscribeSensors<T> = <ET extends SupportedEventType>(
     type: ET,
-    callback: EventCallback<T, ReactEventType<T, ET>>
+    callback: SensorCallback<T, ReactEventType<T, ET>>
 ) => () => void;
 
 export type RegisterSensors<T> = Required<Pick<React.HTMLAttributes<T>, PointerEventType>> &
@@ -43,11 +43,13 @@ export type UseSensors<T> = {
 };
 
 export function useSensors<T extends Element>(): UseSensors<T> {
-    const [subscribers] = React.useState<{ [K in SupportedEventType]?: EventCallback<T, ReactEventType<T, K>>[] }>({});
+    const [subscribers] = React.useState<{
+        [K in SupportedEventType]?: SensorCallback<T, ReactEventType<T, K>>[];
+    }>({});
 
     return React.useMemo(() => {
         const notifySubscribers = <ET extends SupportedEventType>(type: ET, event: ReactEventType<T, ET>) => {
-            (subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[])?.forEach((listener) => {
+            (subscribers[type] as SensorCallback<T, ReactEventType<T, ET>>[])?.forEach((listener) => {
                 if (!event.isPropagationStopped()) listener(event);
             });
         };
@@ -65,15 +67,15 @@ export function useSensors<T extends Element>(): UseSensors<T> {
             },
             subscribeSensors: <ET extends SupportedEventType>(
                 type: ET,
-                callback: EventCallback<T, ReactEventType<T, ET>>
+                callback: SensorCallback<T, ReactEventType<T, ET>>
             ) => {
                 if (!subscribers[type]) {
                     subscribers[type] = [];
                 }
-                (subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[]).unshift(callback);
+                (subscribers[type] as SensorCallback<T, ReactEventType<T, ET>>[]).unshift(callback);
 
                 return () => {
-                    const listeners = subscribers[type] as EventCallback<T, ReactEventType<T, ET>>[];
+                    const listeners = subscribers[type] as SensorCallback<T, ReactEventType<T, ET>>[];
                     if (listeners) {
                         listeners.splice(0, listeners.length, ...listeners.filter((el) => el !== callback));
                     }

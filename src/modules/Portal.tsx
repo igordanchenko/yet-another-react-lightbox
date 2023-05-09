@@ -1,8 +1,8 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createPortal } from "react-dom";
 
-import { ComponentProps } from "../../types.js";
-import { LightboxDefaultProps } from "../../props.js";
+import { ComponentProps } from "../types.js";
+import { LightboxDefaultProps } from "../props.js";
 import { createModule } from "../config.js";
 import { clsx, composePrefix, cssClass, cssVar } from "../utils.js";
 import { useEventCallback, useMotionPreference } from "../hooks/index.js";
@@ -102,7 +102,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
     );
 
     return mounted
-        ? ReactDOM.createPortal(
+        ? createPortal(
               <div
                   ref={handleRef}
                   className={clsx(

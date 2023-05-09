@@ -1,18 +1,17 @@
 import * as React from "react";
 
 import { makeUseContext } from "../utils.js";
-
-export interface EventTypes {}
+import { EventTypes } from "../types.js";
 
 export type Topic = keyof EventTypes;
 
 export type Event<T extends Topic> = EventTypes[T];
 
-export type Callback<T extends Topic> = (...args: Event<T> extends void ? [] : [event: Event<T>]) => void;
+export type EventCallback<T extends Topic> = (...args: Event<T> extends void ? [] : [event: Event<T>]) => void;
 
-export type Subscribe = <T extends Topic>(topic: T, callback: Callback<T>) => () => void;
+export type Subscribe = <T extends Topic>(topic: T, callback: EventCallback<T>) => () => void;
 
-export type Unsubscribe = <T extends Topic>(topic: T, callback: Callback<T>) => void;
+export type Unsubscribe = <T extends Topic>(topic: T, callback: EventCallback<T>) => void;
 
 export type Publish = <T extends Topic>(
     ...args: Event<T> extends void ? [topic: T] : [topic: T, event: Event<T>]
@@ -29,7 +28,7 @@ export const EventsContext = React.createContext<EventsContextType | null>(null)
 export const useEvents = makeUseContext("useEvents", "EventsContext", EventsContext);
 
 export function EventsProvider({ children }: React.PropsWithChildren) {
-    const [subscriptions] = React.useState<{ [T in Topic]?: Callback<T>[] }>({});
+    const [subscriptions] = React.useState<{ [T in Topic]?: EventCallback<T>[] }>({});
 
     React.useEffect(
         () => () => {
@@ -39,7 +38,7 @@ export function EventsProvider({ children }: React.PropsWithChildren) {
     );
 
     const context = React.useMemo<EventsContextType>(() => {
-        const unsubscribe = <T extends Topic>(topic: T, callback: Callback<T>) => {
+        const unsubscribe = <T extends Topic>(topic: T, callback: EventCallback<T>) => {
             subscriptions[topic]?.splice(
                 0,
                 subscriptions[topic]!.length,
@@ -47,7 +46,7 @@ export function EventsProvider({ children }: React.PropsWithChildren) {
             );
         };
 
-        const subscribe = <T extends Topic>(topic: T, callback: Callback<T>) => {
+        const subscribe = <T extends Topic>(topic: T, callback: EventCallback<T>) => {
             if (!subscriptions[topic]) {
                 subscriptions[topic] = [];
             }

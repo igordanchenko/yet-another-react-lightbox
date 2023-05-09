@@ -1,5 +1,11 @@
-import { ContainerRect } from "../../../types.js";
-import { isImageFitCover, isImageSlide, round, useLightboxProps, useLightboxState } from "../../../core/index.js";
+import {
+    ContainerRect,
+    isImageFitCover,
+    isImageSlide,
+    round,
+    useLightboxProps,
+    useLightboxState,
+} from "../../../index.js";
 import { useZoomProps } from "./useZoomProps.js";
 
 export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: ContainerRect) {

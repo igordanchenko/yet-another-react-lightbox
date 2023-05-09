@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { PluginProps } from "../../types.js";
-import { addToolbarButton, createModule, PLUGIN_SLIDESHOW } from "../../core/index.js";
+import { addToolbarButton, createModule, PLUGIN_SLIDESHOW, PluginProps } from "../../index.js";
 import { resolveSlideshowProps } from "./props.js";
 import { SlideshowContextProvider } from "./SlideshowContext.js";
 import { SlideshowButton } from "./SlideshowButton.js";

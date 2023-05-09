@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useEventCallback, useLightboxProps } from "../../../core/index.js";
+import { useEventCallback, useLightboxProps } from "../../../index.js";
 
 export function useZoomCallback(zoom: number, disabled: boolean) {
     const { on } = useLightboxProps();

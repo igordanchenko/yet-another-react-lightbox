@@ -1,5 +1,4 @@
-import { Callback, ContainerRect, ImageFit, RenderFunction, Slide } from "../../types.js";
-import { PLUGIN_THUMBNAILS } from "../../core/index.js";
+import { Callback, ContainerRect, ImageFit, PLUGIN_THUMBNAILS, RenderFunction, Slide } from "../../index.js";
 import { Thumbnails } from "./Thumbnails.js";
 
 type Position = "top" | "bottom" | "start" | "end";

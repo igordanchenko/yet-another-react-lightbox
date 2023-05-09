@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, IconButton, isImageSlide, useLightboxProps, useLightboxState } from "../../core/index.js";
+import { createIcon, IconButton, isImageSlide, useLightboxProps, useLightboxState } from "../../index.js";
 import { saveAs } from "./FileSaver.js";
 
 const DownloadIcon = createIcon(

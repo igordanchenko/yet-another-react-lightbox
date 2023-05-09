@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps, RenderFunction } from "../../types.js";
+import { ComponentProps, RenderFunction } from "../types.js";
 import { createModule } from "../config.js";
 import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
 import { cssClass } from "../utils.js";

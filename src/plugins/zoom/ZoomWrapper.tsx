@@ -4,14 +4,16 @@ import {
     CLASS_FLEX_CENTER,
     CLASS_FULLSIZE,
     clsx,
+    ContainerRect,
     cssClass,
     ImageSlide,
     isImageSlide,
+    LightboxProps,
+    RenderSlideProps,
     useLayoutEffect,
     useLightboxProps,
     useLightboxState,
-} from "../../core/index.js";
-import { ContainerRect, LightboxProps, RenderSlideProps } from "../../types.js";
+} from "../../index.js";
 import { useZoom } from "./ZoomController.js";
 import { isResponsiveImageSlide, ResponsiveImage } from "./ResponsiveImage.js";
 

@@ -1,5 +1,4 @@
-import { LightboxProps } from "../../types.js";
-import { useLightboxProps } from "../../core/index.js";
+import { LightboxProps, useLightboxProps } from "../../index.js";
 
 export const defaultCaptionsProps = {
     descriptionTextAlign: "start" as const,

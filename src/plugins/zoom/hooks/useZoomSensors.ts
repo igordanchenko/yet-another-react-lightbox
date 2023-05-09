@@ -12,7 +12,7 @@ import {
     useController,
     useEventCallback,
     useLightboxState,
-} from "../../../core/index.js";
+} from "../../../index.js";
 import { useZoomProps } from "./useZoomProps.js";
 import { useZoomState } from "./useZoomState.js";
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, IconButton, useLightboxProps } from "../../core/index.js";
+import { createIcon, IconButton, useLightboxProps } from "../../index.js";
 import { useFullscreen } from "./FullscreenContext.js";
 
 const EnterFullscreenIcon = createIcon(

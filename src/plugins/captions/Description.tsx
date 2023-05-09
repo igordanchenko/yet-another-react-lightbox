@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { Slide } from "../../types.js";
-import { clsx, cssVar, useLightboxProps } from "../../core/index.js";
+import { clsx, cssVar, Slide, useLightboxProps } from "../../index.js";
 import { cssPrefix } from "./utils.js";
 import { defaultCaptionsProps, useCaptionsProps } from "./props.js";
 import { useCaptions } from "./CaptionsContext.js";

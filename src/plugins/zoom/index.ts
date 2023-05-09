@@ -1,5 +1,4 @@
-import { Callback, RenderFunction } from "../../types.js";
-import { PLUGIN_ZOOM } from "../../core/index.js";
+import { Callback, RenderFunction, PLUGIN_ZOOM } from "../../index.js";
 import { Zoom } from "./Zoom.js";
 
 declare module "../../types.js" {

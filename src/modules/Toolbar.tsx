@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps } from "../../types.js";
+import { ComponentProps } from "../types.js";
 import { createModule } from "../config.js";
 import { useLayoutEffect } from "../hooks/index.js";
 import { composePrefix, cssClass, stopNavigationEventsPropagation } from "../utils.js";
