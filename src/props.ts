@@ -1,5 +1,5 @@
 import { LightboxProps } from "./types.js";
-import { ACTION_CLOSE, IMAGE_FIT_CONTAIN } from "./core/consts.js";
+import { ACTION_CLOSE, IMAGE_FIT_CONTAIN } from "./consts.js";
 
 export const LightboxDefaultProps: LightboxProps = {
     open: false,

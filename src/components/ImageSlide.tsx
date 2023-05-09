@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ContainerRect, ImageFit, Render, SlideImage } from "../../types.js";
+import { ContainerRect, ImageFit, Render, SlideImage } from "../types.js";
 import { clsx, cssClass, hasWindow, isImageFitCover, makeComposePrefix } from "../utils.js";
 import { useEventCallback } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";

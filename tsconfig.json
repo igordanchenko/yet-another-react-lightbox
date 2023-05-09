@@ -5,10 +5,8 @@
         "module": "ES2015",
         "jsx": "react",
         "lib": ["ES2020", "dom"],
-        "esModuleInterop": true,
         "moduleResolution": "node",
         "isolatedModules": true,
-        "importHelpers": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true
     }

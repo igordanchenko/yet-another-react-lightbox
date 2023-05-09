@@ -5,7 +5,7 @@
     "author": "Igor Danchenko",
     "license": "MIT",
     "type": "module",
-    "main": "dist/index.js",
+    "module": "dist/index.js",
     "types": "dist/index.d.ts",
     "exports": {
         ".": {
@@ -13,8 +13,8 @@
             "default": "./dist/index.js"
         },
         "./core": {
-            "types": "./dist/core/index.d.ts",
-            "default": "./dist/core/index.js"
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
         },
         "./plugins": {
             "types": "./dist/plugins/index.d.ts",
@@ -67,7 +67,7 @@
                 "dist/index.d.ts"
             ],
             "core": [
-                "dist/core/index.d.ts"
+                "dist/index.d.ts"
             ],
             "plugins": [
                 "dist/plugins/index.d.ts"
@@ -125,12 +125,12 @@
     "scripts": {
         "prepare": "husky install",
         "clean": "rimraf dist",
-        "build": "npm-run-all clean build:scss build:css build:js build:dts",
-        "build:js": "tsc -p tsconfig.build.js.json",
-        "build:dts": "tsc -p tsconfig.build.dts.json",
-        "build:css": "postcss src/*.css src/**/*.css --base src -d dist -u autoprefixer --no-map",
-        "build:scss": "sass src --no-source-map",
         "start": "npm-run-all clean --parallel \"build:* -- -w\"",
+        "build": "npm-run-all clean build:scss build:css build:js build:fixup",
+        "build:scss": "sass src --no-source-map",
+        "build:css": "postcss src/*.css src/**/*.css --base src -d dist -u autoprefixer --no-map",
+        "build:js": "rollup -c",
+        "build:fixup": "node fixup-dist.js",
         "lint": "eslint .",
         "test": "vitest run --coverage",
         "dev": "vite --config dev/vite.config.ts"
@@ -142,6 +142,7 @@
     "devDependencies": {
         "@commitlint/cli": "^17.6.3",
         "@commitlint/config-conventional": "^17.6.3",
+        "@rollup/plugin-typescript": "^11.1.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^14.0.0",
         "@testing-library/user-event": "^14.4.3",
@@ -153,6 +154,7 @@
         "@vitest/coverage-c8": "^0.31.0",
         "@vitest/ui": "^0.31.0",
         "autoprefixer": "^10.4.14",
+        "chokidar": "^3.5.3",
         "eslint": "^8.40.0",
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-airbnb-typescript": "^17.0.0",
@@ -162,6 +164,7 @@
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-react": "^7.32.2",
         "eslint-plugin-react-hooks": "^4.6.0",
+        "glob": "^10.2.2",
         "husky": "^8.0.3",
         "jsdom": "^22.0.0",
         "lint-staged": "^13.2.2",
@@ -172,6 +175,8 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "rimraf": "^5.0.0",
+        "rollup": "^3.21.5",
+        "rollup-plugin-dts": "^5.3.0",
         "sass": "^1.62.1",
         "typescript": "^5.0.4",
         "vite": "^4.3.5",

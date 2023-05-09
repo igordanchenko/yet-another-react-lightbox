@@ -1,13 +1,13 @@
 import * as React from "react";
 
-import { PluginProps } from "../../types.js";
 import {
     addToolbarButton,
     createModule,
     MODULE_CONTROLLER,
     PLUGIN_FULLSCREEN,
     PLUGIN_THUMBNAILS,
-} from "../../core/index.js";
+    PluginProps,
+} from "../../index.js";
 import { resolveFullscreenProps } from "./props.js";
 import { FullscreenButton } from "./FullscreenButton.js";
 import { FullscreenContextProvider } from "./FullscreenContext.js";

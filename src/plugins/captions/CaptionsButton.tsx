@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, createIconDisabled, IconButton, useLightboxProps } from "../../core/index.js";
+import { createIcon, createIconDisabled, IconButton, useLightboxProps } from "../../index.js";
 import { useCaptions } from "./CaptionsContext.js";
 
 const captionsIcon = () => (

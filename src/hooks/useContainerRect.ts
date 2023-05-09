@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ContainerRect } from "../../types.js";
+import { ContainerRect } from "../types.js";
 
 export function useContainerRect<T extends HTMLElement = HTMLElement>() {
     const [containerRect, setContainerRect] = React.useState<ContainerRect>();

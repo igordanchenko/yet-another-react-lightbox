@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Callback, ComponentProps, ContainerRect, ControllerRef, NavigationAction } from "../../types.js";
+import { Callback, ComponentProps, ContainerRect, ControllerRef } from "../types.js";
 import { createModule } from "../config.js";
 import {
     cleanup,
@@ -22,37 +22,18 @@ import {
     useRTL,
     useSensors,
 } from "../hooks/index.js";
-import { LightboxStateSwipeAction, useEvents, useLightboxDispatch, useLightboxState } from "../contexts/index.js";
+import { useEvents, useLightboxDispatch, useLightboxState } from "../contexts/index.js";
 import { SwipeState, usePointerSwipe, usePreventSwipeNavigation, useWheelSwipe } from "./controller/index.js";
 import {
     ACTION_CLOSE,
     ACTION_NEXT,
     ACTION_PREV,
     ACTION_SWIPE,
-    ACTIVE_SLIDE_COMPLETE,
-    ACTIVE_SLIDE_ERROR,
-    ACTIVE_SLIDE_LOADING,
-    ACTIVE_SLIDE_PLAYING,
     CLASS_FLEX_CENTER,
     EVENT_ON_KEY_UP,
     MODULE_CONTROLLER,
     VK_ESCAPE,
 } from "../consts.js";
-
-declare module "../index.js" {
-    // noinspection JSUnusedGlobalSymbols
-    interface EventTypes {
-        [ACTION_PREV]: NavigationAction | void;
-        [ACTION_NEXT]: NavigationAction | void;
-        [ACTION_SWIPE]: LightboxStateSwipeAction;
-        [ACTION_CLOSE]: void;
-
-        [ACTIVE_SLIDE_LOADING]: void;
-        [ACTIVE_SLIDE_PLAYING]: void;
-        [ACTIVE_SLIDE_COMPLETE]: void;
-        [ACTIVE_SLIDE_ERROR]: void;
-    }
-}
 
 const cssContainerPrefix = makeComposePrefix("container");
 

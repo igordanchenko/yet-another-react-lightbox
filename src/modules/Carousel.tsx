@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps, Slide } from "../../types.js";
+import { ComponentProps, Slide } from "../types.js";
 import { createModule } from "../config.js";
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";

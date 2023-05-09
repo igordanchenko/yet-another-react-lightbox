@@ -1,5 +1,16 @@
 import * as React from "react";
 
+import {
+    ACTION_CLOSE,
+    ACTION_NEXT,
+    ACTION_PREV,
+    ACTION_SWIPE,
+    ACTIVE_SLIDE_COMPLETE,
+    ACTIVE_SLIDE_ERROR,
+    ACTIVE_SLIDE_LOADING,
+    ACTIVE_SLIDE_PLAYING,
+} from "./consts.js";
+
 /** Lightbox external props */
 export type LightboxExternalProps = DeepPartial<LightboxProps, "carousel" | "animation" | "controller" | "toolbar">;
 
@@ -216,6 +227,21 @@ export interface NavigationAction {
     count?: number;
 }
 
+/** Lightbox state swipe action */
+export type LightboxStateSwipeAction = {
+    type: "swipe";
+    increment: number;
+    duration?: number;
+    easing?: string;
+};
+
+/** Lightbox state update action */
+export type LightboxStateUpdateAction = {
+    type: "update";
+    slides: Slide[];
+    index: number;
+};
+
 /** Lightbox state */
 export interface LightboxState {
     /** lightbox slides */
@@ -329,6 +355,18 @@ export type ToolbarButtonKey = keyof ToolbarButtonKeys;
 
 export interface ToolbarButtonKeys {
     close: null;
+}
+
+export interface EventTypes {
+    [ACTION_PREV]: NavigationAction | void;
+    [ACTION_NEXT]: NavigationAction | void;
+    [ACTION_SWIPE]: LightboxStateSwipeAction;
+    [ACTION_CLOSE]: void;
+
+    [ACTIVE_SLIDE_LOADING]: void;
+    [ACTIVE_SLIDE_PLAYING]: void;
+    [ACTIVE_SLIDE_COMPLETE]: void;
+    [ACTIVE_SLIDE_ERROR]: void;
 }
 
 /** Plugin methods */

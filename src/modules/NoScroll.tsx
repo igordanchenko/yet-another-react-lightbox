@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps } from "../../types.js";
+import { ComponentProps } from "../types.js";
 import { createModule } from "../config.js";
 import { cssClass } from "../utils.js";
 import { useLayoutEffect, useRTL } from "../hooks/index.js";

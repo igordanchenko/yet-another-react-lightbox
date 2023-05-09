@@ -1,22 +1,18 @@
 import * as React from "react";
 
-import { AnimationSettings, ComponentProps, LightboxExternalProps, DeepPartialValue, Node } from "./types.js";
+import { AnimationSettings, ComponentProps, DeepPartialValue, LightboxExternalProps, Node } from "./types.js";
 import { LightboxDefaultProps } from "./props.js";
+import { createNode, withPlugins } from "./config.js";
+import { EventsProvider, LightboxPropsProvider, LightboxStateProvider, TimeoutsProvider } from "./contexts/index.js";
 import {
     CarouselModule,
     ControllerModule,
-    createNode,
-    EventsProvider,
-    LightboxPropsProvider,
-    LightboxStateProvider,
     NavigationModule,
     NoScrollModule,
     PortalModule,
     RootModule,
-    TimeoutsProvider,
     ToolbarModule,
-    withPlugins,
-} from "./core/index.js";
+} from "./modules/index.js";
 
 function renderNode(node: Node, props: ComponentProps): React.ReactElement {
     return React.createElement(

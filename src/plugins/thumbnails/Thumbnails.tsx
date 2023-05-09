@@ -1,13 +1,13 @@
 import * as React from "react";
 
-import { PluginProps } from "../../types.js";
 import {
     addToolbarButton,
     createModule,
     MODULE_CONTROLLER,
     PLUGIN_FULLSCREEN,
     PLUGIN_THUMBNAILS,
-} from "../../core/index.js";
+    PluginProps,
+} from "../../index.js";
 import { resolveThumbnailsProps } from "./props.js";
 import { ThumbnailsContextProvider } from "./ThumbnailsContext.js";
 import { ThumbnailsButton } from "./ThumbnailsButton.js";

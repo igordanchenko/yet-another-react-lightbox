@@ -1,5 +1,4 @@
-import { composePrefix } from "../../core/utils.js";
-import { PLUGIN_THUMBNAILS } from "../../core/consts.js";
+import { composePrefix, PLUGIN_THUMBNAILS } from "../../index.js";
 
 export const cssPrefix = (value?: string) => composePrefix(PLUGIN_THUMBNAILS, value);
 

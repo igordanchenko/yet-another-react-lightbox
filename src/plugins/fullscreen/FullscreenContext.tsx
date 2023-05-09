@@ -1,15 +1,16 @@
 import * as React from "react";
 
-import { ComponentProps, FullscreenRef } from "../../types.js";
 import {
     CLASS_FULLSIZE,
     clsx,
+    ComponentProps,
     cssClass,
+    FullscreenRef,
     makeUseContext,
     PLUGIN_FULLSCREEN,
     useEventCallback,
     useLayoutEffect,
-} from "../../core/index.js";
+} from "../../index.js";
 import { resolveFullscreenProps } from "./props.js";
 
 export const FullscreenContext = React.createContext<FullscreenRef | null>(null);

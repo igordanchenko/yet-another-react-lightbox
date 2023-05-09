@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { PluginProps } from "../../types.js";
-import { addToolbarButton, PLUGIN_DOWNLOAD } from "../../core/index.js";
+import { addToolbarButton, PLUGIN_DOWNLOAD, PluginProps } from "../../index.js";
 import { DownloadButton } from "./DownloadButton.js";
 
 export function Download({ augment }: PluginProps) {

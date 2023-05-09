@@ -4,12 +4,13 @@ import {
     devicePixelRatio,
     ImageSlide,
     ImageSlideProps,
+    ImageSource,
     isImageFitCover,
+    SlideImage,
     UNKNOWN_ACTION_TYPE,
     useEventCallback,
     useLayoutEffect,
-} from "../../core/index.js";
-import { ImageSource, SlideImage } from "../../types.js";
+} from "../../index.js";
 
 export type ResponsiveImageSlide = Omit<SlideImage, "srcSet"> & {
     srcSet: [ImageSource, ...ImageSource[]];

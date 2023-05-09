@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { CaptionsRef, ComponentProps } from "../../types.js";
-import { makeUseContext } from "../../core/index.js";
+import { CaptionsRef, ComponentProps, makeUseContext } from "../../index.js";
 import { resolveCaptionsProps } from "./props.js";
 
 export const CaptionsContext = React.createContext<CaptionsRef | null>(null);

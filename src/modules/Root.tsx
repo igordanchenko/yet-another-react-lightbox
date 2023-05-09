@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps } from "../../types.js";
+import { ComponentProps } from "../types.js";
 import { createModule } from "../config.js";
 import { MODULE_ROOT } from "../consts.js";
 

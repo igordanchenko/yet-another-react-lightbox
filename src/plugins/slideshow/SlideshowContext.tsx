@@ -1,24 +1,25 @@
 import * as React from "react";
 
-import { ComponentProps, SlideshowRef } from "../../types.js";
 import {
     ACTIVE_SLIDE_COMPLETE,
     ACTIVE_SLIDE_ERROR,
     ACTIVE_SLIDE_LOADING,
     ACTIVE_SLIDE_PLAYING,
     cleanup,
+    ComponentProps,
     makeUseContext,
     SLIDE_STATUS_COMPLETE,
     SLIDE_STATUS_ERROR,
     SLIDE_STATUS_LOADING,
     SLIDE_STATUS_PLAYING,
+    SlideshowRef,
     SlideStatus,
     useController,
     useEventCallback,
     useEvents,
     useLightboxState,
     useTimeouts,
-} from "../../core/index.js";
+} from "../../index.js";
 import { resolveSlideshowProps } from "./props.js";
 
 export const SlideshowContext = React.createContext<SlideshowRef | null>(null);

@@ -4,8 +4,7 @@ import { vi } from "vitest";
 
 import { expectToContainButton, lightbox, withFakeTimers } from "../utils.js";
 import { Slideshow } from "../../src/plugins/index.js";
-import { isImageSlide } from "../../src/core/index.js";
-import { LightboxExternalProps, SlideshowRef } from "../../src/index.js";
+import { isImageSlide, LightboxExternalProps, SlideshowRef } from "../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
     return render(

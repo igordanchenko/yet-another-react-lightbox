@@ -2,7 +2,7 @@ import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { cleanup, clsx, cssClass, cssVar, label, makeUseContext } from "../../src/core/utils.js";
+import { cleanup, clsx, cssClass, cssVar, label, makeUseContext } from "../../src/utils.js";
 
 describe("utils", () => {
     describe("cslx", () => {

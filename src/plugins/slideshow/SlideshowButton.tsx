@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { createIcon, IconButton, useLightboxProps, useLoseFocus } from "../../core/index.js";
+import { createIcon, IconButton, useLightboxProps, useLoseFocus } from "../../index.js";
 import { useSlideshow } from "./SlideshowContext.js";
 
 const PlayIcon = createIcon("Play", <path d="M8 5v14l11-7z" />);

@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { Callback, RenderFunction } from "../../types.js";
-import { PLUGIN_FULLSCREEN } from "../../core/index.js";
+import { Callback, PLUGIN_FULLSCREEN, RenderFunction } from "../../index.js";
 import { Fullscreen } from "./Fullscreen.js";
 
 declare module "../../types.js" {
@@ -15,6 +14,7 @@ declare module "../../types.js" {
         };
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface Render {
         /** render custom Enter/Exit Fullscreen button */
         buttonFullscreen?: RenderFunction<FullscreenRef>;

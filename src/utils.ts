@@ -8,7 +8,7 @@ import {
     Slide,
     SlideImage,
     ToolbarSettings,
-} from "../types.js";
+} from "./types.js";
 
 export const clsx = (...classes: (string | boolean | undefined)[]) =>
     [...classes].filter((cls) => Boolean(cls)).join(" ");

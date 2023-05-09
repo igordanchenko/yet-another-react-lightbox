@@ -1,5 +1,4 @@
-import { useLightboxProps } from "../../core/index.js";
-import { LightboxProps } from "../../types.js";
+import { LightboxProps, useLightboxProps } from "../../index.js";
 
 export const defaultThumbnailsProps = {
     ref: null,

@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps, ContainerRect, ZoomRef } from "../../types.js";
-import { makeUseContext, useController } from "../../core/index.js";
+import { ComponentProps, ContainerRect, makeUseContext, useController, ZoomRef } from "../../index.js";
 import { useZoomCallback, useZoomImageRect, useZoomProps, useZoomSensors, useZoomState } from "./hooks/index.js";
 
 export type ActiveZoomWrapper = {

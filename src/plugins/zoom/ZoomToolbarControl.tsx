@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useLightboxProps } from "../../core/index.js";
+import { useLightboxProps } from "../../index.js";
 import ZoomButtonsGroup from "./ZoomButtonsGroup.js";
 import { useZoom } from "./ZoomController.js";
 

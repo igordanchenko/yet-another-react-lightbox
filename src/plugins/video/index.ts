@@ -1,4 +1,4 @@
-import { GenericSlide } from "../../types.js";
+import { GenericSlide } from "../../index.js";
 import { Video } from "./Video.js";
 
 declare module "../../types.js" {

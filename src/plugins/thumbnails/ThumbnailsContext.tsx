@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps, ThumbnailsRef } from "../../types.js";
-import { clsx, cssClass, LightboxPropsProvider, makeUseContext } from "../../core/index.js";
+import { clsx, ComponentProps, cssClass, LightboxPropsProvider, makeUseContext, ThumbnailsRef } from "../../index.js";
 import { cssPrefix } from "./utils.js";
 import { ThumbnailsTrack } from "./ThumbnailsTrack.js";
 import { resolveThumbnailsProps } from "./props.js";

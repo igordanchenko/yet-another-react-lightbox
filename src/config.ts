@@ -1,4 +1,4 @@
-import { Augmentation, Component, Module, Node, Plugin } from "../types.js";
+import { Augmentation, Component, Module, Node, Plugin } from "./types.js";
 import { MODULE_CONTROLLER } from "./consts.js";
 
 export function createModule(name: string, component: Component): Module {
