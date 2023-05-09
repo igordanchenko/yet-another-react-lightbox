@@ -27,7 +27,11 @@ function editFile(file, callback) {
 function fixupMainBundle(file) {
     editFile(file, (data) => {
         const regex = /import.*\r?\n/g;
-        return [...data.match(regex).map((line) => line.trim()), data.replaceAll(regex, "").trim()].join(os.EOL);
+        return [
+            "'use client';",
+            ...data.match(regex).map((line) => line.trim()),
+            data.replaceAll(regex, "").trim(),
+        ].join(os.EOL);
     });
 }
 
