@@ -16,19 +16,29 @@
             "types": "./dist/index.d.ts",
             "default": "./dist/index.js"
         },
+        "./styles.css": {
+            "types": "./dist/styles.css.d.ts",
+            "default": "./dist/styles.css"
+        },
         "./plugins": {
             "types": "./dist/plugins/index.d.ts",
             "default": "./dist/plugins/index.js"
         },
-        "./plugins/captions.css": "./dist/plugins/captions/captions.css",
         "./plugins/captions": {
             "types": "./dist/plugins/captions/index.d.ts",
             "default": "./dist/plugins/captions/index.js"
         },
-        "./plugins/counter.css": "./dist/plugins/counter/counter.css",
+        "./plugins/captions.css": {
+            "types": "./dist/plugins/captions/captions.css.d.ts",
+            "default": "./dist/plugins/captions/captions.css"
+        },
         "./plugins/counter": {
             "types": "./dist/plugins/counter/index.d.ts",
             "default": "./dist/plugins/counter/index.js"
+        },
+        "./plugins/counter.css": {
+            "types": "./dist/plugins/counter/counter.css.d.ts",
+            "default": "./dist/plugins/counter/counter.css"
         },
         "./plugins/download": {
             "types": "./dist/plugins/download/index.d.ts",
@@ -46,10 +56,13 @@
             "types": "./dist/plugins/slideshow/index.d.ts",
             "default": "./dist/plugins/slideshow/index.js"
         },
-        "./plugins/thumbnails.css": "./dist/plugins/thumbnails/thumbnails.css",
         "./plugins/thumbnails": {
             "types": "./dist/plugins/thumbnails/index.d.ts",
             "default": "./dist/plugins/thumbnails/index.js"
+        },
+        "./plugins/thumbnails.css": {
+            "types": "./dist/plugins/thumbnails/thumbnails.css.d.ts",
+            "default": "./dist/plugins/thumbnails/thumbnails.css"
         },
         "./plugins/video": {
             "types": "./dist/plugins/video/index.d.ts",
@@ -58,8 +71,7 @@
         "./plugins/zoom": {
             "types": "./dist/plugins/zoom/index.d.ts",
             "default": "./dist/plugins/zoom/index.js"
-        },
-        "./styles.css": "./dist/styles.css"
+        }
     },
     "typesVersions": {
         "*": {
@@ -69,14 +81,23 @@
             "core": [
                 "dist/index.d.ts"
             ],
+            "styles.css": [
+                "dist/styles.css.d.ts"
+            ],
             "plugins": [
                 "dist/plugins/index.d.ts"
             ],
             "plugins/captions": [
                 "dist/plugins/captions/index.d.ts"
             ],
+            "plugins/captions.css": [
+                "dist/plugins/captions/captions.css.d.ts"
+            ],
             "plugins/counter": [
                 "dist/plugins/counter/index.d.ts"
+            ],
+            "plugins/counter.css": [
+                "dist/plugins/counter/counter.css.d.ts"
             ],
             "plugins/download": [
                 "dist/plugins/download/index.d.ts"
@@ -92,6 +113,9 @@
             ],
             "plugins/thumbnails": [
                 "dist/plugins/thumbnails/index.d.ts"
+            ],
+            "plugins/thumbnails.css": [
+                "dist/plugins/thumbnails/thumbnails.css.d.ts"
             ],
             "plugins/video": [
                 "dist/plugins/video/index.d.ts"
