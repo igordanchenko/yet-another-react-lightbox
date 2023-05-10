@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useEventCallback, UseSensors } from "../../hooks/index.js";
 import { useTimeouts } from "../../contexts/index.js";
-import { SwipeState } from "./index.js";
+import { SwipeState } from "./SwipeState.js";
 import { EVENT_ON_WHEEL } from "../../consts.js";
 
 export function useWheelSwipe<T extends Element = Element>(

@@ -34,7 +34,7 @@ export function NavigationButton({ label, icon, renderIcon, action, onClick, dis
             className={cssClass(`navigation_${action}`)}
             disabled={disabled}
             onClick={onClick}
-            {...useLoseFocus(disabled)}
+            {...useLoseFocus(useController().focus, disabled)}
         />
     );
 }

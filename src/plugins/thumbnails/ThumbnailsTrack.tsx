@@ -22,7 +22,6 @@ import {
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
 import { defaultThumbnailsProps, useThumbnailsProps } from "./props.js";
-import { useThumbnails } from "./ThumbnailsContext.js";
 
 function isHorizontal(position: ReturnType<typeof useThumbnailsProps>["position"]) {
     return ["top", "bottom"].includes(position);
@@ -33,13 +32,13 @@ function boxSize(thumbnails: ReturnType<typeof useThumbnailsProps>, dimension: n
 }
 
 export type ThumbnailsTrackProps = {
+    visible: boolean;
     containerRef: React.RefObject<HTMLDivElement>;
 };
 
-export function ThumbnailsTrack({ containerRef }: ThumbnailsTrackProps) {
+export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps) {
     const track = React.useRef<HTMLDivElement | null>(null);
 
-    const { visible } = useThumbnails();
     const { carousel, styles } = useLightboxProps();
     const { slides, globalIndex, animation } = useLightboxState();
     const { publish, subscribe } = useEvents();

@@ -1,12 +1,9 @@
 import * as React from "react";
 
 import { useLayoutEffect } from "./useLayoutEffect.js";
-import { useController } from "../modules/Controller.js";
 
-export function useLoseFocus(disabled = false) {
+export function useLoseFocus(focus: () => void, disabled = false) {
     const focused = React.useRef(disabled);
-
-    const { focus } = useController();
 
     useLayoutEffect(() => {
         if (disabled) {

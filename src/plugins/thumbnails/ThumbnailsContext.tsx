@@ -31,9 +31,13 @@ export function ThumbnailsContextProvider({ children, ...props }: ComponentProps
         <LightboxPropsProvider {...props}>
             <ThumbnailsContext.Provider value={context}>
                 <div ref={containerRef} className={clsx(cssClass(cssPrefix()), cssClass(cssPrefix(`${position}`)))}>
-                    {["start", "top"].includes(position) && <ThumbnailsTrack containerRef={containerRef} />}
+                    {["start", "top"].includes(position) && (
+                        <ThumbnailsTrack containerRef={containerRef} visible={visible} />
+                    )}
                     <div className={cssClass(cssPrefix("wrapper"))}>{children}</div>
-                    {["end", "bottom"].includes(position) && <ThumbnailsTrack containerRef={containerRef} />}
+                    {["end", "bottom"].includes(position) && (
+                        <ThumbnailsTrack containerRef={containerRef} visible={visible} />
+                    )}
                 </div>
             </ThumbnailsContext.Provider>
         </LightboxPropsProvider>
