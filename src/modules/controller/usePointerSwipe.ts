@@ -1,15 +1,8 @@
 import * as React from "react";
 
-import { cleanup } from "../../utils.js";
 import { UseSensors } from "../../hooks/useSensors.js";
 import { useEventCallback } from "../../hooks/useEventCallback.js";
-import {
-    EVENT_ON_POINTER_CANCEL,
-    EVENT_ON_POINTER_DOWN,
-    EVENT_ON_POINTER_LEAVE,
-    EVENT_ON_POINTER_MOVE,
-    EVENT_ON_POINTER_UP,
-} from "../../consts.js";
+import { usePointerEvents } from "../../hooks/usePointerEvents.js";
 
 export function usePointerSwipe<T extends Element = Element>(
     subscribeSensors: UseSensors<T>["subscribeSensors"],
@@ -114,15 +107,5 @@ export function usePointerSwipe<T extends Element = Element>(
         }
     });
 
-    React.useEffect(
-        () =>
-            cleanup(
-                subscribeSensors(EVENT_ON_POINTER_DOWN, onPointerDown),
-                subscribeSensors(EVENT_ON_POINTER_MOVE, onPointerMove),
-                subscribeSensors(EVENT_ON_POINTER_UP, onPointerUp),
-                subscribeSensors(EVENT_ON_POINTER_LEAVE, onPointerUp),
-                subscribeSensors(EVENT_ON_POINTER_CANCEL, onPointerUp)
-            ),
-        [subscribeSensors, onPointerDown, onPointerMove, onPointerUp]
-    );
+    usePointerEvents(subscribeSensors, onPointerDown, onPointerMove, onPointerUp);
 }

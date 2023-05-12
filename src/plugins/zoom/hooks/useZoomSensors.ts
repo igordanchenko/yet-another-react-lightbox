@@ -3,11 +3,6 @@ import * as React from "react";
 import {
     cleanup,
     EVENT_ON_KEY_DOWN,
-    EVENT_ON_POINTER_CANCEL,
-    EVENT_ON_POINTER_DOWN,
-    EVENT_ON_POINTER_LEAVE,
-    EVENT_ON_POINTER_MOVE,
-    EVENT_ON_POINTER_UP,
     EVENT_ON_WHEEL,
     useController,
     useEventCallback,
@@ -15,6 +10,7 @@ import {
 } from "../../../index.js";
 import { useZoomProps } from "./useZoomProps.js";
 import { useZoomState } from "./useZoomState.js";
+import { usePointerEvents } from "../../../hooks/usePointerEvents.js";
 
 function distance(pointerA: React.MouseEvent, pointerB: React.MouseEvent) {
     return ((pointerA.clientX - pointerB.clientX) ** 2 + (pointerA.clientY - pointerB.clientY) ** 2) ** 0.5;
@@ -230,6 +226,8 @@ export function useZoomSensors(
         pinchZoomDistance.current = undefined;
     }, []);
 
+    usePointerEvents(subscribeSensors, onPointerDown, onPointerMove, onPointerUp, disabled);
+
     React.useEffect(cleanupSensors, [globalIndex, cleanupSensors]);
 
     React.useEffect(() => {
@@ -237,14 +235,9 @@ export function useZoomSensors(
             return cleanup(
                 cleanupSensors,
                 subscribeSensors(EVENT_ON_KEY_DOWN, onKeyDown),
-                subscribeSensors(EVENT_ON_WHEEL, onWheel),
-                subscribeSensors(EVENT_ON_POINTER_DOWN, onPointerDown),
-                subscribeSensors(EVENT_ON_POINTER_MOVE, onPointerMove),
-                subscribeSensors(EVENT_ON_POINTER_UP, onPointerUp),
-                subscribeSensors(EVENT_ON_POINTER_LEAVE, onPointerUp),
-                subscribeSensors(EVENT_ON_POINTER_CANCEL, onPointerUp)
+                subscribeSensors(EVENT_ON_WHEEL, onWheel)
             );
         }
         return () => {};
-    }, [disabled, subscribeSensors, cleanupSensors, onKeyDown, onWheel, onPointerDown, onPointerMove, onPointerUp]);
+    }, [disabled, subscribeSensors, cleanupSensors, onKeyDown, onWheel]);
 }
