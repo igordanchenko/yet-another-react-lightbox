@@ -195,6 +195,8 @@ export interface ControllerSettings {
     touchAction: "none" | "pan-y";
     /** if `true`, set ARIA attributes on the controller div */
     aria: boolean;
+    /** if `true`, close the lightbox on pull-down gesture */
+    closeOnPullDown: boolean;
     /** if `true`, close the lightbox when the backdrop is clicked */
     closeOnBackdropClick: boolean;
 }

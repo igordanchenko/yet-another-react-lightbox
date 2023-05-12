@@ -166,7 +166,7 @@
     "devDependencies": {
         "@commitlint/cli": "^17.6.3",
         "@commitlint/config-conventional": "^17.6.3",
-        "@rollup/plugin-typescript": "^11.1.0",
+        "@rollup/plugin-typescript": "^11.1.1",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^14.0.0",
         "@testing-library/user-event": "^14.4.3",
@@ -189,7 +189,7 @@
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-react": "^7.32.2",
         "eslint-plugin-react-hooks": "^4.6.0",
-        "glob": "^10.2.2",
+        "glob": "^10.2.3",
         "husky": "^8.0.3",
         "jsdom": "^22.0.0",
         "lint-staged": "^13.2.2",

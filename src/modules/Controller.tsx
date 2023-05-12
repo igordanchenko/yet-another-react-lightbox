@@ -220,13 +220,32 @@ export function Controller({ children, ...props }: ComponentProps) {
         isSwipeValid,
         containerRect?.width || 0,
         animation.swipe,
-        () => setSwipeState(SwipeState.SWIPE), // onSwipeStart
-        (offset: number) => setSwipeOffset(offset), // onSwipeProgress
-        (offset: number, duration: number) => swipe({ offset, duration, count: 1 }), // onSwipeFinish
-        (offset: number) => swipe({ offset, count: 0 }), // onSwipeCancel
+        // onSwipeStart
+        () => setSwipeState(SwipeState.SWIPE),
+        // onSwipeProgress
+        (offset: number) => setSwipeOffset(offset),
+        // onSwipeFinish
+        (offset: number, duration: number) => swipe({ offset, duration, count: 1 }),
+        // onSwipeCancel
+        (offset: number) => swipe({ offset, count: 0 }),
     ] as const;
 
-    usePointerSwipe(...swipeParams);
+    const pullDownParams = [
+        // onPullDownStart
+        () => {},
+        // onPullDownProgress
+        () => {},
+        // onPullDownFinish
+        () => {
+            if (controller.closeOnPullDown) {
+                close();
+            }
+        },
+        // onPullDownCancel
+        () => {},
+    ] as const;
+
+    usePointerSwipe(...swipeParams, ...pullDownParams);
 
     useWheelSwipe(swipeState, ...swipeParams);
 

@@ -31,6 +31,7 @@ export const LightboxDefaultProps: LightboxProps = {
         focus: true,
         aria: false,
         touchAction: "none",
+        closeOnPullDown: false,
         closeOnBackdropClick: false,
     },
     portal: {},
