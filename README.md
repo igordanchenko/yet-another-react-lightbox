@@ -123,16 +123,16 @@ See [examples](https://yet-another-react-lightbox.com/examples) on the documenta
 
 ## Plugins
 
-Yet Another React Lightbox allows you to add optional features based on your requirements via plugins.
+Yet Another React Lightbox allows you to add optional features to your project based on your requirements via plugins.
 
-The following plugins come bundled in the package:
+The following plugins are bundled in the package:
 
 - [Captions](https://yet-another-react-lightbox.com/plugins/captions) - adds support for slide title and
   description
 - [Counter](https://yet-another-react-lightbox.com/plugins/counter) - adds slides counter
 - [Download](https://yet-another-react-lightbox.com/plugins/download) - adds download button
 - [Fullscreen](https://yet-another-react-lightbox.com/plugins/fullscreen) - adds support for fullscreen mode
-- [Inline](https://yet-another-react-lightbox.com/plugins/inline) - adds support for inline rendering mode
+- [Inline](https://yet-another-react-lightbox.com/plugins/inline) - transforms the lightbox into an image carousel
 - [Slideshow](https://yet-another-react-lightbox.com/plugins/slideshow) - adds slideshow autoplay feature
 - [Thumbnails](https://yet-another-react-lightbox.com/plugins/thumbnails) - adds thumbnails track
 - [Video](https://yet-another-react-lightbox.com/plugins/video) - adds support for video slides
