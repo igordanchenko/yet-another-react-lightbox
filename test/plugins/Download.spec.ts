@@ -1,7 +1,7 @@
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { lightbox } from "../utils.js";
+import { clickButton, lightbox } from "../utils.js";
 import { Download } from "../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../src/index.js";
 
@@ -17,9 +17,7 @@ describe("Download", () => {
 
         expect(screen.queryByLabelText("Download")).toBeInTheDocument();
 
-        act(() => {
-            screen.getByRole("button", { name: "Download" }).click();
-        });
+        clickButton("Download");
 
         expect(download).toHaveBeenCalled();
     });
@@ -36,5 +34,15 @@ describe("Download", () => {
         renderLightbox({ render: { buttonDownload } });
 
         expect(buttonDownload).toHaveBeenCalled();
+    });
+
+    it("supports custom download function", () => {
+        const download = vi.fn();
+
+        renderLightbox({ slides: [{ src: "image", download: true }], download: { download } });
+
+        clickButton("Download");
+
+        expect(download).toHaveBeenCalled();
     });
 });

@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { createIcon, IconButton, isImageSlide, useLightboxProps, useLightboxState } from "../../index.js";
+import { resolveDownloadProps } from "./props.js";
 import { saveAs } from "./FileSaver.js";
 
 const DownloadIcon = createIcon(
@@ -9,7 +10,8 @@ const DownloadIcon = createIcon(
 );
 
 export function DownloadButton() {
-    const { render, on } = useLightboxProps();
+    const { render, on, download: downloadProps } = useLightboxProps();
+    const { download: customDownload } = resolveDownloadProps(downloadProps);
     const { currentSlide, currentIndex } = useLightboxState();
 
     if (render.buttonDownload) {
@@ -17,21 +19,43 @@ export function DownloadButton() {
     }
 
     const downloadUrl =
-        currentSlide?.downloadUrl || (currentSlide && isImageSlide(currentSlide) ? currentSlide.src : undefined);
+        (currentSlide &&
+            (currentSlide.downloadUrl ||
+                (typeof currentSlide.download === "string" && currentSlide.download) ||
+                (typeof currentSlide.download === "object" && currentSlide.download.url) ||
+                (isImageSlide(currentSlide) && currentSlide.src))) ||
+        undefined;
+
+    // slides must be explicitly marked as downloadable when custom download function is provided
+    const canDownload = customDownload ? Boolean(currentSlide?.download) : Boolean(downloadUrl);
+
+    const defaultDownload = () => {
+        if (currentSlide && downloadUrl) {
+            const downloadFilename =
+                currentSlide.downloadFilename ||
+                (typeof currentSlide.download === "object" && currentSlide.download.filename) ||
+                undefined;
+
+            saveAs(downloadUrl, downloadFilename);
+        }
+    };
+
+    const handleDownload = () => {
+        if (currentSlide) {
+            // noinspection JSUnusedGlobalSymbols
+            (customDownload || defaultDownload)({ slide: currentSlide, saveAs });
+
+            on.download?.({ index: currentIndex });
+        }
+    };
 
     return (
         <IconButton
             label="Download"
             icon={DownloadIcon}
             renderIcon={render.iconDownload}
-            disabled={!downloadUrl}
-            onClick={() => {
-                if (downloadUrl) {
-                    saveAs(downloadUrl, currentSlide?.downloadFilename);
-
-                    on.download?.({ index: currentIndex });
-                }
-            }}
+            disabled={!canDownload}
+            onClick={handleDownload}
         />
     );
 }

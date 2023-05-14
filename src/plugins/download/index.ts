@@ -1,16 +1,32 @@
-import { Callback, PLUGIN_DOWNLOAD, RenderFunction } from "../../index.js";
+import { PLUGIN_DOWNLOAD } from "../../index.js";
 import { Download } from "./Download.js";
 
 declare module "../../types.js" {
-    // noinspection JSUnusedGlobalSymbols
     interface GenericSlide {
-        /** download url */
+        /** @deprecated - use `download` instead */
         downloadUrl?: string;
-        /** download filename override */
+        /** @deprecated - use `download` instead */
         downloadFilename?: string;
+        /** download url or download props */
+        download?:
+            | boolean
+            | string
+            | {
+                  /** download url */
+                  url: string;
+                  /** download filename override */
+                  filename: string;
+              };
     }
 
-    // noinspection JSUnusedGlobalSymbols
+    interface LightboxProps {
+        /** Download plugin settings */
+        download?: {
+            /** Custom download function */
+            download?: ({ slide, saveAs }: DownloadFunctionProps) => void;
+        };
+    }
+
     interface Render {
         /** render custom Download button */
         buttonDownload?: RenderFunction;
@@ -18,19 +34,23 @@ declare module "../../types.js" {
         iconDownload?: RenderFunction;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     interface Callbacks {
         /** a callback called on slide download */
         download?: Callback<DownloadCallbackProps>;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    interface ToolbarButtonKeys {
+        [PLUGIN_DOWNLOAD]: null;
     }
 
     export interface DownloadCallbackProps {
         index: number;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    interface ToolbarButtonKeys {
-        [PLUGIN_DOWNLOAD]: null;
+    export interface DownloadFunctionProps {
+        slide: Slide;
+        saveAs: (source: string | Blob, name?: string) => void;
     }
 }
 
