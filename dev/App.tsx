@@ -5,6 +5,7 @@ import Counter from "../src/plugins/counter/index.js";
 import Captions from "../src/plugins/captions/index.js";
 import Download from "../src/plugins/download/index.js";
 import Fullscreen from "../src/plugins/fullscreen/index.js";
+import Share from "../src/plugins/share/index.js";
 import Slideshow from "../src/plugins/slideshow/index.js";
 import Thumbnails from "../src/plugins/thumbnails/index.js";
 import Video from "../src/plugins/video/index.js";
@@ -26,7 +27,7 @@ export default function App() {
                 open={open}
                 close={() => setOpen(false)}
                 slides={slides}
-                plugins={[Captions, Counter, Download, Fullscreen, Slideshow, Thumbnails, Video, Zoom]}
+                plugins={[Captions, Counter, Download, Share, Fullscreen, Slideshow, Thumbnails, Video, Zoom]}
             />
 
             <button type="button" className="button" onClick={() => setOpen(true)}>

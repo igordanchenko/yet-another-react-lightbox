@@ -133,7 +133,8 @@ The following plugins are bundled in the package:
 - [Download](https://yet-another-react-lightbox.com/plugins/download) - adds download button
 - [Fullscreen](https://yet-another-react-lightbox.com/plugins/fullscreen) - adds support for fullscreen mode
 - [Inline](https://yet-another-react-lightbox.com/plugins/inline) - transforms the lightbox into an image carousel
-- [Slideshow](https://yet-another-react-lightbox.com/plugins/slideshow) - adds slideshow autoplay feature
+- [Share](https://yet-another-react-lightbox.com/plugins/share) - adds sharing button
+- [Slideshow](https://yet-another-react-lightbox.com/plugins/slideshow) - adds slideshow button
 - [Thumbnails](https://yet-another-react-lightbox.com/plugins/thumbnails) - adds thumbnails track
 - [Video](https://yet-another-react-lightbox.com/plugins/video) - adds support for video slides
 - [Zoom](https://yet-another-react-lightbox.com/plugins/zoom) - adds image zoom feature

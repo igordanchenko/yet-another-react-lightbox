@@ -52,6 +52,10 @@
             "types": "./dist/plugins/inline/index.d.ts",
             "default": "./dist/plugins/inline/index.js"
         },
+        "./plugins/share": {
+            "types": "./dist/plugins/share/index.d.ts",
+            "default": "./dist/plugins/share/index.js"
+        },
         "./plugins/slideshow": {
             "types": "./dist/plugins/slideshow/index.d.ts",
             "default": "./dist/plugins/slideshow/index.js"
@@ -107,6 +111,9 @@
             ],
             "plugins/inline": [
                 "dist/plugins/inline/index.d.ts"
+            ],
+            "plugins/share": [
+                "dist/plugins/share/index.d.ts"
             ],
             "plugins/slideshow": [
                 "dist/plugins/slideshow/index.d.ts"
