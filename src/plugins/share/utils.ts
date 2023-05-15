@@ -1,3 +1,3 @@
 export function isShareSupported() {
-    return Boolean(navigator.canShare);
+    return typeof navigator !== "undefined" && Boolean(navigator?.canShare);
 }
