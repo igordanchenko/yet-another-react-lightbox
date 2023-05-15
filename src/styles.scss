@@ -48,7 +48,8 @@
         justify-content: center;
         align-items: stretch;
         width: calc(100% + (var(--yarl__carousel_slides_count) - 1) * (100% + var(--yarl__carousel_spacing_px, 0) * 1px + var(--yarl__carousel_spacing_percent, 0) * 1%));
-        transform: translateX(var(--yarl__swipe_offset, 0px));
+        transform: translate(var(--yarl__swipe_offset, 0px), var(--yarl__pull_down_offset, 0px));
+        opacity: var(--yarl__pull_down_opacity, 1);
 
         &_with_slides {
             column-gap: calc(var(--yarl__carousel_spacing_px, 0) * 1px + 100 / (100 * var(--yarl__carousel_slides_count) + (var(--yarl__carousel_slides_count) - 1) * var(--yarl__carousel_spacing_percent, 0)) * var(--yarl__carousel_spacing_percent, 0) * 1%);

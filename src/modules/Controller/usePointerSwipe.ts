@@ -21,6 +21,7 @@ export function usePointerSwipe<T extends Element = Element>(
     onSwipeProgress: (offset: number) => void,
     onSwipeFinish: (offset: number, duration: number) => void,
     onSwipeCancel: (offset: number) => void,
+    pullDownEnabled: boolean,
     onPullDownStart: () => void,
     onPullDownProgress: (offset: number) => void,
     onPullDownFinish: (offset: number, duration: number) => void,
@@ -126,7 +127,7 @@ export function usePointerSwipe<T extends Element = Element>(
                     // start swipe gesture
                     startGesture(Gesture.SWIPE);
                     onSwipeStart();
-                } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > SWIPE_THRESHOLD) {
+                } else if (pullDownEnabled && Math.abs(deltaY) > Math.abs(deltaX) && deltaY > SWIPE_THRESHOLD) {
                     // start pull-down gesture
                     startGesture(Gesture.PULL_DOWN);
                     onPullDownStart();
