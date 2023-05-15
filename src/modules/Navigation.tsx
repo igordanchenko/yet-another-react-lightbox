@@ -6,7 +6,7 @@ import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/in
 import { cssClass } from "../utils.js";
 import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
 import { useLightboxState } from "../contexts/index.js";
-import { useController } from "./Controller.js";
+import { useController } from "./Controller/index.js";
 import {
     ACTION_NEXT,
     ACTION_PREV,

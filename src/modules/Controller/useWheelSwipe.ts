@@ -70,7 +70,7 @@ export function useWheelSwipe<T extends Element = Element>(
             return;
         }
 
-        if (!swipeState) {
+        if (swipeState === SwipeState.NONE) {
             if (Math.abs(event.deltaX) <= 1.2 * Math.abs(wheelResidualMomentum.current)) {
                 wheelResidualMomentum.current = event.deltaX;
                 return;

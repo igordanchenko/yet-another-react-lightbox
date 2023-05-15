@@ -6,7 +6,7 @@ import { useLayoutEffect } from "../hooks/index.js";
 import { composePrefix, cssClass, stopNavigationEventsPropagation } from "../utils.js";
 import { CloseIcon, IconButton } from "../components/index.js";
 import { useContainerRect } from "../hooks/useContainerRect.js";
-import { useController } from "./Controller.js";
+import { useController } from "./Controller/index.js";
 import { ACTION_CLOSE, MODULE_TOOLBAR } from "../consts.js";
 
 function cssPrefix(value?: string) {

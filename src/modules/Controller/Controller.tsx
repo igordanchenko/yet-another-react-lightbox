@@ -1,29 +1,5 @@
 import * as React from "react";
 
-import { Callback, ComponentProps, ContainerRect, ControllerRef } from "../types.js";
-import { createModule } from "../config.js";
-import {
-    cleanup,
-    clsx,
-    computeSlideRect,
-    cssClass,
-    cssVar,
-    makeComposePrefix,
-    makeUseContext,
-    parseLengthPercentage,
-} from "../utils.js";
-import {
-    SubscribeSensors,
-    useAnimation,
-    useContainerRect,
-    useDelay,
-    useEventCallback,
-    useForkRef,
-    useRTL,
-    useSensors,
-} from "../hooks/index.js";
-import { useEvents, useLightboxDispatch, useLightboxState } from "../contexts/index.js";
-import { SwipeState, usePointerSwipe, usePreventSwipeNavigation, useWheelSwipe } from "./controller/index.js";
 import {
     ACTION_CLOSE,
     ACTION_NEXT,
@@ -33,7 +9,34 @@ import {
     EVENT_ON_KEY_UP,
     MODULE_CONTROLLER,
     VK_ESCAPE,
-} from "../consts.js";
+} from "../../consts.js";
+import { Callback, ComponentProps, ContainerRect, ControllerRef } from "../../types.js";
+import { createModule } from "../../config.js";
+import {
+    cleanup,
+    clsx,
+    computeSlideRect,
+    cssClass,
+    cssVar,
+    makeComposePrefix,
+    makeUseContext,
+    parseLengthPercentage,
+} from "../../utils.js";
+import {
+    SubscribeSensors,
+    useAnimation,
+    useContainerRect,
+    useDelay,
+    useEventCallback,
+    useForkRef,
+    useRTL,
+    useSensors,
+} from "../../hooks/index.js";
+import { useEvents, useLightboxDispatch, useLightboxState } from "../../contexts/index.js";
+import { SwipeState } from "./SwipeState.js";
+import { usePointerSwipe } from "./usePointerSwipe.js";
+import { usePreventSwipeNavigation } from "./usePreventSwipeNavigation.js";
+import { useWheelSwipe } from "./useWheelSwipe.js";
 
 const cssContainerPrefix = makeComposePrefix("container");
 

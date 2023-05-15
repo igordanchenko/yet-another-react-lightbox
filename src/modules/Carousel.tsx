@@ -4,7 +4,7 @@ import { ComponentProps, Slide } from "../types.js";
 import { createModule } from "../config.js";
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
-import { useController } from "./Controller.js";
+import { useController } from "./Controller/index.js";
 import { useLightboxProps, useLightboxState } from "../contexts/index.js";
 import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL } from "../consts.js";
 
