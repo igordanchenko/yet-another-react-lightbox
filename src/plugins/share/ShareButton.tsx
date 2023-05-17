@@ -28,7 +28,7 @@ export function ShareButton() {
         undefined;
 
     // slides must be explicitly marked as shareable when custom share function is provided
-    const canShare = customShare ? Boolean(currentSlide?.share) : share && navigator.canShare(share);
+    const canShare = customShare ? currentSlide?.share !== false : share && navigator.canShare(share);
 
     const defaultShare = () => {
         if (share) {

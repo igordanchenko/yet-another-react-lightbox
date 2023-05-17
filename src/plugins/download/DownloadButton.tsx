@@ -27,7 +27,7 @@ export function DownloadButton() {
         undefined;
 
     // slides must be explicitly marked as downloadable when custom download function is provided
-    const canDownload = customDownload ? Boolean(currentSlide?.download) : Boolean(downloadUrl);
+    const canDownload = customDownload ? currentSlide?.download !== false : Boolean(downloadUrl);
 
     const defaultDownload = () => {
         if (currentSlide && downloadUrl) {
