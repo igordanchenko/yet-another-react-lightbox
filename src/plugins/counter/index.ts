@@ -4,8 +4,14 @@ import { Counter } from "./Counter.js";
 
 declare module "../../types.js" {
     interface LightboxProps {
-        /** HTML div element attributes to be passed to the Counter plugin container */
-        counter?: React.HTMLAttributes<HTMLDivElement>;
+        // TODO v4: remove html attributes from `counter` prop
+        /** Counter plugin settings */
+        counter?: React.HTMLAttributes<HTMLDivElement> & {
+            /** custom separator */
+            separator?: string;
+            /** counter container HTML attributes */
+            container?: React.HTMLAttributes<HTMLDivElement>;
+        };
     }
 }
 
