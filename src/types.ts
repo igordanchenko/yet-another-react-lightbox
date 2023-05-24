@@ -262,9 +262,9 @@ export interface LightboxState {
 export type RenderFunction<T = void> = [T] extends [void] ? () => React.ReactNode : (props: T) => React.ReactNode;
 
 /** `render.slide` render function props */
-export interface RenderSlideProps {
+export interface RenderSlideProps<S extends Slide = Slide> {
     /** slide */
-    slide: Slide;
+    slide: S;
     /** slide offset (`0` - current slide, `1` - next slide, `-1` - previous slide, etc.) */
     offset: number;
     /** container rect */
@@ -410,10 +410,3 @@ export type DeepPartialValue<T> = T extends any[]
           [P in keyof T]?: P extends "ref" ? T[P] : DeepPartialValue<T[P]>;
       }
     : T;
-
-/** Deep non-nullable utility type */
-export type DeepNonNullable<T> = T extends {}
-    ? {
-          [K in keyof T]-?: NonNullable<T[K]>;
-      }
-    : never;
