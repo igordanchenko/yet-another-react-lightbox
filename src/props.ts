@@ -25,6 +25,7 @@ export const LightboxDefaultProps: LightboxProps = {
         padding: "16px",
         spacing: "30%",
         imageFit: IMAGE_FIT_CONTAIN,
+        imageProps: {},
     },
     controller: {
         ref: null,

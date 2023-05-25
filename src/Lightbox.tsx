@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { AnimationSettings, ComponentProps, DeepPartialValue, LightboxExternalProps, Node } from "./types.js";
+import { AnimationSettings, ComponentProps, LightboxExternalProps, Node } from "./types.js";
 import { LightboxDefaultProps } from "./props.js";
 import { createNode, withPlugins } from "./config.js";
 import { EventsProvider, LightboxPropsProvider, LightboxStateProvider, TimeoutsProvider } from "./contexts/index.js";
@@ -22,7 +22,7 @@ function renderNode(node: Node, props: ComponentProps): React.ReactElement {
     );
 }
 
-function mergeAnimation(defaultAnimation: AnimationSettings, animation: DeepPartialValue<AnimationSettings> = {}) {
+function mergeAnimation(defaultAnimation: AnimationSettings, animation: LightboxExternalProps["animation"] = {}) {
     const { easing: defaultAnimationEasing, ...restDefaultAnimation } = defaultAnimation;
     const { easing, ...restAnimation } = animation;
     return {

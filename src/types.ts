@@ -12,7 +12,11 @@ import {
 } from "./consts.js";
 
 /** Lightbox external props */
-export type LightboxExternalProps = DeepPartial<LightboxProps, "carousel" | "animation" | "controller" | "toolbar">;
+export type LightboxExternalProps = DeepPartial<
+    DeepPartial<DeepPartial<LightboxProps, "animation" | "toolbar">, "carousel", "imageProps">,
+    "controller",
+    "ref"
+>;
 
 /** Lightbox properties */
 export interface LightboxProps {
@@ -162,6 +166,11 @@ export interface CarouselSettings {
     spacing: LengthOrPercentage;
     /** `object-fit` setting for image slides */
     imageFit: ImageFit;
+    /** custom image attributes */
+    imageProps: Omit<
+        React.ImgHTMLAttributes<HTMLImageElement>,
+        "src" | "alt" | "sizes" | "srcSet" | "onLoad" | "onError" | "onClick"
+    >;
 }
 
 export type LengthOrPercentage = `${number}px` | `${number}%` | number;
@@ -397,16 +406,16 @@ export interface PluginProps {
 export type Plugin = (props: PluginProps) => void;
 
 /** Deep partial utility type */
-export type DeepPartial<T extends {}, K extends keyof T> = Omit<Partial<T>, K> & {
-    [P in K]?: DeepPartialValue<T[P]>;
+export type DeepPartial<T extends {}, K extends keyof T = keyof T, E extends string = never> = Omit<Partial<T>, K> & {
+    [P in K]?: DeepPartialValue<T[P], E>;
 };
 
-export type DeepPartialValue<T> = T extends any[]
+export type DeepPartialValue<T, E extends string = never> = T extends any[]
     ? T
     : T extends (...props: any[]) => any
     ? T
     : T extends {}
     ? {
-          [P in keyof T]?: P extends "ref" ? T[P] : DeepPartialValue<T[P]>;
+          [P in keyof T]?: P extends E ? T[P] : DeepPartialValue<T[P], E>;
       }
     : T;

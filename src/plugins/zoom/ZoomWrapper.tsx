@@ -47,6 +47,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
             rect,
             render,
             imageFit: carousel.imageFit,
+            imageProps: carousel.imageProps,
             onClick: offset === 0 ? () => on.click?.({ index: currentIndex }) : undefined,
         };
 

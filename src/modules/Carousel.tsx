@@ -28,7 +28,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     const { slideRect, close } = useController();
     const {
         render,
-        carousel: { imageFit },
+        carousel: { imageFit, imageProps },
         on: { click: onClick },
         controller: { closeOnBackdropClick },
     } = useLightboxProps();
@@ -44,6 +44,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
                     render={render}
                     rect={slideRect}
                     imageFit={imageFit}
+                    imageProps={imageProps}
                     onClick={offset === 0 ? () => onClick?.({ index: currentIndex }) : undefined}
                 />
             );

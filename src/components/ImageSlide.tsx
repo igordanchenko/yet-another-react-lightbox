@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ContainerRect, ImageFit, Render, SlideImage } from "../types.js";
+import { CarouselSettings, ContainerRect, Render, SlideImage } from "../types.js";
 import { clsx, cssClass, hasWindow, isImageFitCover, makeComposePrefix } from "../utils.js";
 import { useEventCallback } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
@@ -18,18 +18,27 @@ import {
 const slidePrefix = makeComposePrefix("slide");
 const slideImagePrefix = makeComposePrefix("slide_image");
 
-export type ImageSlideProps = {
+export type ImageSlideProps = Partial<Pick<CarouselSettings, "imageFit" | "imageProps">> & {
     slide: SlideImage;
     offset?: number;
     render?: Render;
     rect?: ContainerRect;
-    imageFit?: ImageFit;
     onClick?: () => void;
     onLoad?: (image: HTMLImageElement) => void;
     style?: React.CSSProperties;
 };
 
-export function ImageSlide({ slide: image, offset, render, rect, imageFit, onClick, onLoad, style }: ImageSlideProps) {
+export function ImageSlide({
+    slide: image,
+    offset,
+    render,
+    rect,
+    imageFit,
+    imageProps,
+    onClick,
+    onLoad,
+    style,
+}: ImageSlideProps) {
     const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
 
     const { publish } = useEvents();
@@ -118,6 +127,8 @@ export function ImageSlide({ slide: image, offset, render, rect, imageFit, onCli
     const sizes =
         srcSet && rect && hasWindow() ? `${Math.round(Math.min(estimateActualWidth(), rect.width))}px` : undefined;
 
+    const { style: imagePropsStyle, className: imagePropsClassName, ...restImageProps } = imageProps || {};
+
     return (
         <>
             {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
@@ -126,14 +137,16 @@ export function ImageSlide({ slide: image, offset, render, rect, imageFit, onCli
                 onLoad={handleOnLoad}
                 onError={onError}
                 onClick={onClick}
+                draggable={false}
                 className={clsx(
                     cssClass(slideImagePrefix()),
                     cover && cssClass(slideImagePrefix("cover")),
-                    status !== SLIDE_STATUS_COMPLETE && cssClass(slideImagePrefix("loading"))
+                    status !== SLIDE_STATUS_COMPLETE && cssClass(slideImagePrefix("loading")),
+                    imagePropsClassName
                 )}
-                draggable={false}
+                style={{ ...defaultStyle, ...style, ...imagePropsStyle }}
+                {...restImageProps}
                 alt={image.alt}
-                style={{ ...defaultStyle, ...style }}
                 sizes={sizes}
                 srcSet={srcSet}
                 src={image.src}
