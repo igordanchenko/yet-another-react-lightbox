@@ -30,7 +30,7 @@ declare module "../../types.js" {
     }
 
     /** Fullscreen plugin ref */
-    export interface FullscreenRef {
+    interface FullscreenRef {
         /** current fullscreen status */
         fullscreen: boolean;
         /** if `true`, fullscreen features are not available */

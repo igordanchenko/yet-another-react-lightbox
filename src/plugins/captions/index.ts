@@ -5,8 +5,6 @@ import { Callback, PLUGIN_CAPTIONS, RenderFunction } from "../../index.js";
 import { Captions } from "./Captions.js";
 
 declare module "../../types.js" {
-    export type TextAlignment = "start" | "end" | "center";
-
     // noinspection JSUnusedGlobalSymbols
     interface GenericSlide {
         /** slide title */
@@ -28,7 +26,7 @@ declare module "../../types.js" {
             /** if `true`, show Captions Toggle button in the toolbar */
             showToggle?: boolean;
             /** description text alignment */
-            descriptionTextAlign?: TextAlignment;
+            descriptionTextAlign?: "start" | "end" | "center";
             /** maximum number of lines to display in the description section */
             descriptionMaxLines?: number;
         };
@@ -57,7 +55,7 @@ declare module "../../types.js" {
     }
 
     /** Captions plugin ref */
-    export interface CaptionsRef {
+    interface CaptionsRef {
         /** if `true`, captions are visible */
         visible: boolean;
         /** show captions */

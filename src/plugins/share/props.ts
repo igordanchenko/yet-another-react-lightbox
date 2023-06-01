@@ -1,4 +1,4 @@
-import { LightboxProps } from "../../types.js";
+import { LightboxProps } from "../../index.js";
 
 export const defaultShareProps = {
     share: undefined,

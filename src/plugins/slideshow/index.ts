@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Callback, RenderFunction, PLUGIN_SLIDESHOW } from "../../index.js";
+import { Callback, PLUGIN_SLIDESHOW, RenderFunction } from "../../index.js";
 import { Slideshow } from "./Slideshow.js";
 
 declare module "../../types.js" {
@@ -39,7 +39,7 @@ declare module "../../types.js" {
     }
 
     /** Slideshow plugin ref */
-    export interface SlideshowRef {
+    interface SlideshowRef {
         /** current slideshow playback status */
         playing: boolean;
         /** if `true`, the slideshow playback is disabled */

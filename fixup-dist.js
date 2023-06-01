@@ -46,6 +46,13 @@ function fixupCssDefinitions(file) {
     writeFile(`${file}.d.ts`, ["declare const styles: unknown;", "export default styles;"].join(os.EOL));
 }
 
+function fixupModuleAugmentation(file) {
+    editFile(file, (data) => {
+        const regex = /declare module "\.\.\/\.\.\/types.js"/g;
+        return data.replaceAll(regex, 'declare module "yet-another-react-lightbox"');
+    });
+}
+
 function fixup(watchMode) {
     try {
         fixupMainBundle(`${ROOT}/index.js`);
@@ -56,6 +63,10 @@ function fixup(watchMode) {
 
         globSync(`${ROOT}/**/*.css`).forEach((file) => {
             fixupCssDefinitions(file);
+        });
+
+        globSync(`${ROOT}/plugins/**/index.d.ts`).forEach((file) => {
+            fixupModuleAugmentation(file);
         });
 
         globSync(`${ROOT}/**/*-*.{js,d\\.ts}`).forEach((file) => {

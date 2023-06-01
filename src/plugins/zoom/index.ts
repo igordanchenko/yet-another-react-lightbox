@@ -1,4 +1,6 @@
-import { Callback, RenderFunction, PLUGIN_ZOOM } from "../../index.js";
+import * as React from "react";
+
+import { Callback, PLUGIN_ZOOM, RenderFunction } from "../../index.js";
 import { Zoom } from "./Zoom.js";
 
 declare module "../../types.js" {
@@ -58,7 +60,7 @@ declare module "../../types.js" {
     }
 
     /** Zoom callback props */
-    export interface ZoomCallbackProps {
+    interface ZoomCallbackProps {
         /** current zoom level */
         zoom: number;
     }
@@ -69,7 +71,7 @@ declare module "../../types.js" {
     }
 
     /** Zoom plugin ref */
-    export interface ZoomRef {
+    interface ZoomRef {
         /** current zoom level */
         zoom: number;
         /** maximum zoom level */

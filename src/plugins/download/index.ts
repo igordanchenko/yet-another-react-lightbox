@@ -34,6 +34,7 @@ declare module "../../types.js" {
         iconDownload?: RenderFunction;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface Callbacks {
         /** a callback called on slide download */
         download?: Callback<DownloadCallbackProps>;
@@ -44,11 +45,11 @@ declare module "../../types.js" {
         [PLUGIN_DOWNLOAD]: null;
     }
 
-    export interface DownloadCallbackProps {
+    interface DownloadCallbackProps {
         index: number;
     }
 
-    export interface DownloadFunctionProps {
+    interface DownloadFunctionProps {
         slide: Slide;
         saveAs: (source: string | Blob, name?: string) => void;
     }

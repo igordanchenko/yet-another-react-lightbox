@@ -1,7 +1,7 @@
+import * as React from "react";
+
 import { Callback, ContainerRect, ImageFit, PLUGIN_THUMBNAILS, RenderFunction, Slide } from "../../index.js";
 import { Thumbnails } from "./Thumbnails.js";
-
-type Position = "top" | "bottom" | "start" | "end";
 
 declare module "../../types.js" {
     interface LightboxProps {
@@ -10,7 +10,7 @@ declare module "../../types.js" {
             /** Thumbnails plugin ref */
             ref?: React.ForwardedRef<ThumbnailsRef>;
             /** thumbnails position */
-            position?: Position;
+            position?: "top" | "bottom" | "start" | "end";
             /** thumbnail width */
             width?: number;
             /** thumbnail height */
@@ -44,7 +44,7 @@ declare module "../../types.js" {
     }
 
     /** `render.thumbnail` render function props */
-    export type RenderThumbnailProps = {
+    type RenderThumbnailProps = {
         slide: Slide;
         rect: ContainerRect;
         render: Render;
@@ -67,12 +67,12 @@ declare module "../../types.js" {
     }
 
     /** Thumbnails plugin ref */
-    export interface ThumbnailsRef {
+    interface ThumbnailsRef {
         /** if `true`, thumbnails are visible */
         visible: boolean;
         /** show thumbnails */
         show: Callback;
-        /** hide thuumbnails */
+        /** hide thumbnails */
         hide: Callback;
     }
 }

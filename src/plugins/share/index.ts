@@ -34,20 +34,22 @@ declare module "../../types.js" {
         iconShare?: RenderFunction;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface Callbacks {
         /** a callback called on slide share */
         share?: Callback<ShareCallbackProps>;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     interface ToolbarButtonKeys {
         [PLUGIN_SHARE]: null;
     }
 
-    export interface ShareCallbackProps {
+    interface ShareCallbackProps {
         index: number;
     }
 
-    export interface ShareFunctionProps {
+    interface ShareFunctionProps {
         slide: Slide;
     }
 }
