@@ -71,6 +71,8 @@ export interface GenericSlide {
 
 /** Image slide properties */
 export interface SlideImage extends GenericSlide {
+    /** image slide type */
+    type?: "image";
     /** image URL */
     src: string;
     /** image 'alt' attribute */

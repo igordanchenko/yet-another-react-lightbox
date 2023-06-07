@@ -10,6 +10,8 @@ declare module "../../types.js" {
 
     /** Video slide attributes */
     export interface SlideVideo extends GenericSlide {
+        /** video slide type */
+        type: "video";
         /** video placeholder image */
         poster?: string;
         /** video width in pixels */
