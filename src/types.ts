@@ -140,6 +140,8 @@ export interface SlotType {
     root: "root";
     /** lightbox container customization slot */
     container: "container";
+    /** lightbox slide customization slot */
+    slide: "slide";
     /** lightbox button customization slot */
     button: "button";
     /** lightbox icon customization slot */
