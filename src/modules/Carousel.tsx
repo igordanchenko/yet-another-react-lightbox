@@ -19,10 +19,9 @@ function cssSlidePrefix(value?: string) {
 type CarouselSlideProps = {
     slide: Slide;
     offset: number;
-    styles: ComponentProps["styles"]["slide"];
 };
 
-function CarouselSlide({ slide, offset, styles }: CarouselSlideProps) {
+function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     const containerRef = React.useRef<HTMLDivElement | null>(null);
 
     const { currentIndex } = useLightboxState();
@@ -32,6 +31,7 @@ function CarouselSlide({ slide, offset, styles }: CarouselSlideProps) {
         carousel: { imageFit, imageProps },
         on: { click: onClick },
         controller: { closeOnBackdropClick },
+        styles: { slide: style },
     } = useLightboxProps();
 
     const renderSlide = () => {
@@ -86,21 +86,19 @@ function CarouselSlide({ slide, offset, styles }: CarouselSlideProps) {
                 cssClass(CLASS_FLEX_CENTER)
             )}
             onClick={handleBackdropClick}
-            style={styles}
+            style={style}
         >
             {renderSlide()}
         </div>
     );
 }
 
-function Placeholder({ styles }: { styles: ComponentProps["styles"]["slide"] }) {
-    return <div className={cssClass("slide")} style={styles} />;
+function Placeholder() {
+    const style = useLightboxProps().styles.slide;
+    return <div className={cssClass("slide")} style={style} />;
 }
 
-export function Carousel({
-    carousel: { finite, preload, padding, spacing },
-    styles: { slide: styles },
-}: ComponentProps) {
+export function Carousel({ carousel: { finite, preload, padding, spacing } }: ComponentProps) {
     const { slides, currentIndex, globalIndex } = useLightboxState();
     const { setCarouselRef } = useController();
 
@@ -118,28 +116,22 @@ export function Carousel({
                         key={key}
                         slide={slides[(i + preload * slides.length) % slides.length]}
                         offset={i - currentIndex}
-                        styles={styles}
                     />
                 ) : (
-                    <Placeholder key={key} styles={styles} />
+                    <Placeholder key={key} />
                 )
             );
         }
 
-        items.push(<CarouselSlide key={globalIndex} slide={slides[currentIndex]} offset={0} styles={styles} />);
+        items.push(<CarouselSlide key={globalIndex} slide={slides[currentIndex]} offset={0} />);
 
         for (let i = currentIndex + 1; i <= currentIndex + preload; i += 1) {
             const key = globalIndex + i - currentIndex;
             items.push(
                 !finite || i <= slides.length - 1 ? (
-                    <CarouselSlide
-                        key={key}
-                        slide={slides[i % slides.length]}
-                        offset={i - currentIndex}
-                        styles={styles}
-                    />
+                    <CarouselSlide key={key} slide={slides[i % slides.length]} offset={i - currentIndex} />
                 ) : (
-                    <Placeholder key={key} styles={styles} />
+                    <Placeholder key={key} />
                 )
             );
         }
