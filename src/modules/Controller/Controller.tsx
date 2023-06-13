@@ -347,7 +347,7 @@ export function Controller({ children, ...props }: ComponentProps) {
     React.useEffect(
         () =>
             subscribeSensors(EVENT_ON_KEY_UP, (event: React.KeyboardEvent) => {
-                if (event.code === VK_ESCAPE) {
+                if (event.key === VK_ESCAPE) {
                     close();
                 }
             }),
