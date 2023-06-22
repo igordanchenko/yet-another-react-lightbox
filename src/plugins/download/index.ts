@@ -1,4 +1,4 @@
-import { PLUGIN_DOWNLOAD } from "../../index.js";
+import { Callback, PLUGIN_DOWNLOAD, RenderFunction, Slide } from "../../index.js";
 import { Download } from "./Download.js";
 
 declare module "../../types.js" {

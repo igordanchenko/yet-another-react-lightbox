@@ -2,8 +2,8 @@ import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { clickButton, lightbox } from "../utils.js";
-import { Share } from "../../src/plugins/index.js";
-import { LightboxExternalProps } from "../../src/index.js";
+import { Share } from "../../../src/plugins/index.js";
+import { LightboxExternalProps } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
     return render(lightbox({ plugins: [Share], ...props }));

@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 
 import { lightbox } from "../utils.js";
-import { Counter } from "../../src/plugins/index.js";
-import { LightboxExternalProps } from "../../src/index.js";
+import { Counter } from "../../../src/plugins/index.js";
+import { LightboxExternalProps } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
     return render(lightbox({ plugins: [Counter], ...props }));

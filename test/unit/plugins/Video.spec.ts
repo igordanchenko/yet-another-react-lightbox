@@ -2,8 +2,8 @@ import { render } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { findCurrentSlide, lightbox } from "../utils.js";
-import { Video } from "../../src/plugins/index.js";
-import { LightboxExternalProps } from "../../src/index.js";
+import { Video } from "../../../src/plugins/index.js";
+import { LightboxExternalProps } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
     return render(

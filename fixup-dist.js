@@ -46,7 +46,31 @@ function fixupCssDefinitions(file) {
     writeFile(`${file}.d.ts`, ["declare const styles: unknown;", "export default styles;"].join(os.EOL));
 }
 
-function fixupModuleAugmentation(file) {
+function fixupPluginsImports(file) {
+    const fileNameMatch = file.match(/dist\/plugins\/([^/]+)\/index.d.ts/);
+    if (fileNameMatch) {
+        const plugin = fileNameMatch[1];
+
+        const parseImports = (data) => {
+            const importsMatch = [
+                ...data.matchAll(/import\s*\{(.*)}\s*from\s*['"]\.\.\/\.\.\/(?:types|index).js['"]/g),
+            ];
+            return importsMatch.length > 0 ? importsMatch[0][1].split(/[ ,]+/).filter(Boolean) : [];
+        };
+
+        editFile(file, (data) => {
+            const imports = new Set();
+            parseImports(data).forEach(imports.add, imports);
+            parseImports(readFile(`src/plugins/${plugin}/index.ts`)).forEach(imports.add, imports);
+            return data.replaceAll(
+                /import\s*\{.*}\s*from\s*['"]\.\.\/\.\.\/types.js['"]/g,
+                `import { ${Array.from(imports).join(", ")} } from '../../types.js'`
+            );
+        });
+    }
+}
+
+function fixupPluginsModuleAugmentation(file) {
     editFile(file, (data) => {
         const regex = /declare module "\.\.\/\.\.\/types.js"/g;
         return data.replaceAll(regex, 'declare module "yet-another-react-lightbox"');
@@ -66,7 +90,8 @@ function fixup(watchMode) {
         });
 
         globSync(`${ROOT}/plugins/**/index.d.ts`).forEach((file) => {
-            fixupModuleAugmentation(file);
+            fixupPluginsModuleAugmentation(file);
+            fixupPluginsImports(file);
         });
 
         globSync(`${ROOT}/**/*-*.{js,d\\.ts}`).forEach((file) => {

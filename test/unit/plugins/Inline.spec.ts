@@ -3,8 +3,8 @@ import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { lightbox } from "../utils.js";
-import { Inline } from "../../src/plugins/index.js";
-import { ControllerRef, LightboxExternalProps } from "../../src/index.js";
+import { Inline } from "../../../src/plugins/index.js";
+import { ControllerRef, LightboxExternalProps } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
     return render(lightbox({ plugins: [Inline], ...props }));

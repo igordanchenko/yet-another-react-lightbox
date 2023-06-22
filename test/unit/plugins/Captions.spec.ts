@@ -3,8 +3,8 @@ import { act, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { lightbox } from "../utils.js";
-import { Captions } from "../../src/plugins/index.js";
-import { CaptionsRef, LightboxExternalProps } from "../../src/index.js";
+import { Captions } from "../../../src/plugins/index.js";
+import { CaptionsRef, LightboxExternalProps } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
     const slides = [

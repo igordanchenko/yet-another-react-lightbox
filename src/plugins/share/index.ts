@@ -1,4 +1,4 @@
-import { PLUGIN_SHARE } from "../../index.js";
+import { Callback, PLUGIN_SHARE, RenderFunction, Slide } from "../../index.js";
 import { Share } from "./Share.js";
 
 export { isShareSupported } from "./utils.js";

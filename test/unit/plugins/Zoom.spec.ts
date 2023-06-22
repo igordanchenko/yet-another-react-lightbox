@@ -1,7 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 
 import { lightbox } from "../utils.js";
-import { Zoom } from "../../src/plugins/index.js";
+import { Zoom } from "../../../src/plugins/index.js";
 
 describe("Zoom", () => {
     it("renders without crashing", async () => {

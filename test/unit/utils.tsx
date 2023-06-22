@@ -2,7 +2,7 @@ import * as React from "react";
 import { act, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import Lightbox from "../src/index.js";
+import Lightbox from "../../src/index.js";
 
 export function lightbox(props?: Parameters<typeof Lightbox>[0]) {
     return <Lightbox open {...props} />;
