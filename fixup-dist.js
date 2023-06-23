@@ -47,9 +47,9 @@ function fixupCssDefinitions(file) {
 }
 
 function fixupPluginsImports(file) {
-    const fileNameMatch = file.match(/dist\/plugins\/([^/]+)\/index.d.ts/);
-    if (fileNameMatch) {
-        const plugin = fileNameMatch[1];
+    const parts = file.split(path.sep);
+    if (parts.length === 4) {
+        const plugin = parts[2];
 
         const parseImports = (data) => {
             const importsMatch = [
@@ -102,8 +102,13 @@ function fixup(watchMode) {
                 process.exit(1);
             }
         });
-    } catch (err) {
-        //
+    } catch (error) {
+        if (watchMode) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        } else {
+            throw error;
+        }
     }
 }
 

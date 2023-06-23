@@ -10,15 +10,15 @@ function resolve(...paths) {
 }
 
 function execSync(cmd) {
-    child_process.execSync(cmd, { cwd: resolve(), timeout: 300_000 });
+    child_process.execSync(cmd, { cwd: resolve(), timeout: 300_000, stdio: "inherit" });
 }
 
 execSync("npm install --no-save");
 
 function copySync(file) {
-    const target = resolve("node_modules/yet-another-react-lightbox", file);
+    const target = resolve("node_modules", "yet-another-react-lightbox", file);
     fse.removeSync(target);
-    fse.copySync(resolve("../..", file), target);
+    fse.copySync(resolve("..", "..", file), target);
 }
 
 copySync("dist");
