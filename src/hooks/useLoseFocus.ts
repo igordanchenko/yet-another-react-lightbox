@@ -3,10 +3,11 @@ import * as React from "react";
 import { useLayoutEffect } from "./useLayoutEffect.js";
 
 export function useLoseFocus(focus: () => void, disabled = false) {
-    const focused = React.useRef(disabled);
+    const focused = React.useRef<boolean>();
 
     useLayoutEffect(() => {
-        if (disabled) {
+        if (disabled && focused.current) {
+            focused.current = false;
             focus();
         }
     }, [disabled, focus]);
