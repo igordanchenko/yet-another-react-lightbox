@@ -14,9 +14,12 @@ export function useThrottle(callback: (...args: any[]) => void, delay: number) {
 
     return React.useCallback(
         (...args: any[]) => {
-            delayCallback(() => {
-                executeCallback(args);
-            }, delay - (Date.now() - lastCallbackTime.current));
+            delayCallback(
+                () => {
+                    executeCallback(args);
+                },
+                delay - (Date.now() - lastCallbackTime.current)
+            );
         },
         [delay, executeCallback, delayCallback]
     );
