@@ -48,20 +48,24 @@ import "yet-another-react-lightbox/styles.css";
 
 // ...
 
-<div style={{ width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" }}>
-  <Lightbox
-    plugins={[Inline]}
-    // ...
-  />
-</div>
+return (
+    <div style={{ width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" }}>
+        <Lightbox
+            plugins={[Inline]}
+            // ...
+        />
+    </div>
+);
 
 // or
 
-<Lightbox
-  plugins={[Inline]}
-  inline={{ style: { width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" } }}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Inline]}
+        inline={{ style: { width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" } }}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

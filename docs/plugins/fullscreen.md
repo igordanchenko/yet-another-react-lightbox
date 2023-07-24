@@ -59,14 +59,16 @@ const fullscreenRef = React.useRef(null);
 
 // ...
 
-<Lightbox
-  plugins={[Fullscreen]}
-  fullscreen={{ ref: fullscreenRef }}
-  on={{
-    click: () => fullscreenRef.current?.enter()
-  }}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Fullscreen]}
+        fullscreen={{ ref: fullscreenRef }}
+        on={{
+            click: () => fullscreenRef.current?.enter(),
+        }}
+        // ...
+    />
+);
 ```
 
 <table class="docs">
@@ -103,10 +105,12 @@ import "yet-another-react-lightbox/styles.css";
 
 // ...
 
-<Lightbox
-  plugins={[Fullscreen]}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Fullscreen]}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

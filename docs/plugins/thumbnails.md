@@ -78,18 +78,18 @@ const thumbnailsRef = React.useRef(null);
 
 // ...
 
-<Lightbox
-  plugins={[Thumbnails]}
-  thumbnails={{ ref: thumbnailsRef }}
-  on={{
-    click: () => {
-      (thumbnailsRef.current?.visible
-        ? thumbnailsRef.current?.hide
-        : thumbnailsRef.current?.show)?.();
-    },
-  }}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Thumbnails]}
+        thumbnails={{ ref: thumbnailsRef }}
+        on={{
+            click: () => {
+                (thumbnailsRef.current?.visible ? thumbnailsRef.current?.hide : thumbnailsRef.current?.show)?.();
+            },
+        }}
+        // ...
+    />
+);
 ```
 
 <table class="docs">
@@ -122,10 +122,12 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 // ...
 
-<Lightbox
-  plugins={[Thumbnails]}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Thumbnails]}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

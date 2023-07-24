@@ -2,8 +2,8 @@
 
 The Share plugin adds a sharing button to the lightbox.
 
-The plugin uses the [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API) and displays
-the sharing button in supported browsers.
+The plugin uses the [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API) and displays the
+sharing button in supported browsers.
 
 ## Documentation
 
@@ -93,15 +93,17 @@ import Share from "yet-another-react-lightbox/plugins/share";
 
 // ...
 
-<Lightbox
-  slides={[
-    { src: "/image1.jpg" },
-    { src: "/image2.jpg", share: "/image2.png" },
-    { src: "/image3.jpg", share: { url: "/image3.png", title: "Image title" } },
-  ]}
-  plugins={[Share]}
-  // ...
-/>
+return (
+    <Lightbox
+        slides={[
+            { src: "/image1.jpg" },
+            { src: "/image2.jpg", share: "/image2.png" },
+            { src: "/image3.jpg", share: { url: "/image3.png", title: "Image title" } },
+        ]}
+        plugins={[Share]}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

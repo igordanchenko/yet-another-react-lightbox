@@ -41,11 +41,15 @@ import Counter from "yet-another-react-lightbox/plugins/counter";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/counter.css";
 
-<Lightbox
-  plugins={[Counter]}
-  counter={{ container: { style: { top: "unset", bottom: 0 } } }}
-  // ...
-/>
+// ...
+
+return (
+    <Lightbox
+        plugins={[Counter]}
+        counter={{ container: { style: { top: "unset", bottom: 0 } } }}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

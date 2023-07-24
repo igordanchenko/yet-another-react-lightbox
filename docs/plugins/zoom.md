@@ -86,7 +86,6 @@ The plugin supports the following input devices and gestures:
     </tbody>
 </table>
 
-
 ## Documentation
 
 Zoom plugin adds the following `Lightbox` properties.
@@ -190,14 +189,16 @@ const zoomRef = React.useRef(null);
 
 // ...
 
-<Lightbox
-  plugins={[Zoom]}
-  zoom={{ ref: zoomRef }}
-  on={{
-    click: () => zoomRef.current?.zoomIn()
-  }}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Zoom]}
+        zoom={{ ref: zoomRef }}
+        on={{
+            click: () => zoomRef.current?.zoomIn(),
+        }}
+        // ...
+    />
+);
 ```
 
 <table class="docs">
@@ -249,10 +250,12 @@ import "yet-another-react-lightbox/styles.css";
 
 // ...
 
-<Lightbox
-  plugins={[Zoom]}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Zoom]}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

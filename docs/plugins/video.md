@@ -4,8 +4,8 @@ Video plugin adds support for video slides via HTML &lt;video&gt; player.
 
 ## Documentation
 
-The plugin adds video `Slide` type with the following attributes. Most attributes are identical to the ones present
-in the [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) HTML element.
+The plugin adds video `Slide` type with the following attributes. Most attributes are identical to the ones present in
+the [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video) HTML element.
 
 <table class="docs">
     <tbody>
@@ -102,7 +102,8 @@ in the [&lt;video&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element
     </tbody>
 </table>
 
-Additionally, the Video plugin adds the following `Lightbox` properties, which can be used as defaults for all video slides within a lightbox.
+Additionally, the Video plugin adds the following `Lightbox` properties, which can be used as defaults for all video
+slides within a lightbox.
 
 <table class="docs">
     <tbody>
@@ -139,25 +140,27 @@ import "yet-another-react-lightbox/styles.css";
 
 // ...
 
-<Lightbox
-  plugins={[Video]}
-  slides={[
-    {
-      type: "video",
-      width: 1280,
-      height: 720,
-      poster: "/public/poster-image.jpg",
-      sources: [
-        {
-          src: "/public/video.mp4",
-          type: "video/mp4"
-        }
-      ]
-    },
-    // ...
-  ]}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Video]}
+        slides={[
+            {
+                type: "video",
+                width: 1280,
+                height: 720,
+                poster: "/public/poster-image.jpg",
+                sources: [
+                    {
+                        src: "/public/video.mp4",
+                        type: "video/mp4",
+                    },
+                ],
+            },
+            // ...
+        ]}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

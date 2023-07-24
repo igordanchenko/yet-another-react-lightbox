@@ -1,21 +1,20 @@
 # Custom Slides
 
-[Yet Another React Lightbox](/) is not limited to just image slides or video slides, and you can render pretty much
-any supported media via custom render function.
+[Yet Another React Lightbox](/) is not limited to just image slides or video slides, and you can render pretty much any
+supported media via custom render function.
 
 ```jsx
 <Lightbox
-  slides={[
-    {
-      type: "custom-slide",
-      // slide attributes
-    }
-  ]}
-  render={{
-    slide: ({ slide }) =>
-      slide.type === "custom-slide" ? <MyCustomSlide slide={slide} /> : undefined
-  }}
-  //...
+    slides={[
+        {
+            type: "custom-slide",
+            // slide attributes
+        },
+    ]}
+    render={{
+        slide: ({ slide }) => (slide.type === "custom-slide" ? <MyCustomSlide slide={slide} /> : undefined),
+    }}
+    //...
 />
 ```
 

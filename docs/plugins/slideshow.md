@@ -75,18 +75,18 @@ const slideshowRef = React.useRef(null);
 
 // ...
 
-<Lightbox
-  plugins={[Slideshow]}
-  slideshow={{ ref: slideshowRef }}
-  on={{
-    click: () => {
-      (slideshowRef.current?.playing
-        ? slideshowRef.current?.pause
-        : slideshowRef.current?.play)?.();
-    },
-  }}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Slideshow]}
+        slideshow={{ ref: slideshowRef }}
+        on={{
+            click: () => {
+                (slideshowRef.current?.playing ? slideshowRef.current?.pause : slideshowRef.current?.play)?.();
+            },
+        }}
+        // ...
+    />
+);
 ```
 
 <table class="docs">
@@ -123,10 +123,12 @@ import "yet-another-react-lightbox/styles.css";
 
 // ...
 
-<Lightbox
-  plugins={[Slideshow]}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Slideshow]}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

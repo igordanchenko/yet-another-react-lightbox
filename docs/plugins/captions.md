@@ -66,18 +66,18 @@ const captionsRef = React.useRef(null);
 
 // ...
 
-<Lightbox
-  plugins={[Captions]}
-  captions={{ ref: captionsRef }}
-  on={{
-    click: () => {
-      (captionsRef.current?.visible
-        ? captionsRef.current?.hide
-        : captionsRef.current?.show)?.();
-    },
-  }}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Captions]}
+        captions={{ ref: captionsRef }}
+        on={{
+            click: () => {
+                (captionsRef.current?.visible ? captionsRef.current?.hide : captionsRef.current?.show)?.();
+            },
+        }}
+        // ...
+    />
+);
 ```
 
 <table class="docs">
@@ -110,18 +110,20 @@ import "yet-another-react-lightbox/plugins/captions.css";
 
 // ...
 
-<Lightbox
-  plugins={[Captions]}
-  slides={[
-    {
-      src: "/image1.jpg",
-      title: "Slide title",
-      description: "Slide description"
-    },
-    // ...
-  ]}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[Captions]}
+        slides={[
+            {
+                src: "/image1.jpg",
+                title: "Slide title",
+                description: "Slide description",
+            },
+            // ...
+        ]}
+        // ...
+    />
+);
 ```
 
 ## Live Demo

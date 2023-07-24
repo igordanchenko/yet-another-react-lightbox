@@ -4,8 +4,9 @@ Here are some basic example demonstrating [Yet Another React Lightbox](/) featur
 
 ## Live Demo
 
-Full-blown example with most of the plugins enabled ([Captions](/plugins/captions), [Fullscreen](/plugins/fullscreen),
-[Slideshow](/plugins/slideshow), [Thumbnails](/plugins/thumbnails), [Video](/plugins/video) and [Zoom](/plugins/zoom)).
+Full-blown example with most of the plugins
+enabled ([Captions](/plugins/captions), [Fullscreen](/plugins/fullscreen), [Slideshow](/plugins/slideshow), [Thumbnails](/plugins/thumbnails), [Video](/plugins/video)
+and [Zoom](/plugins/zoom)).
 
 <AdvancedExample />
 

@@ -106,31 +106,34 @@ import Download from "yet-another-react-lightbox/plugins/download";
 
 // ...
 
-<Lightbox
-  slides={[
-    { src: "/image1.jpg" },
-    { src: "/image2.jpg", downloadUrl: "/image2.png" },
-    { src: "/image3.jpg", downloadFilename: "puppy_in_sunglasses" },
-  ]}
-  plugins={[Download]}
-  // ...
-/>
+return (
+    <Lightbox
+        slides={[
+            { src: "/image1.jpg" },
+            { src: "/image2.jpg", downloadUrl: "/image2.png" },
+            { src: "/image3.jpg", downloadFilename: "puppy_in_sunglasses" },
+        ]}
+        plugins={[Download]}
+        // ...
+    />
+);
 ```
 
 ## Cross-Origin Images
 
-Depending on your setup, you may run into [CORS errors](https://github.com/igordanchenko/yet-another-react-lightbox/issues/119)
-when trying to download cross-origin images in Chrome.
+Depending on your setup, you may run
+into [CORS errors](https://github.com/igordanchenko/yet-another-react-lightbox/issues/119) when trying to download
+cross-origin images in Chrome.
 
 To work around this issue, you can provide the `download` slide prop that is different from the image url that you
 render in the lightbox (for example by appending some unique query parameter to the url):
 
 ```jsx
 <Lightbox
-  open={open}
-  close={() => setOpen(false)}
-  slides={slides.map((slide) => ({ ...slide, download: `${slide.src}?download` }))}
-  plugins={[Download]}
+    open={open}
+    close={() => setOpen(false)}
+    slides={slides.map((slide) => ({ ...slide, download: `${slide.src}?download` }))}
+    plugins={[Download]}
 />
 ```
 
