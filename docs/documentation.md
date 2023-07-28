@@ -318,10 +318,10 @@ As a bare minimum, you need to provide `src` attribute for each image slide.
 
 ```jsx
 const slides = [
-  { src: "/image1.jpg" },
-  { src: "/image2.jpg" },
-  { src: "/image3.jpg" },
-  // ...
+    { src: "/image1.jpg" },
+    { src: "/image2.jpg" },
+    { src: "/image3.jpg" },
+    // ...
 ];
 ```
 
@@ -330,20 +330,20 @@ However, the recommended configuration is to provide multiple files of different
 
 ```jsx
 const slides = [
-  {
-    src: "/image1x3840.jpg",
-    alt: "image 1",
-    width: 3840,
-    height: 2560,
-    srcSet: [
-      { src: "/image1x320.jpg", width: 320, height: 213 },
-      { src: "/image1x640.jpg", width: 640, height: 427 },
-      { src: "/image1x1200.jpg", width: 1200, height: 800 },
-      { src: "/image1x2048.jpg", width: 2048, height: 1365 },
-      { src: "/image1x3840.jpg", width: 3840, height: 2560 },
-    ]
-  },
-  // ...
+    {
+        src: "/image1x3840.jpg",
+        alt: "image 1",
+        width: 3840,
+        height: 2560,
+        srcSet: [
+            { src: "/image1x320.jpg", width: 320, height: 213 },
+            { src: "/image1x640.jpg", width: 640, height: 427 },
+            { src: "/image1x1200.jpg", width: 1200, height: 800 },
+            { src: "/image1x2048.jpg", width: 2048, height: 1365 },
+            { src: "/image1x3840.jpg", width: 3840, height: 2560 },
+        ],
+    },
+    // ...
 ];
 ```
 
@@ -358,12 +358,12 @@ Custom render functions can be passed via `render` prop.
 // render function usage example
 
 <Lightbox
-  render={{
-    slide: ({ slide, offset, rect }) => {
-      // ...
-    }
-  }}
-  // ...
+    render={{
+        slide: ({ slide, offset, rect }) => {
+            // ...
+        },
+    }}
+    // ...
 />
 ```
 
@@ -457,11 +457,13 @@ const ref = React.useRef(null);
 
 // ...
 
-<Lightbox
-  controller={{ ref }}
-  on={{ click: () => ref.current?.close() }}
-  // ...
-/>
+return (
+    <Lightbox
+        controller={{ ref }}
+        on={{ click: () => ref.current?.close() }}
+        // ...
+    />
+);
 ```
 
 <table class="docs">
@@ -503,5 +505,5 @@ const ref = React.useRef(null);
 
 Are you looking for documentation for one of the previous versions?
 
-- [yet-another-react-lightbox v2.x](https://v2.yet-another-react-lightbox.com/documentation)
-- [yet-another-react-lightbox v1.x](https://v1.yet-another-react-lightbox.com/documentation)
+-   [yet-another-react-lightbox v2.x](https://v2.yet-another-react-lightbox.com/documentation)
+-   [yet-another-react-lightbox v1.x](https://v1.yet-another-react-lightbox.com/documentation)

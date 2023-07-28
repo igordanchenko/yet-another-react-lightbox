@@ -37,8 +37,8 @@ import { createModule } from "yet-another-react-lightbox";
 // ...
 
 function MyComponent({ children, ...props }) {
-  // ...
-  return <>{children}</>
+    // ...
+    return <>{children}</>;
 }
 
 const myModule = createModule("MyModule", MyComponent);
@@ -116,15 +116,17 @@ import Lightbox from "yet-another-react-lightbox";
 // ...
 
 function MyPlugin({ addModule }) {
-  addModule(MyModule)
+    addModule(MyModule);
 }
 
 // ...
 
-<Lightbox
-  plugins={[MyPlugin]}
-  // ...
-/>
+return (
+    <Lightbox
+        plugins={[MyPlugin]}
+        // ...
+    />
+);
 ```
 
 ## Augmentation
@@ -135,15 +137,15 @@ All plugins' augmentations are applied before the lightbox starts rendering.
 For example, you can add a toolbar button using the following augmentation:
 
 ```jsx
-import { addToolbarButton  } from "yet-another-react-lightbox";
+import { addToolbarButton } from "yet-another-react-lightbox";
 
 // ...
 
 function MyPlugin({ augment }) {
-  augment(({ toolbar, ...restProps }) => ({
-    toolbar: addToolbarButton(toolbar, "my-button", <MyButton />),
-    ...restProps
-  }));
+    augment(({ toolbar, ...restProps }) => ({
+        toolbar: addToolbarButton(toolbar, "my-button", <MyButton />),
+        ...restProps,
+    }));
 }
 ```
 
@@ -151,14 +153,14 @@ Another common use case for props augmentation is to provide the default values 
 
 ```jsx
 const myPropDefaults = {
-  // ...
+    // ...
 };
 
 function MyPlugin({ augment }) {
-  augment(({ myProp, ...restProps }) => ({
-    myProp: { ...myPropDefaults, ...myProp },
-    ...restProps
-  }));
+    augment(({ myProp, ...restProps }) => ({
+        myProp: { ...myPropDefaults, ...myProp },
+        ...restProps,
+    }));
 }
 ```
 
@@ -198,11 +200,11 @@ The `useLightboxState` hook returns the current state of the lightbox (current s
 </table>
 
 ```jsx
-import { useLightboxState  } from "yet-another-react-lightbox";
+import { useLightboxState } from "yet-another-react-lightbox";
 
 // ...
 
-const { slides, currentSlide, currentIndex  } = useLightboxState();
+const { slides, currentSlide, currentIndex } = useLightboxState();
 ```
 
 ### useLightboxProps
@@ -210,11 +212,11 @@ const { slides, currentSlide, currentIndex  } = useLightboxState();
 The `useLightboxProps` hook provides access to the [lightbox](/documentation#Lightbox) props.
 
 ```jsx
-import { useLightboxProps  } from "yet-another-react-lightbox";
+import { useLightboxProps } from "yet-another-react-lightbox";
 
 // ...
 
-const { carousel, render  } = useLightboxProps();
+const { carousel, render } = useLightboxProps();
 ```
 
 ### useController
@@ -276,15 +278,13 @@ The `useController` hook provides access to the `Controller` module.
 The `useContainerRect` hook allows you to measure the available space of an HTML element excluding padding.
 
 ```jsx
-import { useContainerRect  } from "yet-another-react-lightbox";
+import { useContainerRect } from "yet-another-react-lightbox";
 
 const { containerRect, setContainerRef } = useContainerRect();
 
 // ...
 
-<div ref={setContainerRef}>
-  // ...
-</div>
+<div ref={setContainerRef}>// ...</div>;
 ```
 
 ## Toolbar Buttons
@@ -297,19 +297,21 @@ import { Lightbox, IconButton, createIcon, useLightboxState } from "yet-another-
 const MyIcon = createIcon("MyIcon", <path d="..." />);
 
 function MyButton() {
-  const { currentSlide } = useLightboxState();
+    const { currentSlide } = useLightboxState();
 
-  return <IconButton label="My button" icon={MyIcon} disabled={!currentSlide} />
+    return <IconButton label="My button" icon={MyIcon} disabled={!currentSlide} />;
 }
 
 // ...
 
-<Lightbox
-  toolbar={{
-    buttons: [<MyButton key="my-button" />, "close"],
-  }}
-  // ...
-/>
+return (
+    <Lightbox
+        toolbar={{
+            buttons: [<MyButton key="my-button" />, "close"],
+        }}
+        // ...
+    />
+);
 ```
 
 ## Custom Slides
@@ -322,14 +324,14 @@ Register custom slide type in TypeScript:
 import { GenericSlide } from "yet-another-react-lightbox";
 
 declare module "yet-another-react-lightbox" {
-  export interface CustomSlide extends GenericSlide {
-    type: "custom-slide",
-    // custom slide attributes
-  }
+    export interface CustomSlide extends GenericSlide {
+        type: "custom-slide";
+        // custom slide attributes
+    }
 
-  interface SlideTypes {
-    "custom-slide": CustomSlide;
-  }
+    interface SlideTypes {
+        "custom-slide": CustomSlide;
+    }
 }
 ```
 
@@ -339,24 +341,25 @@ declare module "yet-another-react-lightbox" {
 import { Lightbox, Slide, CustomSlide } from "yet-another-react-lightbox";
 
 function isCustomSlide(slide: Slide): slide is CustomSlide {
-  return slide.type === "custom-slide"
+    return slide.type === "custom-slide";
 }
 
 // ...
 
-<Lightbox
-  slides={[
-    {
-      type: "custom-slide",
-      // custom slide attributes
-    }
-  ]}
-  render={{
-    slide: ({ slide }) =>
-      isCustomSlide(slide) ? <MyCustomSlide slide={slide} /> : undefined
-  }}
-  //...
-/>
+return (
+    <Lightbox
+        slides={[
+            {
+                type: "custom-slide",
+                // custom slide attributes
+            },
+        ]}
+        render={{
+            slide: ({ slide }) => (isCustomSlide(slide) ? <MyCustomSlide slide={slide} /> : undefined),
+        }}
+        //...
+    />
+);
 ```
 
 ## Custom Slide Props
@@ -365,25 +368,26 @@ You can use TypeScript module augmentation to add custom slide props.
 
 ```tsx
 declare module "yet-another-react-lightbox" {
-  interface GenericSlide {
-    customSlideProp?: string;
-  }
+    interface GenericSlide {
+        customSlideProp?: string;
+    }
 
-  interface SlideImage {
-    customImageSlideProp?: string;
-  }
+    interface SlideImage {
+        customImageSlideProp?: string;
+    }
 }
 ```
 
 ```jsx
 <Lightbox
-  slides={[
-    {
-      src: "/image1.jpg",
-      customSlideProp: "foo",
-      customImageSlideProp: "bar"}
-  ]}
-  // ...
+    slides={[
+        {
+            src: "/image1.jpg",
+            customSlideProp: "foo",
+            customImageSlideProp: "bar",
+        },
+    ]}
+    // ...
 />
 ```
 
@@ -393,17 +397,17 @@ You can use TypeScript module augmentation to add custom lightbox props.
 
 ```tsx
 declare module "yet-another-react-lightbox" {
-  interface LightboxProps {
-    customLightboxProp? : {
-      myProp?: string;
+    interface LightboxProps {
+        customLightboxProp?: {
+            myProp?: string;
+        };
     }
-  }
 }
 ```
 
 ```jsx
 <Lightbox
-  customLightboxProp={{ myProp: "baz" }}
-  // ...
+    customLightboxProp={{ myProp: "baz" }}
+    // ...
 />
 ```
