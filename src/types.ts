@@ -146,6 +146,12 @@ export interface SlotType {
     button: "button";
     /** lightbox icon customization slot */
     icon: "icon";
+    /** lightbox toolbar customization slot */
+    toolbar: "toolbar";
+    /** lightbox Prev navigation button customization slot */
+    navigationPrev: "navigationPrev";
+    /** lightbox Next navigation button customization slot */
+    navigationNext: "navigationNext";
 }
 
 /** Customization slot CSS properties */

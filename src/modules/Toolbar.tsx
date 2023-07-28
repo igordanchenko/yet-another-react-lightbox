@@ -13,7 +13,7 @@ function cssPrefix(value?: string) {
     return composePrefix(MODULE_TOOLBAR, value);
 }
 
-export function Toolbar({ toolbar: { buttons }, render: { buttonClose, iconClose } }: ComponentProps) {
+export function Toolbar({ toolbar: { buttons }, render: { buttonClose, iconClose }, styles }: ComponentProps) {
     const { close, setToolbarWidth } = useController();
     const { setContainerRef, containerRect } = useContainerRect();
 
@@ -28,7 +28,12 @@ export function Toolbar({ toolbar: { buttons }, render: { buttonClose, iconClose
     };
 
     return (
-        <div ref={setContainerRef} className={cssClass(cssPrefix())} {...stopNavigationEventsPropagation()}>
+        <div
+            ref={setContainerRef}
+            style={styles.toolbar}
+            className={cssClass(cssPrefix())}
+            {...stopNavigationEventsPropagation()}
+        >
             {buttons?.map((button) => (button === ACTION_CLOSE ? renderCloseButton() : button))}
         </div>
     );

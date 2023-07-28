@@ -38,6 +38,18 @@ The existing styles can be modified by targeting customization slots.
         <td>yarl__icon</td>
     </tr>
     <tr>
+        <td>toolbar</td>
+        <td>yarl__toolbar</td>
+    </tr>
+    <tr>
+        <td>navigationPrev</td>
+        <td>yarl__navigation_prev</td>
+    </tr>
+    <tr>
+        <td>navigationNext</td>
+        <td>yarl__navigation_next</td>
+    </tr>
+    <tr>
         <td>captionsTitle</td>
         <td>yarl__slide_title</td>
     </tr>

@@ -23,9 +23,10 @@ export type NavigationButtonProps = {
     action: "prev" | "next";
     onClick: () => void;
     disabled?: boolean;
+    style?: React.CSSProperties;
 };
 
-export function NavigationButton({ label, icon, renderIcon, action, onClick, disabled }: NavigationButtonProps) {
+export function NavigationButton({ label, icon, renderIcon, action, onClick, disabled, style }: NavigationButtonProps) {
     return (
         <IconButton
             label={label}
@@ -34,6 +35,7 @@ export function NavigationButton({ label, icon, renderIcon, action, onClick, dis
             className={cssClass(`navigation_${action}`)}
             disabled={disabled}
             onClick={onClick}
+            style={style}
             {...useLoseFocus(useController().focus, disabled)}
         />
     );
@@ -43,6 +45,7 @@ export function Navigation({
     carousel: { finite },
     animation,
     render: { buttonPrev, buttonNext, iconPrev, iconNext },
+    styles,
 }: ComponentProps) {
     const { slides, currentIndex } = useLightboxState();
     const { prev, next, subscribeSensors } = useController();
@@ -76,6 +79,7 @@ export function Navigation({
                     action={ACTION_PREV}
                     icon={PreviousIcon}
                     renderIcon={iconPrev}
+                    style={styles.navigationPrev}
                     disabled={prevDisabled}
                     onClick={prev}
                 />
@@ -89,6 +93,7 @@ export function Navigation({
                     action={ACTION_NEXT}
                     icon={NextIcon}
                     renderIcon={iconNext}
+                    style={styles.navigationNext}
                     disabled={nextDisabled}
                     onClick={next}
                 />
