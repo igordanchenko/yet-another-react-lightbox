@@ -1,9 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
+import { fileURLToPath } from "node:url";
+import child_process from "child_process";
 import path from "path";
 import fse from "fs-extra";
-import child_process from "child_process";
-import { fileURLToPath } from "node:url";
 
 function resolve(...paths) {
     return fileURLToPath(new URL(path.join(...paths), import.meta.url));

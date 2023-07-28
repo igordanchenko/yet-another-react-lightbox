@@ -16,7 +16,7 @@ export function Video({ augment }: PluginProps) {
                 if (isVideoSlide(slide)) {
                     return (
                         <VideoSlide
-                            key={`${slide.sources?.map((source) => source.src).join(" ")}`}
+                            key={slide.sources?.map((source) => source.src).join(" ")}
                             slide={slide}
                             offset={offset}
                         />
