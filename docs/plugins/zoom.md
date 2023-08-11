@@ -74,6 +74,7 @@ The plugin supports the following input devices and gestures:
         <td>
             <ul>
                 <li>zoom (`Ctrl` + mouse wheel)</li>
+                <li>double-click</li>
             </ul>
         </td>
         <td>
