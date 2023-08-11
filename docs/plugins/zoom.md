@@ -190,14 +190,22 @@ const zoomRef = React.useRef(null);
 // ...
 
 return (
-    <Lightbox
-        plugins={[Zoom]}
-        zoom={{ ref: zoomRef }}
-        on={{
-            click: () => zoomRef.current?.zoomIn(),
-        }}
-        // ...
-    />
+    <>
+        <Lightbox
+            slides={slides}
+            plugins={[Inline, Zoom]}
+            zoom={{ ref: zoomRef }}
+            inline={{ style: { width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" } }}
+        />
+
+        <button type="button" onClick={() => zoomRef.current?.zoomIn()}>
+            Zoom In
+        </button>
+
+        <button type="button" onClick={() => zoomRef.current?.zoomOut()}>
+            Zoom Out
+        </button>
+    </>
 );
 ```
 
