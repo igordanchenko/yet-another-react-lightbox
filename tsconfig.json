@@ -8,6 +8,7 @@
         "moduleResolution": "node",
         "isolatedModules": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "types": ["vitest/globals"]
     }
 }
