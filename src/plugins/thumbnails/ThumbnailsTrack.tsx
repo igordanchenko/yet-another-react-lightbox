@@ -87,7 +87,7 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
     React.useEffect(() => cleanup(subscribe(ACTION_SWIPE, handleControllerSwipe)), [subscribe, handleControllerSwipe]);
 
     const { finite } = carousel;
-    const preload = Math.max(Math.min(carousel.preload, slides.length - 1), 0);
+    const preload = Math.min(carousel.preload, Math.floor(slides.length / 2));
 
     const items: { slide: Slide | null; index: number; placeholder?: boolean }[] = [];
 
@@ -98,7 +98,7 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
             }
         }
 
-        for (let i = index - preload - (offset > 0 ? offset : 0); i < index; i += 1) {
+        for (let i = index - preload - Math.max(offset, 0); i < index; i += 1) {
             if (!(finite && i < 0)) {
                 items.push({ slide: getSlide(slides, i), index: i });
             } else {
@@ -108,7 +108,7 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
 
         items.push({ slide: getSlide(slides, index), index });
 
-        for (let i = index + 1; i <= index + preload - (offset < 0 ? offset : 0); i += 1) {
+        for (let i = index + 1; i <= index + preload - Math.min(offset, 0); i += 1) {
             if (!finite || i <= slides.length - 1) {
                 items.push({ slide: getSlide(slides, i), index: i });
             } else {

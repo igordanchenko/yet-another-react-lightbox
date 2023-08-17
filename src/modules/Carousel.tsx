@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { ComponentProps, Slide } from "../types.js";
 import { createModule } from "../config.js";
-import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "../utils.js";
+import { clsx, composePrefix, cssClass, cssVar, hasSlides, isImageSlide, parseLengthPercentage } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
 import { useLightboxProps, useLightboxState } from "../contexts/index.js";
@@ -98,20 +98,21 @@ function Placeholder() {
     return <div className={cssClass("slide")} style={style} />;
 }
 
-export function Carousel({ carousel: { finite, preload, padding, spacing } }: ComponentProps) {
+export function Carousel({ carousel }: ComponentProps) {
     const { slides, currentIndex, globalIndex } = useLightboxState();
     const { setCarouselRef } = useController();
 
-    const spacingValue = parseLengthPercentage(spacing);
-    const paddingValue = parseLengthPercentage(padding);
+    const spacingValue = parseLengthPercentage(carousel.spacing);
+    const paddingValue = parseLengthPercentage(carousel.padding);
 
     const items = [];
+    const preload = Math.min(carousel.preload, Math.max(Math.floor(slides.length / 2), 1));
 
-    if (slides?.length > 0) {
+    if (hasSlides(slides)) {
         for (let i = currentIndex - preload; i < currentIndex; i += 1) {
             const key = globalIndex + i - currentIndex;
             items.push(
-                !finite || i >= 0 ? (
+                !carousel.finite || i >= 0 ? (
                     <CarouselSlide
                         key={key}
                         slide={slides[(i + preload * slides.length) % slides.length]}
@@ -128,7 +129,7 @@ export function Carousel({ carousel: { finite, preload, padding, spacing } }: Co
         for (let i = currentIndex + 1; i <= currentIndex + preload; i += 1) {
             const key = globalIndex + i - currentIndex;
             items.push(
-                !finite || i <= slides.length - 1 ? (
+                !carousel.finite || i <= slides.length - 1 ? (
                     <CarouselSlide key={key} slide={slides[i % slides.length]} offset={i - currentIndex} />
                 ) : (
                     <Placeholder key={key} />
@@ -141,15 +142,13 @@ export function Carousel({ carousel: { finite, preload, padding, spacing } }: Co
         <div
             ref={setCarouselRef}
             className={clsx(cssClass(cssPrefix()), items.length > 0 && cssClass(cssPrefix("with_slides")))}
-            style={
-                {
-                    [`${cssVar(cssPrefix("slides_count"))}`]: items.length,
-                    [`${cssVar(cssPrefix("spacing_px"))}`]: spacingValue.pixel || 0,
-                    [`${cssVar(cssPrefix("spacing_percent"))}`]: spacingValue.percent || 0,
-                    [`${cssVar(cssPrefix("padding_px"))}`]: paddingValue.pixel || 0,
-                    [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
-                } as React.CSSProperties
-            }
+            style={{
+                [`${cssVar(cssPrefix("slides_count"))}`]: items.length,
+                [`${cssVar(cssPrefix("spacing_px"))}`]: spacingValue.pixel || 0,
+                [`${cssVar(cssPrefix("spacing_percent"))}`]: spacingValue.percent || 0,
+                [`${cssVar(cssPrefix("padding_px"))}`]: paddingValue.pixel || 0,
+                [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
+            }}
         >
             {items}
         </div>
