@@ -89,6 +89,36 @@ return (
 
 <CodeSandboxLink link="https://codesandbox.io/p/sandbox/yet-another-react-lightbox-nextjs-ts-dt0l1m" file="/app/page.tsx" path="/" />
 
+## With Thumbnails Plugin
+
+In the same way you used `next/image` to optimize your slide images, you can use it to optimize your thumbnails. You can
+replace the standard `<img>` element with `next/image` via a custom `render.thumbnails` function.
+
+```jsx
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+
+import NextJsImage from "../components/NextJsImage";
+
+import image1 from "../../public/images/image01.jpeg";
+import image2 from "../../public/images/image02.jpeg";
+import image3 from "../../public/images/image03.jpeg";
+
+// ...
+
+return (
+    <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={[image1, image2, image3]}
+        render={{ slide: NextJsImage, thumbnails: NextJsImage }}
+        plugins={[Thumbnails]}
+    />
+);
+```
+
 ## With Zoom Plugin
 
 Zoom plugin doesn't work well with the Next.js image component. You can use the following approach to take advantage of
