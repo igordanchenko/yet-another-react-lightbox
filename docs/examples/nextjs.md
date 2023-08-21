@@ -89,6 +89,71 @@ return (
 
 <CodeSandboxLink link="https://codesandbox.io/p/sandbox/yet-another-react-lightbox-nextjs-ts-dt0l1m" file="/app/page.tsx" path="/" />
 
+## With Thumbnails Plugin
+
+In the same way you used `next/image` to optimize your slide images, you can use it to optimize your thumbnails. You can replace the
+standard `<img>` element with `next/image` via a custom `render.thumbnails` function. The below example makes use
+of `placeholder="blur"` instead of showing a spinner.
+
+```jsx
+import Image from "next/image";
+import { isImageFitCover, isImageSlide, useLightboxProps } from "yet-another-react-lightbox";
+
+function isNextJsImage(slide) {
+    return isImageSlide(slide) && typeof slide.width === "number" && typeof slide.height === "number";
+}
+
+export default function NextJsImage({ slide, rect }) {
+    const { imageFit } = useLightboxProps().carousel;
+    const cover = isImageSlide(slide) && isImageFitCover(slide, imageFit);
+
+    if (!isNextJsImage(slide)) return undefined;
+
+    const width = !cover ? Math.round(Math.min(rect.width, (rect.height / slide.height) * slide.width)) : rect.width;
+
+    const height = !cover ? Math.round(Math.min(rect.height, (rect.width / slide.width) * slide.height)) : rect.height;
+
+    return (
+        <div style={{ position: "relative", width, height }}>
+            <Image
+                fill
+                alt=""
+                // If you also have video slides with posters, use this commented src instead
+                // src={slide.poster || slide}
+                src={slide}
+                loading="eager"
+                draggable={false}
+                placeholder={slide.blurDataURL ? "blur" : undefined}
+                style={{ objectFit: cover ? "cover" : "contain" }}
+                sizes={`${Math.ceil((width / window.innerWidth) * 100)}vw`}
+            />
+        </div>
+    );
+}
+```
+
+```jsx
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+
+import NextJsImage from "../components/NextJsImage";
+
+import image1 from "../../public/images/image01.jpeg";
+import image2 from "../../public/images/image02.jpeg";
+import image3 from "../../public/images/image03.jpeg";
+
+// ...
+
+return (
+    <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={[image1, image2, image3]}
+        render={{ thumbnails: NextJsImage }}
+    />
+);
+```
+
 ## With Zoom Plugin
 
 Zoom plugin doesn't work well with the Next.js image component. You can use the following approach to take advantage of
