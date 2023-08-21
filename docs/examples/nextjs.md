@@ -91,50 +91,14 @@ return (
 
 ## With Thumbnails Plugin
 
-In the same way you used `next/image` to optimize your slide images, you can use it to optimize your thumbnails. You can replace the
-standard `<img>` element with `next/image` via a custom `render.thumbnails` function. The below example makes use
-of `placeholder="blur"` instead of showing a spinner.
-
-```jsx
-import Image from "next/image";
-import { isImageFitCover, isImageSlide, useLightboxProps } from "yet-another-react-lightbox";
-
-function isNextJsImage(slide) {
-    return isImageSlide(slide) && typeof slide.width === "number" && typeof slide.height === "number";
-}
-
-export default function NextJsImage({ slide, rect }) {
-    const { imageFit } = useLightboxProps().carousel;
-    const cover = isImageSlide(slide) && isImageFitCover(slide, imageFit);
-
-    if (!isNextJsImage(slide)) return undefined;
-
-    const width = !cover ? Math.round(Math.min(rect.width, (rect.height / slide.height) * slide.width)) : rect.width;
-
-    const height = !cover ? Math.round(Math.min(rect.height, (rect.width / slide.width) * slide.height)) : rect.height;
-
-    return (
-        <div style={{ position: "relative", width, height }}>
-            <Image
-                fill
-                alt=""
-                // If you also have video slides with posters, use this commented src instead
-                // src={slide.poster || slide}
-                src={slide}
-                loading="eager"
-                draggable={false}
-                placeholder={slide.blurDataURL ? "blur" : undefined}
-                style={{ objectFit: cover ? "cover" : "contain" }}
-                sizes={`${Math.ceil((width / window.innerWidth) * 100)}vw`}
-            />
-        </div>
-    );
-}
-```
+In the same way you used `next/image` to optimize your slide images, you can use it to optimize your thumbnails. You can
+replace the standard `<img>` element with `next/image` via a custom `render.thumbnails` function.
 
 ```jsx
 import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 import NextJsImage from "../components/NextJsImage";
 
@@ -149,7 +113,8 @@ return (
         open={open}
         close={() => setOpen(false)}
         slides={[image1, image2, image3]}
-        render={{ thumbnails: NextJsImage }}
+        render={{ slide: NextJsImage, thumbnails: NextJsImage }}
+        plugins={[Thumbnails]}
     />
 );
 ```
