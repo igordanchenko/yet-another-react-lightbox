@@ -96,12 +96,14 @@ export function ImageSlide({
     const nonInfinite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
 
     const maxWidth = nonInfinite(
-        Math.max(...(image.srcSet?.map((x) => x.width) ?? []).concat(image.width ? [image.width] : [])),
+        Math.max(...(image.srcSet?.map((x) => x.width) ?? []).concat(image.width ? [image.width] : []).filter(Boolean)),
         imageRef.current?.naturalWidth || 0
     );
 
     const maxHeight = nonInfinite(
-        Math.max(...(image.srcSet?.map((x) => x.height) ?? []).concat(image.height ? [image.height] : [])),
+        Math.max(
+            ...(image.srcSet?.map((x) => x.height) ?? []).concat(image.height ? [image.height] : []).filter(Boolean)
+        ),
         imageRef.current?.naturalHeight || 0
     );
 
