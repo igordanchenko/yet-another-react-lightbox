@@ -175,7 +175,6 @@
         line-height: 0;
         padding: globalVar(button_padding, $icon-button-padding);
         color: $color-button;
-        filter: globalVar(button_filter, $filter-drop-shadow);
         -webkit-tap-highlight-color: transparent;
 
         &:focus {
