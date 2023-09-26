@@ -52,9 +52,61 @@ export const CloseIcon = createIcon(
     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
 );
 
-export const PreviousIcon = createIcon("Previous", <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />);
+export function PreviousIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" {...props}>
+            <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="white" />
+            <g clipPath="url(#clip0_5180_64953)">
+                <g clipPath="url(#clip1_5180_64953)">
+                    <path
+                        d="M26 18L20 24L26 30"
+                        stroke="black"
+                        strokeWidth="1.75"
+                        strokeLinecap="square"
+                        strokeLinejoin="round"
+                    />
+                </g>
+            </g>
+            <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#ACB0B4" />
+            <defs>
+                <clipPath id="clip0_5180_64953">
+                    <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                </clipPath>
+                <clipPath id="clip1_5180_64953">
+                    <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+}
 
-export const NextIcon = createIcon("Next", <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />);
+export function NextIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" {...props}>
+            <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="white" />
+            <g clipPath="url(#clip0_5180_64958)">
+                <g clipPath="url(#clip1_5180_64958)">
+                    <path
+                        d="M22 30L28 24L22 18"
+                        stroke="black"
+                        strokeWidth="1.75"
+                        strokeLinecap="square"
+                        strokeLinejoin="round"
+                    />
+                </g>
+            </g>
+            <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#ACB0B4" />
+            <defs>
+                <clipPath id="clip0_5180_64958">
+                    <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                </clipPath>
+                <clipPath id="clip1_5180_64958">
+                    <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+}
 
 export const LoadingIcon = createIcon(
     "Loading",
