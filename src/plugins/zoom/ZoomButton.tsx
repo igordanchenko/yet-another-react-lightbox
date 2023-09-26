@@ -1,20 +1,60 @@
 import * as React from "react";
 
-import { createIcon, IconButton, useLightboxProps } from "../../index.js";
+import { IconButton, useLightboxProps } from "../../index.js";
 import { useZoom } from "./ZoomController.js";
 
-const ZoomInIcon = createIcon(
-    "ZoomIn",
-    <>
-        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-        <path d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z" />
-    </>
-);
+export function ZoomInIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" {...props}>
+            <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="white" />
+            <g clipPath="url(#clip0_5180_64943)">
+                <path
+                    d="M24 17V31"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+                <path
+                    d="M17 24H31"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </g>
+            <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="currentColor" />
+            <defs>
+                <clipPath id="clip0_5180_64943">
+                    <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+}
 
-const ZoomOutIcon = createIcon(
-    "ZoomOut",
-    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" />
-);
+export function ZoomOutIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" fill="none" {...props}>
+            <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="white" />
+            <g clipPath="url(#clip0_5180_64948)">
+                <path
+                    d="M17 24H31"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </g>
+            <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="currentColor" />
+            <defs>
+                <clipPath id="clip0_5180_64948">
+                    <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+}
 
 /** Zoom button props */
 export type ZoomButtonProps = {
