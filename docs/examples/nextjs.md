@@ -113,7 +113,7 @@ return (
         open={open}
         close={() => setOpen(false)}
         slides={[image1, image2, image3]}
-        render={{ slide: NextJsImage, thumbnails: NextJsImage }}
+        render={{ slide: NextJsImage, thumbnail: NextJsImage }}
         plugins={[Thumbnails]}
     />
 );
