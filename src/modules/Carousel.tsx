@@ -2,7 +2,16 @@ import * as React from "react";
 
 import { ComponentProps, Slide } from "../types.js";
 import { createModule } from "../config.js";
-import { clsx, composePrefix, cssClass, cssVar, hasSlides, isImageSlide, parseLengthPercentage } from "../utils.js";
+import {
+    calculatePreload,
+    clsx,
+    composePrefix,
+    cssClass,
+    cssVar,
+    hasSlides,
+    isImageSlide,
+    parseLengthPercentage,
+} from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
 import { useLightboxProps, useLightboxState } from "../contexts/index.js";
@@ -106,7 +115,7 @@ export function Carousel({ carousel }: ComponentProps) {
     const paddingValue = parseLengthPercentage(carousel.padding);
 
     const items = [];
-    const preload = Math.min(carousel.preload, Math.max(Math.floor(slides.length / 2), 1));
+    const preload = calculatePreload(carousel, slides, 1);
 
     if (hasSlides(slides)) {
         for (let i = currentIndex - preload; i < currentIndex; i += 1) {

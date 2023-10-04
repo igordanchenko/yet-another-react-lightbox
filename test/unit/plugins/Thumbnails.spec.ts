@@ -15,9 +15,10 @@ function renderLightbox(props?: LightboxExternalProps) {
     );
 }
 
-function queryThumbnails() {
+function queryThumbnails(withImage = true) {
     return screen
         .queryAllByRole("button")
+        .filter((el) => !withImage || Boolean(el.querySelector("img")))
         .filter((el) => el.className.split(" ").includes("yarl__thumbnails_thumbnail"));
 }
 
@@ -119,11 +120,48 @@ describe("Thumbnails", () => {
     it("supports unknown slide types", () => {
         // @ts-expect-error
         renderLightbox({ slides: [{ type: "custom" }] });
-        expectThumbnails();
+        expect(queryThumbnails(false).length).toBe(1);
     });
 
     it("supports custom thumbnails", () => {
         renderLightbox({ render: { thumbnail: () => React.createElement("img", { src: "custom" }) } });
         clickThumbnail("custom");
+    });
+
+    it("renders correct number of thumbnails", () => {
+        const { rerender } = renderLightbox();
+
+        const generateTestCases = (finite: boolean, testCases: number[][]) =>
+            testCases.flatMap((expectedThumbnails, preload) =>
+                expectedThumbnails.map((expected, slides) => [slides, preload, finite, expected] as const)
+            );
+
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [slides, preload, finite, expected] of [
+            ...generateTestCases(false, [
+                [0, 1, 1, 1],
+                [0, 1, 3, 3, 3],
+                [0, 1, 3, 3, 5, 5, 5],
+                [0, 1, 3, 3, 5, 5, 7, 7, 7],
+                [0, 1, 3, 3, 5, 5, 7, 7, 9, 9, 9],
+            ]),
+            ...generateTestCases(true, [
+                [0, 1, 1, 1],
+                [0, 1, 2, 2, 2],
+                [0, 1, 2, 3, 3, 3],
+                [0, 1, 2, 3, 4, 4, 4],
+                [0, 1, 2, 3, 4, 5, 5, 5],
+            ]),
+        ] as const) {
+            rerender(
+                lightbox({
+                    plugins: [Thumbnails],
+                    carousel: { preload, finite },
+                    slides: Array.from({ length: slides }).map((_, index) => ({ src: `img${index}` })),
+                })
+            );
+
+            expect(queryThumbnails().length, JSON.stringify({ slides, preload, finite, expected })).toBe(expected);
+        }
     });
 });

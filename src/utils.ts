@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IMAGE_FIT_CONTAIN, IMAGE_FIT_COVER } from "./consts.js";
 import {
+    CarouselSettings,
     ContainerRect,
     Labels,
     LengthOrPercentage,
@@ -113,4 +114,11 @@ export function stopNavigationEventsPropagation() {
     };
 
     return { onPointerDown: stopPropagation, onKeyDown: stopPropagation, onWheel: stopPropagation };
+}
+
+export function calculatePreload(carousel: CarouselSettings, slides: Slide[], minimum = 0) {
+    return Math.min(
+        carousel.preload,
+        Math.max(carousel.finite ? slides.length - 1 : Math.floor(slides.length / 2), minimum)
+    );
 }
