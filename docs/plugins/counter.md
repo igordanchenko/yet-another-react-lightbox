@@ -13,24 +13,24 @@ import "yet-another-react-lightbox/plugins/counter.css";
 Counter plugin adds the following `Lightbox` properties:
 
 <table class="docs">
-    <tbody>
+  <tbody>
     <tr>
-        <td>counter</td>
-        <td>
-            &#123;<br/>
-            &nbsp;&nbsp;separator?: string;<br/>
-            &nbsp;&nbsp;container?: React.HTMLAttributes&#8203;&lt;HTMLDivElement&gt;;<br/>
-            &#125;
-        </td>
-        <td>
-            <p>Counter plugin settings.</p>
-            <ul>
-                <li>`separator` - custom separator</li>
-                <li>`container` - HTML div element attributes to be passed to the Counter plugin container</li>
-            </ul>
-        </td>
+      <td>counter</td>
+      <td>
+        &#123;<br/>
+        &nbsp;&nbsp;separator?: string;<br/>
+        &nbsp;&nbsp;container?: React.HTMLAttributes&#8203;&lt;HTMLDivElement&gt;;<br/>
+        &#125;
+      </td>
+      <td>
+        <p>Counter plugin settings.</p>
+        <ul>
+          <li>`separator` - custom separator</li>
+          <li>`container` - HTML div element attributes to be passed to the Counter plugin container</li>
+        </ul>
+      </td>
     </tr>
-    </tbody>
+  </tbody>
 </table>
 
 Counter position can be customized via `counter.container.style` prop.
@@ -44,11 +44,11 @@ import "yet-another-react-lightbox/plugins/counter.css";
 // ...
 
 return (
-    <Lightbox
-        plugins={[Counter]}
-        counter={{ container: { style: { top: "unset", bottom: 0 } } }}
-        // ...
-    />
+  <Lightbox
+    plugins={[Counter]}
+    counter={{ container: { style: { top: "unset", bottom: 0 } } }}
+    // ...
+  />
 );
 ```
 

@@ -1,42 +1,43 @@
 # Inline Plugin
 
-The Inline plugin transforms the lightbox into an image carousel that renders inline on the webpage.
+The Inline plugin transforms the lightbox into an image carousel that renders
+inline on the webpage.
 
 ## Documentation
 
 The plugin adds and overrides the following `Lightbox` properties.
 
 <table class="docs">
-    <tbody>
+  <tbody>
     <tr>
-        <td>inline</td>
-        <td>React.HTMLAttributes&#8203;&lt;HTMLDivElement&gt;</td>
-        <td>
-            <p>HTML div element attributes to be passed to the Inline plugin container.</p>
-            <p>Defaults: <span class="font-mono">&#123; style: &#123; width: "100%", height: "100%" &#125; &#125;</span></p>
-        </td>
+      <td>inline</td>
+      <td>React.HTMLAttributes&#8203;&lt;HTMLDivElement&gt;</td>
+      <td>
+        <p>HTML div element attributes to be passed to the Inline plugin container.</p>
+        <p>Defaults: <span class="font-mono">&#123; style: &#123; width: "100%", height: "100%" &#125; &#125;</span></p>
+      </td>
     </tr>
     <tr>
-        <td>open</td>
-        <td>true</td>
-        <td>This prop is ignored.</td>
+      <td>open</td>
+      <td>true</td>
+      <td>This prop is ignored.</td>
     </tr>
     <tr>
-        <td>close</td>
-        <td>() => &#123;&#125;</td>
-        <td>This prop is ignored.</td>
+      <td>close</td>
+      <td>() => &#123;&#125;</td>
+      <td>This prop is ignored.</td>
     </tr>
     <tr>
-        <td>controller.focus</td>
-        <td>false</td>
-        <td>This prop is ignored.</td>
+      <td>controller.focus</td>
+      <td>false</td>
+      <td>This prop is ignored.</td>
     </tr>
     <tr>
-        <td>toolbar.buttons</td>
-        <td>(React.ReactNode | "close")[]</td>
-        <td>The "close" button is ignored.</td>
+      <td>toolbar.buttons</td>
+      <td>(React.ReactNode | "close")[]</td>
+      <td>The "close" button is ignored.</td>
     </tr>
-    </tbody>
+  </tbody>
 </table>
 
 ## Example
@@ -49,22 +50,24 @@ import "yet-another-react-lightbox/styles.css";
 // ...
 
 return (
-    <div style={{ width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" }}>
-        <Lightbox
-            plugins={[Inline]}
-            // ...
-        />
-    </div>
+  <div style={{ width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" }}>
+    <Lightbox
+      plugins={[Inline]}
+      // ...
+    />
+  </div>
 );
 
 // or
 
 return (
-    <Lightbox
-        plugins={[Inline]}
-        inline={{ style: { width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" } }}
-        // ...
-    />
+  <Lightbox
+    plugins={[Inline]}
+    inline={{
+      style: { width: "100%", maxWidth: "900px", aspectRatio: "3 / 2" },
+    }}
+    // ...
+  />
 );
 ```
 
