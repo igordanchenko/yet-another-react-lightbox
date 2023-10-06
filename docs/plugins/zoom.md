@@ -249,6 +249,19 @@ return (
       <td>() => void</td>
       <td>Decrease zoom level using `zoomInMultiplier`.</td>
     </tr>
+    <tr>
+      <td>changeZoom</td>
+      <td>(targetZoom: number, rapid?: boolean, dx?: number, dy?: number) => void</td>
+      <td>
+        <p>Change zoom level.</p>
+        <ul>
+          <li>`targetZoom` - target zoom value</li>
+          <li>`rapid` - if `true`, change zoom level without animation effect</li>
+          <li>`dx` - horizontal offset</li>
+          <li>`dy` - vertical offset</li>
+        </ul>
+      </td>
+    </tr>
   </tbody>
 </table>
 

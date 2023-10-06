@@ -33,8 +33,8 @@ export function ZoomContextProvider({ children }: ComponentProps) {
     useZoomSensors(zoom, maxZoom, disabled, changeZoom, changeOffsets, zoomWrapper?.zoomWrapperRef);
 
     const zoomRef = React.useMemo(
-        () => ({ zoom, maxZoom, offsetX, offsetY, disabled, zoomIn, zoomOut }),
-        [zoom, maxZoom, offsetX, offsetY, disabled, zoomIn, zoomOut]
+        () => ({ zoom, maxZoom, offsetX, offsetY, disabled, zoomIn, zoomOut, changeZoom }),
+        [zoom, maxZoom, offsetX, offsetY, disabled, zoomIn, zoomOut, changeZoom]
     );
 
     React.useImperativeHandle(useZoomProps().ref, () => zoomRef, [zoomRef]);

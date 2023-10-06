@@ -86,6 +86,8 @@ declare module "../../types.js" {
         zoomIn: Callback;
         /** decrease zoom level using `zoomInMultiplier` */
         zoomOut: Callback;
+        /** change zoom level */
+        changeZoom: (targetZoom: number, rapid?: boolean, dx?: number, dy?: number) => void;
     }
 }
 
