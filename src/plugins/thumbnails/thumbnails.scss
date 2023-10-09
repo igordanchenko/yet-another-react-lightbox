@@ -1,6 +1,7 @@
 @import "../../common";
 
 $vignette-size: 12%;
+$thumbnail-focus-box-shadow: $color-black 0 0 0 2px, $color-button 0 0 0 4px;
 
 @function localVar($key, $default) {
     @return globalVar(thumbnails_ + $key, $default);
@@ -66,6 +67,7 @@ $vignette-size: 12%;
     }
 
     &_track {
+        outline: none;
         gap: localVar(thumbnail_gap, 16px);
     }
 
@@ -80,6 +82,7 @@ $vignette-size: 12%;
         position: relative;
         overflow: hidden;
         padding: localVar(thumbnail_padding, 4px);
+        outline: none;
 
         width: localVar(thumbnail_width, 120px);
         height: localVar(thumbnail_height, 80px);
@@ -102,6 +105,18 @@ $vignette-size: 12%;
         &_placeholder {
             visibility: hidden;
             cursor: unset;
+        }
+
+        &:focus {
+            box-shadow: localVar(thumbnail_focus_box_shadow, $thumbnail-focus-box-shadow);
+        }
+
+        &:focus:not(:focus-visible) {
+            box-shadow: unset;
+        }
+
+        &:focus-visible {
+            box-shadow: localVar(thumbnail_focus_box_shadow, $thumbnail-focus-box-shadow);
         }
     }
 

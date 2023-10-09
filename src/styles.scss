@@ -34,7 +34,7 @@
         left: 0;
         overflow: hidden;
         background-color: globalVar(container_background_color, $color-backdrop);
-        outline: 0;
+        outline: none;
         user-select: none;
         touch-action: globalVar(controller_touch_action, none);
         overscroll-behavior: globalVar(controller_overscroll-behavior, contain);

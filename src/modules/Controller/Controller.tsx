@@ -6,9 +6,7 @@ import {
     ACTION_PREV,
     ACTION_SWIPE,
     CLASS_FLEX_CENTER,
-    EVENT_ON_KEY_UP,
     MODULE_CONTROLLER,
-    VK_ESCAPE,
 } from "../../consts.js";
 import { Callback, ComponentProps, ContainerRect, ControllerRef } from "../../types.js";
 import { createModule } from "../../config.js";
@@ -108,7 +106,7 @@ export function Controller({ children, ...props }: ComponentProps) {
         containerRef.current?.style.setProperty(cssVar("swipe_offset"), `${Math.round(offset)}px`);
     };
 
-    const pullDownEnabled = controller.closeOnPullDown;
+    const { closeOnPullDown } = controller;
 
     const setPullDownOffset = (offset: number) => {
         pullDownOffset.current = offset;
@@ -144,7 +142,7 @@ export function Controller({ children, ...props }: ComponentProps) {
     });
 
     const pullDown = (offset: number, cancel?: boolean) => {
-        if (pullDownEnabled) {
+        if (closeOnPullDown) {
             setPullDownOffset(offset);
 
             let duration = 0;
@@ -304,7 +302,7 @@ export function Controller({ children, ...props }: ComponentProps) {
     const pullDownParams = [
         // onPullDownStart
         () => {
-            if (pullDownEnabled) {
+            if (closeOnPullDown) {
                 setSwipeState(SwipeState.PULL_DOWN);
             }
         },
@@ -316,7 +314,7 @@ export function Controller({ children, ...props }: ComponentProps) {
         (offset: number) => pullDown(offset, true),
     ] as const;
 
-    usePointerSwipe(...swipeParams, pullDownEnabled, ...pullDownParams);
+    usePointerSwipe(...swipeParams, closeOnPullDown, ...pullDownParams);
 
     useWheelSwipe(swipeState, ...swipeParams);
 
@@ -342,16 +340,6 @@ export function Controller({ children, ...props }: ComponentProps) {
                 subscribe(ACTION_SWIPE, (action) => dispatch(action))
             ),
         [subscribe, swipe, dispatch]
-    );
-
-    React.useEffect(
-        () =>
-            subscribeSensors(EVENT_ON_KEY_UP, (event: React.KeyboardEvent) => {
-                if (event.key === VK_ESCAPE) {
-                    close();
-                }
-            }),
-        [subscribeSensors, close]
     );
 
     const context = React.useMemo<ControllerContextType>(

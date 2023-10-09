@@ -16,9 +16,11 @@ import {
     useAnimation,
     useEventCallback,
     useEvents,
+    useKeyboardNavigation,
     useLightboxProps,
     useLightboxState,
     useRTL,
+    useSensors,
 } from "../../index.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
@@ -38,12 +40,15 @@ export type ThumbnailsTrackProps = {
 };
 
 export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps) {
-    const track = React.useRef<HTMLDivElement | null>(null);
+    const track = React.useRef<HTMLDivElement>(null);
 
+    const isRTL = useRTL();
+    const { publish, subscribe } = useEvents();
     const { carousel, styles } = useLightboxProps();
     const { slides, globalIndex, animation } = useLightboxState();
-    const { publish, subscribe } = useEvents();
-    const isRTL = useRTL();
+    const { registerSensors, subscribeSensors } = useSensors();
+
+    useKeyboardNavigation(subscribeSensors);
 
     const thumbnails = useThumbnailsProps();
     const { position, width, height, border, borderRadius, padding, gap, vignette } = thumbnails;
@@ -159,6 +164,8 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
                 ref={track}
                 style={styles.thumbnailsTrack}
                 className={clsx(cssClass(cssPrefix("track")), cssClass(CLASS_FLEX_CENTER))}
+                tabIndex={-1}
+                {...registerSensors}
             >
                 {items.map(({ slide, index: slideIndex, placeholder }) => {
                     const fadeAnimationDuration = animationDuration / Math.abs(offset || 1);
@@ -197,6 +204,7 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
                             fadeOut={fadeOut}
                             placeholder={Boolean(placeholder)}
                             onClick={handleClick(slideIndex)}
+                            onLoseFocus={() => track.current?.focus()}
                         />
                     );
                 })}

@@ -24,20 +24,21 @@ export type ReactEventType<T, K> = K extends KeyboardEventType
     ? React.PointerEvent<T>
     : never;
 
-export type SensorCallback<T, P extends React.PointerEvent<T> | React.KeyboardEvent<T> | React.WheelEvent<T>> = (
-    event: P
-) => void;
+export type SensorCallback<
+    T extends Element,
+    P extends React.PointerEvent<T> | React.KeyboardEvent<T> | React.WheelEvent<T>,
+> = (event: P) => void;
 
-export type SubscribeSensors<T> = <ET extends SupportedEventType>(
+export type SubscribeSensors<T extends Element> = <ET extends SupportedEventType>(
     type: ET,
     callback: SensorCallback<T, ReactEventType<T, ET>>
 ) => () => void;
 
-export type RegisterSensors<T> = Required<Pick<React.HTMLAttributes<T>, PointerEventType>> &
+export type RegisterSensors<T extends Element> = Required<Pick<React.HTMLAttributes<T>, PointerEventType>> &
     Required<Pick<React.HTMLAttributes<T>, KeyboardEventType>> &
     Required<Pick<React.HTMLAttributes<T>, WheelEventType>>;
 
-export type UseSensors<T> = {
+export type UseSensors<T extends Element> = {
     registerSensors: RegisterSensors<T>;
     subscribeSensors: SubscribeSensors<T>;
 };

@@ -1,20 +1,14 @@
 import * as React from "react";
 
-import { ComponentProps, RenderFunction } from "../types.js";
-import { createModule } from "../config.js";
-import { useEventCallback, useLoseFocus, useRTL, useThrottle } from "../hooks/index.js";
-import { cssClass } from "../utils.js";
-import { IconButton, NextIcon, PreviousIcon } from "../components/index.js";
-import { useLightboxState } from "../contexts/index.js";
-import { useController } from "./Controller/index.js";
-import {
-    ACTION_NEXT,
-    ACTION_PREV,
-    EVENT_ON_KEY_DOWN,
-    MODULE_NAVIGATION,
-    VK_ARROW_LEFT,
-    VK_ARROW_RIGHT,
-} from "../consts.js";
+import { ComponentProps, RenderFunction } from "../../types.js";
+import { createModule } from "../../config.js";
+import { useLoseFocus } from "../../hooks/index.js";
+import { cssClass } from "../../utils.js";
+import { IconButton, NextIcon, PreviousIcon } from "../../components/index.js";
+import { useController } from "../Controller/index.js";
+import { ACTION_NEXT, ACTION_PREV, MODULE_NAVIGATION } from "../../consts.js";
+import { useNavigationState } from "./useNavigationState.js";
+import { useKeyboardNavigation } from "./useKeyboardNavigation.js";
 
 export type NavigationButtonProps = {
     label: string;
@@ -41,33 +35,11 @@ export function NavigationButton({ label, icon, renderIcon, action, onClick, dis
     );
 }
 
-export function Navigation({
-    carousel: { finite },
-    animation,
-    render: { buttonPrev, buttonNext, iconPrev, iconNext },
-    styles,
-}: ComponentProps) {
-    const { slides, currentIndex } = useLightboxState();
+export function Navigation({ render: { buttonPrev, buttonNext, iconPrev, iconNext }, styles }: ComponentProps) {
     const { prev, next, subscribeSensors } = useController();
-    const isRTL = useRTL();
+    const { prevDisabled, nextDisabled } = useNavigationState();
 
-    const prevDisabled = slides.length === 0 || (finite && currentIndex === 0);
-    const nextDisabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
-
-    const throttle = (animation.navigation ?? animation.swipe) / 2;
-    const prevThrottled = useThrottle(prev, throttle);
-    const nextThrottled = useThrottle(next, throttle);
-
-    const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
-        if (event.key === VK_ARROW_LEFT && !(isRTL ? nextDisabled : prevDisabled)) {
-            (isRTL ? nextThrottled : prevThrottled)();
-        }
-        if (event.key === VK_ARROW_RIGHT && !(isRTL ? prevDisabled : nextDisabled)) {
-            (isRTL ? prevThrottled : nextThrottled)();
-        }
-    });
-
-    React.useEffect(() => subscribeSensors(EVENT_ON_KEY_DOWN, handleKeyDown), [subscribeSensors, handleKeyDown]);
+    useKeyboardNavigation(subscribeSensors);
 
     return (
         <>
