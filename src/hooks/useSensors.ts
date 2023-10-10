@@ -48,40 +48,45 @@ export function useSensors<T extends Element>(): UseSensors<T> {
         [K in SupportedEventType]?: SensorCallback<T, ReactEventType<T, K>>[];
     }>({});
 
-    return React.useMemo(() => {
-        const notifySubscribers = <ET extends SupportedEventType>(type: ET, event: ReactEventType<T, ET>) => {
+    const notifySubscribers = React.useCallback(
+        <ET extends SupportedEventType>(type: ET, event: ReactEventType<T, ET>) => {
             (subscribers[type] as SensorCallback<T, ReactEventType<T, ET>>[])?.forEach((listener) => {
                 if (!event.isPropagationStopped()) listener(event);
             });
-        };
+        },
+        [subscribers]
+    );
 
-        return {
-            registerSensors: {
-                onPointerDown: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_DOWN, event),
-                onPointerMove: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_MOVE, event),
-                onPointerUp: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_UP, event),
-                onPointerLeave: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_LEAVE, event),
-                onPointerCancel: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_CANCEL, event),
-                onKeyDown: (event: React.KeyboardEvent<T>) => notifySubscribers(EVENT_ON_KEY_DOWN, event),
-                onKeyUp: (event: React.KeyboardEvent<T>) => notifySubscribers(EVENT_ON_KEY_UP, event),
-                onWheel: (event: React.WheelEvent<T>) => notifySubscribers(EVENT_ON_WHEEL, event),
-            },
-            subscribeSensors: <ET extends SupportedEventType>(
-                type: ET,
-                callback: SensorCallback<T, ReactEventType<T, ET>>
-            ) => {
-                if (!subscribers[type]) {
-                    subscribers[type] = [];
+    const registerSensors = React.useMemo(
+        () => ({
+            onPointerDown: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_DOWN, event),
+            onPointerMove: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_MOVE, event),
+            onPointerUp: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_UP, event),
+            onPointerLeave: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_LEAVE, event),
+            onPointerCancel: (event: React.PointerEvent<T>) => notifySubscribers(EVENT_ON_POINTER_CANCEL, event),
+            onKeyDown: (event: React.KeyboardEvent<T>) => notifySubscribers(EVENT_ON_KEY_DOWN, event),
+            onKeyUp: (event: React.KeyboardEvent<T>) => notifySubscribers(EVENT_ON_KEY_UP, event),
+            onWheel: (event: React.WheelEvent<T>) => notifySubscribers(EVENT_ON_WHEEL, event),
+        }),
+        [notifySubscribers]
+    );
+
+    const subscribeSensors = React.useCallback(
+        <ET extends SupportedEventType>(type: ET, callback: SensorCallback<T, ReactEventType<T, ET>>) => {
+            if (!subscribers[type]) {
+                subscribers[type] = [];
+            }
+            (subscribers[type] as SensorCallback<T, ReactEventType<T, ET>>[]).unshift(callback);
+
+            return () => {
+                const listeners = subscribers[type] as SensorCallback<T, ReactEventType<T, ET>>[];
+                if (listeners) {
+                    listeners.splice(0, listeners.length, ...listeners.filter((el) => el !== callback));
                 }
-                (subscribers[type] as SensorCallback<T, ReactEventType<T, ET>>[]).unshift(callback);
+            };
+        },
+        [subscribers]
+    );
 
-                return () => {
-                    const listeners = subscribers[type] as SensorCallback<T, ReactEventType<T, ET>>[];
-                    if (listeners) {
-                        listeners.splice(0, listeners.length, ...listeners.filter((el) => el !== callback));
-                    }
-                };
-            },
-        };
-    }, [subscribers]);
+    return { registerSensors, subscribeSensors };
 }

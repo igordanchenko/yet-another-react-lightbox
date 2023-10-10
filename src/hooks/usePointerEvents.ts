@@ -17,14 +17,17 @@ export function usePointerEvents<T extends Element = Element>(
     onPointerUp: (event: React.PointerEvent) => void,
     disabled?: boolean
 ) {
-    React.useEffect(() => {
-        if (disabled) return () => {};
-        return cleanup(
-            subscribeSensors(EVENT_ON_POINTER_DOWN, onPointerDown),
-            subscribeSensors(EVENT_ON_POINTER_MOVE, onPointerMove),
-            subscribeSensors(EVENT_ON_POINTER_UP, onPointerUp),
-            subscribeSensors(EVENT_ON_POINTER_LEAVE, onPointerUp),
-            subscribeSensors(EVENT_ON_POINTER_CANCEL, onPointerUp)
-        );
-    }, [subscribeSensors, onPointerDown, onPointerMove, onPointerUp, disabled]);
+    React.useEffect(
+        () =>
+            !disabled
+                ? cleanup(
+                      subscribeSensors(EVENT_ON_POINTER_DOWN, onPointerDown),
+                      subscribeSensors(EVENT_ON_POINTER_MOVE, onPointerMove),
+                      subscribeSensors(EVENT_ON_POINTER_UP, onPointerUp),
+                      subscribeSensors(EVENT_ON_POINTER_LEAVE, onPointerUp),
+                      subscribeSensors(EVENT_ON_POINTER_CANCEL, onPointerUp)
+                  )
+                : () => {},
+        [subscribeSensors, onPointerDown, onPointerMove, onPointerUp, disabled]
+    );
 }

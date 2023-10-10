@@ -3,9 +3,9 @@ import * as React from "react";
 import { ContainerRect } from "../types.js";
 
 export function useContainerRect<T extends HTMLElement = HTMLElement>() {
-    const [containerRect, setContainerRect] = React.useState<ContainerRect>();
     const containerRef = React.useRef<T | null>(null);
     const observerRef = React.useRef<ResizeObserver>();
+    const [containerRect, setContainerRect] = React.useState<ContainerRect>();
 
     const setContainerRef = React.useCallback((node: T | null) => {
         containerRef.current = node;
@@ -38,12 +38,5 @@ export function useContainerRect<T extends HTMLElement = HTMLElement>() {
         }
     }, []);
 
-    return React.useMemo(
-        () => ({
-            setContainerRef,
-            containerRef,
-            containerRect,
-        }),
-        [setContainerRef, containerRef, containerRect]
-    );
+    return { setContainerRef, containerRef, containerRect };
 }
