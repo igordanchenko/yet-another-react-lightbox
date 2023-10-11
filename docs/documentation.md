@@ -219,11 +219,12 @@ import "yet-another-react-lightbox/styles.css";
         &#125;
       </td>
       <td>
+        <p>NoScroll module settings.</p>
         <p>
-          NoScroll module settings. The NoScroll module is responsible for hiding 
-          the vertical scrollbar and preventing document `<body/>` from scrolling
-          underneath the lightbox. However, in some cases, this functionality may cause 
-          undesired side effects, so you may want to disable this feature.
+          The NoScroll module is responsible for hiding the vertical scrollbar and 
+          preventing document `<body/>` from scrolling underneath the lightbox. 
+          However, in some cases, this functionality may cause undesired side effects, 
+          so you may want to disable this feature.
         </p> 
         <ul>
           <li>`disabled` - if `true`, the NoScroll module functionality is disabled</li>
