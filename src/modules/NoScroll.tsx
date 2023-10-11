@@ -30,10 +30,12 @@ function padScrollbar(element: HTMLElement, padding: number, rtl: boolean) {
     };
 }
 
-export function NoScroll({ children }: ComponentProps) {
+export function NoScroll({ noScroll: { disabled }, children }: ComponentProps) {
     const rtl = useRTL();
 
     useLayoutEffect(() => {
+        if (disabled) return () => {};
+
         const cleanup: (() => void)[] = [];
 
         const { body, documentElement } = document;
@@ -62,7 +64,7 @@ export function NoScroll({ children }: ComponentProps) {
 
             cleanup.forEach((clean) => clean());
         };
-    }, [rtl]);
+    }, [rtl, disabled]);
 
     return <>{children}</>;
 }

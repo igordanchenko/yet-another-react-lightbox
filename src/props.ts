@@ -36,6 +36,9 @@ export const LightboxDefaultProps: LightboxProps = {
         closeOnBackdropClick: false,
     },
     portal: {},
+    noScroll: {
+        disabled: false,
+    },
     on: {},
     styles: {},
     className: "",

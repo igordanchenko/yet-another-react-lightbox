@@ -13,7 +13,7 @@ import {
 
 /** Lightbox external props */
 export type LightboxExternalProps = DeepPartial<
-    DeepPartial<DeepPartial<LightboxProps, "animation" | "toolbar">, "carousel", "imageProps">,
+    DeepPartial<DeepPartial<LightboxProps, "animation" | "toolbar" | "noScroll">, "carousel", "imageProps">,
     "controller",
     "ref"
 >;
@@ -44,6 +44,8 @@ export interface LightboxProps {
     controller: ControllerSettings;
     /** portal settings */
     portal: PortalSettings;
+    /** NoScroll module settings */
+    noScroll: NoScrollSettings;
     /** lifecycle callbacks */
     on: Callbacks;
     /** customization styles */
@@ -240,6 +242,12 @@ export interface ControllerRef {
 export interface PortalSettings {
     /** portal mount point */
     root?: DocumentFragment | Element | null;
+}
+
+/** NoScroll module settings */
+export interface NoScrollSettings {
+    /** if `true`, the NoScroll module functionality is disabled */
+    disabled: boolean;
 }
 
 /** Lightbox navigation action */
