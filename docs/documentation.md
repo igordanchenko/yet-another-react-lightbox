@@ -49,7 +49,8 @@ import "yet-another-react-lightbox/styles.css";
           index) and when either `slides` or `index` props change (in this case the `index` prop determines the
           current slide index). In most cases, you do not need to provide this prop at all, as the lightbox maintains
           its state internally. However, you may need to provide the `index` prop when you modify or completely
-          replace the `slides` array. To keep track of the current slide index, you can use the `on.view` callback.
+          replace the `slides` array. To keep track of the current slide index, you can use the `on.view` callback 
+          (see [Tracking Slide Index](#TrackingSlideIndex) example).
         </p>
         <p>Default value: <span class="font-mono">0</span></p>
       </td>
@@ -66,7 +67,7 @@ import "yet-another-react-lightbox/styles.css";
           holding the lightbox does not re-rerender while the lightbox is open. However, if your component may
           re-render, be sure to either provide the `slides` prop as a stable array reference (i.e., `const` in static
           scope, or wrapped with `React.useState` or `React.useMemo`), or specify the current slide index in the
-          `index` prop.
+          `index` prop (see [Tracking Slide Index](#TrackingSlideIndex) example).
         </p>
         <p>Default value: <span class="font-mono">[]</span></p>
       </td>
@@ -526,6 +527,26 @@ return (
     </tr>
   </tbody>
 </table>
+
+## Tracking Slide Index
+
+While the lightbox maintains the slide index state internally, some use cases
+may require you to keep track of the slide index in a local state variable. You
+can easily accomplish this using the following approach:
+
+```tsx
+const [index, setIndex] = React.useState(0);
+
+// ...
+
+return (
+  <Lightbox
+    index={index}
+    on={{ view: ({ index: currentIndex }) => setIndex(currentIndex) }}
+    // ...
+  />
+);
+```
 
 ## Previous Versions
 
