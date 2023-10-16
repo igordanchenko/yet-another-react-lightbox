@@ -16,5 +16,3 @@ jobs:
                     DOCS_TOKEN: ${{ secrets.DOCS_TOKEN }}
                 run: |
                     curl -s -X POST -H "Authorization: $DOCS_TOKEN" https://yet-another-react-lightbox.com/api/publish
-
-
