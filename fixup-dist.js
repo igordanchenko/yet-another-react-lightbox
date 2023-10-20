@@ -8,14 +8,32 @@ import chokidar from "chokidar";
 
 const ROOT = "dist";
 
+/**
+ * Read file contents.
+ *
+ * @param {string} file - file name
+ * @returns {string} - file contents
+ */
 function readFile(file) {
   return fs.readFileSync(path.resolve(file), { encoding: "utf8", flag: "r" });
 }
 
+/**
+ * Write file contents.
+ *
+ * @param {string} file - file name
+ * @param {string} data - file contents
+ */
 function writeFile(file, data) {
   fs.writeFileSync(path.resolve(file), data, { encoding: "utf8" });
 }
 
+/**
+ * Edit file contents.
+ *
+ * @param {string} file - file name
+ * @param {function} callback - callback function
+ */
 function editFile(file, callback) {
   if (fs.existsSync(file)) {
     let data = readFile(file);
@@ -24,6 +42,11 @@ function editFile(file, callback) {
   }
 }
 
+/**
+ * Fixup main bundle.
+ *
+ * @param {string} file - file name
+ */
 function fixupMainBundle(file) {
   editFile(file, (data) => {
     const regex = /import.*\r?\n/g;
@@ -33,6 +56,11 @@ function fixupMainBundle(file) {
   });
 }
 
+/**
+ * Remove side effect imports.
+ *
+ * @param {string} file - file name
+ */
 function cleanupSideEffectImports(file) {
   editFile(file, (data) => {
     const regex = /import\s*['"]+[^'"]+['"]+;*\r?\n/g;
@@ -40,10 +68,20 @@ function cleanupSideEffectImports(file) {
   });
 }
 
+/**
+ * Add type definitions for CSS files.
+ *
+ * @param {string} file - file name
+ */
 function fixupCssDefinitions(file) {
   writeFile(`${file}.d.ts`, ["declare const styles: unknown;", "export default styles;"].join(os.EOL));
 }
 
+/**
+ * Fixup plugin's imports.
+ *
+ * @param {string} file - file name
+ */
 function fixupPluginsImports(file) {
   const parts = file.split(path.sep);
   if (parts.length === 4) {
@@ -66,6 +104,11 @@ function fixupPluginsImports(file) {
   }
 }
 
+/**
+ * Fixup plugin's module augmentation.
+ *
+ * @param {string} file - file name
+ */
 function fixupPluginsModuleAugmentation(file) {
   editFile(file, (data) => {
     const regex = /declare module "\.\.\/\.\.\/types.js"/g;
@@ -73,6 +116,11 @@ function fixupPluginsModuleAugmentation(file) {
   });
 }
 
+/**
+ * Run all fix-ups.
+ *
+ * @param {boolean} [watchMode] - watch mode flag
+ */
 function fixup(watchMode) {
   try {
     fixupMainBundle(`${ROOT}/index.js`);
@@ -108,6 +156,9 @@ function fixup(watchMode) {
   }
 }
 
+/**
+ * Run all fix-ups in watch mode.
+ */
 function watch() {
   let timeout;
   let running = false;
@@ -126,8 +177,15 @@ function watch() {
   });
 }
 
-if ([...process.argv].includes("-w")) {
-  watch();
-} else {
-  fixup();
+/**
+ * Main entrypoint.
+ */
+function main() {
+  if ([...process.argv].includes("-w")) {
+    watch();
+  } else {
+    fixup();
+  }
 }
+
+main();
