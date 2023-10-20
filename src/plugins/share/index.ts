@@ -4,54 +4,54 @@ import { Share } from "./Share.js";
 export { isShareSupported } from "./utils.js";
 
 declare module "../../types.js" {
-    interface GenericSlide {
-        /** share url or share props */
-        share?:
-            | boolean
-            | string
-            | {
-                  /** share url  */
-                  url?: string;
-                  /** share text  */
-                  text?: string;
-                  /** share title  */
-                  title?: string;
-              };
-    }
-
-    interface LightboxProps {
-        /** Share plugin settings */
-        share?: {
-            /** custom share function */
-            share?: ({ slide }: ShareFunctionProps) => void;
+  interface GenericSlide {
+    /** share url or share props */
+    share?:
+      | boolean
+      | string
+      | {
+          /** share url  */
+          url?: string;
+          /** share text  */
+          text?: string;
+          /** share title  */
+          title?: string;
         };
-    }
+  }
 
-    interface Render {
-        /** render custom Share button */
-        buttonShare?: RenderFunction;
-        /** render custom Share icon */
-        iconShare?: RenderFunction;
-    }
+  interface LightboxProps {
+    /** Share plugin settings */
+    share?: {
+      /** custom share function */
+      share?: ({ slide }: ShareFunctionProps) => void;
+    };
+  }
 
-    // noinspection JSUnusedGlobalSymbols
-    interface Callbacks {
-        /** a callback called on slide share */
-        share?: Callback<ShareCallbackProps>;
-    }
+  interface Render {
+    /** render custom Share button */
+    buttonShare?: RenderFunction;
+    /** render custom Share icon */
+    iconShare?: RenderFunction;
+  }
 
-    // noinspection JSUnusedGlobalSymbols
-    interface ToolbarButtonKeys {
-        [PLUGIN_SHARE]: null;
-    }
+  // noinspection JSUnusedGlobalSymbols
+  interface Callbacks {
+    /** a callback called on slide share */
+    share?: Callback<ShareCallbackProps>;
+  }
 
-    interface ShareCallbackProps {
-        index: number;
-    }
+  // noinspection JSUnusedGlobalSymbols
+  interface ToolbarButtonKeys {
+    [PLUGIN_SHARE]: null;
+  }
 
-    interface ShareFunctionProps {
-        slide: Slide;
-    }
+  interface ShareCallbackProps {
+    index: number;
+  }
+
+  interface ShareFunctionProps {
+    slide: Slide;
+  }
 }
 
 export default Share;

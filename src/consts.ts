@@ -23,10 +23,10 @@ export const SLIDE_STATUS_COMPLETE = "complete";
 export const SLIDE_STATUS_PLACEHOLDER = "placeholder";
 
 export type SlideStatus =
-    | typeof SLIDE_STATUS_LOADING
-    | typeof SLIDE_STATUS_PLAYING
-    | typeof SLIDE_STATUS_ERROR
-    | typeof SLIDE_STATUS_COMPLETE;
+  | typeof SLIDE_STATUS_LOADING
+  | typeof SLIDE_STATUS_PLAYING
+  | typeof SLIDE_STATUS_ERROR
+  | typeof SLIDE_STATUS_COMPLETE;
 
 export const activeSlideStatus = (status: SlideStatus): `active-slide-${SlideStatus}` => `active-slide-${status}`;
 

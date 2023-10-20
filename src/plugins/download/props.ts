@@ -1,10 +1,10 @@
 import { LightboxProps } from "../../index.js";
 
 export const defaultDownloadProps = {
-    download: undefined,
+  download: undefined,
 };
 
 export const resolveDownloadProps = (download: LightboxProps["download"]) => ({
-    ...defaultDownloadProps,
-    ...download,
+  ...defaultDownloadProps,
+  ...download,
 });

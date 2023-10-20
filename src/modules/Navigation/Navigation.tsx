@@ -11,67 +11,67 @@ import { useNavigationState } from "./useNavigationState.js";
 import { useKeyboardNavigation } from "./useKeyboardNavigation.js";
 
 export type NavigationButtonProps = {
-    label: string;
-    icon: React.ElementType;
-    renderIcon?: RenderFunction;
-    action: "prev" | "next";
-    onClick: () => void;
-    disabled?: boolean;
-    style?: React.CSSProperties;
+  label: string;
+  icon: React.ElementType;
+  renderIcon?: RenderFunction;
+  action: "prev" | "next";
+  onClick: () => void;
+  disabled?: boolean;
+  style?: React.CSSProperties;
 };
 
 export function NavigationButton({ label, icon, renderIcon, action, onClick, disabled, style }: NavigationButtonProps) {
-    return (
-        <IconButton
-            label={label}
-            icon={icon}
-            renderIcon={renderIcon}
-            className={cssClass(`navigation_${action}`)}
-            disabled={disabled}
-            onClick={onClick}
-            style={style}
-            {...useLoseFocus(useController().focus, disabled)}
-        />
-    );
+  return (
+    <IconButton
+      label={label}
+      icon={icon}
+      renderIcon={renderIcon}
+      className={cssClass(`navigation_${action}`)}
+      disabled={disabled}
+      onClick={onClick}
+      style={style}
+      {...useLoseFocus(useController().focus, disabled)}
+    />
+  );
 }
 
 export function Navigation({ render: { buttonPrev, buttonNext, iconPrev, iconNext }, styles }: ComponentProps) {
-    const { prev, next, subscribeSensors } = useController();
-    const { prevDisabled, nextDisabled } = useNavigationState();
+  const { prev, next, subscribeSensors } = useController();
+  const { prevDisabled, nextDisabled } = useNavigationState();
 
-    useKeyboardNavigation(subscribeSensors);
+  useKeyboardNavigation(subscribeSensors);
 
-    return (
-        <>
-            {buttonPrev ? (
-                buttonPrev()
-            ) : (
-                <NavigationButton
-                    label="Previous"
-                    action={ACTION_PREV}
-                    icon={PreviousIcon}
-                    renderIcon={iconPrev}
-                    style={styles.navigationPrev}
-                    disabled={prevDisabled}
-                    onClick={prev}
-                />
-            )}
+  return (
+    <>
+      {buttonPrev ? (
+        buttonPrev()
+      ) : (
+        <NavigationButton
+          label="Previous"
+          action={ACTION_PREV}
+          icon={PreviousIcon}
+          renderIcon={iconPrev}
+          style={styles.navigationPrev}
+          disabled={prevDisabled}
+          onClick={prev}
+        />
+      )}
 
-            {buttonNext ? (
-                buttonNext()
-            ) : (
-                <NavigationButton
-                    label="Next"
-                    action={ACTION_NEXT}
-                    icon={NextIcon}
-                    renderIcon={iconNext}
-                    style={styles.navigationNext}
-                    disabled={nextDisabled}
-                    onClick={next}
-                />
-            )}
-        </>
-    );
+      {buttonNext ? (
+        buttonNext()
+      ) : (
+        <NavigationButton
+          label="Next"
+          action={ACTION_NEXT}
+          icon={NextIcon}
+          renderIcon={iconNext}
+          style={styles.navigationNext}
+          disabled={nextDisabled}
+          onClick={next}
+        />
+      )}
+    </>
+  );
 }
 
 export const NavigationModule = createModule(MODULE_NAVIGATION, Navigation);

@@ -1,14 +1,14 @@
 {
-    "compilerOptions": {
-        "strict": true,
-        "target": "ES2018",
-        "module": "ES2015",
-        "jsx": "react",
-        "lib": ["ES2020", "dom"],
-        "moduleResolution": "node",
-        "isolatedModules": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "types": ["vitest/globals"]
-    }
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2018",
+    "module": "ES2015",
+    "jsx": "react",
+    "lib": ["ES2020", "dom"],
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["vitest/globals"]
+  }
 }

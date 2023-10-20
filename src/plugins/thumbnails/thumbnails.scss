@@ -1,155 +1,173 @@
 @import "../../common";
 
 $vignette-size: 12%;
-$thumbnail-focus-box-shadow: $color-black 0 0 0 2px, $color-button 0 0 0 4px;
+$thumbnail-focus-box-shadow:
+  $color-black 0 0 0 2px,
+  $color-button 0 0 0 4px;
 
 @function localVar($key, $default) {
-    @return globalVar(thumbnails_ + $key, $default);
+  @return globalVar(thumbnails_ + $key, $default);
 }
 
 .yarl__thumbnails {
-    display: flex;
-    height: 100%;
+  display: flex;
+  height: 100%;
 
-    &_top, &_bottom {
-        flex-direction: column;
-    }
+  &_top,
+  &_bottom {
+    flex-direction: column;
+  }
 
-    &_start &_track, &_end &_track {
-        flex-direction: column;
-    }
+  &_start &_track,
+  &_end &_track {
+    flex-direction: column;
+  }
 
-    &_wrapper {
-        flex: 1;
-        position: relative;
-    }
+  &_wrapper {
+    flex: 1;
+    position: relative;
+  }
 
-    &_container {
-        flex: 0 0 auto;
-        background-color: localVar(container_background_color, $color-backdrop);
-        padding: localVar(container_padding, 16px);
-        position: relative;
-        overflow: hidden;
-        user-select: none;
-        -webkit-touch-callout: none;
-    }
+  &_container {
+    flex: 0 0 auto;
+    background-color: localVar(container_background_color, $color-backdrop);
+    padding: localVar(container_padding, 16px);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
 
+  &_vignette {
+    position: absolute;
+    pointer-events: none;
+    --yarl__thumbnails_vignette_size: 12%;
+  }
+
+  @media (min-width: 1200px) {
     &_vignette {
-        position: absolute;
-        pointer-events: none;
-        --yarl__thumbnails_vignette_size: 12%;
+      --yarl__thumbnails_vignette_size: 8%;
+    }
+  }
+
+  @media (min-width: 2000px) {
+    &_vignette {
+      --yarl__thumbnails_vignette_size: 5%;
+    }
+  }
+
+  &_top &_vignette,
+  &_bottom &_vignette {
+    height: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(
+      to right,
+      $color-backdrop 0px,
+      transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)),
+      $color-backdrop 100%
+    );
+  }
+
+  &_start &_vignette,
+  &_end &_vignette {
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      $color-backdrop 0px,
+      transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)),
+      $color-backdrop 100%
+    );
+  }
+
+  &_track {
+    outline: none;
+    gap: localVar(thumbnail_gap, 16px);
+  }
+
+  &_thumbnail {
+    flex: 0 0 auto;
+    cursor: pointer;
+    appearance: none;
+    background: localVar(thumbnail_background, $color-black);
+    border: localVar(thumbnail_border, 1px solid $color-button);
+    border-radius: localVar(thumbnail_border_radius, 4px);
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+    padding: localVar(thumbnail_padding, 4px);
+    outline: none;
+
+    width: localVar(thumbnail_width, 120px);
+    height: localVar(thumbnail_height, 80px);
+    box-sizing: content-box;
+
+    &_active {
+      border-color: localVar(thumbnail_active_border_color, $color-button-active);
     }
 
-    @media (min-width: 1200px) {
-        &_vignette {
-            --yarl__thumbnails_vignette_size: 8%;
-        }
+    &_fadein {
+      opacity: 0;
+      animation: yarl__thumbnails_thumbnail_fadein localVar(thumbnail_fadein_duration, 0.5s) ease-in-out
+        localVar(thumbnail_fadein_delay, 0s) forwards;
     }
 
-    @media (min-width: 2000px) {
-        &_vignette {
-            --yarl__thumbnails_vignette_size: 5%;
-        }
+    &_fadeout {
+      animation: yarl__thumbnails_thumbnail_fadeout localVar(thumbnail_fadeout_duration, 0.5s) ease-in-out
+        localVar(thumbnail_fadeout_delay, 0s) forwards;
+      cursor: unset;
     }
 
-    &_top &_vignette, &_bottom &_vignette  {
-        height: 100%;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to right, $color-backdrop 0px, transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)), $color-backdrop 100%);
+    &_placeholder {
+      visibility: hidden;
+      cursor: unset;
     }
 
-    &_start &_vignette, &_end &_vignette  {
-        width: 100%;
-        top: 0;
-        bottom: 0;
-        background: linear-gradient(to bottom, $color-backdrop 0px, transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)), $color-backdrop 100%);
+    &:focus {
+      box-shadow: localVar(thumbnail_focus_box_shadow, $thumbnail-focus-box-shadow);
     }
 
-    &_track {
-        outline: none;
-        gap: localVar(thumbnail_gap, 16px);
+    &:focus:not(:focus-visible) {
+      box-shadow: unset;
     }
 
-    &_thumbnail {
-        flex: 0 0 auto;
-        cursor: pointer;
-        appearance: none;
-        background: localVar(thumbnail_background, $color-black);
-        border: localVar(thumbnail_border, 1px solid $color-button);
-        border-radius: localVar(thumbnail_border_radius, 4px);
-        -webkit-tap-highlight-color: transparent;
-        position: relative;
-        overflow: hidden;
-        padding: localVar(thumbnail_padding, 4px);
-        outline: none;
-
-        width: localVar(thumbnail_width, 120px);
-        height: localVar(thumbnail_height, 80px);
-        box-sizing: content-box;
-
-        &_active {
-            border-color: localVar(thumbnail_active_border_color, $color-button-active);
-        }
-
-        &_fadein {
-            opacity: 0;
-            animation: yarl__thumbnails_thumbnail_fadein localVar(thumbnail_fadein_duration, .5s) ease-in-out localVar(thumbnail_fadein_delay, 0s) forwards;
-        }
-
-        &_fadeout {
-            animation: yarl__thumbnails_thumbnail_fadeout localVar(thumbnail_fadeout_duration, .5s) ease-in-out localVar(thumbnail_fadeout_delay, 0s) forwards;
-            cursor: unset;
-        }
-
-        &_placeholder {
-            visibility: hidden;
-            cursor: unset;
-        }
-
-        &:focus {
-            box-shadow: localVar(thumbnail_focus_box_shadow, $thumbnail-focus-box-shadow);
-        }
-
-        &:focus:not(:focus-visible) {
-            box-shadow: unset;
-        }
-
-        &:focus-visible {
-            box-shadow: localVar(thumbnail_focus_box_shadow, $thumbnail-focus-box-shadow);
-        }
+    &:focus-visible {
+      box-shadow: localVar(thumbnail_focus_box_shadow, $thumbnail-focus-box-shadow);
     }
+  }
 
-    &_thumbnail_icon {
-        color: localVar(thumbnail_icon_color, $color-button);
-        filter: localVar(thumbnail_icon_filter, $filter-drop-shadow);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        width: localVar(thumbnail_icon_size, $icon-size);
-        height: localVar(thumbnail_icon_size, $icon-size);
-    }
+  &_thumbnail_icon {
+    color: localVar(thumbnail_icon_color, $color-button);
+    filter: localVar(thumbnail_icon_filter, $filter-drop-shadow);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: localVar(thumbnail_icon_size, $icon-size);
+    height: localVar(thumbnail_icon_size, $icon-size);
+  }
 
-    &_contain_image {
-        object-fit: contain;
-    }
+  &_contain_image {
+    object-fit: contain;
+  }
 }
 
 @keyframes yarl__thumbnails_thumbnail_fadein {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes yarl__thumbnails_thumbnail_fadeout {
-    from {
-        opacity: 1
-    }
-    to {
-        opacity: 0;
-    }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

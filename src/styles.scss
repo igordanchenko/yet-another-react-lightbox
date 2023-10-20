@@ -1,260 +1,283 @@
 @import "./_common";
 
 .yarl_ {
-    &_fullsize {
+  &_fullsize {
+    width: 100%;
+    height: 100%;
+  }
+
+  &_relative {
+    position: relative;
+  }
+
+  &_portal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    overflow: hidden;
+    z-index: globalVar(portal_zindex, 9999);
+    transition: opacity globalVar(fade_animation_duration, 250ms) globalVar(fade_animation_timing_function, ease);
+
+    &_open {
+      opacity: 1;
+    }
+  }
+
+  &_container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    background-color: globalVar(container_background_color, $color-backdrop);
+    outline: none;
+    user-select: none;
+    touch-action: globalVar(controller_touch_action, none);
+    overscroll-behavior: globalVar(controller_overscroll-behavior, contain);
+  }
+
+  &_carousel {
+    display: flex;
+    flex: 0 0 auto;
+    height: 100%;
+    align-content: center;
+    justify-content: center;
+    align-items: stretch;
+    width: calc(
+      100% + (var(--yarl__carousel_slides_count) - 1) *
+        (100% + var(--yarl__carousel_spacing_px, 0) * 1px + var(--yarl__carousel_spacing_percent, 0) * 1%)
+    );
+    transform: translate(var(--yarl__swipe_offset, 0px), var(--yarl__pull_down_offset, 0px));
+    opacity: var(--yarl__pull_down_opacity, 1);
+
+    &_with_slides {
+      column-gap: calc(
+        var(--yarl__carousel_spacing_px, 0) * 1px + 100 /
+          (
+            100 * var(--yarl__carousel_slides_count) + (var(--yarl__carousel_slides_count) - 1) *
+              var(--yarl__carousel_spacing_percent, 0)
+          ) * var(--yarl__carousel_spacing_percent, 0) * 1%
+      );
+    }
+  }
+
+  &_flex_center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+
+  &_slide {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    padding: calc(
+      var(--yarl__carousel_padding_px, 0) * 1px + 100 /
+        (
+          100 * var(--yarl__carousel_slides_count) + (var(--yarl__carousel_slides_count) - 1) *
+            var(--yarl__carousel_spacing_percent, 0)
+        ) * var(--yarl__carousel_padding_percent, 0) * 1%
+    );
+
+    [dir="rtl"] & {
+      --yarl__direction: -1;
+    }
+
+    &_image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      touch-action: globalVar(controller_touch_action, none);
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+
+      // workaround occasional image flickering in desktop Safari
+      @media screen and (min-width: 800px) {
+        // noinspection CssUnknownProperty
+        -webkit-transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        -webkit-transform-style: preserve-3d;
+      }
+
+      &_cover {
         width: 100%;
         height: 100%;
-    }
+        object-fit: cover;
+      }
 
-    &_relative {
-        position: relative;
-    }
-
-    &_portal {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+      &_loading {
         opacity: 0;
-        overflow: hidden;
-        z-index: globalVar(portal_zindex, 9999);
-        transition: opacity globalVar(fade_animation_duration, 250ms) globalVar(fade_animation_timing_function, ease);
+      }
+    }
 
-        &_open {
-            opacity: 1;
+    &_placeholder {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      line-height: 0;
+    }
+
+    &_loading {
+      color: globalVar(slide_icon_loading_color, $color-button);
+      animation: yarl__delayed_fadein 1s linear;
+
+      & line {
+        animation: yarl__stroke_opacity 1s linear infinite;
+      }
+
+      @for $i from 1 through 8 {
+        & line:nth-of-type(#{$i}) {
+          animation-delay: #{$i * 0.125 - 2}s;
         }
+      }
     }
 
-    &_container {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        overflow: hidden;
-        background-color: globalVar(container_background_color, $color-backdrop);
-        outline: none;
-        user-select: none;
-        touch-action: globalVar(controller_touch_action, none);
-        overscroll-behavior: globalVar(controller_overscroll-behavior, contain);
+    &_error {
+      $icon-size: 48px;
+      width: globalVar(slide_icon_error_size, $icon-size);
+      height: globalVar(slide_icon_error_size, $icon-size);
+      color: globalVar(slide_icon_error_color, red);
     }
+  }
 
-    &_carousel {
-        display: flex;
-        flex: 0 0 auto;
-        height: 100%;
-        align-content: center;
-        justify-content: center;
-        align-items: stretch;
-        width: calc(100% + (var(--yarl__carousel_slides_count) - 1) * (100% + var(--yarl__carousel_spacing_px, 0) * 1px + var(--yarl__carousel_spacing_percent, 0) * 1%));
-        transform: translate(var(--yarl__swipe_offset, 0px), var(--yarl__pull_down_offset, 0px));
-        opacity: var(--yarl__pull_down_opacity, 1);
-
-        &_with_slides {
-            column-gap: calc(var(--yarl__carousel_spacing_px, 0) * 1px + 100 / (100 * var(--yarl__carousel_slides_count) + (var(--yarl__carousel_slides_count) - 1) * var(--yarl__carousel_spacing_percent, 0)) * var(--yarl__carousel_spacing_percent, 0) * 1%);
-        }
-    }
-
-    &_flex_center {
-        display: flex;
-        justify-content: center;
-        align-content: center;
-        align-items: center;
-    }
-
+  @media (prefers-reduced-motion) {
+    &_portal,
     &_slide {
-        flex: 1;
-        position: relative;
-        overflow: hidden;
-        padding: calc(var(--yarl__carousel_padding_px, 0) * 1px + 100 / (100 * var(--yarl__carousel_slides_count) + (var(--yarl__carousel_slides_count) - 1) * var(--yarl__carousel_spacing_percent, 0)) * var(--yarl__carousel_padding_percent, 0) * 1%);
-
-        [dir="rtl"] & {
-            --yarl__direction: -1;
-        }
-
-        &_image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            touch-action: globalVar(controller_touch_action, none);
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
-
-            // workaround occasional image flickering in desktop Safari
-            @media screen and (min-width: 800px) {
-                // noinspection CssUnknownProperty
-                -webkit-transform: translateZ(0);
-                -webkit-backface-visibility: hidden;
-                -webkit-transform-style: preserve-3d;
-            }
-
-            &_cover {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-            &_loading {
-                opacity: 0;
-            }
-        }
-
-        &_placeholder {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-50%);
-            line-height: 0;
-        }
-
-        &_loading {
-            color: globalVar(slide_icon_loading_color, $color-button);
-            animation: yarl__delayed_fadein 1s linear;
-
-            & line {
-                animation: yarl__stroke_opacity 1s linear infinite;
-            }
-
-            @for $i from 1 through 8 {
-                & line:nth-of-type(#{$i}) {
-                    animation-delay: #{$i * 0.125 - 2}s;
-                }
-            }
-        }
-
-        &_error {
-            $icon-size: 48px;
-            width: globalVar(slide_icon_error_size, $icon-size);
-            height: globalVar(slide_icon_error_size, $icon-size);
-            color: globalVar(slide_icon_error_color, red);
-        }
+      transition: unset;
     }
 
-    @media (prefers-reduced-motion) {
-        &_portal, &_slide {
-            transition: unset;
-        }
+    &_slide_loading,
+    &_slide_loading line {
+      animation: unset;
+    }
+  }
 
-        &_slide_loading, &_slide_loading line {
-            animation: unset;
-        }
+  &_toolbar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    display: flex;
+    justify-content: flex-end;
+    padding: globalVar(toolbar_padding, $toolbar-padding);
+
+    [dir="rtl"] & {
+      top: 0;
+      right: auto;
+      bottom: auto;
+      left: 0;
+    }
+  }
+
+  &_icon {
+    width: globalVar(icon_size, $icon-size);
+    height: globalVar(icon_size, $icon-size);
+  }
+
+  &_button {
+    cursor: pointer;
+    appearance: none;
+    background-color: globalVar(button_background_color, transparent);
+    border: globalVar(button_border, 0);
+    margin: globalVar(button_margin, 0);
+    outline: none;
+    line-height: 0;
+    padding: globalVar(button_padding, $icon-button-padding);
+    color: $color-button;
+    filter: globalVar(button_filter, $filter-drop-shadow);
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus {
+      color: $color-button-active;
     }
 
-    &_toolbar {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: auto;
-        left: auto;
-        display: flex;
-        justify-content: flex-end;
-        padding: globalVar(toolbar_padding, $toolbar-padding);
-
-        [dir="rtl"] & {
-            top: 0;
-            right: auto;
-            bottom: auto;
-            left: 0;
-        }
+    &:focus:not(:focus-visible) {
+      color: $color-button;
     }
 
-    &_icon {
-        width: globalVar(icon_size, $icon-size);
-        height: globalVar(icon_size, $icon-size);
+    &:focus-visible {
+      color: $color-button-active;
     }
 
-    &_button {
-        cursor: pointer;
-        appearance: none;
-        background-color: globalVar(button_background_color, transparent);
-        border: globalVar(button_border, 0);
-        margin: globalVar(button_margin, 0);
-        outline: none;
-        line-height: 0;
-        padding: globalVar(button_padding, $icon-button-padding);
-        color: $color-button;
-        filter: globalVar(button_filter, $filter-drop-shadow);
-        -webkit-tap-highlight-color: transparent;
-
-        &:focus {
-            color: $color-button-active;
-        }
-
-        &:focus:not(:focus-visible) {
-            color: $color-button;
-        }
-
-        &:focus-visible {
-            color: $color-button-active;
-        }
-
-        @media (hover: hover) {
-            &:hover, &:focus:hover, &:focus-visible:hover {
-                color: $color-button-active;
-            }
-        }
-
-        &:disabled {
-            color: $color-button-disabled;
-            cursor: default;
-        }
+    @media (hover: hover) {
+      &:hover,
+      &:focus:hover,
+      &:focus-visible:hover {
+        color: $color-button-active;
+      }
     }
 
-    &_navigation {
-        &_prev, &_next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: globalVar(navigation_button_padding, $toolbar-padding + 2 * $icon-button-padding $toolbar-padding + $icon-button-padding);
-        }
+    &:disabled {
+      color: $color-button-disabled;
+      cursor: default;
+    }
+  }
 
-        &_prev {
-            left: 0;
-        }
-
-        [dir="rtl"] &_prev {
-            left: unset;
-            right: 0;
-            transform: translateY(-50%) rotate(180deg);
-        }
-
-        &_next {
-            right: 0;
-        }
-
-        [dir="rtl"] &_next {
-            left: 0;
-            right: unset;
-            transform: translateY(-50%) rotate(180deg);
-        }
+  &_navigation {
+    &_prev,
+    &_next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: globalVar(
+        navigation_button_padding,
+        $toolbar-padding + 2 * $icon-button-padding $toolbar-padding + $icon-button-padding
+      );
     }
 
-    &_no_scroll {
-        height: 100%;
-        overflow: hidden;
-        overscroll-behavior: none;
+    &_prev {
+      left: 0;
     }
+
+    [dir="rtl"] &_prev {
+      left: unset;
+      right: 0;
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    &_next {
+      right: 0;
+    }
+
+    [dir="rtl"] &_next {
+      left: 0;
+      right: unset;
+      transform: translateY(-50%) rotate(180deg);
+    }
+  }
+
+  &_no_scroll {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
 }
 
 @keyframes yarl__delayed_fadein {
-    0% {
-        opacity: 0;
-    }
-    80% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes yarl__stroke_opacity {
-    from {
-        stroke-opacity: 1;
-    }
-    to {
-        stroke-opacity: 0.125;
-    }
+  from {
+    stroke-opacity: 1;
+  }
+  to {
+    stroke-opacity: 0.125;
+  }
 }

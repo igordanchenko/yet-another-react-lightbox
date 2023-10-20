@@ -9,28 +9,28 @@ import { resolveCaptionsProps } from "./props.js";
 
 /** Captions plugin */
 export function Captions({ augment, addModule }: PluginProps) {
-    augment(
-        ({ captions: captionsProps, render: { slideFooter: renderFooter, ...restRender }, toolbar, ...restProps }) => {
-            const captions = resolveCaptionsProps(captionsProps);
-            return {
-                render: {
-                    slideFooter: ({ slide }) => (
-                        <>
-                            {renderFooter?.({ slide })}
+  augment(
+    ({ captions: captionsProps, render: { slideFooter: renderFooter, ...restRender }, toolbar, ...restProps }) => {
+      const captions = resolveCaptionsProps(captionsProps);
+      return {
+        render: {
+          slideFooter: ({ slide }) => (
+            <>
+              {renderFooter?.({ slide })}
 
-                            {slide.title && <Title title={slide.title} />}
+              {slide.title && <Title title={slide.title} />}
 
-                            {slide.description && <Description description={slide.description} />}
-                        </>
-                    ),
-                    ...restRender,
-                },
-                toolbar: addToolbarButton(toolbar, PLUGIN_CAPTIONS, captions.showToggle ? <CaptionsButton /> : null),
-                captions,
-                ...restProps,
-            };
-        }
-    );
+              {slide.description && <Description description={slide.description} />}
+            </>
+          ),
+          ...restRender,
+        },
+        toolbar: addToolbarButton(toolbar, PLUGIN_CAPTIONS, captions.showToggle ? <CaptionsButton /> : null),
+        captions,
+        ...restProps,
+      };
+    },
+  );
 
-    addModule(createModule(PLUGIN_CAPTIONS, CaptionsContextProvider));
+  addModule(createModule(PLUGIN_CAPTIONS, CaptionsContextProvider));
 }

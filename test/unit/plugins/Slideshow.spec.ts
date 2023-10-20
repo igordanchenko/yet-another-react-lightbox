@@ -7,79 +7,79 @@ import { Slideshow } from "../../../src/plugins/index.js";
 import { isImageSlide, LightboxExternalProps, SlideshowRef } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
-    return render(
-        lightbox({
-            slides: [{ src: "image1" }, { src: "image2" }, { src: "image3" }, { src: "image4" }],
-            plugins: [Slideshow],
-            ...props,
-        })
-    );
+  return render(
+    lightbox({
+      slides: [{ src: "image1" }, { src: "image2" }, { src: "image3" }, { src: "image4" }],
+      plugins: [Slideshow],
+      ...props,
+    }),
+  );
 }
 
 function expectToBePlaying() {
-    expect(screen.queryByLabelText("Pause")).toBeInTheDocument();
+  expect(screen.queryByLabelText("Pause")).toBeInTheDocument();
 }
 
 function expectToBePaused() {
-    expect(screen.queryByLabelText("Play")).toBeInTheDocument();
+  expect(screen.queryByLabelText("Play")).toBeInTheDocument();
 }
 
 describe("Slideshow", () => {
-    it("provides slideshow play button", () => {
-        renderLightbox();
+  it("provides slideshow play button", () => {
+    renderLightbox();
 
-        expectToBePaused();
+    expectToBePaused();
+  });
+
+  it("supports slideshow ref", () => {
+    const ref = React.createRef<SlideshowRef>();
+
+    renderLightbox({ slideshow: { ref } });
+
+    expectToBePaused();
+
+    act(() => {
+      ref.current!.play();
     });
 
-    it("supports slideshow ref", () => {
-        const ref = React.createRef<SlideshowRef>();
+    expectToBePlaying();
 
-        renderLightbox({ slideshow: { ref } });
-
-        expectToBePaused();
-
-        act(() => {
-            ref.current!.play();
-        });
-
-        expectToBePlaying();
-
-        act(() => {
-            ref.current!.pause();
-        });
-
-        expectToBePaused();
+    act(() => {
+      ref.current!.pause();
     });
 
-    it("auto plays slides", () =>
-        withFakeTimers(({ runAllTimers }) => {
-            const view = vi.fn();
-            const slideshowStart = vi.fn();
-            const slideshowStop = vi.fn();
+    expectToBePaused();
+  });
 
-            renderLightbox({
-                render: {
-                    slide: ({ slide }) => (isImageSlide(slide) ? React.createElement("div", null, slide.src) : null),
-                },
-                on: { view, slideshowStart, slideshowStop },
-                carousel: { finite: true },
-                slideshow: { autoplay: true },
-            });
+  it("auto plays slides", () =>
+    withFakeTimers(({ runAllTimers }) => {
+      const view = vi.fn();
+      const slideshowStart = vi.fn();
+      const slideshowStop = vi.fn();
 
-            for (let i = 0; i < 10; i += 1) {
-                runAllTimers();
-            }
+      renderLightbox({
+        render: {
+          slide: ({ slide }) => (isImageSlide(slide) ? React.createElement("div", null, slide.src) : null),
+        },
+        on: { view, slideshowStart, slideshowStop },
+        carousel: { finite: true },
+        slideshow: { autoplay: true },
+      });
 
-            expect(view).toHaveBeenCalledTimes(4);
-            expect(slideshowStart).toHaveBeenCalledTimes(1);
-            expect(slideshowStop).toHaveBeenCalledTimes(1);
-        }));
+      for (let i = 0; i < 10; i += 1) {
+        runAllTimers();
+      }
 
-    it("supports custom slideshow button", () => {
-        renderLightbox({
-            render: { buttonSlideshow: () => React.createElement("button", { type: "button" }, "Custom button") },
-        });
+      expect(view).toHaveBeenCalledTimes(4);
+      expect(slideshowStart).toHaveBeenCalledTimes(1);
+      expect(slideshowStop).toHaveBeenCalledTimes(1);
+    }));
 
-        expectToContainButton("Custom button");
+  it("supports custom slideshow button", () => {
+    renderLightbox({
+      render: { buttonSlideshow: () => React.createElement("button", { type: "button" }, "Custom button") },
     });
+
+    expectToContainButton("Custom button");
+  });
 });

@@ -6,19 +6,19 @@ import path from "path";
 import fse from "fs-extra";
 
 function resolve(...paths) {
-    return fileURLToPath(new URL(path.join(...paths), import.meta.url));
+  return fileURLToPath(new URL(path.join(...paths), import.meta.url));
 }
 
 function execSync(cmd) {
-    child_process.execSync(cmd, { cwd: resolve(), timeout: 300_000, stdio: "inherit" });
+  child_process.execSync(cmd, { cwd: resolve(), timeout: 300_000, stdio: "inherit" });
 }
 
 execSync("npm install --no-save");
 
 function copySync(file) {
-    const target = resolve("node_modules", "yet-another-react-lightbox", file);
-    fse.removeSync(target);
-    fse.copySync(resolve("..", "..", file), target);
+  const target = resolve("node_modules", "yet-another-react-lightbox", file);
+  fse.removeSync(target);
+  fse.copySync(resolve("..", "..", file), target);
 }
 
 copySync("dist");

@@ -7,11 +7,11 @@ import { SlideshowButton } from "./SlideshowButton.js";
 
 /** Slideshow plugin */
 export function Slideshow({ augment, addModule }: PluginProps) {
-    augment(({ slideshow, toolbar, ...restProps }) => ({
-        toolbar: addToolbarButton(toolbar, PLUGIN_SLIDESHOW, <SlideshowButton />),
-        slideshow: resolveSlideshowProps(slideshow),
-        ...restProps,
-    }));
+  augment(({ slideshow, toolbar, ...restProps }) => ({
+    toolbar: addToolbarButton(toolbar, PLUGIN_SLIDESHOW, <SlideshowButton />),
+    slideshow: resolveSlideshowProps(slideshow),
+    ...restProps,
+  }));
 
-    addModule(createModule(PLUGIN_SLIDESHOW, SlideshowContextProvider));
+  addModule(createModule(PLUGIN_SLIDESHOW, SlideshowContextProvider));
 }

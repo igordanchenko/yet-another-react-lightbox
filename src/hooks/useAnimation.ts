@@ -5,81 +5,81 @@ import { useMotionPreference } from "./useMotionPreference.js";
 
 /* eslint-disable prefer-destructuring */
 function currentTransformation(node: HTMLElement) {
-    let x = 0;
-    let y = 0;
-    let z = 0;
-    const matrix = window.getComputedStyle(node).transform;
-    const matcher = matrix.match(/matrix.*\((.+)\)/);
-    if (matcher) {
-        const values = matcher[1].split(",").map((str) => Number.parseInt(str, 10));
-        if (values.length === 6) {
-            x = values[4];
-            y = values[5];
-        } else if (values.length === 16) {
-            x = values[12];
-            y = values[13];
-            z = values[14];
-        }
+  let x = 0;
+  let y = 0;
+  let z = 0;
+  const matrix = window.getComputedStyle(node).transform;
+  const matcher = matrix.match(/matrix.*\((.+)\)/);
+  if (matcher) {
+    const values = matcher[1].split(",").map((str) => Number.parseInt(str, 10));
+    if (values.length === 6) {
+      x = values[4];
+      y = values[5];
+    } else if (values.length === 16) {
+      x = values[12];
+      y = values[13];
+      z = values[14];
     }
-    return { x, y, z };
+  }
+  return { x, y, z };
 }
 
 export type ComputeAnimation<T> = (
-    snapshot: T,
-    rect: DOMRect,
-    translate: { x: number; y: number; z: number }
+  snapshot: T,
+  rect: DOMRect,
+  translate: { x: number; y: number; z: number },
 ) =>
-    | {
-          keyframes: Keyframe[];
-          duration: number;
-          easing?: string;
-          onfinish?: () => void;
-      }
-    | undefined;
+  | {
+      keyframes: Keyframe[];
+      duration: number;
+      easing?: string;
+      onfinish?: () => void;
+    }
+  | undefined;
 
 export function useAnimation<T>(nodeRef: React.RefObject<HTMLElement | null>, computeAnimation: ComputeAnimation<T>) {
-    const snapshot = React.useRef<T>();
-    const animation = React.useRef<Animation>();
+  const snapshot = React.useRef<T>();
+  const animation = React.useRef<Animation>();
 
-    const reduceMotion = useMotionPreference();
+  const reduceMotion = useMotionPreference();
 
-    useLayoutEffect(() => {
-        if (nodeRef.current && snapshot.current !== undefined && !reduceMotion) {
-            const { keyframes, duration, easing, onfinish } =
-                computeAnimation(
-                    snapshot.current,
-                    nodeRef.current.getBoundingClientRect(),
-                    currentTransformation(nodeRef.current)
-                ) || {};
+  useLayoutEffect(() => {
+    if (nodeRef.current && snapshot.current !== undefined && !reduceMotion) {
+      const { keyframes, duration, easing, onfinish } =
+        computeAnimation(
+          snapshot.current,
+          nodeRef.current.getBoundingClientRect(),
+          currentTransformation(nodeRef.current),
+        ) || {};
 
-            if (keyframes && duration) {
-                animation.current?.cancel();
-                animation.current = undefined;
+      if (keyframes && duration) {
+        animation.current?.cancel();
+        animation.current = undefined;
 
-                try {
-                    animation.current = nodeRef.current.animate?.(keyframes, { duration, easing });
-                } catch (err) {
-                    // eslint-disable-next-line no-console
-                    console.error(err);
-                }
-
-                if (animation.current) {
-                    animation.current.onfinish = () => {
-                        animation.current = undefined;
-
-                        onfinish?.();
-                    };
-                }
-            }
+        try {
+          animation.current = nodeRef.current.animate?.(keyframes, { duration, easing });
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error(err);
         }
 
-        snapshot.current = undefined;
-    });
+        if (animation.current) {
+          animation.current.onfinish = () => {
+            animation.current = undefined;
 
-    return {
-        prepareAnimation: (currentSnapshot: T | undefined) => {
-            snapshot.current = currentSnapshot;
-        },
-        isAnimationPlaying: () => animation.current?.playState === "running",
-    };
+            onfinish?.();
+          };
+        }
+      }
+    }
+
+    snapshot.current = undefined;
+  });
+
+  return {
+    prepareAnimation: (currentSnapshot: T | undefined) => {
+      snapshot.current = currentSnapshot;
+    },
+    isAnimationPlaying: () => animation.current?.playState === "running",
+  };
 }

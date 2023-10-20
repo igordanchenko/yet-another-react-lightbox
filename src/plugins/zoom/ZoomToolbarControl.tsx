@@ -5,12 +5,12 @@ import ZoomButtonsGroup from "./ZoomButtonsGroup.js";
 import { useZoom } from "./ZoomController.js";
 
 export function ZoomToolbarControl() {
-    const { render } = useLightboxProps();
-    const zoomRef = useZoom();
+  const { render } = useLightboxProps();
+  const zoomRef = useZoom();
 
-    if (render.buttonZoom) {
-        return <>{render.buttonZoom(zoomRef)}</>;
-    }
+  if (render.buttonZoom) {
+    return <>{render.buttonZoom(zoomRef)}</>;
+  }
 
-    return <ZoomButtonsGroup />;
+  return <ZoomButtonsGroup />;
 }

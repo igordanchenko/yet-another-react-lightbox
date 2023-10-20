@@ -1,14 +1,14 @@
 {
-    "root": true,
-    "extends": ["airbnb", "airbnb-typescript", "airbnb/hooks", "plugin:prettier/recommended"],
-    "parserOptions": { "project": "tsconfig.json" },
-    "ignorePatterns": ["dist", "coverage"],
-    "rules": {
-        "react/prop-types": "off",
-        "react/require-default-props": "off",
-        "react/jsx-props-no-spreading": "off",
-        "import/prefer-default-export": "off",
-        "import/extensions": ["error", "ignorePackages"],
-        "react/jsx-no-useless-fragment": ["error", { "allowExpressions": true }]
-    }
+  "root": true,
+  "extends": ["airbnb", "airbnb-typescript", "airbnb/hooks", "plugin:prettier/recommended"],
+  "parserOptions": { "project": "tsconfig.json" },
+  "ignorePatterns": ["dist", "coverage"],
+  "rules": {
+    "react/prop-types": "off",
+    "react/require-default-props": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/prefer-default-export": "off",
+    "import/extensions": ["error", "ignorePackages"],
+    "react/jsx-no-useless-fragment": ["error", { "allowExpressions": true }]
+  }
 }

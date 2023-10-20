@@ -1,5 +1,5 @@
 @function globalVar($key, $default) {
-    @return var(--yarl__ + $key, $default);
+  @return var(--yarl__ + $key, $default);
 }
 
 $toolbar-padding: 8px;
@@ -11,8 +11,8 @@ $color-black: #000;
 
 $color-backdrop: globalVar(color_backdrop, $color-black);
 
-$color-button: globalVar(color_button, rgba($color-white, .8));
+$color-button: globalVar(color_button, rgba($color-white, 0.8));
 $color-button-active: globalVar(color_button_active, $color-white);
-$color-button-disabled: globalVar(color_button_disabled, rgba($color-white, .4));
+$color-button-disabled: globalVar(color_button_disabled, rgba($color-white, 0.4));
 
-$filter-drop-shadow: drop-shadow(2px 2px 2px rgba($color-black, .8))
+$filter-drop-shadow: drop-shadow(2px 2px 2px rgba($color-black, 0.8));

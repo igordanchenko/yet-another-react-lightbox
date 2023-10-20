@@ -1,50 +1,50 @@
 name: Release
 
 on:
-    push:
-        branches: [ main, next ]
+  push:
+    branches: [main, next]
 
 jobs:
-    release:
-        name: Release
-        runs-on: ubuntu-latest
+  release:
+    name: Release
+    runs-on: ubuntu-latest
 
-        permissions:
-            contents: write
-            id-token: write
-            issues: write
-            discussions: write
-            pull-requests: write
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      discussions: write
+      pull-requests: write
 
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            -   name: Setup Node.js
-                uses: actions/setup-node@v3
-                with:
-                    node-version: 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-            -   name: Install dependencies
-                run: npx ci
+      - name: Install dependencies
+        run: npx ci
 
-            -   name: Install semantic-release extra plugins
-                run: npm install --save-dev @semantic-release/changelog @semantic-release/github
+      - name: Install semantic-release extra plugins
+        run: npm install --save-dev @semantic-release/changelog @semantic-release/github
 
-            -   name: Build
-                run: npm run build
+      - name: Build
+        run: npm run build
 
-            -   name: Lint
-                run: npm run lint
+      - name: Lint
+        run: npm run lint
 
-            -   name: Test
-                run: npm run test
+      - name: Test
+        run: npm run test
 
-            -   name: Cleanup
-                run: npm pkg delete scripts devDependencies
+      - name: Cleanup
+        run: npm pkg delete scripts devDependencies
 
-            -   name: Release
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-                run: npx semantic-release
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release

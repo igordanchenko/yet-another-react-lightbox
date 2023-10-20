@@ -1,85 +1,94 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
-    -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 body,
 #root {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 #root {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .button {
-    display: inline-flex;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
+  display: inline-flex;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 
-    margin: 0;
-    padding: 0.625rem 1.5rem;
+  margin: 0;
+  padding: 0.625rem 1.5rem;
 
-    font-size: 0.875rem;
-    line-height: 1.25;
-    font-weight: 500;
-    text-transform: uppercase;
-    text-decoration-line: none;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration-line: none;
 
-    color: white;
-    background-color: rgb(37, 99, 235);
+  color: white;
+  background-color: rgb(37, 99, 235);
 
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 
-    border-width: 0;
-    border-radius: 0.25rem;
-    outline: none;
+  border-width: 0;
+  border-radius: 0.25rem;
+  outline: none;
 
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
-    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 6px -1px, rgba(0, 0, 0, 0.1) 0 2px 4px -2px;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0 4px 6px -1px,
+    rgba(0, 0, 0, 0.1) 0 2px 4px -2px;
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .button:hover {
-        background-color: rgb(29, 78, 216);
-        box-shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.1) 0 4px 6px -4px;
-    }
+  .button:hover {
+    background-color: rgb(29, 78, 216);
+    box-shadow:
+      rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+      rgba(0, 0, 0, 0.1) 0 4px 6px -4px;
+  }
 }
 
 .button:focus-visible {
-    background-color: rgb(29, 78, 216);
-    box-shadow: rgba(59, 130, 246, 0.5) 0 0 0 3px, rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.1) 0 4px 6px -4px;
+  background-color: rgb(29, 78, 216);
+  box-shadow:
+    rgba(59, 130, 246, 0.5) 0 0 0 3px,
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+    rgba(0, 0, 0, 0.1) 0 4px 6px -4px;
 }
 
 .button:active {
-    background-color: rgb(30, 64, 175);
-    box-shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.1) 0 4px 6px -4px;
+  background-color: rgb(30, 64, 175);
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+    rgba(0, 0, 0, 0.1) 0 4px 6px -4px;
 }

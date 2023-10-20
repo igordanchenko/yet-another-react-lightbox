@@ -1,37 +1,37 @@
 name: CI
 
 on:
-    push:
-        branches: [ main, next ]
-    pull_request:
-        branches: [ main, next ]
+  push:
+    branches: [main, next]
+  pull_request:
+    branches: [main, next]
 
 jobs:
-    build:
-        name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-                node: [ 18, 20 ]
-                os: [ ubuntu-latest, windows-latest, macOS-latest ]
+  build:
+    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: [18, 20]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
 
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            -   name: Setup Node.js ${{ matrix.node }}
-                uses: actions/setup-node@v3
-                with:
-                    node-version: ${{ matrix.node }}
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
 
-            -   name: Install dependencies
-                uses: bahmutov/npm-install@v1
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
 
-            -   name: Build
-                run: npm run build
+      - name: Build
+        run: npm run build
 
-            -   name: Lint
-                run: npm run lint
+      - name: Lint
+        run: npm run lint
 
-            -   name: Test
-                run: npm run test
+      - name: Test
+        run: npm run test

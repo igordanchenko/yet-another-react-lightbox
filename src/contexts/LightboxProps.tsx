@@ -10,5 +10,5 @@ export const LightboxPropsContext = React.createContext<LightboxPropsContextType
 export const useLightboxProps = makeUseContext("useLightboxProps", "LightboxPropsContext", LightboxPropsContext);
 
 export function LightboxPropsProvider({ children, ...props }: ComponentProps) {
-    return <LightboxPropsContext.Provider value={props}>{children}</LightboxPropsContext.Provider>;
+  return <LightboxPropsContext.Provider value={props}>{children}</LightboxPropsContext.Provider>;
 }

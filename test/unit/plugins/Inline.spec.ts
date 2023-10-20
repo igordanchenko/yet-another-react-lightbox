@@ -7,39 +7,39 @@ import { Inline } from "../../../src/plugins/index.js";
 import { ControllerRef, LightboxExternalProps } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
-    return render(lightbox({ plugins: [Inline], ...props }));
+  return render(lightbox({ plugins: [Inline], ...props }));
 }
 
 function testMainScenario() {
-    expect(screen.queryByRole("presentation")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Close")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Previous")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Next")).toBeInTheDocument();
+  expect(screen.queryByRole("presentation")).toBeInTheDocument();
+  expect(screen.queryByLabelText("Close")).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Previous")).toBeInTheDocument();
+  expect(screen.queryByLabelText("Next")).toBeInTheDocument();
 }
 
 describe("Inline", () => {
-    it("renders inline lightbox", () => {
-        renderLightbox();
+  it("renders inline lightbox", () => {
+    renderLightbox();
 
-        testMainScenario();
-    });
+    testMainScenario();
+  });
 
-    it("ignores open prop", () => {
-        renderLightbox({ open: false });
+  it("ignores open prop", () => {
+    renderLightbox({ open: false });
 
-        testMainScenario();
-    });
+    testMainScenario();
+  });
 
-    it("doesn't close", () => {
-        const close = vi.fn();
-        const ref = React.createRef<ControllerRef>();
+  it("doesn't close", () => {
+    const close = vi.fn();
+    const ref = React.createRef<ControllerRef>();
 
-        renderLightbox({ controller: { ref }, close });
+    renderLightbox({ controller: { ref }, close });
 
-        ref.current!.close();
+    ref.current!.close();
 
-        expect(close).not.toHaveBeenCalled();
+    expect(close).not.toHaveBeenCalled();
 
-        testMainScenario();
-    });
+    testMainScenario();
+  });
 });

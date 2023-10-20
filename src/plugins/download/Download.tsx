@@ -5,9 +5,9 @@ import { resolveDownloadProps } from "./props.js";
 import { DownloadButton } from "./DownloadButton.js";
 
 export function Download({ augment }: PluginProps) {
-    augment(({ toolbar, download, ...restProps }) => ({
-        toolbar: addToolbarButton(toolbar, PLUGIN_DOWNLOAD, <DownloadButton />),
-        download: resolveDownloadProps(download),
-        ...restProps,
-    }));
+  augment(({ toolbar, download, ...restProps }) => ({
+    toolbar: addToolbarButton(toolbar, PLUGIN_DOWNLOAD, <DownloadButton />),
+    download: resolveDownloadProps(download),
+    ...restProps,
+  }));
 }

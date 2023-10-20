@@ -5,19 +5,19 @@ import { Counter } from "../../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
-    return render(lightbox({ plugins: [Counter], ...props }));
+  return render(lightbox({ plugins: [Counter], ...props }));
 }
 
 describe("Counter", () => {
-    it("renders the counter", () => {
-        renderLightbox({ slides: [{ src: "image1" }, { src: "image2" }] });
+  it("renders the counter", () => {
+    renderLightbox({ slides: [{ src: "image1" }, { src: "image2" }] });
 
-        expect(screen.queryByText("1 / 2")).toBeInTheDocument();
-    });
+    expect(screen.queryByText("1 / 2")).toBeInTheDocument();
+  });
 
-    it("doesn't crash with empty slides", () => {
-        renderLightbox();
+  it("doesn't crash with empty slides", () => {
+    renderLightbox();
 
-        expect(screen.queryByRole("presentation")).toBeInTheDocument();
-    });
+    expect(screen.queryByRole("presentation")).toBeInTheDocument();
+  });
 });

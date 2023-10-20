@@ -6,56 +6,56 @@ import { Share } from "../../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../../src/index.js";
 
 function renderLightbox(props?: LightboxExternalProps) {
-    return render(lightbox({ plugins: [Share], ...props }));
+  return render(lightbox({ plugins: [Share], ...props }));
 }
 
 describe("Share", () => {
-    beforeAll(() => {
-        const shareCopy = navigator.share;
-        const canShareCopy = navigator.canShare;
+  beforeAll(() => {
+    const shareCopy = navigator.share;
+    const canShareCopy = navigator.canShare;
 
-        navigator.share = () => Promise.resolve();
-        navigator.canShare = () => true;
+    navigator.share = () => Promise.resolve();
+    navigator.canShare = () => true;
 
-        return () => {
-            navigator.share = shareCopy;
-            navigator.canShare = canShareCopy;
-        };
-    });
+    return () => {
+      navigator.share = shareCopy;
+      navigator.canShare = canShareCopy;
+    };
+  });
 
-    it("renders the share button", () => {
-        const share = vi.fn();
+  it("renders the share button", () => {
+    const share = vi.fn();
 
-        renderLightbox({ slides: [{ src: "image1" }, { src: "image2" }], on: { share } });
+    renderLightbox({ slides: [{ src: "image1" }, { src: "image2" }], on: { share } });
 
-        expect(screen.queryByLabelText("Share")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Share")).toBeInTheDocument();
 
-        clickButton("Share");
+    clickButton("Share");
 
-        expect(share).toHaveBeenCalled();
-    });
+    expect(share).toHaveBeenCalled();
+  });
 
-    it("doesn't crash with empty slides", () => {
-        renderLightbox();
+  it("doesn't crash with empty slides", () => {
+    renderLightbox();
 
-        expect(screen.queryByRole("presentation")).toBeInTheDocument();
-    });
+    expect(screen.queryByRole("presentation")).toBeInTheDocument();
+  });
 
-    it("supports custom share button", () => {
-        const buttonShare = vi.fn();
+  it("supports custom share button", () => {
+    const buttonShare = vi.fn();
 
-        renderLightbox({ render: { buttonShare } });
+    renderLightbox({ render: { buttonShare } });
 
-        expect(buttonShare).toHaveBeenCalled();
-    });
+    expect(buttonShare).toHaveBeenCalled();
+  });
 
-    it("supports custom share function", () => {
-        const share = vi.fn();
+  it("supports custom share function", () => {
+    const share = vi.fn();
 
-        renderLightbox({ slides: [{ src: "image", share: true }], share: { share } });
+    renderLightbox({ slides: [{ src: "image", share: true }], share: { share } });
 
-        clickButton("Share");
+    clickButton("Share");
 
-        expect(share).toHaveBeenCalled();
-    });
+    expect(share).toHaveBeenCalled();
+  });
 });

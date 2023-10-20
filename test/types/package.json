@@ -1,22 +1,22 @@
 {
-    "name": "test-types",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "tsc && vite build"
-    },
-    "dependencies": {
-        "react": "latest",
-        "react-dom": "latest",
-        "yet-another-react-lightbox": "latest"
-    },
-    "devDependencies": {
-        "@types/react": "latest",
-        "@types/react-dom": "latest",
-        "@vitejs/plugin-react": "latest",
-        "typescript": "latest",
-        "vite": "latest"
-    }
+  "name": "test-types",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "react": "latest",
+    "react-dom": "latest",
+    "yet-another-react-lightbox": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  }
 }

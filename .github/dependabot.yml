@@ -1,9 +1,9 @@
 version: 2
 updates:
-    -   package-ecosystem: "npm"
-        directory: "/"
-        schedule:
-            interval: "weekly"
-        allow:
-            -   dependency-type: "production"
-        open-pull-requests-limit: 0
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "production"
+    open-pull-requests-limit: 0

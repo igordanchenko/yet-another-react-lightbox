@@ -19,20 +19,20 @@ import "../src/plugins/thumbnails/thumbnails.scss";
 import slides from "./slides.js";
 
 export default function App() {
-    const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
-    return (
-        <>
-            <Lightbox
-                open={open}
-                close={() => setOpen(false)}
-                slides={slides}
-                plugins={[Captions, Counter, Download, Share, Fullscreen, Slideshow, Thumbnails, Video, Zoom]}
-            />
+  return (
+    <>
+      <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={slides}
+        plugins={[Captions, Counter, Download, Share, Fullscreen, Slideshow, Thumbnails, Video, Zoom]}
+      />
 
-            <button type="button" className="button" onClick={() => setOpen(true)}>
-                Open Lightbox
-            </button>
-        </>
-    );
+      <button type="button" className="button" onClick={() => setOpen(true)}>
+        Open Lightbox
+      </button>
+    </>
+  );
 }
