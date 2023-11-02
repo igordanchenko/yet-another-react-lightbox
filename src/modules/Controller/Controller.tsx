@@ -7,6 +7,7 @@ import {
   ACTION_SWIPE,
   CLASS_FLEX_CENTER,
   MODULE_CONTROLLER,
+  MODULE_PORTAL,
 } from "../../consts.js";
 import { Callback, ComponentProps, ContainerRect, ControllerRef } from "../../types.js";
 import { createModule } from "../../config.js";
@@ -318,7 +319,10 @@ export function Controller({ children, ...props }: ComponentProps) {
 
   const focusOnMount = useEventCallback(() => {
     if (controller.focus) {
-      containerRef.current?.focus();
+      // capture focus only when rendered inside a portal
+      if (document.querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)) {
+        focus();
+      }
     }
   });
 

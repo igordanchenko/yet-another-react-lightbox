@@ -210,7 +210,8 @@ export interface AnimationSettings {
 export interface ControllerSettings {
   /** controller ref */
   ref: React.ForwardedRef<ControllerRef>;
-  /** if true, the lightbox captures focus when it opens */
+  // TODO v4: remove
+  /** @deprecated for internal use only */
   focus: boolean;
   /** controller `touch-action` */
   touchAction: "none" | "pan-y";

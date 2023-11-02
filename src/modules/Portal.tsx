@@ -32,6 +32,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
   const [visible, setVisible] = React.useState(false);
 
   const cleanup = React.useRef<(() => void)[]>([]);
+  const restoreFocus = React.useRef<Element | null>(null);
 
   const { setTimeout } = useTimeouts();
   const { subscribe } = useEvents();
@@ -50,6 +51,9 @@ export function Portal({ children, animation, styles, className, on, portal, clo
 
   const handleClose = useEventCallback(() => {
     setVisible(false);
+
+    cleanup.current.forEach((clean) => clean());
+    cleanup.current = [];
 
     on.exiting?.();
 
@@ -80,25 +84,22 @@ export function Portal({ children, animation, styles, className, on, portal, clo
       }
     }
 
+    cleanup.current.push(() => {
+      (restoreFocus.current as HTMLElement | null)?.focus?.();
+    });
+
     setTimeout(() => {
       on.entered?.();
     }, animationDuration);
-  });
-
-  const handleExit = useEventCallback(() => {
-    cleanup.current.forEach((clean) => clean());
-    cleanup.current = [];
   });
 
   const handleRef = React.useCallback(
     (node: HTMLDivElement | null) => {
       if (node) {
         handleEnter(node);
-      } else {
-        handleExit();
       }
     },
-    [handleEnter, handleExit],
+    [handleEnter],
   );
 
   return mounted
@@ -122,6 +123,11 @@ export function Portal({ children, animation, styles, className, on, portal, clo
               ? { [cssVar("fade_animation_timing_function")]: animation.easing.fade }
               : null),
             ...styles.root,
+          }}
+          onFocus={(event) => {
+            if (!restoreFocus.current) {
+              restoreFocus.current = event.relatedTarget;
+            }
           }}
         >
           {children}
