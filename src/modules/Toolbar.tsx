@@ -3,7 +3,7 @@ import * as React from "react";
 import { ComponentProps } from "../types.js";
 import { createModule } from "../config.js";
 import { useLayoutEffect } from "../hooks/index.js";
-import { composePrefix, cssClass, stopNavigationEventsPropagation } from "../utils.js";
+import { composePrefix, cssClass } from "../utils.js";
 import { CloseIcon, IconButton } from "../components/index.js";
 import { useContainerRect } from "../hooks/useContainerRect.js";
 import { useController } from "./Controller/index.js";
@@ -28,12 +28,7 @@ export function Toolbar({ toolbar: { buttons }, render: { buttonClose, iconClose
   };
 
   return (
-    <div
-      ref={setContainerRef}
-      style={styles.toolbar}
-      className={cssClass(cssPrefix())}
-      {...stopNavigationEventsPropagation()}
-    >
+    <div ref={setContainerRef} style={styles.toolbar} className={cssClass(cssPrefix())}>
       {buttons?.map((button) => (button === ACTION_CLOSE ? renderCloseButton() : button))}
     </div>
   );

@@ -108,6 +108,7 @@ export function addToolbarButton(toolbar: ToolbarSettings, key: string, button: 
   return { buttons: [buttonWithKey, ...buttons], ...restToolbar };
 }
 
+// TODO v4: remove
 export function stopNavigationEventsPropagation() {
   const stopPropagation = (event: React.PointerEvent | React.KeyboardEvent | React.WheelEvent) => {
     event.stopPropagation();
