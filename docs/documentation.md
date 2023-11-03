@@ -187,7 +187,7 @@ import "yet-another-react-lightbox/styles.css";
         <p>Controller settings.</p>
         <ul>
           <li>`ref` - lightbox controller ref (see [Controller Ref](#ControllerRef) for details)</li>
-          <li>`focus` - if `true`, the lightbox captures focus when it opens</li>
+          <li>`focus` - deprecated, for internal use only</li>
           <li>`aria` - if `true`, set ARIA attributes on the controller div</li>
           <li>`touchAction` - controller touch-action setting</li>
           <li>`closeOnPullDown` - if `true`, close the lightbox on pull-down gesture</li>
