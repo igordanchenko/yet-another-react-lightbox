@@ -193,7 +193,7 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
 
           return (
             <Thumbnail
-              key={slideIndex}
+              key={[`${slideIndex}`, placeholder && "placeholder"].filter(Boolean).join("-")}
               slide={slide}
               active={slideIndex === index}
               fadeIn={fadeIn}
