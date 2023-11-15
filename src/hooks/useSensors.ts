@@ -19,10 +19,10 @@ export type SupportedEventType = PointerEventType | KeyboardEventType | WheelEve
 export type ReactEventType<T, K> = K extends KeyboardEventType
   ? React.KeyboardEvent<T>
   : K extends WheelEventType
-  ? React.WheelEvent<T>
-  : K extends PointerEventType
-  ? React.PointerEvent<T>
-  : never;
+    ? React.WheelEvent<T>
+    : K extends PointerEventType
+      ? React.PointerEvent<T>
+      : never;
 
 export type SensorCallback<
   T extends Element,

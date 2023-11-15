@@ -432,9 +432,9 @@ export type DeepPartial<T extends {}, K extends keyof T = keyof T, E extends str
 export type DeepPartialValue<T, E extends string = never> = T extends any[]
   ? T
   : T extends (...props: any[]) => any
-  ? T
-  : T extends {}
-  ? {
-      [P in keyof T]?: P extends E ? T[P] : DeepPartialValue<T[P], E>;
-    }
-  : T;
+    ? T
+    : T extends {}
+      ? {
+          [P in keyof T]?: P extends E ? T[P] : DeepPartialValue<T[P], E>;
+        }
+      : T;
