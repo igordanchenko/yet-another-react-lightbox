@@ -39,6 +39,7 @@ export const CLASS_FULLSIZE = "fullsize";
 export const CLASS_FLEX_CENTER = "flex_center";
 export const CLASS_NO_SCROLL = "no_scroll";
 export const CLASS_NO_SCROLL_PADDING = "no_scroll_padding";
+export const CLASS_SLIDE_WRAPPER = "slide_wrapper";
 
 export const ACTION_PREV = "prev";
 export const ACTION_NEXT = "next";

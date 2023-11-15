@@ -15,7 +15,7 @@ import {
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
 import { useLightboxProps, useLightboxState } from "../contexts/index.js";
-import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL } from "../consts.js";
+import { CLASS_FLEX_CENTER, CLASS_SLIDE_WRAPPER, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
   return composePrefix(MODULE_CAROUSEL, value);
@@ -77,9 +77,9 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
       target &&
       container &&
       (target === container ||
-        // detect zoom wrapper
+        // detect Zoom and Video wrappers
         (Array.from(container.children).find((x) => x === target) &&
-          target.classList.contains(cssClass(CLASS_FULLSIZE))))
+          target.classList.contains(cssClass(CLASS_SLIDE_WRAPPER))))
     ) {
       close();
     }

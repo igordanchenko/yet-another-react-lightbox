@@ -5,6 +5,7 @@ import {
   ACTIVE_SLIDE_LOADING,
   ACTIVE_SLIDE_PLAYING,
   CLASS_FLEX_CENTER,
+  CLASS_SLIDE_WRAPPER,
   clsx,
   cssClass,
   LightboxProps,
@@ -107,7 +108,7 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
             // even without devicePixelRatio adjustment
             ...(width ? { maxWidth: `${width}px` } : null),
           }}
-          className={clsx(cssClass("video_container"), cssClass(CLASS_FLEX_CENTER))}
+          className={clsx(cssClass("video_container"), cssClass(CLASS_FLEX_CENTER), cssClass(CLASS_SLIDE_WRAPPER))}
         >
           {containerRect && (
             // eslint-disable-next-line jsx-a11y/media-has-caption

@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   CLASS_FLEX_CENTER,
   CLASS_FULLSIZE,
+  CLASS_SLIDE_WRAPPER,
   clsx,
   ContainerRect,
   cssClass,
@@ -72,7 +73,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
   return (
     <div
       ref={zoomWrapperRef}
-      className={clsx(cssClass(CLASS_FULLSIZE), cssClass(CLASS_FLEX_CENTER))}
+      className={clsx(cssClass(CLASS_FULLSIZE), cssClass(CLASS_FLEX_CENTER), cssClass(CLASS_SLIDE_WRAPPER))}
       style={
         offset === 0 ? { transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)` } : undefined
       }
