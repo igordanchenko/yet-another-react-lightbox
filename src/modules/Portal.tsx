@@ -49,11 +49,15 @@ export function Portal({ children, animation, styles, className, on, portal, clo
     };
   }, []);
 
+  const handleCleanup = useEventCallback(() => {
+    cleanup.current.forEach((clean) => clean());
+    cleanup.current = [];
+  });
+
   const handleClose = useEventCallback(() => {
     setVisible(false);
 
-    cleanup.current.forEach((clean) => clean());
-    cleanup.current = [];
+    handleCleanup();
 
     on.exiting?.();
 
@@ -97,9 +101,11 @@ export function Portal({ children, animation, styles, className, on, portal, clo
     (node: HTMLDivElement | null) => {
       if (node) {
         handleEnter(node);
+      } else {
+        handleCleanup();
       }
     },
-    [handleEnter],
+    [handleEnter, handleCleanup],
   );
 
   return mounted
