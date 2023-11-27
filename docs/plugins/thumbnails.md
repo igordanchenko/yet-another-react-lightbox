@@ -23,6 +23,8 @@ Thumbnails plugin adds the following `Lightbox` properties.
         &nbsp;&nbsp;width?: number;<br />
         &nbsp;&nbsp;height?: number;<br />
         &nbsp;&nbsp;border?: number;<br />
+        &nbsp;&nbsp;borderStyle?: string;<br />
+        &nbsp;&nbsp;borderColor?: string;<br />
         &nbsp;&nbsp;borderRadius?: number;<br />
         &nbsp;&nbsp;padding?: number;<br />
         &nbsp;&nbsp;gap?: number;<br />
@@ -39,6 +41,8 @@ Thumbnails plugin adds the following `Lightbox` properties.
           <li>`width` - thumbnail width</li>
           <li>`height` - thumbnail height</li>
           <li>`border` - thumbnail border width</li>
+          <li>`borderStyle` - thumbnail border style</li>
+          <li>`borderColor` - thumbnail border color</li>
           <li>`borderRadius` - thumbnail border radius</li>
           <li>`padding` - thumbnail inner padding</li>
           <li>`gap` - gap between thumbnails</li>

@@ -92,7 +92,9 @@ $thumbnail-focus-box-shadow:
     cursor: pointer;
     appearance: none;
     background: localVar(thumbnail_background, $color-black);
-    border: localVar(thumbnail_border, 1px solid $color-button);
+    border-width: localVar(thumbnail_border, 1px);
+    border-style: localVar(thumbnail_border_style, solid);
+    border-color: localVar(thumbnail_border_color, $color-button);
     border-radius: localVar(thumbnail_border_radius, 4px);
     -webkit-tap-highlight-color: transparent;
     position: relative;

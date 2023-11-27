@@ -51,7 +51,8 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
   useKeyboardNavigation(subscribeSensors);
 
   const thumbnails = useThumbnailsProps();
-  const { position, width, height, border, borderRadius, padding, gap, vignette } = thumbnails;
+  const { position, width, height, border, borderStyle, borderColor, borderRadius, padding, gap, vignette } =
+    thumbnails;
 
   const index = globalIndex;
   const animationDuration = animation?.duration || 0;
@@ -148,6 +149,8 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
         ...(border !== defaultThumbnailsProps.border
           ? { [cssVar(cssThumbnailPrefix("border"))]: `${border}px` }
           : null),
+        ...(borderStyle ? { [cssVar(cssThumbnailPrefix("border_style"))]: borderStyle } : null),
+        ...(borderColor ? { [cssVar(cssThumbnailPrefix("border_color"))]: borderColor } : null),
         ...(borderRadius !== defaultThumbnailsProps.borderRadius
           ? { [cssVar(cssThumbnailPrefix("border_radius"))]: `${borderRadius}px` }
           : null),

@@ -17,6 +17,10 @@ declare module "../../types.js" {
       height?: number;
       /** thumbnail border width */
       border?: number;
+      /** thumbnail border style */
+      borderStyle?: string;
+      /** thumbnail border color */
+      borderColor?: string;
       /** thumbnail border radius */
       borderRadius?: number;
       /** thumbnail inner padding */

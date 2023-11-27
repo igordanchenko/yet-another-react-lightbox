@@ -84,6 +84,8 @@ export default function App() {
           height: 80,
           position: "bottom",
           border: 1,
+          borderColor: "blue",
+          borderStyle: "dashed",
           borderRadius: 4,
           padding: 4,
           gap: 16,
