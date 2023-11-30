@@ -46,12 +46,15 @@ function reducer(state: LightboxState, action: LightboxStateAction): LightboxSta
       return { slides, currentIndex, globalIndex, currentSlide, animation };
     }
     case "update":
-      return {
-        slides: action.slides,
-        currentIndex: action.index,
-        globalIndex: action.index,
-        currentSlide: getSlideIfPresent(action.slides, action.index),
-      };
+      if (action.slides !== state.slides || action.index !== state.currentIndex) {
+        return {
+          slides: action.slides,
+          currentIndex: action.index,
+          globalIndex: action.index,
+          currentSlide: getSlideIfPresent(action.slides, action.index),
+        };
+      }
+      return state;
     default:
       throw new Error(UNKNOWN_ACTION_TYPE);
   }
