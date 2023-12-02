@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { ComponentProps } from "../types.js";
 import { createModule } from "../config.js";
-import { cssClass } from "../utils.js";
+import { cssClass, parseInt } from "../utils.js";
 import { useLayoutEffect, useRTL } from "../hooks/index.js";
 import { CLASS_NO_SCROLL, CLASS_NO_SCROLL_PADDING, MODULE_NO_SCROLL } from "../consts.js";
 
@@ -19,7 +19,7 @@ function padScrollbar(element: HTMLElement, padding: number, rtl: boolean) {
   const computedValue = rtl ? styles.paddingLeft : styles.paddingRight;
   const originalValue = element.style.getPropertyValue(property);
 
-  element.style.setProperty(property, `${(parseInt(computedValue, 10) || 0) + padding}px`);
+  element.style.setProperty(property, `${(parseInt(computedValue) || 0) + padding}px`);
 
   return () => {
     if (originalValue) {

@@ -56,6 +56,10 @@ export const isImageSlide = (slide: Slide): slide is SlideImage => slide.type ==
 export const isImageFitCover = (image: SlideImage, imageFit?: LightboxProps["carousel"]["imageFit"]) =>
   image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
 
+export function parseInt(value: string | number) {
+  return typeof value === "string" ? Number.parseInt(value, 10) : value;
+}
+
 export function parseLengthPercentage(input: LengthOrPercentage) {
   if (typeof input === "number") {
     return { pixel: input };
@@ -63,7 +67,7 @@ export function parseLengthPercentage(input: LengthOrPercentage) {
 
   // noinspection SuspiciousTypeOfGuard
   if (typeof input === "string") {
-    const value = parseInt(input, 10);
+    const value = parseInt(input);
     return input.endsWith("%") ? { percent: value } : { pixel: value };
   }
 

@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { parseInt } from "../utils.js";
 import { useLayoutEffect } from "./useLayoutEffect.js";
 import { useMotionPreference } from "./useMotionPreference.js";
 
@@ -11,7 +12,7 @@ function currentTransformation(node: HTMLElement) {
   const matrix = window.getComputedStyle(node).transform;
   const matcher = matrix.match(/matrix.*\((.+)\)/);
   if (matcher) {
-    const values = matcher[1].split(",").map((str) => Number.parseInt(str, 10));
+    const values = matcher[1].split(",").map(parseInt);
     if (values.length === 6) {
       x = values[4];
       y = values[5];

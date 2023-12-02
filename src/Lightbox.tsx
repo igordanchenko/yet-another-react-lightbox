@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { AnimationSettings, ComponentProps, LightboxExternalProps, Node } from "./types.js";
+import { parseInt } from "./utils.js";
 import { LightboxDefaultProps } from "./props.js";
 import { createNode, withPlugins } from "./config.js";
 import { EventsProvider, LightboxPropsProvider, LightboxStateProvider, TimeoutsProvider } from "./contexts/index.js";
@@ -91,7 +92,11 @@ export function Lightbox({
 
   return (
     <LightboxPropsProvider {...props}>
-      <LightboxStateProvider slides={slides || defaultSlides} index={index || defaultIndex}>
+      <LightboxStateProvider
+        slides={slides || defaultSlides}
+        // safeguard against invalid `index` prop
+        index={parseInt(index || defaultIndex)}
+      >
         <TimeoutsProvider>
           <EventsProvider>{renderNode(createNode(RootModule, config), props)}</EventsProvider>
         </TimeoutsProvider>
