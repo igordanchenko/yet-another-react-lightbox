@@ -9,5 +9,8 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./test/unit/setup.ts",
     dir: "test/unit",
+    coverage: {
+      include: ["src"],
+    },
   },
 });
