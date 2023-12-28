@@ -2,7 +2,7 @@ import * as React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { expectToContainButton, lightbox, withFakeTimers } from "../utils.js";
+import { expectToContainButton, lightbox } from "../utils.js";
 import { Slideshow } from "../../../src/plugins/index.js";
 import { isImageSlide, LightboxExternalProps, SlideshowRef } from "../../../src/index.js";
 
@@ -51,29 +51,32 @@ describe("Slideshow", () => {
     expectToBePaused();
   });
 
-  it("auto plays slides", () =>
-    withFakeTimers(({ runAllTimers }) => {
-      const view = vi.fn();
-      const slideshowStart = vi.fn();
-      const slideshowStop = vi.fn();
+  it("auto plays slides", () => {
+    vi.useFakeTimers();
 
-      renderLightbox({
-        render: {
-          slide: ({ slide }) => (isImageSlide(slide) ? React.createElement("div", null, slide.src) : null),
-        },
-        on: { view, slideshowStart, slideshowStop },
-        carousel: { finite: true },
-        slideshow: { autoplay: true },
-      });
+    const view = vi.fn();
+    const slideshowStart = vi.fn();
+    const slideshowStop = vi.fn();
 
-      for (let i = 0; i < 10; i += 1) {
-        runAllTimers();
-      }
+    renderLightbox({
+      render: {
+        slide: ({ slide }) => (isImageSlide(slide) ? React.createElement("div", null, slide.src) : null),
+      },
+      on: { view, slideshowStart, slideshowStop },
+      carousel: { finite: true },
+      slideshow: { autoplay: true },
+    });
 
-      expect(view).toHaveBeenCalledTimes(4);
-      expect(slideshowStart).toHaveBeenCalledTimes(1);
-      expect(slideshowStop).toHaveBeenCalledTimes(1);
-    }));
+    for (let i = 0; i < 10; i += 1) {
+      act(vi.runAllTimers);
+    }
+
+    expect(view).toHaveBeenCalledTimes(4);
+    expect(slideshowStart).toHaveBeenCalledTimes(1);
+    expect(slideshowStop).toHaveBeenCalledTimes(1);
+
+    vi.useRealTimers();
+  });
 
   it("supports custom slideshow button", () => {
     renderLightbox({

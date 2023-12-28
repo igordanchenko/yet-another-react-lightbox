@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 
-import { expectCurrentImageToBe, findCurrentImage, findCurrentSlide, lightbox, withFakeTimers } from "./utils.js";
+import { expectCurrentImageToBe, findCurrentImage, findCurrentSlide, lightbox } from "./utils.js";
 
 const fireWheelEvent = (element: Element, options: { deltaX?: number; deltaY?: number; ctrlKey?: boolean }) => {
   // noinspection TypeScriptValidateJSTypes
@@ -60,52 +60,50 @@ describe("Lightbox", () => {
     expectCurrentImageToBe("image3");
   });
 
-  it("supports wheel navigation", () =>
-    withFakeTimers(({ runAllTimers }) => {
-      render(
-        lightbox({
-          slides: [{ src: "image1" }, { src: "image2" }, { src: "image3" }],
-          carousel: { finite: true },
-        }),
-      );
+  it("supports wheel navigation", () => {
+    vi.useFakeTimers();
 
-      expectCurrentImageToBe("image1");
+    render(
+      lightbox({
+        slides: [{ src: "image1" }, { src: "image2" }, { src: "image3" }],
+        carousel: { finite: true },
+      }),
+    );
+    expectCurrentImageToBe("image1");
 
-      const slide = findCurrentSlide()!;
+    const slide = findCurrentSlide()!;
 
-      // not a swipe
-      runAllTimers();
-      fireWheelEvent(slide, { deltaX: 1 });
-      fireWheelEvent(slide, { ctrlKey: true });
-      fireWheelEvent(slide, { deltaX: 100, deltaY: 200 });
-      fireWheelEvent(slide, { deltaX: 500, deltaY: 1000 });
-      runAllTimers();
-      expectCurrentImageToBe("image1");
+    // not a swipe
+    fireWheelEvent(slide, { deltaX: 1 });
+    fireWheelEvent(slide, { ctrlKey: true });
+    fireWheelEvent(slide, { deltaX: 100, deltaY: 200 });
+    fireWheelEvent(slide, { deltaX: 500, deltaY: 1000 });
+    act(vi.runAllTimers);
+    expectCurrentImageToBe("image1");
 
-      // invalid swipe
-      runAllTimers();
-      fireWheelEvent(slide, { deltaX: -100 });
-      fireWheelEvent(slide, { deltaX: -1000 });
-      fireWheelEvent(slide, { deltaX: -1000 });
-      runAllTimers();
-      expectCurrentImageToBe("image1");
+    // invalid swipe
+    fireWheelEvent(slide, { deltaX: -100 });
+    fireWheelEvent(slide, { deltaX: -1000 });
+    fireWheelEvent(slide, { deltaX: -1000 });
+    act(vi.runAllTimers);
+    expectCurrentImageToBe("image1");
 
-      // insufficient swipe
-      runAllTimers();
-      fireWheelEvent(slide, { deltaX: 50 });
-      fireWheelEvent(slide, { deltaX: 100 });
-      runAllTimers();
-      expectCurrentImageToBe("image1");
+    // insufficient swipe
+    fireWheelEvent(slide, { deltaX: 50 });
+    fireWheelEvent(slide, { deltaX: 100 });
+    act(vi.runAllTimers);
+    expectCurrentImageToBe("image1");
 
-      // valid swipe
-      fireWheelEvent(slide, { deltaX: 10 });
-      fireWheelEvent(slide, { deltaX: 20 });
-      fireWheelEvent(slide, { deltaX: 30 });
-      fireWheelEvent(slide, { deltaX: 100 });
-      fireWheelEvent(slide, { deltaX: 300 });
-      fireWheelEvent(slide, { deltaX: 100 });
-      runAllTimers();
-      fireWheelEvent(slide, { deltaX: 50 });
-      expectCurrentImageToBe("image2");
-    }));
+    // valid swipe
+    fireWheelEvent(slide, { deltaX: 10 });
+    fireWheelEvent(slide, { deltaX: 20 });
+    fireWheelEvent(slide, { deltaX: 30 });
+    fireWheelEvent(slide, { deltaX: 100 });
+    fireWheelEvent(slide, { deltaX: 300 });
+    fireWheelEvent(slide, { deltaX: 100 });
+    act(vi.runAllTimers);
+    expectCurrentImageToBe("image2");
+
+    vi.useRealTimers();
+  });
 });

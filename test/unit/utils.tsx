@@ -1,6 +1,5 @@
 import * as React from "react";
 import { act, screen } from "@testing-library/react";
-import { vi } from "vitest";
 
 import Lightbox from "../../src/index.js";
 
@@ -40,31 +39,4 @@ export function expectToContainButton(name: string) {
 
 export function expectNotToContainButton(name: string) {
   expect(queryButton(name)).not.toBeInTheDocument();
-}
-
-// Workaround for @testing-library/user-event fake timers bug
-// https://github.com/testing-library/react-testing-library/issues/1197
-export async function withFakeTimers(callback: (props: { runAllTimers: () => void }) => void) {
-  const jestCopy = globalThis.jest;
-
-  globalThis.jest = {
-    ...globalThis.jest,
-    advanceTimersByTime: vi.advanceTimersByTime.bind(vi),
-  };
-
-  try {
-    vi.useFakeTimers();
-
-    await callback({
-      runAllTimers: () => {
-        act(() => {
-          vi.runAllTimers();
-        });
-      },
-    });
-  } finally {
-    vi.useRealTimers();
-
-    globalThis.jest = jestCopy;
-  }
 }
