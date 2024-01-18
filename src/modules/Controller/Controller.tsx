@@ -65,15 +65,15 @@ export function Controller({ children, ...props }: ComponentProps) {
 
   const [swipeState, setSwipeState] = React.useState(SwipeState.NONE);
   const swipeOffset = React.useRef(0);
-  const pullDownOffset = React.useRef(0);
-  const pullDownOpacity = React.useRef(1);
+  const pullOffset = React.useRef(0);
+  const pullOpacity = React.useRef(1);
 
   const { registerSensors, subscribeSensors } = useSensors<HTMLDivElement>();
   const { subscribe, publish } = useEvents();
 
   const cleanupAnimationIncrement = useDelay();
   const cleanupSwipeOffset = useDelay();
-  const cleanupPullDownOffset = useDelay();
+  const cleanupPullOffset = useDelay();
 
   const { containerRef, setContainerRef, containerRect } = useContainerRect<HTMLDivElement>();
   const handleContainerRef = useForkRef(usePreventSwipeNavigation(), setContainerRef);
@@ -107,21 +107,26 @@ export function Controller({ children, ...props }: ComponentProps) {
     containerRef.current?.style.setProperty(cssVar("swipe_offset"), `${Math.round(offset)}px`);
   };
 
-  const { closeOnPullDown } = controller;
+  const { closeOnPullUp, closeOnPullDown } = controller;
 
-  const setPullDownOffset = (offset: number) => {
-    pullDownOffset.current = offset;
-    pullDownOpacity.current = (() => {
+  const setPullOffset = (offset: number) => {
+    pullOffset.current = offset;
+    pullOpacity.current = (() => {
       const threshold = 60;
       const minOpacity = 0.5;
-      return Math.min(Math.max(round(1 - (offset / threshold) * (1 - minOpacity), 2), minOpacity), 1);
+      const offsetValue = (() => {
+        if (closeOnPullDown && offset > 0) return offset;
+        if (closeOnPullUp && offset < 0) return -offset;
+        return 0;
+      })();
+      return Math.min(Math.max(round(1 - (offsetValue / threshold) * (1 - minOpacity), 2), minOpacity), 1);
     })();
 
-    containerRef.current?.style.setProperty(cssVar("pull_down_offset"), `${Math.round(offset)}px`);
-    containerRef.current?.style.setProperty(cssVar("pull_down_opacity"), `${pullDownOpacity.current}`);
+    containerRef.current?.style.setProperty(cssVar("pull_offset"), `${Math.round(offset)}px`);
+    containerRef.current?.style.setProperty(cssVar("pull_opacity"), `${pullOpacity.current}`);
   };
 
-  const { prepareAnimation: preparePullDownAnimation } = useAnimation<{
+  const { prepareAnimation: preparePullAnimation } = useAnimation<{
     rect: DOMRect;
     opacity: number;
     duration: number;
@@ -142,24 +147,24 @@ export function Controller({ children, ...props }: ComponentProps) {
     return undefined;
   });
 
-  const pullDown = (offset: number, cancel?: boolean) => {
-    if (closeOnPullDown) {
-      setPullDownOffset(offset);
+  const pull = (offset: number, cancel?: boolean) => {
+    if (closeOnPullUp || closeOnPullDown) {
+      setPullOffset(offset);
 
       let duration = 0;
 
       if (carouselRef.current) {
         duration = animation.fade * (cancel ? 2 : 1);
 
-        preparePullDownAnimation({
+        preparePullAnimation({
           rect: carouselRef.current.getBoundingClientRect(),
-          opacity: pullDownOpacity.current,
+          opacity: pullOpacity.current,
           duration,
         });
       }
 
-      cleanupPullDownOffset(() => {
-        setPullDownOffset(0);
+      cleanupPullOffset(() => {
+        setPullOffset(0);
         setSwipeState(SwipeState.NONE);
       }, duration);
 
@@ -298,22 +303,22 @@ export function Controller({ children, ...props }: ComponentProps) {
     (offset: number) => swipe({ offset, count: 0 }),
   ] as const;
 
-  const pullDownParams = [
-    // onPullDownStart
+  const pullParams = [
+    // onPullStart
     () => {
       if (closeOnPullDown) {
-        setSwipeState(SwipeState.PULL_DOWN);
+        setSwipeState(SwipeState.PULL);
       }
     },
-    // onPullDownProgress
-    (offset: number) => setPullDownOffset(offset),
-    // onPullDownFinish
-    (offset: number) => pullDown(offset),
-    // onPullDownCancel
-    (offset: number) => pullDown(offset, true),
+    // onPullProgress
+    (offset: number) => setPullOffset(offset),
+    // onPullFinish
+    (offset: number) => pull(offset),
+    // onPullCancel
+    (offset: number) => pull(offset, true),
   ] as const;
 
-  usePointerSwipe(...swipeParams, closeOnPullDown, ...pullDownParams);
+  usePointerSwipe(...swipeParams, closeOnPullUp, closeOnPullDown, ...pullParams);
 
   useWheelSwipe(swipeState, ...swipeParams);
 
@@ -395,10 +400,10 @@ export function Controller({ children, ...props }: ComponentProps) {
         ...(swipeState === SwipeState.SWIPE
           ? { [cssVar("swipe_offset")]: `${Math.round(swipeOffset.current)}px` }
           : null),
-        ...(swipeState === SwipeState.PULL_DOWN
+        ...(swipeState === SwipeState.PULL
           ? {
-              [cssVar("pull_down_offset")]: `${Math.round(pullDownOffset.current)}px`,
-              [cssVar("pull_down_opacity")]: `${pullDownOpacity.current}`,
+              [cssVar("pull_offset")]: `${Math.round(pullOffset.current)}px`,
+              [cssVar("pull_opacity")]: `${pullOpacity.current}`,
             }
           : null),
         ...(controller.touchAction !== "none" ? { [cssVar("controller_touch_action")]: controller.touchAction } : null),

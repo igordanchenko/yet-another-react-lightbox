@@ -32,6 +32,7 @@ export const LightboxDefaultProps: LightboxProps = {
     focus: true,
     aria: false,
     touchAction: "none",
+    closeOnPullUp: false,
     closeOnPullDown: false,
     closeOnBackdropClick: false,
   },

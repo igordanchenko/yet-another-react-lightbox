@@ -179,6 +179,7 @@ import "yet-another-react-lightbox/styles.css";
         &nbsp;&nbsp;focus?: boolean;<br />
         &nbsp;&nbsp;aria?: boolean;<br />
         &nbsp;&nbsp;touchAction?: "none" | "pan-y";<br />
+        &nbsp;&nbsp;closeOnPullUp?: boolean;<br />
         &nbsp;&nbsp;closeOnPullDown?: boolean;<br />
         &nbsp;&nbsp;closeOnBackdropClick?: boolean;<br />
         &#125;
@@ -190,6 +191,7 @@ import "yet-another-react-lightbox/styles.css";
           <li>`focus` - deprecated, for internal use only</li>
           <li>`aria` - if `true`, set ARIA attributes on the controller div</li>
           <li>`touchAction` - controller touch-action setting</li>
+          <li>`closeOnPullUp` - if `true`, close the lightbox on pull-up gesture</li>
           <li>`closeOnPullDown` - if `true`, close the lightbox on pull-down gesture</li>
           <li>`closeOnBackdropClick` - if `true`, close the lightbox when the backdrop is clicked</li>
         </ul>

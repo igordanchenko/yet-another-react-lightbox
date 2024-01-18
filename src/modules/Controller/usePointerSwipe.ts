@@ -7,7 +7,7 @@ import { usePointerEvents } from "../../hooks/usePointerEvents.js";
 enum Gesture {
   NONE,
   SWIPE,
-  PULL_DOWN,
+  PULL,
 }
 
 const SWIPE_THRESHOLD = 30;
@@ -21,11 +21,12 @@ export function usePointerSwipe<T extends Element = Element>(
   onSwipeProgress: (offset: number) => void,
   onSwipeFinish: (offset: number, duration: number) => void,
   onSwipeCancel: (offset: number) => void,
+  pullUpEnabled: boolean,
   pullDownEnabled: boolean,
-  onPullDownStart: () => void,
-  onPullDownProgress: (offset: number) => void,
-  onPullDownFinish: (offset: number, duration: number) => void,
-  onPullDownCancel: (offset: number) => void,
+  onPullStart: () => void,
+  onPullProgress: (offset: number) => void,
+  onPullFinish: (offset: number, duration: number) => void,
+  onPullCancel: (offset: number) => void,
 ) {
   const offset = React.useRef<number>(0);
   const pointers = React.useRef<React.PointerEvent[]>([]);
@@ -60,6 +61,9 @@ export function usePointerSwipe<T extends Element = Element>(
     addPointer(event);
   });
 
+  const exceedsPullThreshold = (value: number, threshold: number) =>
+    (pullDownEnabled && value > threshold) || (pullUpEnabled && value < -threshold);
+
   const onPointerUp = useEventCallback((event: React.PointerEvent) => {
     if (pointers.current.find((x) => x.pointerId === event.pointerId) && activePointer.current === event.pointerId) {
       const duration = Date.now() - startTime.current;
@@ -74,11 +78,11 @@ export function usePointerSwipe<T extends Element = Element>(
         } else {
           onSwipeCancel(currentOffset);
         }
-      } else if (gesture.current === Gesture.PULL_DOWN) {
-        if (currentOffset > 2 * SWIPE_THRESHOLD) {
-          onPullDownFinish(currentOffset, duration);
+      } else if (gesture.current === Gesture.PULL) {
+        if (exceedsPullThreshold(currentOffset, 2 * SWIPE_THRESHOLD)) {
+          onPullFinish(currentOffset, duration);
         } else {
-          onPullDownCancel(currentOffset);
+          onPullCancel(currentOffset);
         }
       }
 
@@ -124,18 +128,18 @@ export function usePointerSwipe<T extends Element = Element>(
           // start swipe gesture
           startGesture(Gesture.SWIPE);
           onSwipeStart();
-        } else if (pullDownEnabled && Math.abs(deltaY) > Math.abs(deltaX) && deltaY > SWIPE_THRESHOLD) {
+        } else if (Math.abs(deltaY) > Math.abs(deltaX) && exceedsPullThreshold(deltaY, SWIPE_THRESHOLD)) {
           // start pull-down gesture
-          startGesture(Gesture.PULL_DOWN);
-          onPullDownStart();
+          startGesture(Gesture.PULL);
+          onPullStart();
         }
       } else if (isCurrentPointer) {
         if (gesture.current === Gesture.SWIPE) {
           offset.current = deltaX;
           onSwipeProgress(deltaX);
-        } else if (gesture.current === Gesture.PULL_DOWN) {
+        } else if (gesture.current === Gesture.PULL) {
           offset.current = deltaY;
-          onPullDownProgress(deltaY);
+          onPullProgress(deltaY);
         }
       }
     }
