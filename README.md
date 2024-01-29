@@ -34,6 +34,10 @@ extendable.
 
 [https://yet-another-react-lightbox.com/examples](https://yet-another-react-lightbox.com/examples)
 
+## Changelog
+
+[https://github.com/igordanchenko/yet-another-react-lightbox/releases](https://github.com/igordanchenko/yet-another-react-lightbox/releases)
+
 ## Installation
 
 ```shell
