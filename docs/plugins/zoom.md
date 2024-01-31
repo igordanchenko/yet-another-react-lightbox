@@ -87,6 +87,15 @@ The plugin supports the following input devices and gestures:
   </tbody>
 </table>
 
+## Requirements
+
+The plugin currently supports only image slides. Custom render functions are
+also supported as long as the slide provides `width` and `height` attributes.
+
+If you need support for custom slide types, please open a
+[discussion](https://github.com/igordanchenko/yet-another-react-lightbox/discussions)
+and provide a specific use case.
+
 ## Documentation
 
 Zoom plugin adds the following `Lightbox` properties.
