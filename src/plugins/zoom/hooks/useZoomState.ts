@@ -4,7 +4,6 @@ import {
   ContainerRect,
   isImageSlide,
   round,
-  Slide,
   useController,
   useEventCallback,
   useLayoutEffect,
@@ -12,14 +11,6 @@ import {
 } from "../../../index.js";
 import { useZoomProps } from "./useZoomProps.js";
 import { useZoomAnimation } from "./useZoomAnimation.js";
-
-function getCurrentSource(slides: Slide[], currentIndex: number) {
-  if (currentIndex < slides.length) {
-    const slide = slides[currentIndex];
-    if (isImageSlide(slide)) return slide.src;
-  }
-  return undefined;
-}
 
 export function useZoomState(
   imageRect: ContainerRect,
@@ -32,13 +23,11 @@ export function useZoomState(
 
   const animate = useZoomAnimation(zoom, offsetX, offsetY, zoomWrapperRef);
 
-  const { slides, currentIndex, globalIndex } = useLightboxState();
-
+  const { currentSlide, globalIndex } = useLightboxState();
   const { containerRect, slideRect } = useController();
-
   const { zoomInMultiplier } = useZoomProps();
 
-  const currentSource = getCurrentSource(slides, currentIndex);
+  const currentSource = currentSlide && isImageSlide(currentSlide) ? currentSlide.src : undefined;
   const disabled = !currentSource || !zoomWrapperRef?.current;
 
   useLayoutEffect(() => {

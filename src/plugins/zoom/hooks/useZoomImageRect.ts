@@ -12,12 +12,12 @@ export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: Con
   let imageRect: ContainerRect = { width: 0, height: 0 };
   let maxImageRect: ContainerRect = { width: 0, height: 0 };
 
-  const { slides, currentIndex } = useLightboxState();
+  const { currentSlide } = useLightboxState();
   const { imageFit } = useLightboxProps().carousel;
   const { maxZoomPixelRatio } = useZoomProps();
 
-  if (slideRect && currentIndex < slides.length) {
-    const slide = { ...slides[currentIndex], ...imageDimensions };
+  if (slideRect && currentSlide) {
+    const slide = { ...currentSlide, ...imageDimensions };
     if (isImageSlide(slide)) {
       const cover = isImageFitCover(slide, imageFit);
 
