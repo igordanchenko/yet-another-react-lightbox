@@ -133,6 +133,6 @@ appending some unique query parameter to the url):
 
 <DownloadPluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/DownloadPlugin.tsx" path="/plugins/download" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/DownloadPlugin.tsx" initialPath="/plugins/download" />

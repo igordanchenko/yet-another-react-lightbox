@@ -41,6 +41,6 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 
 Please refer to the individual plugin's documentation for additional details.
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/CaptionsPlugin.tsx" path="/plugins/captions" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/CaptionsPlugin.tsx" initialPath="/plugins/captions" />

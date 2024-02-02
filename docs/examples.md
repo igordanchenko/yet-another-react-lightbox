@@ -16,8 +16,8 @@ with live demos, source code, and ready-to-use code sandboxes.
   import
   ([next/dynamic](https://nextjs.org/docs/advanced-features/dynamic-import))
 
-## CodeSandbox
+## Sandbox
 
-Explore the above examples on CodeSandbox.
+Explore the above examples on StackBlitz.
 
-<CodeSandboxLink file="/src/examples/BasicExample.tsx" path="/examples/basic" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/BasicExample.tsx" initialPath="/examples/basic" />

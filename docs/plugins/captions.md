@@ -134,6 +134,6 @@ return (
 
 <CaptionsPluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/CaptionsPlugin.tsx" path="/plugins/captions" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/CaptionsPlugin.tsx" initialPath="/plugins/captions" />

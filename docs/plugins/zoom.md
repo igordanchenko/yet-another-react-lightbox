@@ -295,6 +295,6 @@ return (
 
 <ZoomPluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/ZoomPlugin.tsx" path="/plugins/zoom" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/ZoomPlugin.tsx" initialPath="/plugins/zoom" />

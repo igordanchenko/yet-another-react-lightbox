@@ -18,9 +18,9 @@ separate component and load it dynamically with the `next/dynamic` import.
 
 The below example demonstrates the use of `next/dynamic` import.
 
-### CodeSandbox
+### Sandbox
 
-<CodeSandboxLink link="https://codesandbox.io/p/sandbox/yet-another-react-lightbox-nextjs-dynamic-rgkgk6" file="/app/page.tsx" path="/" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-nextjs-dynamic" file="app/page.tsx" />
 
 ## next/image
 
@@ -119,9 +119,9 @@ return (
 
 <NextJsExample />
 
-### CodeSandbox
+### Sandbox
 
-<CodeSandboxLink link="https://codesandbox.io/p/sandbox/yet-another-react-lightbox-nextjs-ts-dt0l1m" file="/app/page.tsx" path="/" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-nextjs" file="components/NextJsImage.tsx" />
 
 ## With Thumbnails Plugin
 
@@ -214,6 +214,6 @@ return (
 
 <NextJsZoomExample />
 
-### CodeSandbox
+### Sandbox
 
-<CodeSandboxLink link="https://codesandbox.io/p/sandbox/yet-another-react-lightbox-nextjs-zoom-323vcm" file="/app/page.tsx" path="/" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-nextjs-zoom" file="app/page.tsx" />

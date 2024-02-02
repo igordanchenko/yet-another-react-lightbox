@@ -114,6 +114,6 @@ return (
 
 <SharePluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/SharePlugin.tsx" path="/plugins/share" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/SharePlugin.tsx" initialPath="/plugins/share" />

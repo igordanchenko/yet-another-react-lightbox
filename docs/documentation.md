@@ -4,7 +4,7 @@
 React project in minutes. To get started, follow the
 [Installation](/#Installation) and
 [Minimal Setup Example](/#MinimalSetupExample) guides, or feel free to explore
-the collection of CodeSandbox [demos](/examples).
+the collection of StackBlitz [demos](/examples).
 
 [Yet Another React Lightbox](/) provides all components and types as named
 exports. [Lightbox](#Lightbox) is exported as both default and named export.

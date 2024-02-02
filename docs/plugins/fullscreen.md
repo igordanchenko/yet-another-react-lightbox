@@ -120,6 +120,6 @@ return (
 
 <FullscreenPluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/FullscreenPlugin.tsx" path="/plugins/fullscreen" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/FullscreenPlugin.tsx" initialPath="/plugins/fullscreen" />

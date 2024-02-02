@@ -16,6 +16,6 @@ Basic example demonstrating lightbox core features without any plugins.
 
 <BasicExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/BasicExample.tsx" path="/examples/basic" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/BasicExample.tsx" initialPath="/examples/basic" />

@@ -56,6 +56,6 @@ return (
 
 <CounterPluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/CounterPlugin.tsx" path="/plugins/counter" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/CounterPlugin.tsx" initialPath="/plugins/counter" />

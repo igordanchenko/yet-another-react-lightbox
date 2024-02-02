@@ -85,6 +85,6 @@ Image carousel with Fullscreen, Slideshow, Thumbnails and Zoom plugins:
 
 <InlinePluginAdvancedExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/InlinePlugin.tsx" path="/plugins/inline" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/InlinePlugin.tsx" initialPath="/plugins/inline" />

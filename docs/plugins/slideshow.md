@@ -138,6 +138,6 @@ return (
 
 <SlideshowPluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/SlideshowPlugin.tsx" path="/plugins/slideshow" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/SlideshowPlugin.tsx" initialPath="/plugins/slideshow" />

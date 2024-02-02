@@ -169,6 +169,6 @@ return (
 
 <VideoPluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/VideoPlugin.tsx" path="/plugins/video" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/VideoPlugin.tsx" initialPath="/plugins/video" />

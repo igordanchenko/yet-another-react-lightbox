@@ -8,6 +8,6 @@ to open it in a lightbox. This example is built with
 
 <PhotoGalleryExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/Gallery.tsx" path="/examples/gallery" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/Gallery.tsx" initialPath="/examples/gallery" />

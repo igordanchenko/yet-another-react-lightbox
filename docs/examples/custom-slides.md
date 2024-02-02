@@ -28,6 +28,6 @@ Here is an example of a text slide with CSS animation.
 
 <CustomSlidesExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/CustomSlides.tsx" path="/examples/custom-slides" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/CustomSlides.tsx" initialPath="/examples/custom-slides" />

@@ -7,6 +7,6 @@ to open it in a lightbox.
 
 <CarouselExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/Carousel.tsx" path="/examples/carousel" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/Carousel.tsx" initialPath="/examples/carousel" />

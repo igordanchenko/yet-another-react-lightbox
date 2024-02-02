@@ -141,6 +141,6 @@ return (
 
 <ThumbnailsPluginExample />
 
-## CodeSandbox
+## Sandbox
 
-<CodeSandboxLink file="/src/examples/ThumbnailsPlugin.tsx" path="/plugins/thumbnails" />
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/ThumbnailsPlugin.tsx" initialPath="/plugins/thumbnails" />
