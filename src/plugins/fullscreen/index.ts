@@ -25,6 +25,14 @@ declare module "../../types.js" {
   }
 
   // noinspection JSUnusedGlobalSymbols
+  interface Callbacks {
+    /** a callback called when the lightbox enters fullscreen mode */
+    enterFullscreen?: Callback;
+    /** a callback called when the lightbox exits fullscreen mode */
+    exitFullscreen?: Callback;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
   interface ToolbarButtonKeys {
     [PLUGIN_FULLSCREEN]: null;
   }

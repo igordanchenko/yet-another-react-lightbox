@@ -17,12 +17,13 @@ export const FullscreenContext = React.createContext<FullscreenRef | null>(null)
 
 export const useFullscreen = makeUseContext("useFullscreen", "FullscreenContext", FullscreenContext);
 
-export function FullscreenContextProvider({ fullscreen: fullscreenProps, children }: ComponentProps) {
+export function FullscreenContextProvider({ fullscreen: fullscreenProps, on, children }: ComponentProps) {
   const { auto, ref } = resolveFullscreenProps(fullscreenProps);
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
-  const [fullscreen, setFullscreen] = React.useState(false);
   const [disabled, setDisabled] = React.useState<boolean>();
+  const [fullscreen, setFullscreen] = React.useState(false);
+  const wasFullscreen = React.useRef<boolean>(false);
 
   useLayoutEffect(() => {
     setDisabled(
@@ -82,16 +83,12 @@ export function FullscreenContextProvider({ fullscreen: fullscreenProps, childre
     }
   }, [getFullscreenElement]);
 
-  const fullscreenChangeListener = React.useCallback(() => {
-    if (getFullscreenElement() === containerRef.current) {
-      setFullscreen(true);
-    } else {
-      setFullscreen(false);
-    }
-  }, [getFullscreenElement]);
-
   React.useEffect(() => {
     const events = ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"];
+
+    const fullscreenChangeListener = () => {
+      setFullscreen(getFullscreenElement() === containerRef.current);
+    };
 
     events.forEach((event) => {
       document.addEventListener(event, fullscreenChangeListener);
@@ -102,7 +99,21 @@ export function FullscreenContextProvider({ fullscreen: fullscreenProps, childre
         document.removeEventListener(event, fullscreenChangeListener);
       });
     };
-  }, [fullscreenChangeListener]);
+  }, [getFullscreenElement]);
+
+  const onEnterFullscreen = useEventCallback(() => on.enterFullscreen?.());
+
+  const onExitFullscreen = useEventCallback(() => on.exitFullscreen?.());
+
+  React.useEffect(() => {
+    if (fullscreen) {
+      wasFullscreen.current = true;
+    }
+
+    if (wasFullscreen.current) {
+      (fullscreen ? onEnterFullscreen : onExitFullscreen)();
+    }
+  }, [fullscreen, onEnterFullscreen, onExitFullscreen]);
 
   const handleAutoFullscreen = useEventCallback(() => (auto ? enter : null)?.());
 

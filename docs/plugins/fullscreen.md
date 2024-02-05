@@ -47,6 +47,22 @@ The plugin adds the following `Lightbox` properties.
         </ul>
       </td>
     </tr>
+    <tr>
+      <td>on</td>
+      <td>
+        &#123;<br />
+        &nbsp;&nbsp;enterFullscreen?: () => void;<br />
+        &nbsp;&nbsp;exitFullscreen?: () => void;<br />
+        &#125;
+      </td>
+      <td>
+        <p>Lifecycle callbacks.</p>
+        <ul>
+          <li>`enterFullscreen` - a callback called when the lightbox enters fullscreen mode</li>
+          <li>`exitFullscreen` - a callback called when the lightbox exits fullscreen mode</li>
+        </ul>
+      </td>
+    </tr>
   </tbody>
 </table>
 
