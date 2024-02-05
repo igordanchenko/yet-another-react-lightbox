@@ -17,7 +17,7 @@ body:
   - type: textarea
     attributes:
       label: How to reproduce
-      description: If applicable, add links or code snippets demonstrating the issue.
+      description: If applicable, add links or code snippets demonstrating the issue or provide a sandbox by forking the following [sandbox template](https://stackblitz.com/edit/yet-another-react-lightbox-sandbox?file=src%2FApp.tsx&description=yet-another-react-lightbox%20sandbox).
     validations:
       required: true
   - type: textarea
