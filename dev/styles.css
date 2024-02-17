@@ -3,13 +3,8 @@
 }
 
 html {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -19,17 +14,18 @@ body {
   padding: 0;
 }
 
-body,
 #root {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-}
-
-#root {
   justify-content: center;
   align-items: center;
-  text-align: center;
+  min-height: 100vh;
+}
+
+@supports (min-height: 100svh) {
+  #root {
+    min-height: 100svh;
+  }
 }
 
 .button {
