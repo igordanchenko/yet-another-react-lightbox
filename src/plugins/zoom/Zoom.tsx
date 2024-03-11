@@ -8,16 +8,20 @@ import { ZoomWrapper } from "./ZoomWrapper.js";
 
 /** Zoom plugin */
 export const Zoom: Plugin = ({ augment, addModule }) => {
-  augment(({ toolbar, render, zoom, ...restProps }) => ({
-    zoom: resolveZoomProps(zoom),
-    toolbar: addToolbarButton(toolbar, PLUGIN_ZOOM, <ZoomToolbarControl />),
-    render: {
-      ...render,
-      slide: (props) =>
-        isImageSlide(props.slide) ? <ZoomWrapper render={render} {...props} /> : render.slide?.(props),
-    },
-    ...restProps,
-  }));
+  augment(({ zoom: zoomProps, toolbar, render, controller, ...restProps }) => {
+    const zoom = resolveZoomProps(zoomProps);
+    return {
+      zoom,
+      toolbar: addToolbarButton(toolbar, PLUGIN_ZOOM, <ZoomToolbarControl />),
+      render: {
+        ...render,
+        slide: (props) =>
+          isImageSlide(props.slide) ? <ZoomWrapper render={render} {...props} /> : render.slide?.(props),
+      },
+      controller: { ...controller, preventDefaultWheelY: zoom.scrollToZoom },
+      ...restProps,
+    };
+  });
 
   addModule(createModule(PLUGIN_ZOOM, ZoomContextProvider));
 };

@@ -34,9 +34,9 @@ import {
 } from "../../hooks/index.js";
 import { useEvents, useLightboxDispatch, useLightboxState } from "../../contexts/index.js";
 import { SwipeState } from "./SwipeState.js";
-import { usePointerSwipe } from "./usePointerSwipe.js";
-import { usePreventSwipeNavigation } from "./usePreventSwipeNavigation.js";
 import { useWheelSwipe } from "./useWheelSwipe.js";
+import { usePointerSwipe } from "./usePointerSwipe.js";
+import { usePreventWheelDefaults } from "./usePreventWheelDefaults.js";
 
 const cssContainerPrefix = makeComposePrefix("container");
 
@@ -57,6 +57,7 @@ export const useController = makeUseContext("useController", "ControllerContext"
 
 export function Controller({ children, ...props }: ComponentProps) {
   const { carousel, animation, controller, on, styles, render } = props;
+  const { closeOnPullUp, closeOnPullDown, preventDefaultWheelX, preventDefaultWheelY } = controller;
 
   const [toolbarWidth, setToolbarWidth] = React.useState<number>();
 
@@ -76,7 +77,10 @@ export function Controller({ children, ...props }: ComponentProps) {
   const cleanupPullOffset = useDelay();
 
   const { containerRef, setContainerRef, containerRect } = useContainerRect<HTMLDivElement>();
-  const handleContainerRef = useForkRef(usePreventSwipeNavigation(), setContainerRef);
+  const handleContainerRef = useForkRef(
+    usePreventWheelDefaults({ preventDefaultWheelX, preventDefaultWheelY }),
+    setContainerRef,
+  );
 
   const carouselRef = React.useRef<HTMLDivElement | null>(null);
   const setCarouselRef = useForkRef(carouselRef, undefined);
@@ -106,8 +110,6 @@ export function Controller({ children, ...props }: ComponentProps) {
 
     containerRef.current?.style.setProperty(cssVar("swipe_offset"), `${Math.round(offset)}px`);
   };
-
-  const { closeOnPullUp, closeOnPullDown } = controller;
 
   const setPullOffset = (offset: number) => {
     pullOffset.current = offset;
