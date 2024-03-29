@@ -27,6 +27,7 @@ export function Inline({ augment, replace, remove }: PluginProps) {
         ...restToolbar,
       },
       inline: { style: { width: "100%", height: "100%" }, className },
+      // TODO v4: implement `touch-action` similar to `overscroll-behavior`
       controller: { focus: false, aria: true, touchAction: "pan-y", ...restController },
       className,
       ...restProps,

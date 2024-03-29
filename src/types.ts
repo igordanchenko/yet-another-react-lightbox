@@ -213,7 +213,8 @@ export interface ControllerSettings {
   // TODO v4: remove
   /** @deprecated for internal use only */
   focus: boolean;
-  /** controller `touch-action` */
+  // TODO v4: remove
+  /** @deprecated for internal use only */
   touchAction: "none" | "pan-y";
   /** if `true`, set ARIA attributes on the controller div */
   aria: boolean;
