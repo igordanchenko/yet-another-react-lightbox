@@ -11,50 +11,66 @@ import {
   ToolbarSettings,
 } from "./types.js";
 
-export const clsx = (...classes: (string | boolean | undefined)[]) =>
-  [...classes].filter((cls) => Boolean(cls)).join(" ");
-
 const cssPrefix = "yarl__";
 
-export const cssClass = (name: string) => `${cssPrefix}${name}`;
+export function clsx(...classes: (string | boolean | undefined)[]) {
+  return [...classes].filter(Boolean).join(" ");
+}
 
-export const cssVar = (name: string) => `--${cssPrefix}${name}`;
+export function cssClass(name: string) {
+  return `${cssPrefix}${name}`;
+}
 
-export const composePrefix = (base: string, prefix?: string) => `${base}${prefix ? `_${prefix}` : ""}`;
+export function cssVar(name: string) {
+  return `--${cssPrefix}${name}`;
+}
 
-export const makeComposePrefix = (base: string) => (prefix?: string) => composePrefix(base, prefix);
+export function composePrefix(base: string, prefix?: string) {
+  return `${base}${prefix ? `_${prefix}` : ""}`;
+}
 
-export const label = (labels: Labels | undefined, lbl: string) => (labels && labels[lbl] ? labels[lbl] : lbl);
+export function makeComposePrefix(base: string) {
+  return (prefix?: string) => composePrefix(base, prefix);
+}
 
-export const cleanup =
-  (...cleaners: (() => void)[]) =>
-  () => {
+export function label(labels: Labels | undefined, defaultLabel: string) {
+  return labels?.[defaultLabel] ?? defaultLabel;
+}
+
+export function cleanup(...cleaners: (() => void)[]) {
+  return () => {
     cleaners.forEach((cleaner) => {
       cleaner();
     });
   };
+}
 
-export const makeUseContext =
-  <T>(name: string, contextName: string, context: React.Context<T | null>) =>
-  () => {
+export function makeUseContext<T>(name: string, contextName: string, context: React.Context<T | null>) {
+  return () => {
     const ctx = React.useContext(context);
     if (!ctx) {
       throw new Error(`${name} must be used within a ${contextName}.Provider`);
     }
     return ctx;
   };
+}
 
-export const hasWindow = () => typeof window !== "undefined";
+export function hasWindow() {
+  return typeof window !== "undefined";
+}
 
 export function round(value: number, decimals = 0) {
   const factor = 10 ** decimals;
   return Math.round((value + Number.EPSILON) * factor) / factor;
 }
 
-export const isImageSlide = (slide: Slide): slide is SlideImage => slide.type === undefined || slide.type === "image";
+export function isImageSlide(slide: Slide): slide is SlideImage {
+  return slide.type === undefined || slide.type === "image";
+}
 
-export const isImageFitCover = (image: SlideImage, imageFit?: LightboxProps["carousel"]["imageFit"]) =>
-  image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
+export function isImageFitCover(image: SlideImage, imageFit?: LightboxProps["carousel"]["imageFit"]) {
+  return image.imageFit === IMAGE_FIT_COVER || (image.imageFit !== IMAGE_FIT_CONTAIN && imageFit === IMAGE_FIT_COVER);
+}
 
 export function parseInt(value: string | number) {
   return typeof value === "string" ? Number.parseInt(value, 10) : value;
@@ -84,17 +100,25 @@ export function computeSlideRect(containerRect: ContainerRect, padding: LengthOr
   };
 }
 
-export const devicePixelRatio = () => (hasWindow() ? window?.devicePixelRatio : undefined) || 1;
+export function devicePixelRatio() {
+  return (hasWindow() ? window?.devicePixelRatio : undefined) || 1;
+}
 
-export const getSlideIndex = (index: number, slidesCount: number) =>
-  slidesCount > 0 ? ((index % slidesCount) + slidesCount) % slidesCount : 0;
+export function getSlideIndex(index: number, slidesCount: number) {
+  return slidesCount > 0 ? ((index % slidesCount) + slidesCount) % slidesCount : 0;
+}
 
-export const hasSlides = (slides: Slide[]): slides is [Slide, ...Slide[]] => slides.length > 0;
+export function hasSlides(slides: Slide[]): slides is [Slide, ...Slide[]] {
+  return slides.length > 0;
+}
 
-export const getSlide = (slides: [Slide, ...Slide[]], index: number) => slides[getSlideIndex(index, slides.length)];
+export function getSlide(slides: [Slide, ...Slide[]], index: number) {
+  return slides[getSlideIndex(index, slides.length)];
+}
 
-export const getSlideIfPresent = (slides: Slide[], index: number) =>
-  hasSlides(slides) ? getSlide(slides, index) : undefined;
+export function getSlideIfPresent(slides: Slide[], index: number) {
+  return hasSlides(slides) ? getSlide(slides, index) : undefined;
+}
 
 export function addToolbarButton(toolbar: ToolbarSettings, key: string, button: React.ReactNode) {
   if (!button) return toolbar;
