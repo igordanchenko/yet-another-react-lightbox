@@ -37,7 +37,7 @@
     outline: none;
     user-select: none;
     touch-action: globalVar(controller_touch_action, none);
-    overscroll-behavior: globalVar(controller_overscroll-behavior, contain);
+    overscroll-behavior: globalVar(controller_overscroll_behavior, contain);
   }
 
   &_carousel {
