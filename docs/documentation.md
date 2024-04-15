@@ -232,6 +232,14 @@ import "yet-another-react-lightbox/styles.css";
         <ul>
           <li>`disabled` - if `true`, the NoScroll module functionality is disabled</li>
         </ul>
+        <p>
+          Additionally, the NoScroll module adds extra padding to the
+          fixed-positioned elements to avoid visual layout shifts. The primary
+          use case for this feature is a fixed-position page header / appbar.
+          However, if this behavior causes undesired side effects, you can
+          deactivate it for specific elements by marking them with the
+          `yarl__no_scroll_padding` CSS class.
+        </p>
       </td>
     </tr>
     <tr>
