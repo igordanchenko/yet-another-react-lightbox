@@ -30,8 +30,8 @@ function isHorizontal(position: ReturnType<typeof useThumbnailsProps>["position"
   return ["top", "bottom"].includes(position);
 }
 
-function boxSize(thumbnails: ReturnType<typeof useThumbnailsProps>, dimension: number, includeGap?: boolean) {
-  return dimension + 2 * (thumbnails.border + thumbnails.padding) + (includeGap ? thumbnails.gap : 0);
+function boxSize(thumbnails: ReturnType<typeof useThumbnailsProps>, dimension: number) {
+  return dimension + 2 * (thumbnails.border + thumbnails.padding) + thumbnails.gap;
 }
 
 export type ThumbnailsTrackProps = {
@@ -62,13 +62,13 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
     keyframes: isHorizontal(position)
       ? [
           {
-            transform: `translateX(${(isRTL ? -1 : 1) * boxSize(thumbnails, width, true) * offset + snapshot}px)`,
+            transform: `translateX(${(isRTL ? -1 : 1) * boxSize(thumbnails, width) * offset + snapshot}px)`,
           },
           { transform: "translateX(0)" },
         ]
       : [
           {
-            transform: `translateY(${boxSize(thumbnails, height, true) * offset + snapshot}px)`,
+            transform: `translateY(${boxSize(thumbnails, height) * offset + snapshot}px)`,
           },
           { transform: "translateY(0)" },
         ],
@@ -140,11 +140,9 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
       className={clsx(cssClass(cssPrefix("container")), cssClass(CLASS_FLEX_CENTER))}
       style={{
         ...(!visible ? { display: "none" } : null),
-        ...(width !== defaultThumbnailsProps.width
-          ? { [cssVar(cssThumbnailPrefix("width"))]: `${boxSize(thumbnails, width)}px` }
-          : null),
+        ...(width !== defaultThumbnailsProps.width ? { [cssVar(cssThumbnailPrefix("width"))]: `${width}px` } : null),
         ...(height !== defaultThumbnailsProps.height
-          ? { [cssVar(cssThumbnailPrefix("height"))]: `${boxSize(thumbnails, height)}px` }
+          ? { [cssVar(cssThumbnailPrefix("height"))]: `${height}px` }
           : null),
         ...(border !== defaultThumbnailsProps.border
           ? { [cssVar(cssThumbnailPrefix("border"))]: `${border}px` }
