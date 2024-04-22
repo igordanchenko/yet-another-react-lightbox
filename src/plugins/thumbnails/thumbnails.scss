@@ -150,10 +150,6 @@ $thumbnail-focus-box-shadow:
     width: localVar(thumbnail_icon_size, $icon-size);
     height: localVar(thumbnail_icon_size, $icon-size);
   }
-
-  &_contain_image {
-    object-fit: contain;
-  }
 }
 
 @keyframes yarl__thumbnails_thumbnail_fadein {

@@ -2,7 +2,6 @@ import * as React from "react";
 
 import {
   CLASS_FLEX_CENTER,
-  CLASS_FULLSIZE,
   clsx,
   createIcon,
   cssClass,
@@ -16,7 +15,7 @@ import {
   useEventCallback,
   useLightboxProps,
 } from "../../index.js";
-import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
+import { cssThumbnailPrefix } from "./utils.js";
 import { useThumbnailsProps } from "./props.js";
 
 const VideoThumbnailIcon = createIcon(
@@ -37,23 +36,18 @@ function renderThumbnail({ slide, render, rect, imageFit }: RenderThumbnailProps
 
   const thumbnailIconClass = cssClass(cssThumbnailPrefix(ELEMENT_ICON));
 
-  if (!isImageSlide(slide)) {
-    if (slide.type === "video") {
-      return (
-        <>
-          {"poster" in slide && (
-            <img
-              alt=""
-              src={slide.poster}
-              className={clsx(cssClass(CLASS_FULLSIZE), cssClass(cssPrefix("contain_image")))}
-            />
-          )}
-          <VideoThumbnailIcon className={thumbnailIconClass} />
-        </>
-      );
-    }
-  } else {
+  if (isImageSlide(slide)) {
     return <ImageSlide slide={slide} render={render} rect={rect} imageFit={imageFit} />;
+  }
+
+  if (slide.type === "video") {
+    return (
+      <>
+        {slide.poster && <ImageSlide slide={{ src: slide.poster }} render={render} rect={rect} imageFit={imageFit} />}
+
+        <VideoThumbnailIcon className={thumbnailIconClass} />
+      </>
+    );
   }
 
   return <UnknownThumbnailIcon className={thumbnailIconClass} />;
