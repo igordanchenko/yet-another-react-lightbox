@@ -12,14 +12,12 @@ function isVideoSlide(slide: Slide): slide is SlideVideo {
 export function Video({ augment }: PluginProps) {
   augment(({ render: { slide: renderSlide, ...restRender }, video, ...restProps }) => ({
     render: {
-      slide: ({ slide, offset, rect }) => {
-        if (isVideoSlide(slide)) {
-          return (
-            <VideoSlide key={slide.sources?.map((source) => source.src).join(" ")} slide={slide} offset={offset} />
-          );
-        }
-        return renderSlide?.({ slide, offset, rect });
-      },
+      slide: ({ slide, offset, rect }) =>
+        isVideoSlide(slide) ? (
+          <VideoSlide key={slide.sources?.map((source) => source.src).join("|")} slide={slide} offset={offset} />
+        ) : (
+          renderSlide?.({ slide, offset, rect })
+        ),
       ...restRender,
     },
     video: resolveVideoProps(video),

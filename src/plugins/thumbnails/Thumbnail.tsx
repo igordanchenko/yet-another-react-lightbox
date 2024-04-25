@@ -43,7 +43,16 @@ function renderThumbnail({ slide, render, rect, imageFit }: RenderThumbnailProps
   if (slide.type === "video") {
     return (
       <>
-        {slide.poster && <ImageSlide slide={{ src: slide.poster }} render={render} rect={rect} imageFit={imageFit} />}
+        {slide.poster && (
+          <ImageSlide
+            // video slides do not provide a unique key in the `ThumbnailsTrack`
+            key={slide.poster}
+            slide={{ src: slide.poster }}
+            render={render}
+            rect={rect}
+            imageFit={imageFit}
+          />
+        )}
 
         <VideoThumbnailIcon className={thumbnailIconClass} />
       </>

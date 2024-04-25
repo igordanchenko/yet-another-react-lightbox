@@ -54,14 +54,12 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
 
     rendered = isResponsiveImageSlide(slide) ? (
       <ResponsiveImage
-        key={slide.src}
         {...slideProps}
         slide={slide}
         rect={offset === 0 ? { width: rect.width * zoom, height: rect.height * zoom } : rect}
       />
     ) : (
       <ImageSlide
-        key={slide.src}
         onLoad={(img) => setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })}
         {...slideProps}
       />

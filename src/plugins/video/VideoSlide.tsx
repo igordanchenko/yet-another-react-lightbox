@@ -133,9 +133,8 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
                 publish(ACTIVE_SLIDE_COMPLETE);
               }}
             >
-              {sources.map(({ src, type }, index) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <source key={index} src={src} type={type} />
+              {sources.map(({ src, type }) => (
+                <source key={[src, type].join("|")} src={src} type={type} />
               ))}
             </video>
           )}

@@ -120,6 +120,11 @@ export function getSlideIfPresent(slides: Slide[], index: number) {
   return hasSlides(slides) ? getSlide(slides, index) : undefined;
 }
 
+export function getSlideKey(slide: Slide) {
+  // TODO v4: add `key` attribute to GenericSlide
+  return isImageSlide(slide) ? slide.src : undefined;
+}
+
 export function addToolbarButton(toolbar: ToolbarSettings, key: string, button: React.ReactNode) {
   if (!button) return toolbar;
 

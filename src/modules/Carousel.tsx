@@ -8,6 +8,8 @@ import {
   composePrefix,
   cssClass,
   cssVar,
+  getSlide,
+  getSlideKey,
   hasSlides,
   isImageSlide,
   parseLengthPercentage,
@@ -114,35 +116,23 @@ export function Carousel({ carousel }: ComponentProps) {
   const spacingValue = parseLengthPercentage(carousel.spacing);
   const paddingValue = parseLengthPercentage(carousel.padding);
 
-  const items = [];
   const preload = calculatePreload(carousel, slides, 1);
+  const items: ({ key: React.Key } & ({ slide: Slide; offset: number } | { slide?: never; offset?: never }))[] = [];
 
   if (hasSlides(slides)) {
-    for (let i = currentIndex - preload; i < currentIndex; i += 1) {
-      const key = globalIndex + i - currentIndex;
-      items.push(
-        !carousel.finite || i >= 0 ? (
-          <CarouselSlide
-            key={key}
-            slide={slides[(i + preload * slides.length) % slides.length]}
-            offset={i - currentIndex}
-          />
-        ) : (
-          <Placeholder key={key} />
-        ),
-      );
-    }
+    for (let index = currentIndex - preload; index <= currentIndex + preload; index += 1) {
+      const slide = getSlide(slides, index);
+      const key = globalIndex - currentIndex + index;
+      const placeholder = carousel.finite && (index < 0 || index > slides.length - 1);
 
-    items.push(<CarouselSlide key={globalIndex} slide={slides[currentIndex]} offset={0} />);
-
-    for (let i = currentIndex + 1; i <= currentIndex + preload; i += 1) {
-      const key = globalIndex + i - currentIndex;
       items.push(
-        !carousel.finite || i <= slides.length - 1 ? (
-          <CarouselSlide key={key} slide={slides[i % slides.length]} offset={i - currentIndex} />
-        ) : (
-          <Placeholder key={key} />
-        ),
+        !placeholder
+          ? {
+              key: [`${key}`, getSlideKey(slide)].filter(Boolean).join("|"),
+              offset: index - currentIndex,
+              slide,
+            }
+          : { key },
       );
     }
   }
@@ -159,7 +149,9 @@ export function Carousel({ carousel }: ComponentProps) {
         [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
       }}
     >
-      {items}
+      {items.map(({ key, slide, offset }) =>
+        slide ? <CarouselSlide key={key} slide={slide} offset={offset} /> : <Placeholder key={key} />,
+      )}
     </div>
   );
 }
