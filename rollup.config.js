@@ -27,8 +27,8 @@ const config = {
   },
   output: [
     {
-      format: "esm",
       dir: "dist",
+      format: "esm",
       minifyInternalExports: false,
     },
   ],
