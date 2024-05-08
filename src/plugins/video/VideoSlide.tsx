@@ -133,8 +133,8 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
                 publish(ACTIVE_SLIDE_COMPLETE);
               }}
             >
-              {sources.map(({ src, type }) => (
-                <source key={[src, type].join("|")} src={src} type={type} />
+              {sources.map(({ src, type, media }) => (
+                <source key={[src, type, media].filter(Boolean).join("|")} src={src} type={type} media={media} />
               ))}
             </video>
           )}

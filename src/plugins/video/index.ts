@@ -1,4 +1,3 @@
-import { GenericSlide } from "../../index.js";
 import { Video } from "./Video.js";
 
 declare module "../../types.js" {
@@ -44,6 +43,8 @@ declare module "../../types.js" {
       src: string;
       /** video source type (e.g., `video/mp4`) */
       type: string;
+      /** media query for the resource's intended media (e.g., `(min-width: 800px)`) */
+      media?: string;
     }[];
   }
 

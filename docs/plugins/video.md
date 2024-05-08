@@ -26,13 +26,21 @@ HTML element.
         &#123;<br />
         &nbsp;&nbsp;src: string;<br />
         &nbsp;&nbsp;type: string;<br />
+        &nbsp;&nbsp;media?: string;<br />
         &#125;[]
       </td>
       <td>
         <p>an array of video files</p>
         <ul>
           <li>`src` - video source URL</li>
-          <li>`type` - video source type (e.g., <span class="font-mono">video/mp4</span>)</li>
+          <li>
+            `type` - video source type 
+            (e.g., <span class="font-mono">video/mp4</span>)
+          </li>
+          <li>
+            `media` - media query for the resource's intended media
+            (e.g., <span class="font-mono">(min-width: 800px)</span>)
+          </li>
         </ul>
       </td>
     </tr>
