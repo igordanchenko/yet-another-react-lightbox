@@ -37,14 +37,15 @@ export function FullscreenContextProvider({ fullscreen: fullscreenProps, on, chi
     );
   }, []);
 
-  const getFullscreenElement = React.useCallback(
-    () =>
-      document.fullscreenElement ??
-      document.webkitFullscreenElement ??
-      document.mozFullScreenElement ??
-      document.msFullscreenElement,
-    [],
-  );
+  const getFullscreenElement = React.useCallback(() => {
+    const fullscreenElement =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
+
+    return fullscreenElement?.shadowRoot?.fullscreenElement || fullscreenElement;
+  }, []);
 
   const enter = React.useCallback(() => {
     const container = containerRef.current;
