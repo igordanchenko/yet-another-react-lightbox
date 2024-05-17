@@ -7,6 +7,7 @@ import { createModule } from "../config.js";
 import { clsx, composePrefix, cssClass, cssVar } from "../utils.js";
 import { useEventCallback, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
+import { LightboxRoot } from "../components/index.js";
 import { ACTION_CLOSE, CLASS_NO_SCROLL_PADDING, MODULE_PORTAL } from "../consts.js";
 
 function cssPrefix(value?: string) {
@@ -110,11 +111,10 @@ export function Portal({ children, animation, styles, className, on, portal, clo
 
   return mounted
     ? createPortal(
-        <div
+        <LightboxRoot
           ref={handleRef}
           className={clsx(
             className,
-            cssClass("root"),
             cssClass(cssPrefix()),
             cssClass(CLASS_NO_SCROLL_PADDING),
             visible && cssClass(cssPrefix("open")),
@@ -137,7 +137,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
           }}
         >
           {children}
-        </div>,
+        </LightboxRoot>,
         portal.root || document.body,
       )
     : null;
