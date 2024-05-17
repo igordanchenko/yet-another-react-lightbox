@@ -12,6 +12,7 @@ import {
   makeComposePrefix,
   RenderThumbnailProps,
   Slide,
+  useDocumentContext,
   useEventCallback,
   useLightboxProps,
 } from "../../index.js";
@@ -88,16 +89,17 @@ export type ThumbnailProps = {
 export function Thumbnail({ slide, onClick, active, fadeIn, fadeOut, placeholder, onLoseFocus }: ThumbnailProps) {
   const ref = React.useRef<HTMLButtonElement>(null);
   const { render, styles } = useLightboxProps();
+  const { getOwnerDocument } = useDocumentContext();
   const { width, height, imageFit } = useThumbnailsProps();
   const rect = { width, height };
 
   const onLoseFocusCallback = useEventCallback(onLoseFocus);
 
   React.useEffect(() => {
-    if (fadeOut && document.activeElement === ref.current) {
+    if (fadeOut && getOwnerDocument().activeElement === ref.current) {
       onLoseFocusCallback();
     }
-  }, [fadeOut, onLoseFocusCallback]);
+  }, [fadeOut, onLoseFocusCallback, getOwnerDocument]);
 
   return (
     <button
