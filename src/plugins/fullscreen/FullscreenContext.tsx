@@ -2,12 +2,14 @@ import * as React from "react";
 
 import {
   CLASS_FULLSIZE,
+  cleanup,
   clsx,
   ComponentProps,
   cssClass,
   FullscreenRef,
   makeUseContext,
   PLUGIN_FULLSCREEN,
+  useDocumentContext,
   useEventCallback,
   useLayoutEffect,
 } from "../../index.js";
@@ -25,82 +27,85 @@ export function FullscreenContextProvider({ fullscreen: fullscreenProps, on, chi
   const [fullscreen, setFullscreen] = React.useState(false);
   const wasFullscreen = React.useRef<boolean>(false);
 
+  const { getOwnerDocument } = useDocumentContext();
+
   useLayoutEffect(() => {
+    const ownerDocument = getOwnerDocument();
+
     setDisabled(
       !(
-        document.fullscreenEnabled ??
-        document.webkitFullscreenEnabled ??
-        document.mozFullScreenEnabled ??
-        document.msFullscreenEnabled ??
+        ownerDocument.fullscreenEnabled ??
+        ownerDocument.webkitFullscreenEnabled ??
+        ownerDocument.mozFullScreenEnabled ??
+        ownerDocument.msFullscreenEnabled ??
         false
       ),
     );
-  }, []);
+  }, [getOwnerDocument]);
 
   const getFullscreenElement = React.useCallback(() => {
+    const ownerDocument = getOwnerDocument();
+
     const fullscreenElement =
-      document.fullscreenElement ||
-      document.webkitFullscreenElement ||
-      document.mozFullScreenElement ||
-      document.msFullscreenElement;
+      ownerDocument.fullscreenElement ||
+      ownerDocument.webkitFullscreenElement ||
+      ownerDocument.mozFullScreenElement ||
+      ownerDocument.msFullscreenElement;
 
     return fullscreenElement?.shadowRoot?.fullscreenElement || fullscreenElement;
-  }, []);
+  }, [getOwnerDocument]);
 
   const enter = React.useCallback(() => {
-    const container = containerRef.current;
-    if (container) {
-      try {
-        if (container.requestFullscreen) {
-          container.requestFullscreen().catch(() => {});
-        } else if (container.webkitRequestFullscreen) {
-          container.webkitRequestFullscreen();
-        } else if (container.mozRequestFullScreen) {
-          container.mozRequestFullScreen();
-        } else if (container.msRequestFullscreen) {
-          container.msRequestFullscreen();
-        }
-      } catch (err) {
-        //
+    const container = containerRef.current!;
+
+    try {
+      if (container.requestFullscreen) {
+        container.requestFullscreen().catch(() => {});
+      } else if (container.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen();
+      } else if (container.mozRequestFullScreen) {
+        container.mozRequestFullScreen();
+      } else if (container.msRequestFullscreen) {
+        container.msRequestFullscreen();
       }
+    } catch (err) {
+      //
     }
   }, []);
 
   const exit = React.useCallback(() => {
-    if (getFullscreenElement()) {
-      try {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().catch(() => {});
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      } catch (err) {
-        //
+    if (!getFullscreenElement()) return;
+
+    const ownerDocument = getOwnerDocument();
+    try {
+      if (ownerDocument.exitFullscreen) {
+        ownerDocument.exitFullscreen().catch(() => {});
+      } else if (ownerDocument.webkitExitFullscreen) {
+        ownerDocument.webkitExitFullscreen();
+      } else if (ownerDocument.mozCancelFullScreen) {
+        ownerDocument.mozCancelFullScreen();
+      } else if (ownerDocument.msExitFullscreen) {
+        ownerDocument.msExitFullscreen();
       }
+    } catch (err) {
+      //
     }
-  }, [getFullscreenElement]);
+  }, [getFullscreenElement, getOwnerDocument]);
 
   React.useEffect(() => {
-    const events = ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"];
+    const ownerDocument = getOwnerDocument();
 
-    const fullscreenChangeListener = () => {
+    const listener = () => {
       setFullscreen(getFullscreenElement() === containerRef.current);
     };
 
-    events.forEach((event) => {
-      document.addEventListener(event, fullscreenChangeListener);
-    });
-
-    return () => {
-      events.forEach((event) => {
-        document.removeEventListener(event, fullscreenChangeListener);
-      });
-    };
-  }, [getFullscreenElement]);
+    return cleanup(
+      ...["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"].map((event) => {
+        ownerDocument.addEventListener(event, listener);
+        return () => ownerDocument.removeEventListener(event, listener);
+      }),
+    );
+  }, [getFullscreenElement, getOwnerDocument]);
 
   const onEnterFullscreen = useEventCallback(() => on.enterFullscreen?.());
 
@@ -116,22 +121,14 @@ export function FullscreenContextProvider({ fullscreen: fullscreenProps, on, chi
     }
   }, [fullscreen, onEnterFullscreen, onExitFullscreen]);
 
-  const handleAutoFullscreen = useEventCallback(() => (auto ? enter : null)?.());
+  const handleAutoFullscreen = useEventCallback(() => {
+    (auto ? enter : null)?.();
+    return exit;
+  });
 
-  React.useEffect(() => {
-    handleAutoFullscreen();
-    return () => exit();
-  }, [handleAutoFullscreen, exit]);
+  React.useEffect(handleAutoFullscreen, [handleAutoFullscreen]);
 
-  const context = React.useMemo(
-    () => ({
-      fullscreen,
-      disabled,
-      enter,
-      exit,
-    }),
-    [fullscreen, disabled, enter, exit],
-  );
+  const context = React.useMemo(() => ({ fullscreen, disabled, enter, exit }), [fullscreen, disabled, enter, exit]);
 
   React.useImperativeHandle(ref, () => context, [context]);
 
