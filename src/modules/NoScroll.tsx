@@ -3,7 +3,8 @@ import * as React from "react";
 import { ComponentProps } from "../types.js";
 import { createModule } from "../config.js";
 import { cssClass, parseInt } from "../utils.js";
-import { useLayoutEffect, useRTL } from "../hooks/index.js";
+import { useRTL } from "../hooks/index.js";
+import { useDocumentContext } from "../contexts/index.js";
 import { CLASS_NO_SCROLL, CLASS_NO_SCROLL_PADDING, MODULE_NO_SCROLL } from "../consts.js";
 
 const noScroll = cssClass(CLASS_NO_SCROLL);
@@ -32,15 +33,17 @@ function padScrollbar(element: HTMLElement, padding: number, rtl: boolean) {
 
 export function NoScroll({ noScroll: { disabled }, children }: ComponentProps) {
   const rtl = useRTL();
+  const { getOwnerDocument, getOwnerWindow } = useDocumentContext();
 
-  useLayoutEffect(() => {
+  React.useEffect(() => {
     if (disabled) return () => {};
 
     const cleanup: (() => void)[] = [];
 
-    const { body, documentElement } = document;
+    const ownerWindow = getOwnerWindow();
+    const { body, documentElement } = getOwnerDocument();
 
-    const scrollbar = Math.round(window.innerWidth - documentElement.clientWidth);
+    const scrollbar = Math.round(ownerWindow.innerWidth - documentElement.clientWidth);
     if (scrollbar > 0) {
       cleanup.push(padScrollbar(body, scrollbar, rtl));
 
@@ -49,7 +52,7 @@ export function NoScroll({ noScroll: { disabled }, children }: ComponentProps) {
         const element = elements[i];
         if (
           isHTMLElement(element) &&
-          window.getComputedStyle(element).getPropertyValue("position") === "fixed" &&
+          ownerWindow.getComputedStyle(element).getPropertyValue("position") === "fixed" &&
           !element.classList.contains(noScrollPadding)
         ) {
           cleanup.push(padScrollbar(element, scrollbar, rtl));
@@ -64,7 +67,7 @@ export function NoScroll({ noScroll: { disabled }, children }: ComponentProps) {
 
       cleanup.forEach((clean) => clean());
     };
-  }, [rtl, disabled]);
+  }, [rtl, disabled, getOwnerDocument, getOwnerWindow]);
 
   return <>{children}</>;
 }
