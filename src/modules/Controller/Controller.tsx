@@ -32,7 +32,7 @@ import {
   useRTL,
   useSensors,
 } from "../../hooks/index.js";
-import { useEvents, useLightboxDispatch, useLightboxState } from "../../contexts/index.js";
+import { useDocumentContext, useEvents, useLightboxDispatch, useLightboxState } from "../../contexts/index.js";
 import { SwipeState } from "./SwipeState.js";
 import { useWheelSwipe } from "./useWheelSwipe.js";
 import { usePointerSwipe } from "./usePointerSwipe.js";
@@ -84,6 +84,8 @@ export function Controller({ children, ...props }: ComponentProps) {
 
   const carouselRef = React.useRef<HTMLDivElement | null>(null);
   const setCarouselRef = useForkRef(carouselRef, undefined);
+
+  const { getOwnerDocument } = useDocumentContext();
 
   const isRTL = useRTL();
 
@@ -325,11 +327,12 @@ export function Controller({ children, ...props }: ComponentProps) {
   useWheelSwipe(swipeState, ...swipeParams);
 
   const focusOnMount = useEventCallback(() => {
-    if (controller.focus) {
-      // capture focus only when rendered inside a portal
-      if (document.querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)) {
-        focus();
-      }
+    // capture focus only when rendered inside a portal
+    if (
+      controller.focus &&
+      getOwnerDocument().querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)
+    ) {
+      focus();
     }
   });
 
