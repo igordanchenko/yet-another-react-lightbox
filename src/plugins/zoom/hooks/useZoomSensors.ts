@@ -5,6 +5,7 @@ import {
   EVENT_ON_KEY_DOWN,
   EVENT_ON_WHEEL,
   useController,
+  useDocumentContext,
   useEventCallback,
   useLightboxState,
 } from "../../../index.js";
@@ -29,6 +30,7 @@ export function useZoomSensors(
   const pinchZoomDistance = React.useRef<number>();
 
   const { globalIndex } = useLightboxState();
+  const { getOwnerWindow } = useDocumentContext();
   const { containerRef, subscribeSensors } = useController();
   const {
     keyboardMoveDistance,
@@ -45,13 +47,13 @@ export function useZoomSensors(
     (event: React.MouseEvent) => {
       if (containerRef.current) {
         const { pageX, pageY } = event;
-        const { scrollX, scrollY } = window;
+        const { scrollX, scrollY } = getOwnerWindow();
         const { left, top, width, height } = containerRef.current.getBoundingClientRect();
         return [pageX - left - scrollX - width / 2, pageY - top - scrollY - height / 2];
       }
       return [];
     },
-    [containerRef],
+    [containerRef, getOwnerWindow],
   );
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
