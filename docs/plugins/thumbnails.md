@@ -1,6 +1,9 @@
 # Thumbnails Plugin
 
-Thumbnails plugin adds thumbnails track to the lightbox.
+Thumbnails plugin adds a thumbnail preview to the lightbox. Image and video
+slides are supported out of the box. You can specify a thumbnail image for
+custom slide types or override the default thumbnail by adding a `thumbnail`
+slide prop to your slides.
 
 The plugin comes with an additional CSS stylesheet.
 
@@ -10,7 +13,7 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 ## Documentation
 
-Thumbnails plugin adds the following `Lightbox` properties.
+Thumbnails plugin adds the following `Lightbox` properties:
 
 <table class="docs">
   <tbody>
@@ -71,10 +74,21 @@ Thumbnails plugin adds the following `Lightbox` properties.
   </tbody>
 </table>
 
+and the following `Slide` properties:
+
+<table class="docs">
+  <tbody>
+    <tr>
+      <td>thumbnail</td>
+      <td>string</td>
+      <td>Thumbnail image.</td>
+    </tr>
+  </tbody>
+</table>
+
 ## Thumbnails Ref
 
-The Thumbnails plugin provides a ref object to control the plugin features
-externally.
+The plugin provides a ref object to control its features externally.
 
 ```jsx
 // Thumbnails ref usage example
