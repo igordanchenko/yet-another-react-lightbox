@@ -35,25 +35,22 @@ function renderThumbnail({ slide, render, rect, imageFit }: RenderThumbnailProps
     return customThumbnail;
   }
 
-  const thumbnailIconClass = cssClass(cssThumbnailPrefix(ELEMENT_ICON));
+  const imageSlideProps = { render, rect, imageFit };
+
+  if (slide.thumbnail) {
+    return <ImageSlide slide={{ src: slide.thumbnail }} {...imageSlideProps} />;
+  }
 
   if (isImageSlide(slide)) {
-    return <ImageSlide slide={slide} render={render} rect={rect} imageFit={imageFit} />;
+    return <ImageSlide slide={slide} {...imageSlideProps} />;
   }
+
+  const thumbnailIconClass = cssClass(cssThumbnailPrefix(ELEMENT_ICON));
 
   if (slide.type === "video") {
     return (
       <>
-        {slide.poster && (
-          <ImageSlide
-            // video slides do not provide a unique key in the `ThumbnailsTrack`
-            key={slide.poster}
-            slide={{ src: slide.poster }}
-            render={render}
-            rect={rect}
-            imageFit={imageFit}
-          />
-        )}
+        {slide.poster && <ImageSlide slide={{ src: slide.poster }} {...imageSlideProps} />}
 
         <VideoThumbnailIcon className={thumbnailIconClass} />
       </>

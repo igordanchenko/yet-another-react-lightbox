@@ -1,9 +1,15 @@
 import * as React from "react";
 
-import { Callback, ContainerRect, ImageFit, PLUGIN_THUMBNAILS, RenderFunction, Slide } from "../../index.js";
+import { Callback, PLUGIN_THUMBNAILS, RenderFunction } from "../../index.js";
 import { Thumbnails } from "./Thumbnails.js";
 
 declare module "../../types.js" {
+  // noinspection JSUnusedGlobalSymbols
+  interface GenericSlide {
+    /** thumbnail image */
+    thumbnail?: string;
+  }
+
   interface LightboxProps {
     /** Thumbnails plugin settings */
     thumbnails?: {

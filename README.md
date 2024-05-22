@@ -76,11 +76,12 @@ export default function App() {
 
 ## Recommended Setup
 
-Unlike many other lightbox libraries, Yet Another React Lightbox doesn't have a
-concept of "thumbnail" or "original" (or "full size") images. We use responsive
-images instead and recommend you provide multiple files of different resolutions
-for each image. Yet Another React Lightbox automatically populates `srcset` /
-`sizes` attributes and lets the browser decide which image is more appropriate
+Unlike many other lightbox libraries, Yet Another React Lightbox is not limited
+to just two images per slide ("thumbnail" and "original" / "full size").
+Instead, we favor responsive images with automatic resolution switching and
+recommend you provide multiple files of different resolutions for each image
+slide. Yet Another React Lightbox automatically populates `srcset` / `sizes`
+attributes and lets the user's browser decide which image is more appropriate
 for its viewport size.
 
 ```jsx

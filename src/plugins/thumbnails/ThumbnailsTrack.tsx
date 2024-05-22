@@ -35,6 +35,20 @@ function boxSize(thumbnails: ReturnType<typeof useThumbnailsProps>, dimension: n
   return dimension + 2 * (thumbnails.border + thumbnails.padding) + thumbnails.gap;
 }
 
+function getThumbnailKey(slide?: Slide | null) {
+  const { thumbnail, poster } = (slide as {
+    thumbnail?: unknown;
+    poster?: unknown;
+  }) || { thumbnail: "placeholder" };
+
+  return (
+    (typeof thumbnail === "string" && thumbnail) ||
+    (typeof poster === "string" && poster) ||
+    (slide && getSlideKey(slide)) ||
+    undefined
+  );
+}
+
 export type ThumbnailsTrackProps = {
   visible: boolean;
   containerRef: React.RefObject<HTMLDivElement>;
@@ -105,7 +119,7 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
         (offset < 0 && index < globalIndex - preload) ||
         (offset > 0 && index > globalIndex + preload);
       const slide = !placeholder ? getSlide(slides, index) : null;
-      const key = [`${index}`, slide ? getSlideKey(slide) : "placeholder"].filter(Boolean).join("|");
+      const key = [`${index}`, getThumbnailKey(slide)].filter(Boolean).join("|");
 
       items.push({ key, index, slide });
     }

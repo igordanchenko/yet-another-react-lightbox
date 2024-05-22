@@ -362,7 +362,8 @@ const slides = [
 
 However, the recommended configuration is to provide multiple files of different
 resolution for each slide. [Yet Another React Lightbox](/) uses all supplied
-images to populate `srcset` and `sizes` attributes on the fly.
+images to populate `srcset` and `sizes` attributes on the fly. Please note that
+`width` and `height` attributes are required in this case.
 
 ```jsx
 const slides = [
