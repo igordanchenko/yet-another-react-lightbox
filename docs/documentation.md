@@ -342,7 +342,7 @@ Image slides are supported by default. Additional slide types can be added via
         &nbsp;&nbsp;src: string;<br />
         &nbsp;&nbsp;width: number;<br />
         &nbsp;&nbsp;height: number;<br />
-        &#125;
+        &#125;[]
       </td>
       <td>Alternative images to be included in the `srcset`</td>
     </tr>
