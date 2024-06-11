@@ -1,78 +1,72 @@
-const breakpoints = [4320, 2160, 1080, 640, 384, 256, 128];
+const breakpoints = [3840, 2160, 1080, 640, 384, 256, 128];
 
-const unsplashLink = (id: string, width: number, height: number) =>
-  `https://source.unsplash.com/${id}/${width}x${height}`;
+function assetLink(asset: string, width: number) {
+  return `https://assets.yet-another-react-lightbox.com/_next/image?url=${encodeURIComponent(
+    `/_next/static/media/${asset}`,
+  )}&w=${width}&q=75`;
+}
 
-const unsplashPhotos = [
-  { id: "ts1zXzsD7xc", width: 1080, height: 1620 },
-  { id: "F_r83HEzsXI", width: 1080, height: 1426 },
-  { id: "m82uh_vamhg", width: 1080, height: 1440 },
-  { id: "br-Xdb9KE0Q", width: 1080, height: 716 },
-  { id: "6mze64HRU2Q", width: 1080, height: 1620 },
-  { id: "7ENqG6Gmch0", width: 1080, height: 718 },
-  { id: "KMn4VEeEPR8", width: 1080, height: 718 },
-  { id: "uQDRDqpYJHI", width: 1080, height: 1620 },
-  { id: "AD6rn3vqG7o", width: 1080, height: 1620 },
-  { id: "SYx3UCHZJlo", width: 1080, height: 720 },
-  { id: "qH-JPcFXUTY", width: 1080, height: 1620 },
-  { id: "NLUkAA-nDdE", width: 1080, height: 1441 },
-  { id: "55OH6wnJqXo", width: 1080, height: 1587 },
-  { id: "CSs8aiN_LkI", width: 1080, height: 1626 },
-  { id: "dZ4Ylj91F2M", width: 1080, height: 1350 },
-  { id: "35muyqODIHA", width: 1080, height: 1620 },
-  { id: "xarhNpLSHTk", width: 1080, height: 720 },
-  { id: "oR0uERTVyD0", width: 1080, height: 1922 },
-  { id: "h0AnGGgseio", width: 1080, height: 1623 },
-  { id: "ImHttRUM2jE", width: 1080, height: 1613 },
-  { id: "TkGZFU2t9gc", width: 1080, height: 720 },
-  { id: "P93ijX1URuU", width: 1080, height: 1441 },
-  { id: "MGKGuMP9nLY", width: 1080, height: 1350 },
-  { id: "1VYdx37vOGQ", width: 1080, height: 720 },
-  { id: "9kY6iayVGIk", width: 1080, height: 1620 },
-  { id: "7zT-vbOFoSM", width: 1080, height: 1309 },
-  { id: "K8e4DtETWpg", width: 1080, height: 718 },
-  { id: "HRVpJIkZP4o", width: 1080, height: 1923 },
-  { id: "qY_yTu7YBT4", width: 1080, height: 639 },
-  { id: "Siuwr3uCir0", width: 1080, height: 1440 },
-  { id: "alfhBV8JxlE", width: 1080, height: 1620 },
-  { id: "6_pFPo2YM9c", width: 1080, height: 1440 },
-  { id: "exfO5IC0etk", width: 1080, height: 1350 },
-  { id: "CY3wdG4eRoA", width: 1080, height: 1920 },
-  { id: "4-Dq3Gyozk8", width: 1080, height: 1440 },
-  { id: "yt1-v0TrOi8", width: 1080, height: 810 },
-  { id: "nRZoLSr0mEE", width: 1080, height: 864 },
-  { id: "5iYR93akU48", width: 1080, height: 720 },
-  { id: "yRc9FiM1Zdk", width: 1080, height: 1619 },
-  { id: "HXqpJnLyHzg", width: 1080, height: 1620 },
-  { id: "3bAblStd-IY", width: 1080, height: 607 },
-  { id: "a6ux9NBPJac", width: 1080, height: 1350 },
-  { id: "8qEuawM_txg", width: 1080, height: 1440 },
-  { id: "p0Fvb9MvLAY", width: 1080, height: 1350 },
-  { id: "72IuuwilrY8", width: 1080, height: 1350 },
-  { id: "Q3Qdb3ni-zw", width: 1080, height: 1620 },
-  { id: "AAFH_AADpRg", width: 1080, height: 2206 },
-  { id: "6JU5C73KQ5Q", width: 1080, height: 1620 },
-  { id: "UxZVUDxWppw", width: 1080, height: 720 },
-  { id: "X-Far-t1woI", width: 1080, height: 1620 },
-  { id: "Y1gBZbB_5bA", width: 1080, height: 720 },
-];
-
-const slides = unsplashPhotos.map((photo) => {
-  const width = photo.width * 4;
-  const height = photo.height * 4;
-  return {
-    src: unsplashLink(photo.id, width, height),
-    width,
-    height,
-    srcSet: breakpoints.map((breakpoint) => {
-      const breakpointHeight = Math.round((height / width) * breakpoint);
-      return {
-        src: unsplashLink(photo.id, breakpoint, breakpointHeight),
-        width: breakpoint,
-        height: breakpointHeight,
-      };
-    }),
-  };
-});
+const slides = [
+  { asset: "image01.cd7ee301.jpeg", width: 3840, height: 5760 },
+  { asset: "image02.da10388f.jpeg", width: 3840, height: 5070 },
+  { asset: "image03.a6580cde.jpeg", width: 3840, height: 5120 },
+  { asset: "image04.cb767d7c.jpeg", width: 3840, height: 2546 },
+  { asset: "image05.fdbef001.jpeg", width: 3840, height: 5760 },
+  { asset: "image06.2e6597a1.jpeg", width: 3840, height: 2553 },
+  { asset: "image07.27dd139c.jpeg", width: 3840, height: 2553 },
+  { asset: "image08.f646dad6.jpeg", width: 3840, height: 5760 },
+  { asset: "image09.7f346735.jpeg", width: 3840, height: 5760 },
+  { asset: "image10.41ba7faa.jpeg", width: 3840, height: 2560 },
+  { asset: "image11.d57d7fe1.jpeg", width: 3840, height: 5760 },
+  { asset: "image12.faa02319.jpeg", width: 3840, height: 5124 },
+  { asset: "image13.94108f7d.jpeg", width: 3840, height: 5643 },
+  { asset: "image14.953c7b70.jpeg", width: 3840, height: 5781 },
+  { asset: "image15.5ebdf6ed.jpeg", width: 3840, height: 4800 },
+  { asset: "image16.e81dbeb1.jpeg", width: 3840, height: 5760 },
+  { asset: "image17.6546cfcd.jpeg", width: 3840, height: 2560 },
+  { asset: "image18.31163d01.jpeg", width: 3840, height: 6834 },
+  { asset: "image19.7d89a265.jpeg", width: 3840, height: 5771 },
+  { asset: "image20.05176f17.jpeg", width: 3840, height: 5735 },
+  { asset: "image21.bbfb647d.jpeg", width: 3840, height: 2560 },
+  { asset: "image22.e8ce81ce.jpeg", width: 3840, height: 5124 },
+  { asset: "image23.9dc5eb2c.jpeg", width: 3840, height: 4800 },
+  { asset: "image24.3fd5c729.jpeg", width: 3840, height: 2560 },
+  { asset: "image25.77de342d.jpeg", width: 3840, height: 5760 },
+  { asset: "image26.3ca53ad1.jpeg", width: 3840, height: 4654 },
+  { asset: "image27.c8fde361.jpeg", width: 3840, height: 2553 },
+  { asset: "image28.0ab6b361.jpeg", width: 3840, height: 6837 },
+  { asset: "image29.b3972088.jpeg", width: 3840, height: 2272 },
+  { asset: "image30.785ba204.jpeg", width: 3840, height: 5120 },
+  { asset: "image31.c3217527.jpeg", width: 3840, height: 5760 },
+  { asset: "image32.871ab9c0.jpeg", width: 3840, height: 5120 },
+  { asset: "image33.dcfe554a.jpeg", width: 3840, height: 4800 },
+  { asset: "image34.7486121b.jpeg", width: 3840, height: 6827 },
+  { asset: "image35.e881eb31.jpeg", width: 3840, height: 5120 },
+  { asset: "image36.4e5b5abd.jpeg", width: 3840, height: 2880 },
+  { asset: "image37.2a651052.jpeg", width: 3840, height: 3072 },
+  { asset: "image38.c26c2fea.jpeg", width: 3840, height: 2560 },
+  { asset: "image39.3cda0dc7.jpeg", width: 3840, height: 5756 },
+  { asset: "image40.45760457.jpeg", width: 3840, height: 5760 },
+  { asset: "image41.ff494aee.jpeg", width: 3840, height: 2158 },
+  { asset: "image42.1f591633.jpeg", width: 3840, height: 4800 },
+  { asset: "image43.080b9633.jpeg", width: 3840, height: 5120 },
+  { asset: "image44.1abbe2ca.jpeg", width: 3840, height: 4800 },
+  { asset: "image45.d3221a8a.jpeg", width: 3840, height: 4800 },
+  { asset: "image46.719c4a6b.jpeg", width: 3840, height: 5760 },
+  { asset: "image47.5d5c8ebf.jpeg", width: 3840, height: 7844 },
+  { asset: "image48.c3acad57.jpeg", width: 3840, height: 5760 },
+  { asset: "image49.2da6704b.jpeg", width: 3840, height: 2560 },
+  { asset: "image50.d0a43c01.jpeg", width: 3840, height: 5760 },
+  { asset: "image51.f63b7fea.jpeg", width: 3840, height: 2560 },
+].map(({ asset, width, height }) => ({
+  src: assetLink(asset, width),
+  width,
+  height,
+  srcSet: breakpoints.map((breakpoint) => ({
+    src: assetLink(asset, breakpoint),
+    width: breakpoint,
+    height: Math.round((height / width) * breakpoint),
+  })),
+}));
 
 export default slides;

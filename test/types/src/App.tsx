@@ -28,15 +28,15 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 const slides = [
   {
-    src: "https://source.unsplash.com/ts1zXzsD7xc/1080x1600",
+    src: "https://yet-another-react-lightbox.com/images/image01.jpeg",
     title: "Title",
     description: "Description",
     download: {
-      url: "https://source.unsplash.com/ts1zXzsD7xc/1080x1600",
-      filename: "ts1zXzsD7xc.jpg",
+      url: "https://yet-another-react-lightbox.com/images/image01.jpeg",
+      filename: "image01.jpeg",
     },
     share: {
-      url: "https://source.unsplash.com/ts1zXzsD7xc/1080x1600",
+      url: "https://yet-another-react-lightbox.com/images/image01.jpeg",
       text: "text",
       title: "title",
     },
