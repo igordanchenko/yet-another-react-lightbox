@@ -4,6 +4,7 @@ export const defaultCaptionsProps = {
   descriptionTextAlign: "start" as const,
   descriptionMaxLines: 3,
   showToggle: false,
+  hidden: false,
 };
 
 export const resolveCaptionsProps = (captions: LightboxProps["captions"]) => ({

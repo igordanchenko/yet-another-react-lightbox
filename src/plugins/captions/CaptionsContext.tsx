@@ -8,9 +8,9 @@ export const CaptionsContext = React.createContext<CaptionsRef | null>(null);
 export const useCaptions = makeUseContext("useCaptions", "CaptionsContext", CaptionsContext);
 
 export function CaptionsContextProvider({ captions, children }: ComponentProps) {
-  const { ref } = resolveCaptionsProps(captions);
+  const { ref, hidden } = resolveCaptionsProps(captions);
 
-  const [visible, setVisible] = React.useState(true);
+  const [visible, setVisible] = React.useState(!hidden);
 
   const context = React.useMemo(
     () => ({

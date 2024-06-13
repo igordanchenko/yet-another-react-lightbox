@@ -20,6 +20,7 @@ Captions plugin adds the following `Lightbox` properties:
       <td>
         &#123;<br />
         &nbsp;&nbsp;ref?: React.ForwardedRef&#8203;&lt;CaptionsRef&gt;;<br />
+        &nbsp;&nbsp;hidden?: boolean;<br />
         &nbsp;&nbsp;showToggle?: boolean;<br />
         &nbsp;&nbsp;descriptionTextAlign?: "start" | "end" | "center";<br />
         &nbsp;&nbsp;descriptionMaxLines?: number;<br />
@@ -29,6 +30,7 @@ Captions plugin adds the following `Lightbox` properties:
         <p>Captions plugin settings:</p>
         <ul>
           <li>`ref` - Captions plugin ref. See [Captions Ref](#CaptionsRef) for details.</li>
+          <li>`hidden` - if `true`, captions are hidden when the lightbox opens</li>
           <li>`showToggle` - if `true`, show the Captions Toggle button in the toolbar</li>
           <li>`descriptionTextAlign` - description text alignment</li>
           <li>`descriptionMaxLines` - maximum number of lines to display in the description section</li>

@@ -64,7 +64,13 @@ export default function App() {
         close={() => setOpen(false)}
         slides={slides}
         plugins={[Captions, Counter, Download, Fullscreen, Share, Slideshow, Thumbnails, Video, Zoom]}
-        captions={{ ref: captionsRef, showToggle: true, descriptionMaxLines: 3, descriptionTextAlign: "start" }}
+        captions={{
+          ref: captionsRef,
+          hidden: true,
+          showToggle: true,
+          descriptionMaxLines: 3,
+          descriptionTextAlign: "start",
+        }}
         counter={{ separator: "of" }}
         download={{
           download: ({ slide, saveAs }) => {

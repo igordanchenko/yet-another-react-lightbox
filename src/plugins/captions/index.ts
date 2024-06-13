@@ -23,6 +23,8 @@ declare module "../../types.js" {
     captions?: {
       /** Captions plugin ref */
       ref?: React.ForwardedRef<CaptionsRef>;
+      /** if `true`, captions are hidden when the lightbox opens */
+      hidden?: boolean;
       /** if `true`, show Captions Toggle button in the toolbar */
       showToggle?: boolean;
       /** description text alignment */
