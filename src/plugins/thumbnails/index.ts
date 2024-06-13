@@ -37,6 +37,8 @@ declare module "../../types.js" {
       imageFit?: ImageFit;
       /** if `true`, show the vignette effect on the edges of the thumbnails track */
       vignette?: boolean;
+      /** if `true`, thumbnails are hidden when the lightbox opens */
+      hidden?: boolean;
       /** if `true`, show the Toggle Thumbnails button in the toolbar */
       showToggle?: boolean;
     };

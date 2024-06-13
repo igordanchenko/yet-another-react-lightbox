@@ -33,6 +33,7 @@ Thumbnails plugin adds the following `Lightbox` properties:
         &nbsp;&nbsp;gap?: number;<br />
         &nbsp;&nbsp;imageFit?: "contain" | "cover";<br />
         &nbsp;&nbsp;vignette?: boolean;<br />
+        &nbsp;&nbsp;hidden?: boolean;<br />
         &nbsp;&nbsp;showToggle?: boolean;<br />
         &#125;
       </td>
@@ -51,6 +52,7 @@ Thumbnails plugin adds the following `Lightbox` properties:
           <li>`gap` - gap between thumbnails</li>
           <li>`imageFit` - `object-fit` setting</li>
           <li>`vignette` - vignette effect on the edges of the thumbnails track</li>
+          <li>`hidden` - if `true`, thumbnails are hidden when the lightbox opens</li>
           <li>`showToggle` - if `true`, show the Toggle Thumbnails button in the toolbar</li>
         </ul>
         <p>

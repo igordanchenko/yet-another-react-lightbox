@@ -97,6 +97,7 @@ export default function App() {
           gap: 16,
           imageFit: "contain",
           vignette: true,
+          hidden: true,
           showToggle: true,
         }}
         video={{

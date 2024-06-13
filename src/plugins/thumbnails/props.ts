@@ -11,6 +11,8 @@ export const defaultThumbnailsProps = {
   gap: 16,
   imageFit: "contain" as const,
   vignette: true,
+  hidden: false,
+  showToggle: false,
 };
 
 export const resolveThumbnailsProps = (thumbnails: LightboxProps["thumbnails"]) => ({

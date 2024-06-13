@@ -11,10 +11,10 @@ export const useThumbnails = makeUseContext("useThumbnails", "ThumbnailsContext"
 
 /** Thumbnails plugin component */
 export function ThumbnailsContextProvider({ children, ...props }: ComponentProps) {
-  const [visible, setVisible] = React.useState(true);
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const { ref, position, hidden } = resolveThumbnailsProps(props.thumbnails);
 
-  const { ref, position } = resolveThumbnailsProps(props.thumbnails);
+  const [visible, setVisible] = React.useState(!hidden);
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   const context = React.useMemo(
     () => ({
