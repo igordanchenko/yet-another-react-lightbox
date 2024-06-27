@@ -25,6 +25,7 @@ export type ImageSlideProps = Partial<Pick<CarouselSettings, "imageFit" | "image
   rect?: ContainerRect;
   onClick?: () => void;
   onLoad?: (image: HTMLImageElement) => void;
+  onError?: () => void;
   style?: React.CSSProperties;
 };
 
@@ -37,6 +38,7 @@ export function ImageSlide({
   imageProps,
   onClick,
   onLoad,
+  onError,
   style,
 }: ImageSlideProps) {
   const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
@@ -87,9 +89,11 @@ export function ImageSlide({
     [handleLoading],
   );
 
-  const onError = React.useCallback(() => {
+  const handleOnError = useEventCallback(() => {
     setStatus(SLIDE_STATUS_ERROR);
-  }, []);
+
+    onError?.();
+  });
 
   const cover = isImageFitCover(image, imageFit);
 
@@ -135,7 +139,7 @@ export function ImageSlide({
       <img
         ref={setImageRef}
         onLoad={handleOnLoad}
-        onError={onError}
+        onError={handleOnError}
         onClick={onClick}
         draggable={false}
         className={clsx(
