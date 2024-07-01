@@ -23,6 +23,7 @@ export function isResponsiveImageSlide(slide: SlideImage): slide is ResponsiveIm
 export type ResponsiveImageProps = Omit<ImageSlideProps, "slide" | "rect"> &
   Required<Pick<ImageSlideProps, "rect">> & {
     slide: ResponsiveImageSlide;
+    interactive: boolean;
   };
 
 type ResponsiveImageState = {
@@ -58,7 +59,7 @@ function reducer(
 export function ResponsiveImage(props: ResponsiveImageProps) {
   const [{ current, preload }, dispatch] = React.useReducer(reducer, {});
 
-  const { slide: image, rect, imageFit, render } = props;
+  const { slide: image, rect, imageFit, render, interactive } = props;
 
   const srcSet = image.srcSet.sort((a, b) => a.width - b.width);
   const width = image.width ?? srcSet[srcSet.length - 1].width;
@@ -84,7 +85,7 @@ export function ResponsiveImage(props: ResponsiveImageProps) {
 
   const style = {
     // workaround occasional flickering in mobile Safari
-    WebkitTransform: "translateZ(0)",
+    WebkitTransform: !interactive ? "translateZ(0)" : "initial",
   };
 
   if (!cover) {

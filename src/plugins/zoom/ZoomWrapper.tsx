@@ -4,6 +4,7 @@ import {
   CLASS_FLEX_CENTER,
   CLASS_FULLSIZE,
   CLASS_SLIDE_WRAPPER,
+  CLASS_SLIDE_WRAPPER_INTERACTIVE,
   clsx,
   ContainerRect,
   cssClass,
@@ -27,6 +28,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
   const zoomWrapperRef = React.useRef<HTMLDivElement>(null);
 
   const { zoom, maxZoom, offsetX, offsetY, setZoomWrapper } = useZoom();
+  const interactive = zoom > 1;
 
   const { carousel, on } = useLightboxProps();
   const { currentIndex } = useLightboxState();
@@ -56,6 +58,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
       <ResponsiveImage
         {...slideProps}
         slide={slide}
+        interactive={interactive}
         rect={offset === 0 ? { width: rect.width * zoom, height: rect.height * zoom } : rect}
       />
     ) : (
@@ -71,7 +74,12 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
   return (
     <div
       ref={zoomWrapperRef}
-      className={clsx(cssClass(CLASS_FULLSIZE), cssClass(CLASS_FLEX_CENTER), cssClass(CLASS_SLIDE_WRAPPER))}
+      className={clsx(
+        cssClass(CLASS_FULLSIZE),
+        cssClass(CLASS_FLEX_CENTER),
+        cssClass(CLASS_SLIDE_WRAPPER),
+        interactive && cssClass(CLASS_SLIDE_WRAPPER_INTERACTIVE),
+      )}
       style={
         offset === 0 ? { transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)` } : undefined
       }
