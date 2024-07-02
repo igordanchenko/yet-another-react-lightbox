@@ -6,7 +6,7 @@ import { ELEMENT_BUTTON, ELEMENT_ICON } from "../consts.js";
 
 export type IconButtonProps = Omit<
   React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
-  "type" | "aria-label"
+  "type" | "title" | "aria-label"
 > & {
   label: string;
   icon: React.ElementType;
@@ -23,6 +23,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
     <button
       ref={ref}
       type="button"
+      title={translateLabel(labels, label)}
       aria-label={translateLabel(labels, label)}
       className={clsx(cssClass(ELEMENT_BUTTON), className)}
       onClick={onClick}
