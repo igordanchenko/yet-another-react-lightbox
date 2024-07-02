@@ -4,10 +4,7 @@ import { clsx, cssClass, label as translateLabel } from "../utils.js";
 import { useLightboxProps } from "../contexts/index.js";
 import { ELEMENT_BUTTON, ELEMENT_ICON } from "../consts.js";
 
-export type IconButtonProps = Omit<
-  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
-  "type" | "aria-label"
-> & {
+export type IconButtonProps = React.ComponentProps<"button"> & {
   label: string;
   icon: React.ElementType;
   renderIcon?: () => React.ReactNode;
@@ -18,12 +15,14 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
   ref,
 ) {
   const { styles, labels } = useLightboxProps();
+  const buttonLabel = translateLabel(labels, label);
 
   return (
     <button
       ref={ref}
       type="button"
-      aria-label={translateLabel(labels, label)}
+      title={buttonLabel}
+      aria-label={buttonLabel}
       className={clsx(cssClass(ELEMENT_BUTTON), className)}
       onClick={onClick}
       style={{ ...style, ...styles.button }}
