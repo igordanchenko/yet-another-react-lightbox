@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import { Callback, PLUGIN_THUMBNAILS, RenderFunction } from "../../index.js";
+// do not remove the "unused" imports
+import { Callback, ContainerRect, ImageFit, PLUGIN_THUMBNAILS, RenderFunction, Slide } from "../../index.js";
 import { Thumbnails } from "./Thumbnails.js";
 
 declare module "../../types.js" {
