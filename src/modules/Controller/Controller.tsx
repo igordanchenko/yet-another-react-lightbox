@@ -211,7 +211,7 @@ export function Controller({ children, ...props }: ComponentProps) {
   const swipe = useEventCallback(
     (action: { direction?: "prev" | "next"; count?: number; offset?: number; duration?: number }) => {
       const currentSwipeOffset = action.offset || 0;
-      const swipeDuration = !currentSwipeOffset ? animation.navigation ?? animation.swipe : animation.swipe;
+      const swipeDuration = !currentSwipeOffset ? (animation.navigation ?? animation.swipe) : animation.swipe;
       const swipeEasing =
         !currentSwipeOffset && !isAnimationPlaying() ? animation.easing.navigation : animation.easing.swipe;
 

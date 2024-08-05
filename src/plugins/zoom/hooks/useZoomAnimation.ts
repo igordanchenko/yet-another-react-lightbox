@@ -26,7 +26,7 @@ export function useZoomAnimation(
             { transform: `scale(${zoom}) translateX(${offsetX}px) translateY(${offsetY}px)` },
           ],
           {
-            duration: !reduceMotion ? zoomAnimationDuration ?? 500 : 0,
+            duration: !reduceMotion ? (zoomAnimationDuration ?? 500) : 0,
             easing: zoomAnimation.current ? "ease-out" : "ease-in-out",
           },
         );
