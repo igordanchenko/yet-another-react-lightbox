@@ -96,6 +96,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
         offset === 0 && cssClass(cssSlidePrefix("current")),
         cssClass(CLASS_FLEX_CENTER),
       )}
+      aria-hidden={offset !== 0}
       onClick={handleBackdropClick}
       style={style}
     >
