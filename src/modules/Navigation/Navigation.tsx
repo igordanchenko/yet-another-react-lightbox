@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ComponentProps, RenderFunction } from "../../types.js";
+import { ComponentProps, Label, RenderFunction } from "../../types.js";
 import { createModule } from "../../config.js";
 import { useLoseFocus } from "../../hooks/index.js";
 import { cssClass } from "../../utils.js";
@@ -11,7 +11,7 @@ import { useNavigationState } from "./useNavigationState.js";
 import { useKeyboardNavigation } from "./useKeyboardNavigation.js";
 
 export type NavigationButtonProps = {
-  label: string;
+  label: Label;
   icon: React.ElementType;
   renderIcon?: RenderFunction;
   action: "prev" | "next";

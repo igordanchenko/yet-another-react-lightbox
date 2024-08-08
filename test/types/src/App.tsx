@@ -230,6 +230,25 @@ export default function App() {
           thumbnailsTrack: { borderColor: "#eee" },
           thumbnailsContainer: { borderColor: "#eee" },
         }}
+        labels={{
+          Previous: "Custom Previous",
+          Next: "Custom Next",
+          Close: "Custom Close",
+          Play: "Custom Play",
+          Pause: "Custom Pause",
+          Share: "Custom Share",
+          Download: "Custom Download",
+          "Zoom in": "Custom Zoom In",
+          "Zoom out": "Custom Zoom Out",
+          "Enter Fullscreen": "Custom Enter Fullscreen",
+          "Exit Fullscreen": "Custom Exit Fullscreen",
+          "Show captions": "Custom Show Captions",
+          "Hide captions": "Custom Hide Captions",
+          "Show thumbnails": "Custom Show thumbnails",
+          "Hide thumbnails": "Custom Hide thumbnails",
+          // @ts-expect-error
+          "non-existent-label": "non-existent-label",
+        }}
       />
 
       <button type="button" onClick={() => setOpen(true)} style={{ display: "block", margin: "20px auto" }}>

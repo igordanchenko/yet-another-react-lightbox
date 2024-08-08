@@ -34,6 +34,10 @@ declare module "../../types.js" {
     iconShare?: RenderFunction;
   }
 
+  interface Labels {
+    Share?: string;
+  }
+
   // noinspection JSUnusedGlobalSymbols
   interface Callbacks {
     /** a callback called on slide share */

@@ -24,6 +24,12 @@ declare module "../../types.js" {
     iconExitFullscreen?: RenderFunction;
   }
 
+  interface Labels {
+    // TODO v4: change Fullscreen to lowercase
+    "Enter Fullscreen"?: string;
+    "Exit Fullscreen"?: string;
+  }
+
   // noinspection JSUnusedGlobalSymbols
   interface Callbacks {
     /** a callback called when the lightbox enters fullscreen mode */

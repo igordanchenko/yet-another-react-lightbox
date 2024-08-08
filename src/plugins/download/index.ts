@@ -35,6 +35,10 @@ declare module "../../types.js" {
     iconDownload?: RenderFunction;
   }
 
+  interface Labels {
+    Download?: string;
+  }
+
   // noinspection JSUnusedGlobalSymbols
   interface Callbacks {
     /** a callback called on slide download */

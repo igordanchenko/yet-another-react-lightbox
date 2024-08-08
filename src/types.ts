@@ -30,7 +30,7 @@ export interface LightboxProps {
   slides: Slide[];
   /** custom render functions */
   render: Render;
-  /** custom UI labels */
+  /** custom UI labels / translations */
   labels: Labels;
   /** enabled plugins */
   plugins: Plugin[];
@@ -377,10 +377,14 @@ export interface Callbacks {
   exited?: Callback;
 }
 
-/** Custom UI labels */
-export type Labels = {
-  [key: string]: string;
-};
+/** Custom UI labels / translations */
+export interface Labels {
+  Previous?: string;
+  Next?: string;
+  Close?: string;
+}
+
+export type Label = keyof Labels;
 
 /** Toolbar settings */
 export interface ToolbarSettings {

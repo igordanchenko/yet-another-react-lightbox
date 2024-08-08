@@ -45,6 +45,11 @@ declare module "../../types.js" {
     iconZoomOut?: RenderFunction;
   }
 
+  interface Labels {
+    "Zoom in"?: string;
+    "Zoom out"?: string;
+  }
+
   // noinspection JSUnusedGlobalSymbols
   interface RenderSlideProps {
     /** current zoom level */

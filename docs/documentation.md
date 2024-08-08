@@ -89,7 +89,7 @@ import "yet-another-react-lightbox/styles.css";
       <td>labels</td>
       <td>object</td>
       <td>
-        <p>Custom UI labels.</p>
+        <p>Custom UI labels / translations.</p>
         <p>Example: <span class="font-mono">labels=&#123;&#123; Next: "Next slide" &#125;&#125;</span></p>
       </td>
     </tr>

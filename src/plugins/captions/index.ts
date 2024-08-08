@@ -56,6 +56,11 @@ declare module "../../types.js" {
     buttonCaptions?: RenderFunction<CaptionsRef>;
   }
 
+  interface Labels {
+    "Show captions"?: string;
+    "Hide captions"?: string;
+  }
+
   /** Captions plugin ref */
   interface CaptionsRef {
     /** if `true`, captions are visible */

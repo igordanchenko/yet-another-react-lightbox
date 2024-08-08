@@ -3,9 +3,10 @@ import * as React from "react";
 import { clsx, cssClass, label as translateLabel } from "../utils.js";
 import { useLightboxProps } from "../contexts/index.js";
 import { ELEMENT_BUTTON, ELEMENT_ICON } from "../consts.js";
+import { Label } from "../types.js";
 
 export type IconButtonProps = React.ComponentProps<"button"> & {
-  label: string;
+  label: Label;
   icon: React.ElementType;
   renderIcon?: () => React.ReactNode;
 };

@@ -25,6 +25,11 @@ declare module "../../types.js" {
     buttonSlideshow?: RenderFunction<SlideshowRef>;
   }
 
+  interface Labels {
+    Play?: string;
+    Pause?: string;
+  }
+
   // noinspection JSUnusedGlobalSymbols
   interface Callbacks {
     /** a callback called on slideshow playback start */

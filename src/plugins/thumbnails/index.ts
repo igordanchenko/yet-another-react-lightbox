@@ -56,6 +56,11 @@ declare module "../../types.js" {
     buttonThumbnails?: RenderFunction<ThumbnailsRef>;
   }
 
+  interface Labels {
+    "Show thumbnails"?: string;
+    "Hide thumbnails"?: string;
+  }
+
   /** `render.thumbnail` render function props */
   type RenderThumbnailProps = {
     slide: Slide;

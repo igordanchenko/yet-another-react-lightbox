@@ -3,6 +3,7 @@ import { IMAGE_FIT_CONTAIN, IMAGE_FIT_COVER } from "./consts.js";
 import {
   CarouselSettings,
   ContainerRect,
+  Label,
   Labels,
   LengthOrPercentage,
   LightboxProps,
@@ -33,7 +34,7 @@ export function makeComposePrefix(base: string) {
   return (prefix?: string) => composePrefix(base, prefix);
 }
 
-export function label(labels: Labels | undefined, defaultLabel: string) {
+export function label(labels: Labels | undefined, defaultLabel: Label) {
   return labels?.[defaultLabel] ?? defaultLabel;
 }
 
