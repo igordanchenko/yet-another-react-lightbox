@@ -164,9 +164,13 @@
     "build:fixup": "node fixup-dist.js",
     "lint": "eslint .",
     "test": "npm-run-all test:unit test:types",
+    "test:ui": "vitest --ui",
     "test:unit": "vitest run --coverage",
     "test:types": "node test/types",
-    "dev": "vite --config dev/vite.config.ts"
+    "dev": "vite --config dev/vite.config.ts",
+    "dev:build": "vite build --config dev/vite.config.ts",
+    "dev:preview": "vite preview --config dev/vite.config.ts",
+    "ci": "npm-run-all build test lint"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

@@ -32,14 +32,8 @@ jobs:
       - name: Install semantic-release extra plugins
         run: npm install --save-dev @semantic-release/changelog @semantic-release/github
 
-      - name: Build
-        run: npm run build
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Test
-        run: npm run test
+      - name: Build, Test, Lint
+        run: npm run ci
 
       - name: Cleanup
         run: npm pkg delete scripts devDependencies
