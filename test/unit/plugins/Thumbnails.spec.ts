@@ -19,7 +19,7 @@ function queryThumbnails(withImage = true) {
   return screen
     .queryAllByRole("button")
     .filter((el) => !withImage || Boolean(el.querySelector("img")))
-    .filter((el) => el.className.split(" ").includes("yarl__thumbnails_thumbnail"));
+    .filter((el) => el.classList.contains("yarl__thumbnails_thumbnail"));
 }
 
 function clickThumbnail(image: string) {
