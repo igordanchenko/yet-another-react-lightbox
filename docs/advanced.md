@@ -140,14 +140,30 @@ augmentations are applied before the lightbox starts rendering.
 
 For example, you can add a toolbar button using the following augmentation:
 
-```jsx
-import { addToolbarButton } from "yet-another-react-lightbox";
+```tsx
+import { addToolbarButton, IconButton } from "yet-another-react-lightbox";
+
+declare module "yet-another-react-lightbox" {
+  interface Labels {
+    "My button"?: string;
+  }
+}
 
 // ...
 
 function MyPlugin({ augment }) {
   augment(({ toolbar, ...restProps }) => ({
-    toolbar: addToolbarButton(toolbar, "my-button", <MyButton />),
+    toolbar: addToolbarButton(
+      toolbar,
+      "my-button",
+      <IconButton
+        icon={MyIcon}
+        label="My button"
+        onClick={() => {
+          // ...
+        }}
+      />,
+    ),
     ...restProps,
   }));
 }
