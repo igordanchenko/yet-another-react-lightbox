@@ -140,30 +140,14 @@ augmentations are applied before the lightbox starts rendering.
 
 For example, you can add a toolbar button using the following augmentation:
 
-```tsx
-import { addToolbarButton, IconButton } from "yet-another-react-lightbox";
-
-declare module "yet-another-react-lightbox" {
-  interface Labels {
-    "My button"?: string;
-  }
-}
+```jsx
+import { addToolbarButton } from "yet-another-react-lightbox";
 
 // ...
 
 function MyPlugin({ augment }) {
   augment(({ toolbar, ...restProps }) => ({
-    toolbar: addToolbarButton(
-      toolbar,
-      "my-button",
-      <IconButton
-        icon={MyIcon}
-        label="My button"
-        onClick={() => {
-          // ...
-        }}
-      />,
-    ),
+    toolbar: addToolbarButton(toolbar, "my-button", <MyButton />),
     ...restProps,
   }));
 }
@@ -317,7 +301,7 @@ const { containerRect, setContainerRef } = useContainerRect();
 You can create custom toolbar buttons by using the `IconButton` component and
 the `createIcon` helper function.
 
-```jsx
+```tsx
 import {
   Lightbox,
   IconButton,
@@ -325,13 +309,26 @@ import {
   useLightboxState,
 } from "yet-another-react-lightbox";
 
+declare module "yet-another-react-lightbox" {
+  interface Labels {
+    "My button"?: string;
+  }
+}
+
 const MyIcon = createIcon("MyIcon", <path d="..." />);
 
 function MyButton() {
   const { currentSlide } = useLightboxState();
 
   return (
-    <IconButton label="My button" icon={MyIcon} disabled={!currentSlide} />
+    <IconButton
+      label="My button"
+      icon={MyIcon}
+      disabled={!currentSlide}
+      onClic={() => {
+        // ...
+      }}
+    />
   );
 }
 
