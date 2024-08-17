@@ -132,8 +132,12 @@ export function useZoomSensors(
   const onPointerDown = useEventCallback((event: React.PointerEvent) => {
     const pointers = activePointers.current;
 
-    // ignore clicks outside current slide (zoom icons, navigation buttons, etc.)
-    if (!zoomWrapperRef?.current?.contains(event.target as unknown as Element)) {
+    if (
+      // ignore right button clicks (e.g., context menu)
+      (event.pointerType === "mouse" && event.buttons > 1) ||
+      // ignore clicks outside current slide (zoom icons, navigation buttons, etc.)
+      !zoomWrapperRef?.current?.contains(event.target as unknown as Element)
+    ) {
       return;
     }
 
