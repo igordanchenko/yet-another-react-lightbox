@@ -17,6 +17,10 @@ function distance(pointerA: React.MouseEvent, pointerB: React.MouseEvent) {
   return ((pointerA.clientX - pointerB.clientX) ** 2 + (pointerA.clientY - pointerB.clientY) ** 2) ** 0.5;
 }
 
+function scaleZoom(value: number, delta: number, factor = 100, clamp = 2) {
+  return value * Math.min(1 + Math.abs(delta / factor), clamp) ** Math.sign(delta);
+}
+
 export function useZoomSensors(
   zoom: number,
   maxZoom: number,
@@ -100,7 +104,7 @@ export function useZoomSensors(
       if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
         event.stopPropagation();
 
-        changeZoom(zoom * (1 - event.deltaY / wheelZoomDistanceFactor), true, ...translateCoordinates(event));
+        changeZoom(scaleZoom(zoom, -event.deltaY, wheelZoomDistanceFactor), true, ...translateCoordinates(event));
 
         return;
       }
@@ -182,7 +186,7 @@ export function useZoomSensors(
 
       if (Math.abs(delta) > 0) {
         changeZoom(
-          zoom * (1 + delta / pinchZoomDistanceFactor),
+          scaleZoom(zoom, delta, pinchZoomDistanceFactor),
           true,
           ...pointers
             .map((x) => translateCoordinates(x))
