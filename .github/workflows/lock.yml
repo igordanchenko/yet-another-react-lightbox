@@ -1,0 +1,23 @@
+name: Lock Closed Issues
+
+on:
+  schedule:
+    - cron: "17 9 * * 0"
+
+permissions:
+  issues: write
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+
+    if: github.repository == 'igordanchenko/yet-another-react-lightbox'
+
+    steps:
+      - uses: dessant/lock-threads@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-inactive-days: "90"
+          exclude-issue-created-after: "2022-07-01T00:00:00Z"
+          issue-lock-reason: ""
+          process-only: issues
