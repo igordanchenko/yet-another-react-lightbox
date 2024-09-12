@@ -7,9 +7,15 @@ on:
 
 permissions:
   issues: write
+  discussions: write
+  pull-requests: write
+
+concurrency:
+  group: lock-threads
 
 jobs:
   action:
+    name: Lock
     runs-on: ubuntu-latest
 
     if: github.repository == 'igordanchenko/yet-another-react-lightbox'
@@ -18,7 +24,8 @@ jobs:
       - uses: dessant/lock-threads@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-inactive-days: "90"
-          exclude-issue-created-after: "2022-07-01T00:00:00Z"
+          pr-lock-reason: ""
           issue-lock-reason: ""
-          process-only: issues
+          pr-inactive-days: "90"
+          issue-inactive-days: "90"
+          discussion-inactive-days: "90"
