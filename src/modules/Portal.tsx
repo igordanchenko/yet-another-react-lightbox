@@ -84,7 +84,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
     for (let i = 0; i < elements.length; i += 1) {
       const element = elements[i];
       if (["TEMPLATE", "SCRIPT", "STYLE"].indexOf(element.tagName) === -1 && element !== node) {
-        cleanup.current.push(setAttribute(element, "inert", "true"));
+        cleanup.current.push(setAttribute(element, "inert", ""));
         cleanup.current.push(setAttribute(element, "aria-hidden", "true"));
       }
     }

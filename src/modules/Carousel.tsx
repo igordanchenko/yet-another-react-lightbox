@@ -12,11 +12,12 @@ import {
   getSlideKey,
   hasSlides,
   isImageSlide,
+  makeInertWhen,
   parseLengthPercentage,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
-import { useLightboxProps, useLightboxState } from "../contexts/index.js";
+import { useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
 import { CLASS_FLEX_CENTER, CLASS_SLIDE_WRAPPER, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
@@ -36,7 +37,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   const { currentIndex } = useLightboxState();
-  const { slideRect, close } = useController();
+  const { slideRect, close, focus } = useController();
   const {
     render,
     carousel: { imageFit, imageProps },
@@ -44,6 +45,15 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     controller: { closeOnBackdropClick },
     styles: { slide: style },
   } = useLightboxProps();
+  const { getOwnerDocument } = useDocumentContext();
+
+  const offscreen = offset !== 0;
+
+  React.useEffect(() => {
+    if (offscreen && containerRef.current?.contains(getOwnerDocument().activeElement)) {
+      focus();
+    }
+  }, [offscreen, focus, getOwnerDocument]);
 
   const renderSlide = () => {
     let rendered = render.slide?.({ slide, offset, rect: slideRect });
@@ -57,7 +67,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
           rect={slideRect}
           imageFit={imageFit}
           imageProps={imageProps}
-          onClick={offset === 0 ? () => onClick?.({ index: currentIndex }) : undefined}
+          onClick={!offscreen ? () => onClick?.({ index: currentIndex }) : undefined}
         />
       );
     }
@@ -93,10 +103,10 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
       ref={containerRef}
       className={clsx(
         cssClass(cssSlidePrefix()),
-        offset === 0 && cssClass(cssSlidePrefix("current")),
+        !offscreen && cssClass(cssSlidePrefix("current")),
         cssClass(CLASS_FLEX_CENTER),
       )}
-      aria-hidden={offset !== 0}
+      {...makeInertWhen(offscreen)}
       onClick={handleBackdropClick}
       style={style}
     >
