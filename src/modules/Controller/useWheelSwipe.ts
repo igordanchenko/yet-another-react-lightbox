@@ -20,7 +20,8 @@ export function useWheelSwipe<T extends Element = Element>(
   const intent = React.useRef(0);
   const intentCleanup = React.useRef<number>();
   const resetCleanup = React.useRef<number>();
-  const wheelResidualMomentum = React.useRef(0);
+  const wheelInertia = React.useRef(0);
+  const wheelInertiaCleanup = React.useRef<number>();
   const startTime = React.useRef(0);
 
   const { setTimeout, clearTimeout } = useTimeouts();
@@ -70,9 +71,23 @@ export function useWheelSwipe<T extends Element = Element>(
       return;
     }
 
+    const setWheelInertia = (inertia: number) => {
+      wheelInertia.current = inertia;
+
+      clearTimeout(wheelInertiaCleanup.current);
+
+      wheelInertiaCleanup.current =
+        inertia > 0
+          ? setTimeout(() => {
+              wheelInertia.current = 0;
+              wheelInertiaCleanup.current = undefined;
+            }, 300)
+          : undefined;
+    };
+
     if (swipeState === SwipeState.NONE) {
-      if (Math.abs(event.deltaX) <= 1.2 * Math.abs(wheelResidualMomentum.current)) {
-        wheelResidualMomentum.current = event.deltaX;
+      if (Math.abs(event.deltaX) <= 1.2 * Math.abs(wheelInertia.current)) {
+        setWheelInertia(event.deltaX);
         return;
       }
 
@@ -86,7 +101,7 @@ export function useWheelSwipe<T extends Element = Element>(
 
       if (Math.abs(intent.current) > 30) {
         intent.current = 0;
-        wheelResidualMomentum.current = 0;
+        setWheelInertia(0);
         startTime.current = Date.now();
 
         onSwipeStart();
@@ -109,7 +124,7 @@ export function useWheelSwipe<T extends Element = Element>(
       cancelSwipeResetCleanup();
 
       if (Math.abs(newSwipeOffset) > 0.2 * containerWidth) {
-        wheelResidualMomentum.current = event.deltaX;
+        setWheelInertia(event.deltaX);
 
         onSwipeFinish(newSwipeOffset, Date.now() - startTime.current);
 
@@ -118,7 +133,7 @@ export function useWheelSwipe<T extends Element = Element>(
 
       resetCleanup.current = setTimeout(() => handleCancelSwipe(newSwipeOffset), 2 * swipeAnimationDuration);
     } else {
-      wheelResidualMomentum.current = event.deltaX;
+      setWheelInertia(event.deltaX);
     }
   });
 
