@@ -1,12 +1,12 @@
-@import "../../common";
+@use "../../common";
 
 $vignette-size: 12%;
 $thumbnail-focus-box-shadow:
-  $color-black 0 0 0 2px,
-  $color-button 0 0 0 4px;
+  common.$color-black 0 0 0 2px,
+  common.$color-button 0 0 0 4px;
 
 @function localVar($key, $default) {
-  @return globalVar(thumbnails_ + $key, $default);
+  @return common.globalVar(thumbnails_ + $key, $default);
 }
 
 .yarl__thumbnails {
@@ -30,7 +30,7 @@ $thumbnail-focus-box-shadow:
 
   &_container {
     flex: 0 0 auto;
-    background-color: localVar(container_background_color, $color-backdrop);
+    background-color: localVar(container_background_color, common.$color-backdrop);
     padding: localVar(container_padding, 16px);
     position: relative;
     overflow: hidden;
@@ -63,9 +63,9 @@ $thumbnail-focus-box-shadow:
     right: 0;
     background: linear-gradient(
       to right,
-      $color-backdrop 0px,
+      common.$color-backdrop 0px,
       transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)),
-      $color-backdrop 100%
+      common.$color-backdrop 100%
     );
   }
 
@@ -76,9 +76,9 @@ $thumbnail-focus-box-shadow:
     bottom: 0;
     background: linear-gradient(
       to bottom,
-      $color-backdrop 0px,
+      common.$color-backdrop 0px,
       transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)),
-      $color-backdrop 100%
+      common.$color-backdrop 100%
     );
   }
 
@@ -91,10 +91,10 @@ $thumbnail-focus-box-shadow:
     flex: 0 0 auto;
     cursor: pointer;
     appearance: none;
-    background: localVar(thumbnail_background, $color-black);
+    background: localVar(thumbnail_background, common.$color-black);
     border-width: localVar(thumbnail_border, 1px);
     border-style: localVar(thumbnail_border_style, solid);
-    border-color: localVar(thumbnail_border_color, $color-button);
+    border-color: localVar(thumbnail_border_color, common.$color-button);
     border-radius: localVar(thumbnail_border_radius, 4px);
     -webkit-tap-highlight-color: transparent;
     position: relative;
@@ -107,7 +107,7 @@ $thumbnail-focus-box-shadow:
     box-sizing: content-box;
 
     &_active {
-      border-color: localVar(thumbnail_active_border_color, $color-button-active);
+      border-color: localVar(thumbnail_active_border_color, common.$color-button-active);
     }
 
     &_fadein {
@@ -141,14 +141,14 @@ $thumbnail-focus-box-shadow:
   }
 
   &_thumbnail_icon {
-    color: localVar(thumbnail_icon_color, $color-button);
-    filter: localVar(thumbnail_icon_filter, $filter-drop-shadow);
+    color: localVar(thumbnail_icon_color, common.$color-button);
+    filter: localVar(thumbnail_icon_filter, common.$filter-drop-shadow);
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    width: localVar(thumbnail_icon_size, $icon-size);
-    height: localVar(thumbnail_icon_size, $icon-size);
+    width: localVar(thumbnail_icon_size, common.$icon-size);
+    height: localVar(thumbnail_icon_size, common.$icon-size);
   }
 }
 

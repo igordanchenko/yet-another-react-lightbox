@@ -1,4 +1,4 @@
-@import "./_common";
+@use "common";
 
 .yarl_ {
   &_fullsize {
@@ -18,8 +18,8 @@
     left: 0;
     opacity: 0;
     overflow: hidden;
-    z-index: globalVar(portal_zindex, 9999);
-    transition: opacity globalVar(fade_animation_duration, 250ms) globalVar(fade_animation_timing_function, ease);
+    z-index: common.globalVar(portal_zindex, 9999);
+    transition: opacity common.globalVar(fade_animation_duration, 250ms) common.globalVar(fade_animation_timing_function, ease);
 
     &_open {
       opacity: 1;
@@ -33,11 +33,11 @@
     bottom: 0;
     left: 0;
     overflow: hidden;
-    background-color: globalVar(container_background_color, $color-backdrop);
+    background-color: common.globalVar(container_background_color, common.$color-backdrop);
     outline: none;
     user-select: none;
-    touch-action: globalVar(controller_touch_action, none);
-    overscroll-behavior: globalVar(controller_overscroll_behavior, contain);
+    touch-action: common.globalVar(controller_touch_action, none);
+    overscroll-behavior: common.globalVar(controller_overscroll_behavior, contain);
   }
 
   &_carousel {
@@ -92,7 +92,7 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      touch-action: globalVar(controller_touch_action, none);
+      touch-action: common.globalVar(controller_touch_action, none);
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
@@ -127,7 +127,7 @@
     }
 
     &_loading {
-      color: globalVar(slide_icon_loading_color, $color-button);
+      color: common.globalVar(slide_icon_loading_color, common.$color-button);
       animation: yarl__delayed_fadein 1s linear;
 
       & line {
@@ -143,9 +143,9 @@
 
     &_error {
       $icon-size: 48px;
-      width: globalVar(slide_icon_error_size, $icon-size);
-      height: globalVar(slide_icon_error_size, $icon-size);
-      color: globalVar(slide_icon_error_color, red);
+      width: common.globalVar(slide_icon_error_size, $icon-size);
+      height: common.globalVar(slide_icon_error_size, $icon-size);
+      color: common.globalVar(slide_icon_error_color, red);
     }
   }
 
@@ -169,7 +169,7 @@
     left: auto;
     display: flex;
     justify-content: flex-end;
-    padding: globalVar(toolbar_padding, $toolbar-padding);
+    padding: common.globalVar(toolbar_padding, common.$toolbar-padding);
 
     [dir="rtl"] & {
       top: 0;
@@ -180,45 +180,45 @@
   }
 
   &_icon {
-    width: globalVar(icon_size, $icon-size);
-    height: globalVar(icon_size, $icon-size);
+    width: common.globalVar(icon_size, common.$icon-size);
+    height: common.globalVar(icon_size, common.$icon-size);
   }
 
   &_button {
     cursor: pointer;
     appearance: none;
-    background-color: globalVar(button_background_color, transparent);
-    border: globalVar(button_border, 0);
-    margin: globalVar(button_margin, 0);
+    background-color: common.globalVar(button_background_color, transparent);
+    border: common.globalVar(button_border, 0);
+    margin: common.globalVar(button_margin, 0);
     outline: none;
     line-height: 0;
-    padding: globalVar(button_padding, $icon-button-padding);
-    color: $color-button;
-    filter: globalVar(button_filter, $filter-drop-shadow);
+    padding: common.globalVar(button_padding, common.$icon-button-padding);
+    color: common.$color-button;
+    filter: common.globalVar(button_filter, common.$filter-drop-shadow);
     -webkit-tap-highlight-color: transparent;
 
     &:focus {
-      color: $color-button-active;
+      color: common.$color-button-active;
     }
 
     &:focus:not(:focus-visible) {
-      color: $color-button;
+      color: common.$color-button;
     }
 
     &:focus-visible {
-      color: $color-button-active;
+      color: common.$color-button-active;
     }
 
     @media (hover: hover) {
       &:hover,
       &:focus:hover,
       &:focus-visible:hover {
-        color: $color-button-active;
+        color: common.$color-button-active;
       }
     }
 
     &:disabled {
-      color: $color-button-disabled;
+      color: common.$color-button-disabled;
       cursor: default;
     }
   }
@@ -229,9 +229,9 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      padding: globalVar(
+      padding: common.globalVar(
         navigation_button_padding,
-        $toolbar-padding + 2 * $icon-button-padding $toolbar-padding + $icon-button-padding
+        common.$toolbar-padding + 2 * common.$icon-button-padding common.$toolbar-padding + common.$icon-button-padding
       );
     }
 
