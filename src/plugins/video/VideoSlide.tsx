@@ -127,6 +127,11 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
               {...resolveString("crossOrigin")}
               {...resolveString("preload")}
               onPlay={() => {
+                if (offset !== 0) {
+                  videoRef.current?.pause();
+                  return;
+                }
+
                 publish(ACTIVE_SLIDE_PLAYING);
               }}
               onEnded={() => {
