@@ -15,7 +15,7 @@ import { useZoomAnimation } from "./useZoomAnimation.js";
 export function useZoomState(
   imageRect: ContainerRect,
   maxZoom: number,
-  zoomWrapperRef?: React.RefObject<HTMLDivElement>,
+  zoomWrapperRef?: React.RefObject<HTMLDivElement | null>,
 ) {
   const [zoom, setZoom] = React.useState(1);
   const [offsetX, setOffsetX] = React.useState(0);

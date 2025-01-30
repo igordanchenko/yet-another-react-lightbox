@@ -14,7 +14,7 @@ export function ThumbnailsContextProvider({ children, ...props }: ComponentProps
   const { ref, position, hidden } = resolveThumbnailsProps(props.thumbnails);
 
   const [visible, setVisible] = React.useState(!hidden);
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const context = React.useMemo(
     () => ({

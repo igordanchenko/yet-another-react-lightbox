@@ -4,7 +4,7 @@ import { ComponentProps, ContainerRect, makeUseContext, useController, ZoomRef }
 import { useZoomCallback, useZoomImageRect, useZoomProps, useZoomSensors, useZoomState } from "./hooks/index.js";
 
 export type ActiveZoomWrapper = {
-  zoomWrapperRef: React.RefObject<HTMLDivElement>;
+  zoomWrapperRef: React.RefObject<HTMLDivElement | null>;
   imageDimensions?: ContainerRect;
 };
 

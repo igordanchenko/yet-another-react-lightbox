@@ -13,7 +13,7 @@ export function usePreventWheelDefaults<T extends HTMLElement = HTMLElement>({
   preventDefaultWheelX,
   preventDefaultWheelY,
 }: Pick<ControllerSettings, "preventDefaultWheelX" | "preventDefaultWheelY">) {
-  const ref = React.useRef<T | null>(null);
+  const ref = React.useRef<T>(null);
 
   const listener = useEventCallback((event: WheelEvent) => {
     const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY);

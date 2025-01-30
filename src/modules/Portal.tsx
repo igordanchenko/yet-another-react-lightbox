@@ -33,7 +33,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
   const [visible, setVisible] = React.useState(false);
 
   const cleanup = React.useRef<(() => void)[]>([]);
-  const restoreFocus = React.useRef<Element | null>(null);
+  const restoreFocus = React.useRef<Element>(null);
 
   const { setTimeout } = useTimeouts();
   const { subscribe } = useEvents();

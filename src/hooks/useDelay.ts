@@ -3,7 +3,7 @@ import * as React from "react";
 import { useTimeouts } from "../contexts/Timeouts.js";
 
 export function useDelay() {
-  const timeoutId = React.useRef<number>();
+  const timeoutId = React.useRef<number>(undefined);
   const { setTimeout, clearTimeout } = useTimeouts();
 
   return React.useCallback(

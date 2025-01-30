@@ -32,8 +32,8 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, on, 
   const wasPlaying = React.useRef(autoplay);
   const [playing, setPlaying] = React.useState(autoplay);
 
-  const scheduler = React.useRef<number>();
-  const slideStatus = React.useRef<SlideStatus | undefined>();
+  const scheduler = React.useRef<number>(undefined);
+  const slideStatus = React.useRef<SlideStatus>(undefined);
 
   const { slides, currentIndex } = useLightboxState();
   const { setTimeout, clearTimeout } = useTimeouts();

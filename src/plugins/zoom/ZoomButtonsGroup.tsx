@@ -10,7 +10,7 @@ export default function ZoomButtonsGroup() {
   const { focus } = useController();
 
   const focusSibling = React.useCallback(
-    (sibling: React.RefObject<HTMLButtonElement>) => {
+    (sibling: React.RefObject<HTMLButtonElement | null>) => {
       if (!sibling.current?.disabled) {
         sibling.current?.focus();
       } else {

@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { cleanup, clsx, cssClass, cssVar, label, makeUseContext } from "../../../src/utils.js";
+import { Labels } from "../../../src/types.js";
 
 describe("utils", () => {
   describe("cslx", () => {
@@ -28,22 +29,23 @@ describe("utils", () => {
   });
 
   describe("label", () => {
-    const labels = {
-      label2: "Label2",
-      label3: "Label3",
+    const labels: Labels = {
+      Previous: "previous",
+      Next: "next",
     };
 
     it("can be called with no labels", () => {
-      expect(label(undefined, "label")).toBe("label");
+      expect(label(undefined, "Previous")).toBe("Previous");
     });
 
     it("handles absent translation correctly", () => {
-      expect(label(labels, "label1")).toBe("label1");
+      // @ts-expect-error - expected error
+      expect(label(labels, "Other")).toBe("Other");
     });
 
     it("translates labels correctly", () => {
-      expect(label(labels, "label2")).toBe("Label2");
-      expect(label(labels, "label3")).toBe("Label3");
+      expect(label(labels, "Previous")).toBe("previous");
+      expect(label(labels, "Next")).toBe("next");
     });
   });
 

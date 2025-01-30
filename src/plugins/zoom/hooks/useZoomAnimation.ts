@@ -6,10 +6,10 @@ export function useZoomAnimation(
   zoom: number,
   offsetX: number,
   offsetY: number,
-  zoomWrapperRef?: React.RefObject<HTMLDivElement>,
+  zoomWrapperRef?: React.RefObject<HTMLDivElement | null>,
 ) {
-  const zoomAnimation = React.useRef<Animation>();
-  const zoomAnimationStart = React.useRef<CSSStyleDeclaration["transform"]>();
+  const zoomAnimation = React.useRef<Animation>(undefined);
+  const zoomAnimationStart = React.useRef<CSSStyleDeclaration["transform"]>(undefined);
 
   const { zoom: zoomAnimationDuration } = useLightboxProps().animation;
   const reduceMotion = useMotionPreference();

@@ -51,7 +51,7 @@ function getThumbnailKey(slide?: Slide | null) {
 
 export type ThumbnailsTrackProps = {
   visible: boolean;
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps) {

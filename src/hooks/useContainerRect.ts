@@ -3,8 +3,8 @@ import * as React from "react";
 import { ContainerRect } from "../types.js";
 
 export function useContainerRect<T extends HTMLElement = HTMLElement>() {
-  const containerRef = React.useRef<T | null>(null);
-  const observerRef = React.useRef<ResizeObserver>();
+  const containerRef = React.useRef<T>(null);
+  const observerRef = React.useRef<ResizeObserver>(undefined);
   const [containerRect, setContainerRect] = React.useState<ContainerRect>();
 
   const setContainerRef = React.useCallback((node: T | null) => {

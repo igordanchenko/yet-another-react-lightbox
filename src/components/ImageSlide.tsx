@@ -46,7 +46,7 @@ export function ImageSlide({
   const { publish } = useEvents();
   const { setTimeout } = useTimeouts();
 
-  const imageRef = React.useRef<HTMLImageElement | null>(null);
+  const imageRef = React.useRef<HTMLImageElement>(null);
 
   React.useEffect(() => {
     if (offset === 0) {

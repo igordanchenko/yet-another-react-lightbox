@@ -160,8 +160,8 @@ export function calculatePreload(carousel: CarouselSettings, slides: Slide[], mi
 
 const isReact19 = Number(React.version.split(".")[0]) >= 19;
 
-// this hack is necessary to support the upcoming breaking change in React 19 - https://github.com/facebook/react/pull/24730
+// this hack is necessary to support `inert` attribute breaking change in React 19 - https://github.com/facebook/react/pull/24730
 export function makeInertWhen(condition: boolean) {
   const legacyValue = condition ? "" : undefined;
-  return { inert: isReact19 ? condition : legacyValue };
+  return { inert: isReact19 ? condition : legacyValue } as { inert: boolean };
 }

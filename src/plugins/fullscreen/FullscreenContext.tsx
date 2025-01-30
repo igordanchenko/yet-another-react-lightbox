@@ -22,7 +22,7 @@ export const useFullscreen = makeUseContext("useFullscreen", "FullscreenContext"
 export function FullscreenContextProvider({ fullscreen: fullscreenProps, on, children }: ComponentProps) {
   const { auto, ref } = resolveFullscreenProps(fullscreenProps);
 
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const [disabled, setDisabled] = React.useState<boolean>();
   const [fullscreen, setFullscreen] = React.useState(false);
   const wasFullscreen = React.useRef<boolean>(false);

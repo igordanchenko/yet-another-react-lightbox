@@ -30,7 +30,7 @@ export function usePointerSwipe<T extends Element = Element>(
 ) {
   const offset = React.useRef<number>(0);
   const pointers = React.useRef<React.PointerEvent[]>([]);
-  const activePointer = React.useRef<number>();
+  const activePointer = React.useRef<number>(undefined);
   const startTime = React.useRef<number>(0);
   const gesture = React.useRef(Gesture.NONE);
 

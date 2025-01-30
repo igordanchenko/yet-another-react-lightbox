@@ -39,8 +39,8 @@ export type ComputeAnimation<T> = (
   | undefined;
 
 export function useAnimation<T>(nodeRef: React.RefObject<HTMLElement | null>, computeAnimation: ComputeAnimation<T>) {
-  const snapshot = React.useRef<T>();
-  const animation = React.useRef<Animation>();
+  const snapshot = React.useRef<T>(undefined);
+  const animation = React.useRef<Animation>(undefined);
 
   const reduceMotion = useMotionPreference();
 

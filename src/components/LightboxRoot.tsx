@@ -8,7 +8,8 @@ const LightboxRoot = React.forwardRef<HTMLDivElement, React.ComponentProps<"div"
   { className, children, ...rest },
   ref,
 ) {
-  const nodeRef = React.useRef<HTMLDivElement | null>(null);
+  const nodeRef = React.useRef<HTMLDivElement>(null);
+
   return (
     <DocumentContextProvider nodeRef={nodeRef}>
       <div ref={useForkRef(ref, nodeRef)} className={clsx(cssClass("root"), className)} {...rest}>

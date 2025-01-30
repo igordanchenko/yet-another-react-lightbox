@@ -27,11 +27,11 @@ export function useZoomSensors(
   disabled: boolean,
   changeZoom: ReturnType<typeof useZoomState>["changeZoom"],
   changeOffsets: ReturnType<typeof useZoomState>["changeOffsets"],
-  zoomWrapperRef?: React.RefObject<HTMLDivElement>,
+  zoomWrapperRef?: React.RefObject<HTMLDivElement | null>,
 ) {
   const activePointers = React.useRef<React.PointerEvent[]>([]);
   const lastPointerDown = React.useRef(0);
-  const pinchZoomDistance = React.useRef<number>();
+  const pinchZoomDistance = React.useRef<number>(undefined);
 
   const { globalIndex } = useLightboxState();
   const { getOwnerWindow } = useDocumentContext();

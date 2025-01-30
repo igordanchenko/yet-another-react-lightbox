@@ -26,7 +26,7 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
   const video = useVideoProps();
   const { publish } = useEvents();
   const { setContainerRef, containerRect } = useContainerRect();
-  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
   React.useEffect(() => {
     if (offset !== 0 && videoRef.current && !videoRef.current.paused) {

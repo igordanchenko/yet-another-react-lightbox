@@ -18,10 +18,10 @@ export function useWheelSwipe<T extends Element = Element>(
 ) {
   const offset = React.useRef(0);
   const intent = React.useRef(0);
-  const intentCleanup = React.useRef<number>();
-  const resetCleanup = React.useRef<number>();
+  const intentCleanup = React.useRef<number>(undefined);
+  const resetCleanup = React.useRef<number>(undefined);
   const wheelInertia = React.useRef(0);
-  const wheelInertiaCleanup = React.useRef<number>();
+  const wheelInertiaCleanup = React.useRef<number>(undefined);
   const startTime = React.useRef(0);
 
   const { setTimeout, clearTimeout } = useTimeouts();

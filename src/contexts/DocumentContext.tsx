@@ -12,7 +12,7 @@ export const DocumentContext = React.createContext<DocumentContextType | null>(n
 export const useDocumentContext = makeUseContext("useDocument", "DocumentContext", DocumentContext);
 
 export type DocumentContextProviderProps = React.PropsWithChildren & {
-  nodeRef: React.RefObject<Node>;
+  nodeRef: React.RefObject<Node | null>;
 };
 
 export function DocumentContextProvider({ nodeRef, children }: DocumentContextProviderProps) {

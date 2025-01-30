@@ -34,7 +34,7 @@ type CarouselSlideProps = {
 };
 
 function CarouselSlide({ slide, offset }: CarouselSlideProps) {
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const { currentIndex } = useLightboxState();
   const { slideRect, close, focus } = useController();

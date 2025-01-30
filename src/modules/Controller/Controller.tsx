@@ -45,7 +45,7 @@ export type ControllerContextType = Pick<ControllerRef, "prev" | "next" | "close
   slideRect: ContainerRect;
   containerRect: ContainerRect;
   subscribeSensors: SubscribeSensors<HTMLDivElement>;
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
   setCarouselRef: React.Ref<HTMLDivElement>;
   toolbarWidth: number | undefined;
   setToolbarWidth: (width: number | undefined) => void;
@@ -82,7 +82,7 @@ export function Controller({ children, ...props }: ComponentProps) {
     setContainerRef,
   );
 
-  const carouselRef = React.useRef<HTMLDivElement | null>(null);
+  const carouselRef = React.useRef<HTMLDivElement>(null);
   const setCarouselRef = useForkRef(carouselRef, undefined);
 
   const { getOwnerDocument } = useDocumentContext();
