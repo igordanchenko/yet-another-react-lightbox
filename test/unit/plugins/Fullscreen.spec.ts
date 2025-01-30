@@ -37,8 +37,8 @@ function init(
 
   Object.defineProperty(Element.prototype, requestFullscreen, {
     value: define
-      ? // eslint-disable-next-line func-names
-        function (this: HTMLElement) {
+      ? function (this: HTMLElement) {
+          // eslint-disable-next-line @typescript-eslint/no-this-alias
           element = this;
           dispatchFullscreenChangeEvent();
           return Promise.resolve();
@@ -90,11 +90,9 @@ describe("Fullscreen", () => {
   });
 
   const testMainScenario = (requestFullscreen = "requestFullscreen", exitFullscreen = "exitFullscreen") => {
-    // @ts-ignore
-    const requestFullscreenSpy = vi.spyOn(Element.prototype, requestFullscreen);
+    const requestFullscreenSpy = vi.spyOn(Element.prototype, requestFullscreen as "requestFullscreen");
 
-    // @ts-ignore
-    const exitFullscreenSpy = vi.spyOn(document, exitFullscreen);
+    const exitFullscreenSpy = vi.spyOn(document, exitFullscreen as "exitFullscreen");
 
     const { unmount } = renderLightbox();
 

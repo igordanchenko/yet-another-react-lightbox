@@ -8,7 +8,6 @@ function download(url: string, name?: string) {
   xhr.open("GET", url);
   xhr.responseType = "blob";
   xhr.onload = () => {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     saveAs(xhr.response, name);
   };
   xhr.onerror = () => {
@@ -23,7 +22,7 @@ function corsEnabled(url: string) {
   xhr.open("HEAD", url, false);
   try {
     xhr.send();
-  } catch (e) {
+  } catch (_) {
     //
   }
   return xhr.status >= 200 && xhr.status <= 299;
@@ -32,7 +31,7 @@ function corsEnabled(url: string) {
 function click(link: HTMLAnchorElement) {
   try {
     link.dispatchEvent(new MouseEvent("click"));
-  } catch (e) {
+  } catch (_) {
     const event = document.createEvent("MouseEvents");
     event.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
     link.dispatchEvent(event);

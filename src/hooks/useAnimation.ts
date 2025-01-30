@@ -4,7 +4,6 @@ import { parseInt } from "../utils.js";
 import { useLayoutEffect } from "./useLayoutEffect.js";
 import { useMotionPreference } from "./useMotionPreference.js";
 
-/* eslint-disable prefer-destructuring */
 function currentTransformation(node: HTMLElement) {
   let x = 0;
   let y = 0;

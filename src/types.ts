@@ -436,15 +436,20 @@ export interface PluginProps {
 export type Plugin = (props: PluginProps) => void;
 
 /** Deep partial utility type */
-export type DeepPartial<T extends {}, K extends keyof T = keyof T, E extends string = never> = Omit<Partial<T>, K> & {
+export type DeepPartial<T extends object, K extends keyof T = keyof T, E extends string = never> = Omit<
+  Partial<T>,
+  K
+> & {
   [P in K]?: DeepPartialValue<T[P], E>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DeepPartialValue<T, E extends string = never> = T extends any[]
   ? T
-  : T extends (...props: any[]) => any
+  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    T extends (...props: any[]) => any
     ? T
-    : T extends {}
+    : T extends object
       ? {
           [P in keyof T]?: P extends E ? T[P] : DeepPartialValue<T[P], E>;
         }

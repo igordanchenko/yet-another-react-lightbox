@@ -118,7 +118,7 @@ describe("Thumbnails", () => {
   });
 
   it("supports unknown slide types", () => {
-    // @ts-expect-error
+    // @ts-expect-error - expected error
     renderLightbox({ slides: [{ type: "custom" }] });
     expect(queryThumbnails(false).length).toBe(1);
   });
@@ -136,7 +136,6 @@ describe("Thumbnails", () => {
         expectedThumbnails.map((expected, slides) => [slides, preload, finite, expected] as const),
       );
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const [slides, preload, finite, expected] of [
       ...generateTestCases(false, [
         [0, 1, 1, 1],

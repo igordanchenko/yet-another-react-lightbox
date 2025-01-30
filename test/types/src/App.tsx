@@ -246,7 +246,7 @@ export default function App() {
           "Hide captions": "Custom Hide Captions",
           "Show thumbnails": "Custom Show thumbnails",
           "Hide thumbnails": "Custom Hide thumbnails",
-          // @ts-expect-error
+          // @ts-expect-error - expected error
           "non-existent-label": "non-existent-label",
         }}
       />

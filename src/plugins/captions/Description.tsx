@@ -34,10 +34,7 @@ export function Description({ description }: DescriptionProps) {
         }}
       >
         {typeof description === "string"
-          ? description
-              .split("\n")
-              // eslint-disable-next-line react/no-array-index-key
-              .flatMap((line, index) => [...(index > 0 ? [<br key={index} />] : []), line])
+          ? description.split("\n").flatMap((line, index) => [...(index > 0 ? [<br key={index} />] : []), line])
           : description}
       </div>
     </div>

@@ -91,8 +91,8 @@ describe("utils", () => {
     });
 
     it("throws error when used outside of context provider", () => {
-      class ErrorBoundary extends React.Component<React.PropsWithChildren<{}>, { error: boolean }> {
-        constructor(props: React.PropsWithChildren<{}>) {
+      class ErrorBoundary extends React.Component<React.PropsWithChildren<object>, { error: boolean }> {
+        constructor(props: React.PropsWithChildren<object>) {
           super(props);
           this.state = { error: false };
         }

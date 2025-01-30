@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 import { fileURLToPath } from "node:url";
 import child_process from "child_process";
 import path from "path";

@@ -61,7 +61,6 @@ export const LoadingIcon = createIcon(
   <>
     {Array.from({ length: 8 }).map((_, index, array) => (
       <line
-        // eslint-disable-next-line react/no-array-index-key
         key={index}
         x1="12"
         y1="6.5"

@@ -68,7 +68,7 @@ export function FullscreenContextProvider({ fullscreen: fullscreenProps, on, chi
       } else if (container.msRequestFullscreen) {
         container.msRequestFullscreen();
       }
-    } catch (err) {
+    } catch (_) {
       //
     }
   }, []);
@@ -87,7 +87,7 @@ export function FullscreenContextProvider({ fullscreen: fullscreenProps, on, chi
       } else if (ownerDocument.msExitFullscreen) {
         ownerDocument.msExitFullscreen();
       }
-    } catch (err) {
+    } catch (_) {
       //
     }
   }, [getFullscreenElement, getOwnerDocument]);
