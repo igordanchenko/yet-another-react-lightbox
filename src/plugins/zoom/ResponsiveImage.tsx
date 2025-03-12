@@ -101,6 +101,8 @@ export function ResponsiveImage(props: ResponsiveImageProps) {
         <ImageSlide
           key="preload"
           {...props}
+          // do not publish active slide status events
+          offset={undefined}
           slide={{ ...image, src: preload, srcSet: undefined }}
           style={{ position: "absolute", visibility: "hidden", ...style }}
           onLoad={() => handlePreload(preload)}
