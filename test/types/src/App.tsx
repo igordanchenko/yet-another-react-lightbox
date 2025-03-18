@@ -28,15 +28,15 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 const slides = [
   {
-    src: "https://yet-another-react-lightbox.com/images/image01.jpeg",
+    src: "https://images.yet-another-react-lightbox.com/image01.jpg",
     title: "Title",
     description: "Description",
     download: {
-      url: "https://yet-another-react-lightbox.com/images/image01.jpeg",
-      filename: "image01.jpeg",
+      url: "https://images.yet-another-react-lightbox.com/image01.jpg",
+      filename: "image01.jpg",
     },
     share: {
-      url: "https://yet-another-react-lightbox.com/images/image01.jpeg",
+      url: "https://images.yet-another-react-lightbox.com/image01.jpg",
       text: "text",
       title: "title",
     },
