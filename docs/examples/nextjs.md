@@ -97,11 +97,11 @@ export default function NextJsImage({ slide, offset, rect }) {
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
-import NextJsImage from "../components/NextJsImage";
+import NextJsImage from "@/components/NextJsImage";
 
-import image1 from "../../public/images/image01.jpeg";
-import image2 from "../../public/images/image02.jpeg";
-import image3 from "../../public/images/image03.jpeg";
+import image1 from "@/public/images/image01.jpg";
+import image2 from "@/public/images/image02.jpg";
+import image3 from "@/public/images/image03.jpg";
 
 // ...
 
@@ -135,11 +135,11 @@ import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-import NextJsImage from "../components/NextJsImage";
+import NextJsImage from "@/components/NextJsImage";
 
-import image1 from "../../public/images/image01.jpeg";
-import image2 from "../../public/images/image02.jpeg";
-import image3 from "../../public/images/image03.jpeg";
+import image1 from "@/public/images/image01.jpg";
+import image2 from "@/public/images/image02.jpg";
+import image3 from "@/public/images/image03.jpg";
 
 // ...
 
@@ -165,9 +165,9 @@ import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
 
-import image1 from "../public/images/image01.jpeg";
-import image2 from "../public/images/image02.jpeg";
-import image3 from "../public/images/image03.jpeg";
+import image1 from "@/public/images/image01.jpg";
+import image2 from "@/public/images/image02.jpg";
+import image3 from "@/public/images/image03.jpg";
 // ...
 
 const images = [
