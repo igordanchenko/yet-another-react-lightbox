@@ -61,6 +61,9 @@ export function useZoomSensors(
   );
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    const { key, metaKey, ctrlKey } = event;
+    const meta = metaKey || ctrlKey;
+
     const preventDefault = () => {
       event.preventDefault();
       event.stopPropagation();
@@ -72,13 +75,13 @@ export function useZoomSensors(
         changeOffsets(deltaX, deltaY);
       };
 
-      if (event.key === "ArrowDown") {
+      if (key === "ArrowDown") {
         move(0, keyboardMoveDistance);
-      } else if (event.key === "ArrowUp") {
+      } else if (key === "ArrowUp") {
         move(0, -keyboardMoveDistance);
-      } else if (event.key === "ArrowLeft") {
+      } else if (key === "ArrowLeft") {
         move(-keyboardMoveDistance, 0);
-      } else if (event.key === "ArrowRight") {
+      } else if (key === "ArrowRight") {
         move(keyboardMoveDistance, 0);
       }
     }
@@ -88,13 +91,11 @@ export function useZoomSensors(
       changeZoom(zoomValue);
     };
 
-    const hasMeta = () => event.getModifierState("Meta");
-
-    if (event.key === "+" || (event.key === "=" && hasMeta())) {
+    if (key === "+" || (meta && key === "=")) {
       handleChangeZoom(zoom * zoomInMultiplier);
-    } else if (event.key === "-" || (event.key === "_" && hasMeta())) {
+    } else if (key === "-" || (meta && key === "_")) {
       handleChangeZoom(zoom / zoomInMultiplier);
-    } else if (event.key === "0" && hasMeta()) {
+    } else if (meta && key === "0") {
       handleChangeZoom(1);
     }
   });
