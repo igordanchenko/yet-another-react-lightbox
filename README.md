@@ -24,7 +24,7 @@ extendable.
 - **TypeScript:** type definitions come built-in in the package
 - **RTL:** compatible with RTL layout
 
-![Yet Another React Lightbox | Example](https://yet-another-react-lightbox.com/images/example.jpg)
+![Yet Another React Lightbox | Example](https://images.yet-another-react-lightbox.com/example.jpg)
 
 ## Documentation
 
