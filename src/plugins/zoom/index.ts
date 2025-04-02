@@ -13,9 +13,9 @@ declare module "../../types.js" {
       maxZoomPixelRatio?: number;
       /** zoom-in multiplier */
       zoomInMultiplier?: number;
-      /** double-tap maximum time delay */
+      /** @deprecated - double-tap maximum time delay */
       doubleTapDelay?: number;
-      /** double-click maximum time delay */
+      /** @deprecated - double-click maximum time delay */
       doubleClickDelay?: number;
       /** maximum number of zoom-in stops via double-click or double-tap */
       doubleClickMaxStops?: number;

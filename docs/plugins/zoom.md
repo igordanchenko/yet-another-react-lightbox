@@ -124,8 +124,8 @@ Zoom plugin adds the following `Lightbox` properties.
           <li>`ref` - Zoom plugin ref. See [Zoom Ref](#ZoomRef) for details.</li>
           <li>`maxZoomPixelRatio` - ratio of image pixels to physical pixels at maximum zoom level</li>
           <li>`zoomInMultiplier` - zoom-in multiplier</li>
-          <li>`doubleTapDelay` - double-tap maximum time delay</li>
-          <li>`doubleClickDelay` - double-click maximum time delay</li>
+          <li>`doubleTapDelay` - double-tap maximum time delay (deprecated)</li>
+          <li>`doubleClickDelay` - double-click maximum time delay (deprecated)</li>
           <li>`doubleClickMaxStops` - maximum number of zoom-in stops via double-click or double-tap</li>
           <li>`keyboardMoveDistance` - keyboard move distance</li>
           <li>`wheelZoomDistanceFactor` - wheel zoom distance factor</li>
