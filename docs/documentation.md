@@ -182,6 +182,7 @@ import "yet-another-react-lightbox/styles.css";
         &nbsp;&nbsp;closeOnPullUp?: boolean;<br />
         &nbsp;&nbsp;closeOnPullDown?: boolean;<br />
         &nbsp;&nbsp;closeOnBackdropClick?: boolean;<br />
+        &nbsp;&nbsp;disableSwipeNavigation?: boolean;<br />
         &#125;
       </td>
       <td>
@@ -194,6 +195,7 @@ import "yet-another-react-lightbox/styles.css";
           <li>`closeOnPullUp` - if `true`, close the lightbox on pull-up gesture</li>
           <li>`closeOnPullDown` - if `true`, close the lightbox on pull-down gesture</li>
           <li>`closeOnBackdropClick` - if `true`, close the lightbox when the backdrop is clicked</li>
+          <li>`disableSwipeNavigation` - if `true`, disable slide change on pointer swipe / drag</li>
         </ul>
         <p>
           Default value: <span class="font-mono">&#123; ref: null, focus: true, aria: false, touchAction: "none" &#125;</span>

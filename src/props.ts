@@ -37,6 +37,7 @@ export const LightboxDefaultProps: LightboxProps = {
     closeOnBackdropClick: false,
     preventDefaultWheelX: true,
     preventDefaultWheelY: false,
+    disableSwipeNavigation: false,
   },
   portal: {},
   noScroll: {

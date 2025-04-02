@@ -228,6 +228,8 @@ export interface ControllerSettings {
   preventDefaultWheelX: boolean;
   /** if `true`, prevent default for vertical wheel scroll events (for internal use only) */
   preventDefaultWheelY: boolean;
+  /** if `true`, disable slide change on pointer swipe / drag */
+  disableSwipeNavigation: boolean;
 }
 
 /** Lightbox controller ref */

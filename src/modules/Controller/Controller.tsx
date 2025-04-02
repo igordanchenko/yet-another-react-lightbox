@@ -322,7 +322,7 @@ export function Controller({ children, ...props }: ComponentProps) {
     (offset: number) => pull(offset, true),
   ] as const;
 
-  usePointerSwipe(...swipeParams, closeOnPullUp, closeOnPullDown, ...pullParams);
+  usePointerSwipe(controller, ...swipeParams, closeOnPullUp, closeOnPullDown, ...pullParams);
 
   useWheelSwipe(swipeState, ...swipeParams);
 

@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { ControllerSettings } from "../../types.js";
 import { UseSensors } from "../../hooks/useSensors.js";
 import { useEventCallback } from "../../hooks/useEventCallback.js";
 import { usePointerEvents } from "../../hooks/usePointerEvents.js";
@@ -13,6 +14,7 @@ enum Gesture {
 const SWIPE_THRESHOLD = 30;
 
 export function usePointerSwipe<T extends Element = Element>(
+  { disableSwipeNavigation }: ControllerSettings,
   subscribeSensors: UseSensors<T>["subscribeSensors"],
   isSwipeValid: (offset: number) => boolean,
   containerWidth: number,
@@ -125,9 +127,11 @@ export function usePointerSwipe<T extends Element = Element>(
         };
 
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > SWIPE_THRESHOLD && isSwipeValid(deltaX)) {
-          // start swipe gesture
-          startGesture(Gesture.SWIPE);
-          onSwipeStart();
+          if (!disableSwipeNavigation) {
+            // start swipe gesture
+            startGesture(Gesture.SWIPE);
+            onSwipeStart();
+          }
         } else if (Math.abs(deltaY) > Math.abs(deltaX) && exceedsPullThreshold(deltaY, SWIPE_THRESHOLD)) {
           // start pull-down gesture
           startGesture(Gesture.PULL);
