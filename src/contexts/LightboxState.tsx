@@ -36,7 +36,7 @@ function reducer(state: LightboxState, action: LightboxStateAction): LightboxSta
       const currentIndex = getSlideIndex(globalIndex, slides.length);
       const currentSlide = getSlideIfPresent(slides, currentIndex);
       const animation =
-        increment || action.duration
+        increment || action.duration !== undefined
           ? {
               increment,
               duration: action.duration,

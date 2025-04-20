@@ -69,8 +69,8 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
   const { position, width, height, border, borderStyle, borderColor, borderRadius, padding, gap, vignette } =
     thumbnails;
 
+  const offset = (animation?.duration !== undefined && animation?.increment) || 0;
   const animationDuration = animation?.duration || 0;
-  const offset = (animationDuration > 0 && animation?.increment) || 0;
 
   const { prepareAnimation } = useAnimation<number>(track, (snapshot) => ({
     keyframes: isHorizontal(position)
