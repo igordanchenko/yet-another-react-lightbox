@@ -111,15 +111,13 @@ describe("utils", () => {
         }
       }
 
-      const suppressConsoleError = (event: ErrorEvent) => {
-        event.preventDefault();
-      };
-      window.addEventListener("error", suppressConsoleError);
+      const consoleSpy = vi.spyOn(console, "error");
+      consoleSpy.mockImplementation(() => {});
 
       try {
         render(React.createElement(ErrorBoundary, null, React.createElement(Test)));
       } finally {
-        window.removeEventListener("error", suppressConsoleError);
+        consoleSpy.mockRestore();
       }
 
       expect(screen.queryByText("error")).toBeInTheDocument();
