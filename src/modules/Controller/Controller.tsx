@@ -414,7 +414,7 @@ export function Controller({ children, ...props }: ComponentProps) {
         ...(controller.touchAction !== "none" ? { [cssVar("controller_touch_action")]: controller.touchAction } : null),
         ...styles.container,
       }}
-      {...(controller.aria ? { role: "presentation", "aria-live": "polite" } : null)}
+      {...(controller.aria ? { role: "region", "aria-live": "polite", "aria-roledescription": "carousel" } : null)}
       tabIndex={-1}
       {...registerSensors}
     >

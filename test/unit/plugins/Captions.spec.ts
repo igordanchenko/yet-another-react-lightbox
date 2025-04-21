@@ -2,7 +2,7 @@ import * as React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { lightbox } from "../utils.js";
+import { lightbox } from "../test-utils.js";
 import { Captions } from "../../../src/plugins/index.js";
 import { CaptionsRef, LightboxExternalProps } from "../../../src/index.js";
 

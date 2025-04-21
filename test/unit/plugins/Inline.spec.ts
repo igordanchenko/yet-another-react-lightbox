@@ -2,7 +2,7 @@ import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { lightbox } from "../utils.js";
+import { lightbox, expectLightboxToBeOpen } from "../test-utils.js";
 import { Inline } from "../../../src/plugins/index.js";
 import { ControllerRef, LightboxExternalProps } from "../../../src/index.js";
 
@@ -11,7 +11,7 @@ function renderLightbox(props?: LightboxExternalProps) {
 }
 
 function testMainScenario() {
-  expect(screen.queryByRole("presentation")).toBeInTheDocument();
+  expectLightboxToBeOpen();
   expect(screen.queryByLabelText("Close")).not.toBeInTheDocument();
   expect(screen.queryByLabelText("Previous")).toBeInTheDocument();
   expect(screen.queryByLabelText("Next")).toBeInTheDocument();

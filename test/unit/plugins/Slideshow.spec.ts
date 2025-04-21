@@ -2,7 +2,7 @@ import * as React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { expectToContainButton, lightbox } from "../utils.js";
+import { expectToContainButton, lightbox } from "../test-utils.js";
 import { Slideshow } from "../../../src/plugins/index.js";
 import { isImageSlide, LightboxExternalProps, SlideshowRef } from "../../../src/index.js";
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import { act, render } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { clickButton, expectNotToContainButton, expectToContainButton, lightbox } from "../utils.js";
+import { clickButton, expectNotToContainButton, expectToContainButton, lightbox } from "../test-utils.js";
 import { Fullscreen, Thumbnails } from "../../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../../src/index.js";
 

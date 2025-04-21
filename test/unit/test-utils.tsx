@@ -3,12 +3,16 @@ import { act, screen } from "@testing-library/react";
 
 import Lightbox from "../../src/index.js";
 
+function lightboxRoot() {
+  return document.querySelector(".yarl__root");
+}
+
 export function lightbox(props?: Parameters<typeof Lightbox>[0]) {
   return <Lightbox open {...props} />;
 }
 
 export function querySelector(selector: string) {
-  return screen.getByRole("presentation").querySelector(selector);
+  return lightboxRoot()?.querySelector(selector) ?? null;
 }
 
 export function findCurrentSlide() {
@@ -39,4 +43,12 @@ export function expectToContainButton(name: string) {
 
 export function expectNotToContainButton(name: string) {
   expect(queryButton(name)).not.toBeInTheDocument();
+}
+
+export function expectLightboxToBeOpen() {
+  expect(lightboxRoot()).toBeInTheDocument();
+}
+
+export function expectLightboxToBeClosed() {
+  expect(lightboxRoot()).not.toBeInTheDocument();
 }

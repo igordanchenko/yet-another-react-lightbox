@@ -1,7 +1,7 @@
 import * as React from "react";
 import { act, render, screen } from "@testing-library/react";
 
-import { clickButton, expectCurrentImageToBe, expectToContainButton, lightbox } from "../utils.js";
+import { clickButton, expectCurrentImageToBe, expectToContainButton, lightbox } from "../test-utils.js";
 import { Fullscreen, Thumbnails, Video } from "../../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../../src/index.js";
 

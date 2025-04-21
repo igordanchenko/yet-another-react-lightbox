@@ -1,6 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 
-import { lightbox } from "../utils.js";
+import { lightbox, expectLightboxToBeOpen } from "../test-utils.js";
 import { Zoom } from "../../../src/plugins/index.js";
 
 describe("Zoom", () => {
@@ -24,6 +24,6 @@ describe("Zoom", () => {
       screen.getByLabelText("Zoom out").click();
     });
 
-    expect(screen.getByRole("presentation")).toBeInTheDocument();
+    expectLightboxToBeOpen();
   });
 });

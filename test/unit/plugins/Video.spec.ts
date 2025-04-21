@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { findCurrentSlide, lightbox } from "../utils.js";
+import { findCurrentSlide, lightbox } from "../test-utils.js";
 import { Video } from "../../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../../src/index.js";
 

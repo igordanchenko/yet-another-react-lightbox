@@ -1,6 +1,13 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 
-import { expectCurrentImageToBe, findCurrentImage, findCurrentSlide, lightbox } from "./utils.js";
+import {
+  expectCurrentImageToBe,
+  findCurrentImage,
+  findCurrentSlide,
+  lightbox,
+  expectLightboxToBeOpen,
+  expectLightboxToBeClosed,
+} from "./test-utils.js";
 
 const fireWheelEvent = (element: Element, options: { deltaX?: number; deltaY?: number; ctrlKey?: boolean }) => {
   // noinspection TypeScriptValidateJSTypes
@@ -10,16 +17,16 @@ const fireWheelEvent = (element: Element, options: { deltaX?: number; deltaY?: n
 describe("Lightbox", () => {
   it("respects open prop", () => {
     const { rerender } = render(lightbox({ open: false }));
-    expect(screen.queryByRole("presentation")).not.toBeInTheDocument();
+    expectLightboxToBeClosed();
 
     rerender(lightbox());
-    expect(screen.getByRole("presentation")).toBeInTheDocument();
+    expectLightboxToBeOpen();
   });
 
   it("presents basic controls", () => {
     render(lightbox());
 
-    expect(screen.queryByRole("presentation")).toBeInTheDocument();
+    expectLightboxToBeOpen();
     expect(screen.queryByLabelText("Close")).toBeInTheDocument();
     expect(screen.queryByLabelText("Previous")).toBeInTheDocument();
     expect(screen.queryByLabelText("Next")).toBeInTheDocument();

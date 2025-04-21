@@ -119,8 +119,10 @@ export function Portal({ children, animation, styles, className, on, portal, clo
             cssClass(CLASS_NO_SCROLL_PADDING),
             visible && cssClass(cssPrefix("open")),
           )}
-          role="presentation"
+          aria-modal
+          role="dialog"
           aria-live="polite"
+          aria-roledescription="lightbox"
           style={{
             ...(animation.fade !== LightboxDefaultProps.animation.fade
               ? { [cssVar("fade_animation_duration")]: `${animationDuration}ms` }

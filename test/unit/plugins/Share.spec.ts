@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { clickButton, lightbox } from "../utils.js";
+import { clickButton, lightbox, expectLightboxToBeOpen } from "../test-utils.js";
 import { Share } from "../../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../../src/index.js";
 
@@ -38,7 +38,7 @@ describe("Share", () => {
   it("doesn't crash with empty slides", () => {
     renderLightbox();
 
-    expect(screen.queryByRole("presentation")).toBeInTheDocument();
+    expectLightboxToBeOpen();
   });
 
   it("supports custom share button", () => {

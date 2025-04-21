@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import { lightbox } from "../utils.js";
+import { lightbox, expectLightboxToBeOpen } from "../test-utils.js";
 import { Counter } from "../../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../../src/index.js";
 
@@ -18,6 +18,6 @@ describe("Counter", () => {
   it("doesn't crash with empty slides", () => {
     renderLightbox();
 
-    expect(screen.queryByRole("presentation")).toBeInTheDocument();
+    expectLightboxToBeOpen();
   });
 });
