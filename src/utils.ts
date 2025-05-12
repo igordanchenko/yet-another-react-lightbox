@@ -165,3 +165,8 @@ export function makeInertWhen(condition: boolean) {
   const legacyValue = condition ? "" : undefined;
   return { inert: isReact19 ? condition : legacyValue } as { inert: boolean };
 }
+
+export function reflow(node: HTMLElement) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  node.scrollTop;
+}

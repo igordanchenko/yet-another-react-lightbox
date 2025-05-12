@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { ComponentProps } from "../types.js";
 import { LightboxDefaultProps } from "../props.js";
 import { createModule } from "../config.js";
-import { clsx, composePrefix, cssClass, cssVar } from "../utils.js";
+import { clsx, composePrefix, cssClass, cssVar, reflow } from "../utils.js";
 import { useEventCallback, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 import { LightboxRoot } from "../components/index.js";
@@ -72,9 +72,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
   React.useEffect(() => subscribe(ACTION_CLOSE, handleClose), [subscribe, handleClose]);
 
   const handleEnter = useEventCallback((node: HTMLDivElement) => {
-    // reflow
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    node.scrollTop;
+    reflow(node);
 
     setVisible(true);
 

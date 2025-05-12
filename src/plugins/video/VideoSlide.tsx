@@ -9,10 +9,12 @@ import {
   clsx,
   cssClass,
   LightboxProps,
+  reflow,
   SlideVideo,
   useContainerRect,
   useEventCallback,
   useEvents,
+  useLightboxProps,
 } from "../../index.js";
 import { useVideoProps } from "./props.js";
 
@@ -25,7 +27,8 @@ export type VideoSlideProps = {
 export function VideoSlide({ slide, offset }: VideoSlideProps) {
   const video = useVideoProps();
   const { publish } = useEvents();
-  const { setContainerRef, containerRect } = useContainerRect();
+  const { setContainerRef, containerRect, containerRef } = useContainerRect();
+  const { animation } = useLightboxProps();
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   React.useEffect(() => {
@@ -41,6 +44,33 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
       videoRef.current.play().catch(() => {});
     }
   }, [offset, video.autoPlay, slide.autoPlay, publish]);
+
+  const fixupPlayerControls = useEventCallback(() => {
+    const timeoutId = setTimeout(
+      () => {
+        if (containerRef.current) {
+          const borderStyle = containerRef.current.style.border;
+          containerRef.current.style.border = "1px solid transparent";
+          reflow(containerRef.current);
+          containerRef.current.style.border = borderStyle;
+        }
+      },
+      Math.max(animation.swipe, animation.navigation || 0) + 50,
+    );
+
+    return () => clearTimeout(timeoutId);
+  });
+
+  React.useEffect(() => {
+    const isChromium =
+      (navigator as { userAgentData?: { brands: { brand: string }[] } }).userAgentData?.brands.some(
+        ({ brand }) => brand === "Chromium",
+      ) || !!(window as { chrome?: unknown }).chrome;
+
+    if (isChromium && offset === 0) {
+      return fixupPlayerControls();
+    }
+  }, [offset, fixupPlayerControls]);
 
   const handleVideoRef = useEventCallback((node: HTMLVideoElement) => {
     if (offset === 0 && (video.autoPlay || slide.autoPlay) && node.paused) {
