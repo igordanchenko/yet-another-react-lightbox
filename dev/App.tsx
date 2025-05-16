@@ -27,6 +27,9 @@ export default function App() {
         open={open}
         close={() => setOpen(false)}
         slides={slides}
+        controller={{
+          closeOnBackdropClick: true,
+        }}
         plugins={[Captions, Counter, Download, Share, Fullscreen, Slideshow, Thumbnails, Video, Zoom]}
       />
 
