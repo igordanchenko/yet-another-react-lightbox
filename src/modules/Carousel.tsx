@@ -36,6 +36,9 @@ type CarouselSlideProps = {
 function CarouselSlide({ slide, offset }: CarouselSlideProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
+  const pointerDownData = React.useRef<{ x: number; y: number; time: number } | null>(null);
+  const isRealClickRef = React.useRef<boolean>(false);
+
   const { currentIndex } = useLightboxState();
   const { slideRect, close, focus } = useController();
   const {
@@ -54,6 +57,30 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
       focus();
     }
   }, [offscreen, focus, getOwnerDocument]);
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    pointerDownData.current = {
+      x: event.clientX,
+      y: event.clientY,
+      time: Date.now(),
+    };
+    isRealClickRef.current = false;
+  };
+
+  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const down = pointerDownData.current;
+    if (!down) return;
+    const dx = event.clientX - down.x;
+    const dy = event.clientY - down.y;
+    const dt = Date.now() - down.time;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < 5 && dt < 300) {
+      isRealClickRef.current = true;
+    } else {
+      isRealClickRef.current = false;
+    }
+    pointerDownData.current = null;
+  };
 
   const renderSlide = () => {
     let rendered = render.slide?.({ slide, offset, rect: slideRect });
@@ -84,17 +111,19 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
   const handleBackdropClick: React.MouseEventHandler = (event) => {
     const container = containerRef.current;
     const target = event.target instanceof HTMLElement ? event.target : undefined;
+
     if (
       closeOnBackdropClick &&
+      isRealClickRef.current &&
       target &&
       container &&
       (target === container ||
-        // detect Zoom and Video wrappers
         (Array.from(container.children).find((x) => x === target) &&
           target.classList.contains(cssClass(CLASS_SLIDE_WRAPPER))))
     ) {
       close();
     }
+    isRealClickRef.current = false;
   };
 
   return (
@@ -107,6 +136,8 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
         cssClass(CLASS_FLEX_CENTER),
       )}
       {...makeInertWhen(offscreen)}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
       onClick={handleBackdropClick}
       style={style}
       role="region"
