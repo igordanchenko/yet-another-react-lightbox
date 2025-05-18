@@ -5,7 +5,7 @@ import { UseSensors } from "../../hooks/useSensors.js";
 import { useEventCallback } from "../../hooks/useEventCallback.js";
 import { usePointerEvents } from "../../hooks/usePointerEvents.js";
 import { cssClass } from "../../utils.js";
-import { CLASS_SLIDE_WRAPPER } from "../../consts.js";
+import { CLASS_SLIDE, CLASS_SLIDE_WRAPPER } from "../../consts.js";
 
 enum Gesture {
   NONE,
@@ -62,6 +62,11 @@ export function usePointerSwipe<T extends Element = Element>(
     [clearPointer],
   );
 
+  const lookupPointer = React.useCallback(
+    (event: React.PointerEvent) => pointers.current.find(({ pointerId }) => event.pointerId === pointerId),
+    [],
+  );
+
   const onPointerDown = useEventCallback((event: React.PointerEvent) => {
     addPointer(event);
   });
@@ -70,7 +75,8 @@ export function usePointerSwipe<T extends Element = Element>(
     (pullDownEnabled && value > threshold) || (pullUpEnabled && value < -threshold);
 
   const onPointerUp = useEventCallback((event: React.PointerEvent) => {
-    if (pointers.current.find((x) => x.pointerId === event.pointerId)) {
+    const pointer = lookupPointer(event);
+    if (pointer) {
       if (activePointer.current === event.pointerId) {
         const duration = Date.now() - startTime.current;
         const currentOffset = offset.current;
@@ -96,11 +102,12 @@ export function usePointerSwipe<T extends Element = Element>(
         gesture.current = Gesture.NONE;
       } else {
         // Handle click events
-        const target = event.target as HTMLElement;
+        const { target } = event;
         if (
           closeOnBackdropClick &&
-          target &&
-          (target.classList.contains(cssClass(CLASS_SLIDE_WRAPPER)) || target.classList.contains(cssClass("slide")))
+          target instanceof HTMLElement &&
+          target === pointer.target &&
+          (target.classList.contains(cssClass(CLASS_SLIDE)) || target.classList.contains(cssClass(CLASS_SLIDE_WRAPPER)))
         ) {
           onClose();
         }
@@ -111,7 +118,7 @@ export function usePointerSwipe<T extends Element = Element>(
   });
 
   const onPointerMove = useEventCallback((event: React.PointerEvent) => {
-    const pointer = pointers.current.find((p) => p.pointerId === event.pointerId);
+    const pointer = lookupPointer(event);
     if (pointer) {
       const isCurrentPointer = activePointer.current === event.pointerId;
 

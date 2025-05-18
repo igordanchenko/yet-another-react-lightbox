@@ -18,14 +18,14 @@ import {
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
 import { useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
-import { CLASS_FLEX_CENTER, MODULE_CAROUSEL } from "../consts.js";
+import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
   return composePrefix(MODULE_CAROUSEL, value);
 }
 
 function cssSlidePrefix(value?: string) {
-  return composePrefix("slide", value);
+  return composePrefix(CLASS_SLIDE, value);
 }
 
 type CarouselSlideProps = {
@@ -100,7 +100,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
 
 function Placeholder() {
   const style = useLightboxProps().styles.slide;
-  return <div className={cssClass("slide")} style={style} />;
+  return <div className={cssClass(CLASS_SLIDE)} style={style} />;
 }
 
 export function Carousel({ carousel }: ComponentProps) {
