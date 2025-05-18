@@ -18,14 +18,14 @@ import {
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
 import { useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
-import { CLASS_FLEX_CENTER, CLASS_SLIDE_WRAPPER, MODULE_CAROUSEL } from "../consts.js";
+import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
   return composePrefix(MODULE_CAROUSEL, value);
 }
 
 function cssSlidePrefix(value?: string) {
-  return composePrefix("slide", value);
+  return composePrefix(CLASS_SLIDE, value);
 }
 
 type CarouselSlideProps = {
@@ -37,12 +37,11 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const { currentIndex } = useLightboxState();
-  const { slideRect, close, focus } = useController();
+  const { slideRect, focus } = useController();
   const {
     render,
     carousel: { imageFit, imageProps },
     on: { click: onClick },
-    controller: { closeOnBackdropClick },
     styles: { slide: style },
   } = useLightboxProps();
   const { getOwnerDocument } = useDocumentContext();
@@ -81,24 +80,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     ) : null;
   };
 
-  const handleBackdropClick: React.MouseEventHandler = (event) => {
-    const container = containerRef.current;
-    const target = event.target instanceof HTMLElement ? event.target : undefined;
-    if (
-      closeOnBackdropClick &&
-      target &&
-      container &&
-      (target === container ||
-        // detect Zoom and Video wrappers
-        (Array.from(container.children).find((x) => x === target) &&
-          target.classList.contains(cssClass(CLASS_SLIDE_WRAPPER))))
-    ) {
-      close();
-    }
-  };
-
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
     <div
       ref={containerRef}
       className={clsx(
@@ -107,7 +89,6 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
         cssClass(CLASS_FLEX_CENTER),
       )}
       {...makeInertWhen(offscreen)}
-      onClick={handleBackdropClick}
       style={style}
       role="region"
       aria-roledescription="slide"
@@ -119,7 +100,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
 
 function Placeholder() {
   const style = useLightboxProps().styles.slide;
-  return <div className={cssClass("slide")} style={style} />;
+  return <div className={cssClass(CLASS_SLIDE)} style={style} />;
 }
 
 export function Carousel({ carousel }: ComponentProps) {
