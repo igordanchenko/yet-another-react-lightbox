@@ -12,6 +12,7 @@ import {
   getSlideKey,
   hasSlides,
   isImageSlide,
+  label as translateLabel,
   makeInertWhen,
   parseLengthPercentage,
 } from "../utils.js";
@@ -43,6 +44,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     carousel: { imageFit, imageProps },
     on: { click: onClick },
     styles: { slide: style },
+    labels,
   } = useLightboxProps();
   const { getOwnerDocument } = useDocumentContext();
 
@@ -91,7 +93,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
       {...makeInertWhen(offscreen)}
       style={style}
       role="region"
-      aria-roledescription="slide"
+      aria-roledescription={translateLabel(labels, "Slide")}
     >
       {renderSlide()}
     </div>
