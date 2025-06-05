@@ -17,6 +17,7 @@ import {
   computeSlideRect,
   cssClass,
   cssVar,
+  label as translateLabel,
   makeComposePrefix,
   makeUseContext,
   parseLengthPercentage,
@@ -56,7 +57,7 @@ export const ControllerContext = React.createContext<ControllerContextType | nul
 export const useController = makeUseContext("useController", "ControllerContext", ControllerContext);
 
 export function Controller({ children, ...props }: ComponentProps) {
-  const { carousel, animation, controller, on, styles, render } = props;
+  const { carousel, animation, controller, on, styles, render, labels } = props;
   const { closeOnPullUp, closeOnPullDown, preventDefaultWheelX, preventDefaultWheelY } = controller;
 
   const [toolbarWidth, setToolbarWidth] = React.useState<number>();
@@ -414,7 +415,9 @@ export function Controller({ children, ...props }: ComponentProps) {
         ...(controller.touchAction !== "none" ? { [cssVar("controller_touch_action")]: controller.touchAction } : null),
         ...styles.container,
       }}
-      {...(controller.aria ? { role: "region", "aria-live": "polite", "aria-roledescription": "carousel" } : null)}
+      {...(controller.aria
+        ? { role: "region", "aria-live": "polite", "aria-roledescription": translateLabel(labels, "Carousel") }
+        : null)}
       tabIndex={-1}
       {...registerSensors}
     >

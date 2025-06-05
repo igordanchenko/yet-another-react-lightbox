@@ -384,6 +384,9 @@ export interface Labels {
   Previous?: string;
   Next?: string;
   Close?: string;
+  Slide?: string;
+  Carousel?: string;
+  Lightbox?: string;
 }
 
 export type Label = keyof Labels;
