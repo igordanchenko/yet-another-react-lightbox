@@ -110,7 +110,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
 
   return mounted
     ? createPortal(
-        <FocusTrap>
+        <FocusTrap active={visible} focusTrapOptions={{ tabbableOptions: { displayCheck: "none" } }}>
           <LightboxRoot
             ref={handleRef}
             className={clsx(
