@@ -119,7 +119,6 @@ export function Portal({ children, animation, styles, className, on, portal, clo
           )}
           aria-modal
           role="dialog"
-          aria-live="polite"
           aria-roledescription={translateLabel(labels, "Lightbox")}
           style={{
             ...(animation.fade !== LightboxDefaultProps.animation.fade
