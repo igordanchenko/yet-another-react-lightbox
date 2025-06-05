@@ -65,6 +65,7 @@ export const slides = [
     src: imageLink(asset, width),
     width,
     height,
+    description: "Description of the image",
     srcSet: breakpoints.map((breakpoint) => ({
       src: imageLink(asset, breakpoint),
       width: breakpoint,
