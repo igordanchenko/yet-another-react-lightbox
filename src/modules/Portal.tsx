@@ -119,7 +119,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
           )}
           aria-modal
           role="dialog"
-          aria-roledescription={translateLabel(labels, "Lightbox")}
+          aria-label={translateLabel(labels, "Lightbox")}
           style={{
             ...(animation.fade !== LightboxDefaultProps.animation.fade
               ? { [cssVar("fade_animation_duration")]: `${animationDuration}ms` }
