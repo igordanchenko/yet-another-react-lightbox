@@ -415,9 +415,10 @@ export function Controller({ children, ...props }: ComponentProps) {
         ...(controller.touchAction !== "none" ? { [cssVar("controller_touch_action")]: controller.touchAction } : null),
         ...styles.container,
       }}
-      {...(controller.aria
-        ? { role: "region", "aria-live": "polite", "aria-roledescription": translateLabel(labels, "Carousel") }
-        : null)}
+      role="region"
+      aria-live="polite"
+      aria-roledescription={translateLabel(labels, "Carousel")}
+      aria-label={translateLabel(labels, "Photo gallery")}
       tabIndex={-1}
       {...registerSensors}
     >

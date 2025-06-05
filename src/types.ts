@@ -216,7 +216,8 @@ export interface ControllerSettings {
   // TODO v4: remove
   /** @deprecated for internal use only */
   touchAction: "none" | "pan-y";
-  /** if `true`, set ARIA attributes on the controller div */
+  // TODO v4: remove
+  /** @deprecated describe the carousel for AT even if it is contained in a dialog */
   aria: boolean;
   /** if `true`, close the lightbox on pull-up gesture */
   closeOnPullUp: boolean;
@@ -387,6 +388,7 @@ export interface Labels {
   Slide?: string;
   Carousel?: string;
   Lightbox?: string;
+  "Photo gallery"?: string;
   "{{index}} / {{slidesLength}}"?: string;
 }
 
