@@ -31,7 +31,7 @@ const config = {
       minifyInternalExports: false,
     },
   ],
-  external: ["react", "react-dom"],
+  external: ["react", "react-dom", "focus-trap-react"],
   preserveEntrySignatures: "allow-extension",
   treeshake: false,
 };
