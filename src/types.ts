@@ -387,6 +387,7 @@ export interface Labels {
   Slide?: string;
   Carousel?: string;
   Lightbox?: string;
+  "{{index}} / {{slidesLength}}"?: string;
 }
 
 export type Label = keyof Labels;
