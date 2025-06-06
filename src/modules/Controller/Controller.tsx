@@ -17,13 +17,13 @@ import {
   computeSlideRect,
   cssClass,
   cssVar,
-  label as translateLabel,
   makeComposePrefix,
   makeUseContext,
   parseLengthPercentage,
   round,
 } from "../../utils.js";
 import {
+  RegisterSensors,
   SubscribeSensors,
   useAnimation,
   useContainerRect,
@@ -45,6 +45,7 @@ export type ControllerContextType = Pick<ControllerRef, "prev" | "next" | "close
   focus: Callback;
   slideRect: ContainerRect;
   containerRect: ContainerRect;
+  registerSensors: RegisterSensors<HTMLDivElement>;
   subscribeSensors: SubscribeSensors<HTMLDivElement>;
   containerRef: React.RefObject<HTMLDivElement | null>;
   setCarouselRef: React.Ref<HTMLDivElement>;
@@ -57,7 +58,7 @@ export const ControllerContext = React.createContext<ControllerContextType | nul
 export const useController = makeUseContext("useController", "ControllerContext", ControllerContext);
 
 export function Controller({ children, ...props }: ComponentProps) {
-  const { carousel, animation, controller, on, styles, render, labels } = props;
+  const { carousel, animation, controller, on, styles, render } = props;
   const { closeOnPullUp, closeOnPullDown, preventDefaultWheelX, preventDefaultWheelY } = controller;
 
   const [toolbarWidth, setToolbarWidth] = React.useState<number>();
@@ -415,10 +416,6 @@ export function Controller({ children, ...props }: ComponentProps) {
         ...(controller.touchAction !== "none" ? { [cssVar("controller_touch_action")]: controller.touchAction } : null),
         ...styles.container,
       }}
-      role="region"
-      aria-live="polite"
-      aria-roledescription={translateLabel(labels, "Carousel")}
-      aria-label={translateLabel(labels, "Photo gallery")}
       tabIndex={-1}
       {...registerSensors}
     >

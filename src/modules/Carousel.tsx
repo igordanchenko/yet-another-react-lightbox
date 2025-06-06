@@ -112,9 +112,9 @@ function Placeholder() {
   return <div className={cssClass(CLASS_SLIDE)} style={style} />;
 }
 
-export function Carousel({ carousel }: ComponentProps) {
+export function Carousel({ carousel, labels }: ComponentProps) {
   const { slides, currentIndex, globalIndex } = useLightboxState();
-  const { setCarouselRef } = useController();
+  const { setCarouselRef, registerSensors } = useController();
 
   const spacingValue = parseLengthPercentage(carousel.spacing);
   const paddingValue = parseLengthPercentage(carousel.padding);
@@ -155,6 +155,12 @@ export function Carousel({ carousel }: ComponentProps) {
         [`${cssVar(cssPrefix("padding_px"))}`]: paddingValue.pixel || 0,
         [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
       }}
+      role="region"
+      aria-live="polite"
+      aria-roledescription={translateLabel(labels, "Carousel")}
+      aria-label={translateLabel(labels, "Photo gallery")}
+      tabIndex={-1}
+      {...registerSensors}
     >
       {items.map(({ key, slide, offset, index }) =>
         slide ? <CarouselSlide key={key} slide={slide} offset={offset} index={index} /> : <Placeholder key={key} />,
