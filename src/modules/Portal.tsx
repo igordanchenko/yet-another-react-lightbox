@@ -1,6 +1,5 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { FocusTrap } from "focus-trap-react";
 
 import { ComponentProps } from "../types.js";
 import { LightboxDefaultProps } from "../props.js";
@@ -110,36 +109,34 @@ export function Portal({ children, animation, styles, className, on, portal, clo
 
   return mounted
     ? createPortal(
-        <FocusTrap active={visible} focusTrapOptions={{ tabbableOptions: { displayCheck: "none" } }}>
-          <LightboxRoot
-            ref={handleRef}
-            className={clsx(
-              className,
-              cssClass(cssPrefix()),
-              cssClass(CLASS_NO_SCROLL_PADDING),
-              visible && cssClass(cssPrefix("open")),
-            )}
-            aria-modal
-            role="dialog"
-            aria-label={translateLabel(labels, "Lightbox")}
-            style={{
-              ...(animation.fade !== LightboxDefaultProps.animation.fade
-                ? { [cssVar("fade_animation_duration")]: `${animationDuration}ms` }
-                : null),
-              ...(animation.easing.fade !== LightboxDefaultProps.animation.easing.fade
-                ? { [cssVar("fade_animation_timing_function")]: animation.easing.fade }
-                : null),
-              ...styles.root,
-            }}
-            onFocus={(event) => {
-              if (!restoreFocus.current) {
-                restoreFocus.current = event.relatedTarget;
-              }
-            }}
-          >
-            {children}
-          </LightboxRoot>
-        </FocusTrap>,
+        <LightboxRoot
+          ref={handleRef}
+          className={clsx(
+            className,
+            cssClass(cssPrefix()),
+            cssClass(CLASS_NO_SCROLL_PADDING),
+            visible && cssClass(cssPrefix("open")),
+          )}
+          aria-modal
+          role="dialog"
+          aria-label={translateLabel(labels, "Lightbox")}
+          style={{
+            ...(animation.fade !== LightboxDefaultProps.animation.fade
+              ? { [cssVar("fade_animation_duration")]: `${animationDuration}ms` }
+              : null),
+            ...(animation.easing.fade !== LightboxDefaultProps.animation.easing.fade
+              ? { [cssVar("fade_animation_timing_function")]: animation.easing.fade }
+              : null),
+            ...styles.root,
+          }}
+          onFocus={(event) => {
+            if (!restoreFocus.current) {
+              restoreFocus.current = event.relatedTarget;
+            }
+          }}
+        >
+          {children}
+        </LightboxRoot>,
         portal.root || document.body,
       )
     : null;
