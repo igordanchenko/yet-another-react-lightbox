@@ -118,7 +118,7 @@ function Placeholder() {
 
 export function Carousel({ carousel, labels }: ComponentProps) {
   const { slides, currentIndex, globalIndex } = useLightboxState();
-  const { setCarouselRef, registerSensors, focus } = useController();
+  const { setCarouselRef, focus } = useController();
   const { getOwnerDocument } = useDocumentContext();
 
   const spacingValue = parseLengthPercentage(carousel.spacing);
@@ -174,7 +174,6 @@ export function Carousel({ carousel, labels }: ComponentProps) {
       aria-roledescription={translateLabel(labels, "Carousel")}
       aria-label={translateLabel(labels, "Photo gallery")}
       tabIndex={-1}
-      {...registerSensors}
     >
       {items.map(({ key, slide, offset, index }) =>
         slide ? <CarouselSlide key={key} slide={slide} offset={offset} index={index} /> : <Placeholder key={key} />,

@@ -22,7 +22,6 @@ import {
   round,
 } from "../../utils.js";
 import {
-  RegisterSensors,
   SubscribeSensors,
   useAnimation,
   useContainerRect,
@@ -44,7 +43,6 @@ export type ControllerContextType = Pick<ControllerRef, "prev" | "next" | "close
   focus: Callback;
   slideRect: ContainerRect;
   containerRect: ContainerRect;
-  registerSensors: RegisterSensors<HTMLDivElement>;
   subscribeSensors: SubscribeSensors<HTMLDivElement>;
   containerRef: React.RefObject<HTMLDivElement | null>;
   setCarouselRef: React.Ref<HTMLDivElement>;
@@ -350,7 +348,6 @@ export function Controller({ children, ...props }: ComponentProps) {
       // we are not going to render context provider when containerRect is undefined
       slideRect: containerRect ? computeSlideRect(containerRect, carousel.padding) : { width: 0, height: 0 },
       containerRect: containerRect || { width: 0, height: 0 },
-      registerSensors,
       subscribeSensors,
       containerRef,
       setCarouselRef,
@@ -362,7 +359,6 @@ export function Controller({ children, ...props }: ComponentProps) {
       next,
       close,
       focus,
-      registerSensors,
       subscribeSensors,
       containerRect,
       containerRef,
@@ -403,6 +399,7 @@ export function Controller({ children, ...props }: ComponentProps) {
         ...(controller.touchAction !== "none" ? { [cssVar("controller_touch_action")]: controller.touchAction } : null),
         ...styles.container,
       }}
+      {...registerSensors}
     >
       {containerRect && (
         <ControllerContext.Provider value={context}>
