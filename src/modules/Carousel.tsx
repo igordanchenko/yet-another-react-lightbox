@@ -15,6 +15,7 @@ import {
   label as translateLabel,
   makeInertWhen,
   parseLengthPercentage,
+  getSlideIndex,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
@@ -84,7 +85,7 @@ function CarouselSlide({ slide, offset, index }: CarouselSlideProps) {
   };
 
   const slideLabel = translateLabel(labels, "{{index}} / {{slidesLength}}")
-    .replace("{{index}}", String(index))
+    .replace("{{index}}", String(index + 1))
     .replace("{{slidesLength}}", String(slides.length));
 
   return (
@@ -135,7 +136,7 @@ export function Carousel({ carousel }: ComponentProps) {
           ? {
               key: [`${key}`, getSlideKey(slide)].filter(Boolean).join("|"),
               offset: index - currentIndex,
-              index,
+              index: getSlideIndex(index, slides.length),
               slide,
             }
           : { key },
