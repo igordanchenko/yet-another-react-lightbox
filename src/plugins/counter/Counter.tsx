@@ -26,7 +26,12 @@ export function CounterComponent({ counter }: ComponentProps) {
   if (slides.length === 0) return null;
 
   return (
-    <div className={clsx(cssClass("counter"), className || legacyClassName)} {...legacyRest} {...rest}>
+    <div
+      className={clsx(cssClass("counter"), className || legacyClassName)}
+      {...legacyRest}
+      {...rest}
+      aria-hidden="true"
+    >
       {currentIndex + 1} {separator} {slides.length}
     </div>
   );
