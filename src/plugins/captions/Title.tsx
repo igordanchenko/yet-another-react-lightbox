@@ -15,6 +15,8 @@ export function Title({ title }: TitleProps) {
 
   return (
     <div
+      role="heading"
+      aria-level={2}
       style={styles.captionsTitleContainer}
       className={clsx(cssPrefix("captions_container"), cssPrefix("title_container"))}
     >
