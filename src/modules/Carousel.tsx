@@ -84,7 +84,7 @@ function CarouselSlide({ slide, offset, index }: CarouselSlideProps) {
     ) : null;
   };
 
-  const slideLabel = translateLabel(labels, "{{index}} / {{slidesLength}}")
+  const slideLabel = translateLabel(labels, "{{index}} of {{slidesLength}}")
     .replace("{{index}}", String(index + 1))
     .replace("{{slidesLength}}", String(slides.length));
 
