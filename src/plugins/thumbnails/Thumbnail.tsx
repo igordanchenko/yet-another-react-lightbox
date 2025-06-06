@@ -9,12 +9,14 @@ import {
   ELEMENT_ICON,
   ImageSlide,
   isImageSlide,
+  label as translateLabel,
   makeComposePrefix,
   RenderThumbnailProps,
   Slide,
   useDocumentContext,
   useEventCallback,
   useLightboxProps,
+  useLightboxState,
 } from "../../index.js";
 import { cssThumbnailPrefix } from "./utils.js";
 import { useThumbnailsProps } from "./props.js";
@@ -75,6 +77,7 @@ export type FadeSettings = {
 
 export type ThumbnailProps = {
   slide: Slide | null;
+  index: number;
   onClick: () => void;
   active: boolean;
   fadeIn?: FadeSettings;
@@ -83,9 +86,19 @@ export type ThumbnailProps = {
   onLoseFocus: () => void;
 };
 
-export function Thumbnail({ slide, onClick, active, fadeIn, fadeOut, placeholder, onLoseFocus }: ThumbnailProps) {
+export function Thumbnail({
+  slide,
+  index,
+  onClick,
+  active,
+  fadeIn,
+  fadeOut,
+  placeholder,
+  onLoseFocus,
+}: ThumbnailProps) {
   const ref = React.useRef<HTMLButtonElement>(null);
-  const { render, styles } = useLightboxProps();
+  const { render, styles, labels } = useLightboxProps();
+  const { slides, currentIndex } = useLightboxState();
   const { getOwnerDocument } = useDocumentContext();
   const { width, height, imageFit } = useThumbnailsProps();
   const rect = { width, height };
@@ -97,6 +110,10 @@ export function Thumbnail({ slide, onClick, active, fadeIn, fadeOut, placeholder
       onLoseFocusCallback();
     }
   }, [fadeOut, onLoseFocusCallback, getOwnerDocument]);
+
+  const thumbnailLabel = translateLabel(labels, "{{index}} / {{slidesLength}}")
+    .replace("{{index}}", String(index + 1))
+    .replace("{{slidesLength}}", String(slides.length));
 
   return (
     <button
@@ -126,6 +143,8 @@ export function Thumbnail({ slide, onClick, active, fadeIn, fadeOut, placeholder
         ...styles.thumbnail,
       }}
       onClick={onClick}
+      aria-label={thumbnailLabel + (slide?.title ? ` - ${slide.title}` : "")}
+      aria-current={index === currentIndex ? true : undefined}
     >
       {slide && renderThumbnail({ slide, render, rect, imageFit })}
     </button>

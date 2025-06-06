@@ -59,6 +59,7 @@ declare module "../../types.js" {
   interface Labels {
     "Show thumbnails"?: string;
     "Hide thumbnails"?: string;
+    Thumbnails?: string;
   }
 
   /** `render.thumbnail` render function props */
