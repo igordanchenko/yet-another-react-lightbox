@@ -111,7 +111,7 @@ export function Thumbnail({
     }
   }, [fadeOut, onLoseFocusCallback, getOwnerDocument]);
 
-  const thumbnailLabel = translateLabel(labels, "{{index}} / {{slidesLength}}")
+  const thumbnailLabel = translateLabel(labels, "{{index}} of {{slidesLength}}")
     .replace("{{index}}", String(index + 1))
     .replace("{{slidesLength}}", String(slides.length));
 
