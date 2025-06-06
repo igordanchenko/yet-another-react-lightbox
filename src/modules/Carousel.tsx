@@ -16,11 +16,13 @@ import {
   makeInertWhen,
   parseLengthPercentage,
   getSlideIndex,
+  makeComposePrefix,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
 import { useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
-import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL } from "../consts.js";
+import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL, MODULE_PORTAL } from "../consts.js";
+import { useEventCallback } from "../hooks/useEventCallback.js";
 
 function cssPrefix(value?: string) {
   return composePrefix(MODULE_CAROUSEL, value);
@@ -29,6 +31,8 @@ function cssPrefix(value?: string) {
 function cssSlidePrefix(value?: string) {
   return composePrefix(CLASS_SLIDE, value);
 }
+
+const cssContainerPrefix = makeComposePrefix("container");
 
 type CarouselSlideProps = {
   slide: Slide;
@@ -114,7 +118,8 @@ function Placeholder() {
 
 export function Carousel({ carousel, labels }: ComponentProps) {
   const { slides, currentIndex, globalIndex } = useLightboxState();
-  const { setCarouselRef, registerSensors } = useController();
+  const { setCarouselRef, registerSensors, focus } = useController();
+  const { getOwnerDocument } = useDocumentContext();
 
   const spacingValue = parseLengthPercentage(carousel.spacing);
   const paddingValue = parseLengthPercentage(carousel.padding);
@@ -143,6 +148,15 @@ export function Carousel({ carousel, labels }: ComponentProps) {
       );
     }
   }
+
+  const focusOnMount = useEventCallback(() => {
+    // capture focus only when rendered inside a portal
+    if (getOwnerDocument().querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)) {
+      focus();
+    }
+  });
+
+  React.useEffect(focusOnMount, [focusOnMount]);
 
   return (
     <div
