@@ -12,13 +12,17 @@ import {
   getSlideKey,
   hasSlides,
   isImageSlide,
+  label as translateLabel,
   makeInertWhen,
   parseLengthPercentage,
+  getSlideIndex,
+  makeComposePrefix,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
 import { useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
-import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL } from "../consts.js";
+import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL, MODULE_PORTAL } from "../consts.js";
+import { useEventCallback } from "../hooks/useEventCallback.js";
 
 function cssPrefix(value?: string) {
   return composePrefix(MODULE_CAROUSEL, value);
@@ -28,21 +32,25 @@ function cssSlidePrefix(value?: string) {
   return composePrefix(CLASS_SLIDE, value);
 }
 
+const cssContainerPrefix = makeComposePrefix("container");
+
 type CarouselSlideProps = {
   slide: Slide;
   offset: number;
+  index: number;
 };
 
-function CarouselSlide({ slide, offset }: CarouselSlideProps) {
+function CarouselSlide({ slide, offset, index }: CarouselSlideProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const { currentIndex } = useLightboxState();
+  const { currentIndex, slides } = useLightboxState();
   const { slideRect, focus } = useController();
   const {
     render,
     carousel: { imageFit, imageProps },
     on: { click: onClick },
     styles: { slide: style },
+    labels,
   } = useLightboxProps();
   const { getOwnerDocument } = useDocumentContext();
 
@@ -80,6 +88,10 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     ) : null;
   };
 
+  const slideLabel = translateLabel(labels, "{{index}} of {{slidesLength}}")
+    .replace("{{index}}", String(index + 1))
+    .replace("{{slidesLength}}", String(slides.length));
+
   return (
     <div
       ref={containerRef}
@@ -91,7 +103,8 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
       {...makeInertWhen(offscreen)}
       style={style}
       role="region"
-      aria-roledescription="slide"
+      aria-roledescription={translateLabel(labels, "Slide")}
+      aria-label={slideLabel}
     >
       {renderSlide()}
     </div>
@@ -103,15 +116,19 @@ function Placeholder() {
   return <div className={cssClass(CLASS_SLIDE)} style={style} />;
 }
 
-export function Carousel({ carousel }: ComponentProps) {
+export function Carousel({ carousel, labels }: ComponentProps) {
   const { slides, currentIndex, globalIndex } = useLightboxState();
-  const { setCarouselRef } = useController();
+  const { setCarouselRef, focus } = useController();
+  const { getOwnerDocument } = useDocumentContext();
 
   const spacingValue = parseLengthPercentage(carousel.spacing);
   const paddingValue = parseLengthPercentage(carousel.padding);
 
   const preload = calculatePreload(carousel, slides, 1);
-  const items: ({ key: React.Key } & ({ slide: Slide; offset: number } | { slide?: never; offset?: never }))[] = [];
+  const items: ({ key: React.Key } & (
+    | { slide: Slide; offset: number; index: number }
+    | { slide?: never; offset?: never; index?: number }
+  ))[] = [];
 
   if (hasSlides(slides)) {
     for (let index = currentIndex - preload; index <= currentIndex + preload; index += 1) {
@@ -124,12 +141,22 @@ export function Carousel({ carousel }: ComponentProps) {
           ? {
               key: [`${key}`, getSlideKey(slide)].filter(Boolean).join("|"),
               offset: index - currentIndex,
+              index: getSlideIndex(index, slides.length),
               slide,
             }
           : { key },
       );
     }
   }
+
+  const focusOnMount = useEventCallback(() => {
+    // capture focus only when rendered inside a portal
+    if (getOwnerDocument().querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)) {
+      focus();
+    }
+  });
+
+  React.useEffect(focusOnMount, [focusOnMount]);
 
   return (
     <div
@@ -142,9 +169,14 @@ export function Carousel({ carousel }: ComponentProps) {
         [`${cssVar(cssPrefix("padding_px"))}`]: paddingValue.pixel || 0,
         [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
       }}
+      role="region"
+      aria-live="polite"
+      aria-roledescription={translateLabel(labels, "Carousel")}
+      aria-label={translateLabel(labels, "Photo gallery")}
+      tabIndex={-1}
     >
-      {items.map(({ key, slide, offset }) =>
-        slide ? <CarouselSlide key={key} slide={slide} offset={offset} /> : <Placeholder key={key} />,
+      {items.map(({ key, slide, offset, index }) =>
+        slide ? <CarouselSlide key={key} slide={slide} offset={offset} index={index} /> : <Placeholder key={key} />,
       )}
     </div>
   );
