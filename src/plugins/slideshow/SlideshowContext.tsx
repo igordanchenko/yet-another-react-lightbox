@@ -105,7 +105,7 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, on, 
   const { isFocusWithin } = useFocusWithin(containerRef);
 
   React.useEffect(() => {
-    carouselRef.current?.setAttribute("aria-live", isFocusWithin && playing ? "off" : "polite");
+    carouselRef.current?.setAttribute("aria-live", !isFocusWithin && playing ? "off" : "polite");
   }, [isFocusWithin, carouselRef, playing]);
 
   React.useEffect(
