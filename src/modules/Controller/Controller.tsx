@@ -45,6 +45,7 @@ export type ControllerContextType = Pick<ControllerRef, "prev" | "next" | "close
   containerRect: ContainerRect;
   subscribeSensors: SubscribeSensors<HTMLDivElement>;
   containerRef: React.RefObject<HTMLDivElement | null>;
+  carouselRef: React.RefObject<HTMLDivElement | null>;
   setCarouselRef: React.Ref<HTMLDivElement>;
   toolbarWidth: number | undefined;
   setToolbarWidth: (width: number | undefined) => void;
@@ -350,6 +351,7 @@ export function Controller({ children, ...props }: ComponentProps) {
       containerRect: containerRect || { width: 0, height: 0 },
       subscribeSensors,
       containerRef,
+      carouselRef,
       setCarouselRef,
       toolbarWidth,
       setToolbarWidth,
@@ -362,6 +364,7 @@ export function Controller({ children, ...props }: ComponentProps) {
       subscribeSensors,
       containerRect,
       containerRef,
+      carouselRef,
       setCarouselRef,
       toolbarWidth,
       setToolbarWidth,
