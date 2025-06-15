@@ -7,7 +7,6 @@ import {
   ACTION_SWIPE,
   CLASS_FLEX_CENTER,
   MODULE_CONTROLLER,
-  MODULE_PORTAL,
 } from "../../consts.js";
 import { Callback, ComponentProps, ContainerRect, ControllerRef } from "../../types.js";
 import { createModule } from "../../config.js";
@@ -32,7 +31,7 @@ import {
   useRTL,
   useSensors,
 } from "../../hooks/index.js";
-import { useDocumentContext, useEvents, useLightboxDispatch, useLightboxState } from "../../contexts/index.js";
+import { useEvents, useLightboxDispatch, useLightboxState } from "../../contexts/index.js";
 import { SwipeState } from "./SwipeState.js";
 import { useWheelSwipe } from "./useWheelSwipe.js";
 import { usePointerSwipe } from "./usePointerSwipe.js";
@@ -46,6 +45,7 @@ export type ControllerContextType = Pick<ControllerRef, "prev" | "next" | "close
   containerRect: ContainerRect;
   subscribeSensors: SubscribeSensors<HTMLDivElement>;
   containerRef: React.RefObject<HTMLDivElement | null>;
+  carouselRef: React.RefObject<HTMLDivElement | null>;
   setCarouselRef: React.Ref<HTMLDivElement>;
   toolbarWidth: number | undefined;
   setToolbarWidth: (width: number | undefined) => void;
@@ -85,13 +85,11 @@ export function Controller({ children, ...props }: ComponentProps) {
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const setCarouselRef = useForkRef(carouselRef, undefined);
 
-  const { getOwnerDocument } = useDocumentContext();
-
   const isRTL = useRTL();
 
   const rtl = (value?: number) => (isRTL ? -1 : 1) * (typeof value === "number" ? value : 1);
 
-  const focus = useEventCallback(() => containerRef.current?.focus());
+  const focus = useEventCallback(() => carouselRef.current?.focus());
 
   const getLightboxProps = useEventCallback(() => props);
   const getLightboxState = useEventCallback(() => state);
@@ -326,18 +324,6 @@ export function Controller({ children, ...props }: ComponentProps) {
 
   useWheelSwipe(swipeState, ...swipeParams);
 
-  const focusOnMount = useEventCallback(() => {
-    // capture focus only when rendered inside a portal
-    if (
-      controller.focus &&
-      getOwnerDocument().querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)
-    ) {
-      focus();
-    }
-  });
-
-  React.useEffect(focusOnMount, [focusOnMount]);
-
   const onViewCallback = useEventCallback(() => {
     on.view?.({ index: state.currentIndex });
   });
@@ -365,6 +351,7 @@ export function Controller({ children, ...props }: ComponentProps) {
       containerRect: containerRect || { width: 0, height: 0 },
       subscribeSensors,
       containerRef,
+      carouselRef,
       setCarouselRef,
       toolbarWidth,
       setToolbarWidth,
@@ -377,6 +364,7 @@ export function Controller({ children, ...props }: ComponentProps) {
       subscribeSensors,
       containerRect,
       containerRef,
+      carouselRef,
       setCarouselRef,
       toolbarWidth,
       setToolbarWidth,
@@ -414,8 +402,6 @@ export function Controller({ children, ...props }: ComponentProps) {
         ...(controller.touchAction !== "none" ? { [cssVar("controller_touch_action")]: controller.touchAction } : null),
         ...styles.container,
       }}
-      {...(controller.aria ? { role: "region", "aria-live": "polite", "aria-roledescription": "carousel" } : null)}
-      tabIndex={-1}
       {...registerSensors}
     >
       {containerRect && (

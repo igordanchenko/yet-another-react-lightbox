@@ -57,6 +57,7 @@ declare module "../../types.js" {
   }
 
   interface Labels {
+    Caption?: string;
     "Show captions"?: string;
     "Hide captions"?: string;
   }
