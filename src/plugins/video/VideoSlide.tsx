@@ -94,7 +94,7 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
   const scaleWidthAndHeight = () => {
     const scalingProps: React.ComponentProps<"video"> = {};
 
-    // to prevent video element overflow from its container
+    // to prevent the video element overflow from its container
     scalingProps.style = { maxWidth: "100%", maxHeight: "100%" };
 
     if (width && height && containerRect) {
@@ -124,6 +124,13 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
       return { [attr]: slide[attr] || video[attr] };
     }
     return null;
+  };
+
+  // avoid conflicts with swipe navigation in Safari
+  const stopPropagationInSafari = (event: React.PointerEvent) => {
+    if (/^((?!chrome|android).)*(safari|mobile)/i.test(navigator.userAgent)) {
+      event.stopPropagation();
+    }
   };
 
   return (
@@ -167,6 +174,9 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
               onEnded={() => {
                 publish(ACTIVE_SLIDE_COMPLETE);
               }}
+              onPointerUp={stopPropagationInSafari}
+              onPointerDown={stopPropagationInSafari}
+              onPointerMove={stopPropagationInSafari}
             >
               {sources.map(({ src, type, media }) => (
                 <source key={[src, type, media].filter(Boolean).join("|")} src={src} type={type} media={media} />
