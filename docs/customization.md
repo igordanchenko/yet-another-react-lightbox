@@ -166,6 +166,31 @@ or
   --yarl__color_backdrop: rgba(0, 0, 0, 0.8);
 }
 ```
+#### Custom class names
+
+In case completely custom classnames are needed, e.g. because css classes are 
+prefixed / postfixed during build, a `classNameResolver` can be used:
+
+```jsx
+import { setClassNameResolver } from 'yet-another-react-lightbox';
+import yarlClasses from 'yet-another-react-lightbox/styles.css';
+import yarlCaptionClasses from 'yet-another-react-lightbox/plugins/captions.css';
+
+setClassNameResolver((originalClassName: string) => {
+  const yarlKey = _.camelCase(`yarl_${originalClassName}`);
+
+  if (Object.keys(yarlClasses as Record<string, string>).includes(yarlKey)) {
+    return (yarlClasses as Record<string, string>)[yarlKey];
+  }
+
+  if (Object.keys(yarlCaptionClasses as Record<string, string>).includes(yarlKey)) {
+    return (yarlCaptionClasses as Record<string, string>)[yarlKey];
+  }
+
+  return originalClassName;
+});
+
+```
 
 ## Adding Toolbar Buttons
 

@@ -12,6 +12,12 @@ import {
   ToolbarSettings,
 } from "./types.js";
 
+let classNameResolver: ((className: string) => string) | undefined;
+
+export function setClassNameResolver(resolver: typeof classNameResolver) {
+  classNameResolver = resolver;
+}
+
 const cssPrefix = "yarl__";
 
 export function clsx(...classes: (string | boolean | undefined)[]) {
@@ -19,7 +25,7 @@ export function clsx(...classes: (string | boolean | undefined)[]) {
 }
 
 export function cssClass(name: string) {
-  return `${cssPrefix}${name}`;
+  return classNameResolver ? classNameResolver(name) : `${cssPrefix}${name}`;
 }
 
 export function cssVar(name: string) {

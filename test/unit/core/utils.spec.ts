@@ -1,8 +1,8 @@
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { afterEach, beforeEach, vi } from "vitest";
 
-import { cleanup, clsx, cssClass, cssVar, label, makeUseContext } from "../../../src/utils.js";
+import { cleanup, clsx, cssClass, cssVar, label, makeUseContext, setClassNameResolver } from "../../../src/utils.js";
 import { Labels } from "../../../src/types.js";
 
 describe("utils", () => {
@@ -52,6 +52,20 @@ describe("utils", () => {
   describe("cssClass", () => {
     it("prepends css class prefix", () => {
       expect(cssClass("class")).toBe("yarl__class");
+    });
+
+    describe("with classNameResolver", () => {
+      beforeEach(() => {
+        setClassNameResolver((oName) => `resolved-${oName}-with-postfix`);
+      });
+
+      it("replaces css class with return value", () => {
+        expect(cssClass("class")).toBe("resolved-class-with-postfix");
+      });
+
+      afterEach(() => {
+        setClassNameResolver(undefined);
+      });
     });
   });
 
