@@ -93,7 +93,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
       )}
       {...makeInertWhen(offscreen)}
       style={style}
-      role="region"
+      role="group"
       aria-roledescription={translateLabel(labels, "Slide")}
       aria-label={translateSlideCounter(labels, slides, currentIndex + offset)}
     >
