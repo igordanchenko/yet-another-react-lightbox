@@ -389,7 +389,7 @@ export interface Labels {
   Carousel?: string;
   Lightbox?: string;
   "Photo gallery"?: string;
-  "{{index}} of {{slidesLength}}"?: string;
+  "{index} of {total}"?: string;
 }
 
 export type Label = keyof Labels;
