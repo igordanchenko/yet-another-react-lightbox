@@ -34,8 +34,13 @@ export function makeComposePrefix(base: string) {
   return (prefix?: string) => composePrefix(base, prefix);
 }
 
-export function label(labels: Labels | undefined, defaultLabel: Label) {
+export function translateLabel(labels: Labels | undefined, defaultLabel: Label) {
   return labels?.[defaultLabel] ?? defaultLabel;
+}
+
+/** @deprecated - use `translateLabel` instead */
+export function label(labels: Labels | undefined, defaultLabel: Label) {
+  return translateLabel(labels, defaultLabel);
 }
 
 export function cleanup(...cleaners: (() => void)[]) {

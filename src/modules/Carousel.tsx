@@ -13,9 +13,9 @@ import {
   getSlideKey,
   hasSlides,
   isImageSlide,
-  label as translateLabel,
   makeInertWhen,
   parseLengthPercentage,
+  translateLabel,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";

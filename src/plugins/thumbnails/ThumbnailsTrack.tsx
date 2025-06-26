@@ -11,10 +11,11 @@ import {
   cssClass,
   cssVar,
   getSlide,
+  getSlideIndex,
   getSlideKey,
   hasSlides,
-  label as translateLabel,
   Slide,
+  translateLabel,
   useAnimation,
   useEventCallback,
   useEvents,
@@ -23,7 +24,6 @@ import {
   useLightboxState,
   useRTL,
   useSensors,
-  getSlideIndex,
 } from "../../index.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
