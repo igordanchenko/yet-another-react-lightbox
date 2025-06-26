@@ -7,6 +7,7 @@ import {
   ACTION_SWIPE,
   CLASS_FLEX_CENTER,
   MODULE_CONTROLLER,
+  MODULE_PORTAL,
 } from "../../consts.js";
 import { Callback, ComponentProps, ContainerRect, ControllerRef } from "../../types.js";
 import { createModule } from "../../config.js";
@@ -31,7 +32,7 @@ import {
   useRTL,
   useSensors,
 } from "../../hooks/index.js";
-import { useEvents, useLightboxDispatch, useLightboxState } from "../../contexts/index.js";
+import { useDocumentContext, useEvents, useLightboxDispatch, useLightboxState } from "../../contexts/index.js";
 import { SwipeState } from "./SwipeState.js";
 import { useWheelSwipe } from "./useWheelSwipe.js";
 import { usePointerSwipe } from "./usePointerSwipe.js";
@@ -85,11 +86,13 @@ export function Controller({ children, ...props }: ComponentProps) {
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const setCarouselRef = useForkRef(carouselRef, undefined);
 
+  const { getOwnerDocument } = useDocumentContext();
+
   const isRTL = useRTL();
 
   const rtl = (value?: number) => (isRTL ? -1 : 1) * (typeof value === "number" ? value : 1);
 
-  const focus = useEventCallback(() => carouselRef.current?.focus());
+  const focus = useEventCallback(() => containerRef.current?.focus());
 
   const getLightboxProps = useEventCallback(() => props);
   const getLightboxState = useEventCallback(() => state);
@@ -324,6 +327,15 @@ export function Controller({ children, ...props }: ComponentProps) {
 
   useWheelSwipe(swipeState, ...swipeParams);
 
+  const focusOnMount = useEventCallback(() => {
+    // capture focus only when rendered inside a portal
+    if (getOwnerDocument().querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)) {
+      focus();
+    }
+  });
+
+  React.useEffect(focusOnMount, [focusOnMount]);
+
   const onViewCallback = useEventCallback(() => {
     on.view?.({ index: state.currentIndex });
   });
@@ -402,6 +414,7 @@ export function Controller({ children, ...props }: ComponentProps) {
         ...(controller.touchAction !== "none" ? { [cssVar("controller_touch_action")]: controller.touchAction } : null),
         ...styles.container,
       }}
+      tabIndex={-1}
       {...registerSensors}
     >
       {containerRect && (
