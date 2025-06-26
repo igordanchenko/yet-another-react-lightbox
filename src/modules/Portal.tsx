@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { ComponentProps } from "../types.js";
 import { LightboxDefaultProps } from "../props.js";
 import { createModule } from "../config.js";
-import { clsx, composePrefix, cssClass, cssVar, label as translateLabel, reflow } from "../utils.js";
+import { clsx, composePrefix, cssClass, cssVar, reflow, translateLabel } from "../utils.js";
 import { useEventCallback, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 import { LightboxRoot } from "../components/index.js";
