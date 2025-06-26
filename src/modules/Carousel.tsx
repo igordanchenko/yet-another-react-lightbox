@@ -9,17 +9,17 @@ import {
   cssClass,
   cssVar,
   getSlide,
+  getSlideIndex,
   getSlideKey,
   hasSlides,
   isImageSlide,
   label as translateLabel,
   makeInertWhen,
   parseLengthPercentage,
-  getSlideIndex,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
-import { useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
+import { useA11yContext, useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
 import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
@@ -115,6 +115,7 @@ function Placeholder() {
 export function Carousel({ carousel, labels }: ComponentProps) {
   const { slides, currentIndex, globalIndex } = useLightboxState();
   const { setCarouselRef } = useController();
+  const { autoPlaying, focusWithin } = useA11yContext();
 
   const spacingValue = parseLengthPercentage(carousel.spacing);
   const paddingValue = parseLengthPercentage(carousel.padding);
@@ -156,7 +157,7 @@ export function Carousel({ carousel, labels }: ComponentProps) {
         [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
       }}
       role="region"
-      aria-live="polite"
+      aria-live={autoPlaying && !focusWithin ? "off" : "polite"}
       aria-roledescription={translateLabel(labels, "Carousel")}
       aria-label={translateLabel(labels, "Photo gallery")}
     >

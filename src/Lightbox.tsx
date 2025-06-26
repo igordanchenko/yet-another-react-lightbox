@@ -4,7 +4,13 @@ import { AnimationSettings, ComponentProps, LightboxExternalProps, Node } from "
 import { parseInt } from "./utils.js";
 import { LightboxDefaultProps } from "./props.js";
 import { createNode, withPlugins } from "./config.js";
-import { EventsProvider, LightboxPropsProvider, LightboxStateProvider, TimeoutsProvider } from "./contexts/index.js";
+import {
+  A11yContextProvider,
+  EventsProvider,
+  LightboxPropsProvider,
+  LightboxStateProvider,
+  TimeoutsProvider,
+} from "./contexts/index.js";
 import {
   CarouselModule,
   ControllerModule,
@@ -98,7 +104,9 @@ export function Lightbox({
         index={parseInt(index || defaultIndex)}
       >
         <TimeoutsProvider>
-          <EventsProvider>{renderNode(createNode(RootModule, config), props)}</EventsProvider>
+          <EventsProvider>
+            <A11yContextProvider>{renderNode(createNode(RootModule, config), props)}</A11yContextProvider>
+          </EventsProvider>
         </TimeoutsProvider>
       </LightboxStateProvider>
     </LightboxPropsProvider>
