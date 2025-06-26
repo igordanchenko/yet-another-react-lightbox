@@ -17,6 +17,7 @@ import {
   useLightboxProps,
 } from "../../index.js";
 import { useVideoProps } from "./props.js";
+import { isChromium, isWebKit } from "./utils.js";
 
 export type VideoSlideProps = {
   slide: SlideVideo;
@@ -62,12 +63,7 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
   });
 
   React.useEffect(() => {
-    const isChromium =
-      (navigator as { userAgentData?: { brands: { brand: string }[] } }).userAgentData?.brands.some(
-        ({ brand }) => brand === "Chromium",
-      ) || !!(window as { chrome?: unknown }).chrome;
-
-    if (isChromium && offset === 0) {
+    if (isChromium() && offset === 0) {
       return fixupPlayerControls();
     }
   }, [offset, fixupPlayerControls]);
@@ -126,13 +122,6 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
     return null;
   };
 
-  // avoid conflicts with swipe navigation in Safari
-  const stopPropagationInSafari = (event: React.PointerEvent) => {
-    if (/^((?!chrome|android).)*(safari|mobile)/i.test(navigator.userAgent)) {
-      event.stopPropagation();
-    }
-  };
-
   return (
     <>
       {sources && (
@@ -174,9 +163,17 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
               onEnded={() => {
                 publish(ACTIVE_SLIDE_COMPLETE);
               }}
-              onPointerUp={stopPropagationInSafari}
-              onPointerDown={stopPropagationInSafari}
-              onPointerMove={stopPropagationInSafari}
+              onPointerDown={(event) => {
+                // avoid conflicts with swipe navigation in WebKit browsers
+                // heuristic: suppress `pointerDown` events that happen in the area around the video progress bar
+                if (
+                  isWebKit() &&
+                  videoRef.current &&
+                  videoRef.current.getBoundingClientRect().bottom - event.clientY < 40
+                ) {
+                  event.stopPropagation();
+                }
+              }}
             >
               {sources.map(({ src, type, media }) => (
                 <source key={[src, type, media].filter(Boolean).join("|")} src={src} type={type} media={media} />
