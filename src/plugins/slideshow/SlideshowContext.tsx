@@ -21,7 +21,6 @@ import {
   useTimeouts,
 } from "../../index.js";
 import { resolveSlideshowProps } from "./props.js";
-import { useFocusWithin } from "../../hooks/useFocusWithin.js";
 
 export const SlideshowContext = React.createContext<SlideshowRef | null>(null);
 
@@ -39,7 +38,7 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, on, 
   const { slides, currentIndex } = useLightboxState();
   const { setTimeout, clearTimeout } = useTimeouts();
   const { subscribe } = useEvents();
-  const { next, containerRef, carouselRef } = useController();
+  const { next } = useController();
 
   const disabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
 
@@ -101,12 +100,6 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, on, 
 
     wasPlaying.current = playing;
   }, [playing, onSlideshowStart, onSlideshowStop]);
-
-  const { isFocusWithin } = useFocusWithin(containerRef);
-
-  React.useEffect(() => {
-    carouselRef.current?.setAttribute("aria-live", isFocusWithin && playing ? "off" : "polite");
-  }, [isFocusWithin, carouselRef, playing]);
 
   React.useEffect(
     () =>
