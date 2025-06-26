@@ -143,7 +143,7 @@ export function Thumbnail({
         ...styles.thumbnail,
       }}
       onClick={onClick}
-      aria-label={thumbnailLabel + (slide?.title ? ` - ${slide.title}` : "")}
+      aria-label={thumbnailLabel}
       aria-current={index === currentIndex ? true : undefined}
     >
       {slide && renderThumbnail({ slide, render, rect, imageFit })}
