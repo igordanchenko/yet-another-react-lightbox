@@ -30,7 +30,8 @@ export function CounterComponent({ counter }: ComponentProps) {
       className={clsx(cssClass("counter"), className || legacyClassName)}
       {...legacyRest}
       {...rest}
-      aria-hidden="true"
+      // slides already provide the "k of N" label, so there is no need to override the `aria-hidden` attribute here
+      aria-hidden
     >
       {currentIndex + 1} {separator} {slides.length}
     </div>
