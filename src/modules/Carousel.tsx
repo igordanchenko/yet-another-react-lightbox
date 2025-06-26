@@ -16,13 +16,11 @@ import {
   makeInertWhen,
   parseLengthPercentage,
   getSlideIndex,
-  makeComposePrefix,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
 import { useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
-import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL, MODULE_PORTAL } from "../consts.js";
-import { useEventCallback } from "../hooks/useEventCallback.js";
+import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
   return composePrefix(MODULE_CAROUSEL, value);
@@ -31,8 +29,6 @@ function cssPrefix(value?: string) {
 function cssSlidePrefix(value?: string) {
   return composePrefix(CLASS_SLIDE, value);
 }
-
-const cssContainerPrefix = makeComposePrefix("container");
 
 type CarouselSlideProps = {
   slide: Slide;
@@ -118,8 +114,7 @@ function Placeholder() {
 
 export function Carousel({ carousel, labels }: ComponentProps) {
   const { slides, currentIndex, globalIndex } = useLightboxState();
-  const { setCarouselRef, focus } = useController();
-  const { getOwnerDocument } = useDocumentContext();
+  const { setCarouselRef } = useController();
 
   const spacingValue = parseLengthPercentage(carousel.spacing);
   const paddingValue = parseLengthPercentage(carousel.padding);
@@ -149,15 +144,6 @@ export function Carousel({ carousel, labels }: ComponentProps) {
     }
   }
 
-  const focusOnMount = useEventCallback(() => {
-    // capture focus only when rendered inside a portal
-    if (getOwnerDocument().querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)) {
-      focus();
-    }
-  });
-
-  React.useEffect(focusOnMount, [focusOnMount]);
-
   return (
     <div
       ref={setCarouselRef}
@@ -173,7 +159,6 @@ export function Carousel({ carousel, labels }: ComponentProps) {
       aria-live="polite"
       aria-roledescription={translateLabel(labels, "Carousel")}
       aria-label={translateLabel(labels, "Photo gallery")}
-      tabIndex={-1}
     >
       {items.map(({ key, slide, offset, index }) =>
         slide ? <CarouselSlide key={key} slide={slide} offset={offset} index={index} /> : <Placeholder key={key} />,
