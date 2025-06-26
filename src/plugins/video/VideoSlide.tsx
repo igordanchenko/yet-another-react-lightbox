@@ -12,6 +12,7 @@ import {
   reflow,
   SlideVideo,
   useContainerRect,
+  useDocumentContext,
   useEventCallback,
   useEvents,
   useLightboxProps,
@@ -29,8 +30,10 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
   const video = useVideoProps();
   const { publish } = useEvents();
   const { setContainerRef, containerRect, containerRef } = useContainerRect();
+  const { getOwnerDocument } = useDocumentContext();
   const { animation } = useLightboxProps();
   const videoRef = React.useRef<HTMLVideoElement>(null);
+  const freezeNavigation = React.useRef(false);
 
   React.useEffect(() => {
     if (offset !== 0 && videoRef.current && !videoRef.current.paused) {
@@ -85,6 +88,31 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
     [handleVideoRef],
   );
 
+  React.useEffect(() => {
+    if (offset === 0) {
+      let fullscreen = false;
+
+      const onFullscreenChange = () => {
+        fullscreen = getOwnerDocument().fullscreenElement === videoRef.current;
+        freezeNavigation.current = fullscreen;
+      };
+
+      getOwnerDocument().addEventListener("fullscreenchange", onFullscreenChange);
+
+      return () => {
+        getOwnerDocument().removeEventListener("fullscreenchange", onFullscreenChange);
+
+        if (fullscreen) {
+          freezeNavigation.current = false;
+
+          getOwnerDocument()
+            .exitFullscreen()
+            .catch(() => {});
+        }
+      };
+    }
+  }, [offset, getOwnerDocument]);
+
   const { width, height, poster, sources } = slide;
 
   const scaleWidthAndHeight = () => {
@@ -120,6 +148,12 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
       return { [attr]: slide[attr] || video[attr] };
     }
     return null;
+  };
+
+  const suppressWhenFrozen = (event: React.UIEvent) => {
+    if (freezeNavigation.current) {
+      event.stopPropagation();
+    }
   };
 
   return (
@@ -163,7 +197,11 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
               onEnded={() => {
                 publish(ACTIVE_SLIDE_COMPLETE);
               }}
+              onWheel={suppressWhenFrozen}
+              onKeyDown={suppressWhenFrozen}
               onPointerDown={(event) => {
+                suppressWhenFrozen(event);
+
                 // avoid conflicts with swipe navigation in WebKit browsers
                 // heuristic: suppress `pointerDown` events that happen in the area around the video progress bar
                 if (
