@@ -217,7 +217,7 @@ export interface ControllerSettings {
   /** @deprecated for internal use only */
   touchAction: "none" | "pan-y";
   // TODO v4: remove
-  /** @deprecated describe the carousel for AT even if it is contained in a dialog */
+  /** @deprecated for internal use only */
   aria: boolean;
   /** if `true`, close the lightbox on pull-up gesture */
   closeOnPullUp: boolean;

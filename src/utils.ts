@@ -43,6 +43,12 @@ export function label(labels: Labels | undefined, defaultLabel: Label) {
   return translateLabel(labels, defaultLabel);
 }
 
+export function translateSlideCounter(labels: Labels | undefined, slides: Slide[], index: number) {
+  return translateLabel(labels, "{{index}} of {{slidesLength}}")
+    .replace("{{index}}", String(getSlideIndex(index, slides.length) + 1))
+    .replace("{{slidesLength}}", String(slides.length));
+}
+
 export function cleanup(...cleaners: (() => void)[]) {
   return () => {
     cleaners.forEach((cleaner) => {

@@ -24,7 +24,7 @@ export function A11yContextProvider({ children }: React.PropsWithChildren) {
   const [autoPlaying, setAutoPlaying] = React.useState(false);
 
   const context = React.useMemo(() => {
-    const trackFocusWithin = (onFocus?: React.FocusEventHandler, onBlur?: React.FocusEventHandler) => {
+    const trackFocusWithin: A11yContextType["trackFocusWithin"] = (onFocus, onBlur) => {
       const trackAndDelegate = (focusWithinValue: boolean) => (event: React.FocusEvent) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {
           setFocusWithin(focusWithinValue);

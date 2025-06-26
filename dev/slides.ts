@@ -5,9 +5,9 @@ function imageLink(asset: string, size: number) {
 }
 
 export const slides = [
-  { asset: "image01.0800ee93.3840x5760" },
-  { asset: "image02.645bc7e4.3840x5070" },
-  { asset: "image03.13c5eeb7.3840x5120" },
+  { asset: "image01.0800ee93.3840x5760", description: "Puppy in sunglasses" },
+  { asset: "image02.645bc7e4.3840x5070", description: "Miami beach" },
+  { asset: "image03.13c5eeb7.3840x5120", description: "Flamingo" },
   { asset: "image04.2d71a97f.3840x2546" },
   { asset: "image05.c6ce32ab.3840x5760" },
   { asset: "image06.74d5e191.3840x2553" },
@@ -65,7 +65,6 @@ export const slides = [
     src: imageLink(asset, width),
     width,
     height,
-    description: "Description of the image",
     srcSet: breakpoints.map((breakpoint) => ({
       src: imageLink(asset, breakpoint),
       width: breakpoint,

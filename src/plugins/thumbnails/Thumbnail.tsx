@@ -12,7 +12,7 @@ import {
   makeComposePrefix,
   RenderThumbnailProps,
   Slide,
-  translateLabel,
+  translateSlideCounter,
   useDocumentContext,
   useEventCallback,
   useLightboxProps,
@@ -79,29 +79,20 @@ export type ThumbnailProps = {
   slide: Slide | null;
   index: number;
   onClick: () => void;
-  active: boolean;
   fadeIn?: FadeSettings;
   fadeOut?: FadeSettings;
   placeholder: boolean;
   onLoseFocus: () => void;
 };
 
-export function Thumbnail({
-  slide,
-  index,
-  onClick,
-  active,
-  fadeIn,
-  fadeOut,
-  placeholder,
-  onLoseFocus,
-}: ThumbnailProps) {
+export function Thumbnail({ slide, index, onClick, fadeIn, fadeOut, placeholder, onLoseFocus }: ThumbnailProps) {
   const ref = React.useRef<HTMLButtonElement>(null);
   const { render, styles, labels } = useLightboxProps();
-  const { slides, currentIndex } = useLightboxState();
+  const { slides, globalIndex } = useLightboxState();
   const { getOwnerDocument } = useDocumentContext();
   const { width, height, imageFit } = useThumbnailsProps();
   const rect = { width, height };
+  const active = index === globalIndex;
 
   const onLoseFocusCallback = useEventCallback(onLoseFocus);
 
@@ -110,10 +101,6 @@ export function Thumbnail({
       onLoseFocusCallback();
     }
   }, [fadeOut, onLoseFocusCallback, getOwnerDocument]);
-
-  const thumbnailLabel = translateLabel(labels, "{{index}} of {{slidesLength}}")
-    .replace("{{index}}", String(index + 1))
-    .replace("{{slidesLength}}", String(slides.length));
 
   return (
     <button
@@ -143,8 +130,8 @@ export function Thumbnail({
         ...styles.thumbnail,
       }}
       onClick={onClick}
-      aria-label={thumbnailLabel}
-      aria-current={index === currentIndex ? true : undefined}
+      aria-current={active ? true : undefined}
+      aria-label={translateSlideCounter(labels, slides, index)}
     >
       {slide && renderThumbnail({ slide, render, rect, imageFit })}
     </button>

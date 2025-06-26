@@ -11,7 +11,6 @@ import {
   cssClass,
   cssVar,
   getSlide,
-  getSlideIndex,
   getSlideKey,
   hasSlides,
   Slide,
@@ -161,7 +160,6 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
     >
       <nav
         ref={track}
-        role="navigation"
         style={styles.thumbnailsTrack}
         className={clsx(cssClass(cssPrefix("track")), cssClass(CLASS_FLEX_CENTER))}
         aria-label={translateLabel(labels, "Thumbnails")}
@@ -197,9 +195,8 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
           return (
             <Thumbnail
               key={key}
-              index={getSlideIndex(index, slides.length)}
+              index={index}
               slide={slide}
-              active={index === globalIndex}
               fadeIn={fadeIn}
               fadeOut={fadeOut}
               placeholder={!slide}

@@ -9,13 +9,13 @@ import {
   cssClass,
   cssVar,
   getSlide,
-  getSlideIndex,
   getSlideKey,
   hasSlides,
   isImageSlide,
   makeInertWhen,
   parseLengthPercentage,
   translateLabel,
+  translateSlideCounter,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
@@ -33,10 +33,9 @@ function cssSlidePrefix(value?: string) {
 type CarouselSlideProps = {
   slide: Slide;
   offset: number;
-  index: number;
 };
 
-function CarouselSlide({ slide, offset, index }: CarouselSlideProps) {
+function CarouselSlide({ slide, offset }: CarouselSlideProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const { currentIndex, slides } = useLightboxState();
@@ -84,10 +83,6 @@ function CarouselSlide({ slide, offset, index }: CarouselSlideProps) {
     ) : null;
   };
 
-  const slideLabel = translateLabel(labels, "{{index}} of {{slidesLength}}")
-    .replace("{{index}}", String(index + 1))
-    .replace("{{slidesLength}}", String(slides.length));
-
   return (
     <div
       ref={containerRef}
@@ -100,7 +95,7 @@ function CarouselSlide({ slide, offset, index }: CarouselSlideProps) {
       style={style}
       role="region"
       aria-roledescription={translateLabel(labels, "Slide")}
-      aria-label={slideLabel}
+      aria-label={translateSlideCounter(labels, slides, currentIndex + offset)}
     >
       {renderSlide()}
     </div>
@@ -121,10 +116,7 @@ export function Carousel({ carousel, labels }: ComponentProps) {
   const paddingValue = parseLengthPercentage(carousel.padding);
 
   const preload = calculatePreload(carousel, slides, 1);
-  const items: ({ key: React.Key } & (
-    | { slide: Slide; offset: number; index: number }
-    | { slide?: never; offset?: never; index?: number }
-  ))[] = [];
+  const items: ({ key: React.Key } & ({ slide: Slide; offset: number } | { slide?: never; offset?: never }))[] = [];
 
   if (hasSlides(slides)) {
     for (let index = currentIndex - preload; index <= currentIndex + preload; index += 1) {
@@ -137,7 +129,6 @@ export function Carousel({ carousel, labels }: ComponentProps) {
           ? {
               key: [`${key}`, getSlideKey(slide)].filter(Boolean).join("|"),
               offset: index - currentIndex,
-              index: getSlideIndex(index, slides.length),
               slide,
             }
           : { key },
@@ -161,8 +152,8 @@ export function Carousel({ carousel, labels }: ComponentProps) {
       aria-roledescription={translateLabel(labels, "Carousel")}
       aria-label={translateLabel(labels, "Photo gallery")}
     >
-      {items.map(({ key, slide, offset, index }) =>
-        slide ? <CarouselSlide key={key} slide={slide} offset={offset} index={index} /> : <Placeholder key={key} />,
+      {items.map(({ key, slide, offset }) =>
+        slide ? <CarouselSlide key={key} slide={slide} offset={offset} /> : <Placeholder key={key} />,
       )}
     </div>
   );

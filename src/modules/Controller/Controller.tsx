@@ -328,7 +328,10 @@ export function Controller({ children, ...props }: ComponentProps) {
 
   const focusOnMount = useEventCallback(() => {
     // capture focus only when rendered inside a portal
-    if (getOwnerDocument().querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)) {
+    if (
+      controller.focus &&
+      getOwnerDocument().querySelector(`.${cssClass(MODULE_PORTAL)} .${cssClass(cssContainerPrefix())}`)
+    ) {
       focus();
     }
   });
