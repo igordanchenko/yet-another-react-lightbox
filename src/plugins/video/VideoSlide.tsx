@@ -113,6 +113,38 @@ export function VideoSlide({ slide, offset }: VideoSlideProps) {
     }
   }, [offset, getOwnerDocument]);
 
+  React.useEffect(() => {
+    if (offset === 0) {
+      let pip = false;
+
+      const trackPiP = (pipValue: boolean) => (event: Event) => {
+        if (event.target === videoRef.current) {
+          pip = pipValue;
+          freezeNavigation.current = pip;
+        }
+      };
+
+      const onEnterPiP = trackPiP(true);
+      const onLeavePiP = trackPiP(false);
+
+      getOwnerDocument().addEventListener("enterpictureinpicture", onEnterPiP);
+      getOwnerDocument().addEventListener("leavepictureinpicture", onLeavePiP);
+
+      return () => {
+        getOwnerDocument().removeEventListener("enterpictureinpicture", onEnterPiP);
+        getOwnerDocument().removeEventListener("leavepictureinpicture", onLeavePiP);
+
+        if (pip) {
+          freezeNavigation.current = false;
+
+          getOwnerDocument()
+            .exitPictureInPicture()
+            .catch(() => {});
+        }
+      };
+    }
+  }, [offset, getOwnerDocument]);
+
   const { width, height, poster, sources } = slide;
 
   const scaleWidthAndHeight = () => {
