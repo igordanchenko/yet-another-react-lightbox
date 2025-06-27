@@ -14,6 +14,7 @@ import {
   getSlideKey,
   hasSlides,
   Slide,
+  translateLabel,
   useAnimation,
   useEventCallback,
   useEvents,
@@ -59,7 +60,7 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
 
   const isRTL = useRTL();
   const { publish, subscribe } = useEvents();
-  const { carousel, styles } = useLightboxProps();
+  const { carousel, styles, labels } = useLightboxProps();
   const { slides, globalIndex, animation } = useLightboxState();
   const { registerSensors, subscribeSensors } = useSensors();
 
@@ -161,6 +162,7 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
         ref={track}
         style={styles.thumbnailsTrack}
         className={clsx(cssClass(cssPrefix("track")), cssClass(CLASS_FLEX_CENTER))}
+        aria-label={translateLabel(labels, "Thumbnails")}
         tabIndex={-1}
         {...registerSensors}
       >
@@ -193,8 +195,8 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
           return (
             <Thumbnail
               key={key}
+              index={index}
               slide={slide}
-              active={index === globalIndex}
               fadeIn={fadeIn}
               fadeOut={fadeOut}
               placeholder={!slide}

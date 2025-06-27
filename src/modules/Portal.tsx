@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { ComponentProps } from "../types.js";
 import { LightboxDefaultProps } from "../props.js";
 import { createModule } from "../config.js";
-import { clsx, composePrefix, cssClass, cssVar, reflow } from "../utils.js";
+import { clsx, composePrefix, cssClass, cssVar, reflow, translateLabel } from "../utils.js";
 import { useEventCallback, useMotionPreference } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 import { LightboxRoot } from "../components/index.js";
@@ -28,7 +28,7 @@ function setAttribute(element: Element, attribute: string, value: string) {
   };
 }
 
-export function Portal({ children, animation, styles, className, on, portal, close }: ComponentProps) {
+export function Portal({ children, animation, styles, className, on, portal, close, labels }: ComponentProps) {
   const [mounted, setMounted] = React.useState(false);
   const [visible, setVisible] = React.useState(false);
 
@@ -119,8 +119,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
           )}
           aria-modal
           role="dialog"
-          aria-live="polite"
-          aria-roledescription="lightbox"
+          aria-label={translateLabel(labels, "Lightbox")}
           style={{
             ...(animation.fade !== LightboxDefaultProps.animation.fade
               ? { [cssVar("fade_animation_duration")]: `${animationDuration}ms` }

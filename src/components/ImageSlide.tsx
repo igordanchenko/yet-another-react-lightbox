@@ -150,7 +150,7 @@ export function ImageSlide({
         )}
         style={{ ...defaultStyle, ...style, ...imagePropsStyle }}
         {...restImageProps}
-        alt={image.alt}
+        alt={image.alt ?? ""}
         sizes={sizes}
         srcSet={srcSet}
         src={image.src}

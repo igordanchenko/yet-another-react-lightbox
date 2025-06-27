@@ -2,7 +2,7 @@ import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { cleanup, clsx, cssClass, cssVar, label, makeUseContext } from "../../../src/utils.js";
+import { cleanup, clsx, cssClass, cssVar, makeUseContext, translateLabel } from "../../../src/utils.js";
 import { Labels } from "../../../src/types.js";
 
 describe("utils", () => {
@@ -28,24 +28,24 @@ describe("utils", () => {
     });
   });
 
-  describe("label", () => {
+  describe("translateLabel", () => {
     const labels: Labels = {
       Previous: "previous",
       Next: "next",
     };
 
     it("can be called with no labels", () => {
-      expect(label(undefined, "Previous")).toBe("Previous");
+      expect(translateLabel(undefined, "Previous")).toBe("Previous");
     });
 
     it("handles absent translation correctly", () => {
       // @ts-expect-error - expected error
-      expect(label(labels, "Other")).toBe("Other");
+      expect(translateLabel(labels, "Other")).toBe("Other");
     });
 
     it("translates labels correctly", () => {
-      expect(label(labels, "Previous")).toBe("previous");
-      expect(label(labels, "Next")).toBe("next");
+      expect(translateLabel(labels, "Previous")).toBe("previous");
+      expect(translateLabel(labels, "Next")).toBe("next");
     });
   });
 

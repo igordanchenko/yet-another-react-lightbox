@@ -14,10 +14,12 @@ import {
   isImageSlide,
   makeInertWhen,
   parseLengthPercentage,
+  translateLabel,
+  translateSlideCounter,
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
-import { useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
+import { useA11yContext, useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
 import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
@@ -36,13 +38,14 @@ type CarouselSlideProps = {
 function CarouselSlide({ slide, offset }: CarouselSlideProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const { currentIndex } = useLightboxState();
+  const { currentIndex, slides } = useLightboxState();
   const { slideRect, focus } = useController();
   const {
     render,
     carousel: { imageFit, imageProps },
     on: { click: onClick },
     styles: { slide: style },
+    labels,
   } = useLightboxProps();
   const { getOwnerDocument } = useDocumentContext();
 
@@ -90,8 +93,9 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
       )}
       {...makeInertWhen(offscreen)}
       style={style}
-      role="region"
-      aria-roledescription="slide"
+      role="group"
+      aria-roledescription={translateLabel(labels, "Slide")}
+      aria-label={translateSlideCounter(labels, slides, currentIndex + offset)}
     >
       {renderSlide()}
     </div>
@@ -103,9 +107,10 @@ function Placeholder() {
   return <div className={cssClass(CLASS_SLIDE)} style={style} />;
 }
 
-export function Carousel({ carousel }: ComponentProps) {
+export function Carousel({ carousel, labels }: ComponentProps) {
   const { slides, currentIndex, globalIndex } = useLightboxState();
   const { setCarouselRef } = useController();
+  const { autoPlaying, focusWithin } = useA11yContext();
 
   const spacingValue = parseLengthPercentage(carousel.spacing);
   const paddingValue = parseLengthPercentage(carousel.padding);
@@ -142,6 +147,10 @@ export function Carousel({ carousel }: ComponentProps) {
         [`${cssVar(cssPrefix("padding_px"))}`]: paddingValue.pixel || 0,
         [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
       }}
+      role="region"
+      aria-live={autoPlaying && !focusWithin ? "off" : "polite"}
+      aria-roledescription={translateLabel(labels, "Carousel")}
+      aria-label={translateLabel(labels, "Photo gallery")}
     >
       {items.map(({ key, slide, offset }) =>
         slide ? <CarouselSlide key={key} slide={slide} offset={offset} /> : <Placeholder key={key} />,
