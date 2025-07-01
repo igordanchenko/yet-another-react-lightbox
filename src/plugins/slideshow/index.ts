@@ -26,7 +26,9 @@ declare module "../../types.js" {
   }
 
   interface Labels {
+    /** `Play` button title */
     Play?: string;
+    /** `Pause` button title */
     Pause?: string;
   }
 

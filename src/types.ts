@@ -380,15 +380,29 @@ export interface Callbacks {
   exited?: Callback;
 }
 
-/** Custom UI labels / translations */
+/** Custom UI labels / translations / localization */
 export interface Labels {
+  /** `Previous` button title */
   Previous?: string;
+  /** `Next` button title */
   Next?: string;
+  /** `Close` button title */
   Close?: string;
+  /** Slide ARIA role description */
   Slide?: string;
+  /** Carousel ARIA role description */
   Carousel?: string;
+  /** Lightbox ARIA label */
   Lightbox?: string;
+  /** Carousel ARIA label */
   "Photo gallery"?: string;
+  /**
+   * Slide ARIA label
+   *
+   * The value is a template string supporting the following placeholders:
+   * - {index} - current slide index
+   * - {total} - total number of slides
+   */
   "{index} of {total}"?: string;
 }
 
