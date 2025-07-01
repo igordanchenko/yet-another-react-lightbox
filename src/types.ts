@@ -216,7 +216,8 @@ export interface ControllerSettings {
   // TODO v4: remove
   /** @deprecated for internal use only */
   touchAction: "none" | "pan-y";
-  /** if `true`, set ARIA attributes on the controller div */
+  // TODO v4: remove
+  /** @deprecated for internal use only */
   aria: boolean;
   /** if `true`, close the lightbox on pull-up gesture */
   closeOnPullUp: boolean;
@@ -379,11 +380,30 @@ export interface Callbacks {
   exited?: Callback;
 }
 
-/** Custom UI labels / translations */
+/** Custom UI labels / translations / localization */
 export interface Labels {
+  /** `Previous` button title */
   Previous?: string;
+  /** `Next` button title */
   Next?: string;
+  /** `Close` button title */
   Close?: string;
+  /** Slide ARIA role description */
+  Slide?: string;
+  /** Carousel ARIA role description */
+  Carousel?: string;
+  /** Lightbox ARIA label */
+  Lightbox?: string;
+  /** Carousel ARIA label */
+  "Photo gallery"?: string;
+  /**
+   * Slide ARIA label
+   *
+   * The value is a template string supporting the following placeholders:
+   * - {index} - current slide index
+   * - {total} - total number of slides
+   */
+  "{index} of {total}"?: string;
 }
 
 export type Label = keyof Labels;

@@ -36,6 +36,7 @@ declare module "../../types.js" {
   }
 
   interface Labels {
+    /** `Download` button title */
     Download?: string;
   }
 

@@ -14,6 +14,7 @@ import {
   SLIDE_STATUS_PLAYING,
   SlideshowRef,
   SlideStatus,
+  useA11yContext,
   useController,
   useEventCallback,
   useEvents,
@@ -39,6 +40,10 @@ export function SlideshowContextProvider({ slideshow, carousel: { finite }, on, 
   const { setTimeout, clearTimeout } = useTimeouts();
   const { subscribe } = useEvents();
   const { next } = useController();
+
+  const { setAutoPlaying } = useA11yContext();
+
+  React.useEffect(() => setAutoPlaying(playing), [playing, setAutoPlaying]);
 
   const disabled = slides.length === 0 || (finite && currentIndex === slides.length - 1);
 

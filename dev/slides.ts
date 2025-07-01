@@ -5,9 +5,21 @@ function imageLink(asset: string, size: number) {
 }
 
 export const slides = [
-  { asset: "image01.0800ee93.3840x5760" },
-  { asset: "image02.645bc7e4.3840x5070" },
-  { asset: "image03.13c5eeb7.3840x5120" },
+  {
+    asset: "image01.0800ee93.3840x5760",
+    alt: "A small black and tan dog wearing oversized black sunglasses, posing confidently against a yellow background",
+    description: "Puppy in sunglasses",
+  },
+  {
+    asset: "image02.645bc7e4.3840x5070",
+    alt: "A vibrant pastel lifeguard tower on Miami Beach, painted in shades of pink, purple, and orange, with a green flag and a plane flying overhead",
+    description: "Miami beach",
+  },
+  {
+    asset: "image03.13c5eeb7.3840x5120",
+    alt: "A bright pink inflatable flamingo floating in clear turquoise ocean water under a sunny, cloudless sky",
+    description: "Flamingo",
+  },
   { asset: "image04.2d71a97f.3840x2546" },
   { asset: "image05.c6ce32ab.3840x5760" },
   { asset: "image06.74d5e191.3840x2553" },

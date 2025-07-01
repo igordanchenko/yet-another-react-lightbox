@@ -57,7 +57,11 @@ declare module "../../types.js" {
   }
 
   interface Labels {
+    /** Slide description ARIA role description */
+    Caption?: string;
+    /** `Show captions` button title */
     "Show captions"?: string;
+    /** `Hide captions` button title */
     "Hide captions"?: string;
   }
 

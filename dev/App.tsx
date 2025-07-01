@@ -30,7 +30,7 @@ export default function App() {
         plugins={[Captions, Counter, Download, Share, Fullscreen, Slideshow, Thumbnails, Video, Zoom]}
       />
 
-      <button type="button" className="button" onClick={() => setOpen(true)}>
+      <button type="button" className="button" aria-haspopup="dialog" onClick={() => setOpen(true)}>
         Open Lightbox
       </button>
     </>

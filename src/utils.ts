@@ -34,8 +34,19 @@ export function makeComposePrefix(base: string) {
   return (prefix?: string) => composePrefix(base, prefix);
 }
 
-export function label(labels: Labels | undefined, defaultLabel: Label) {
+export function translateLabel(labels: Labels | undefined, defaultLabel: Label) {
   return labels?.[defaultLabel] ?? defaultLabel;
+}
+
+/** @deprecated - use `translateLabel` instead */
+export function label(labels: Labels | undefined, defaultLabel: Label) {
+  return translateLabel(labels, defaultLabel);
+}
+
+export function translateSlideCounter(labels: Labels | undefined, slides: Slide[], index: number) {
+  return translateLabel(labels, "{index} of {total}")
+    .replace(/\{index}/g, `${getSlideIndex(index, slides.length) + 1}`)
+    .replace(/\{total}/g, `${slides.length}`);
 }
 
 export function cleanup(...cleaners: (() => void)[]) {

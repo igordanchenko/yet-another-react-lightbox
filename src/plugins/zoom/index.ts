@@ -46,7 +46,9 @@ declare module "../../types.js" {
   }
 
   interface Labels {
+    /** `Zoom in` button title */
     "Zoom in"?: string;
+    /** `Zoom out` button title */
     "Zoom out"?: string;
   }
 

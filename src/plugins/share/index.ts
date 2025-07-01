@@ -35,6 +35,7 @@ declare module "../../types.js" {
   }
 
   interface Labels {
+    /** `Share` button title */
     Share?: string;
   }
 

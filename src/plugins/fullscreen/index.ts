@@ -26,7 +26,9 @@ declare module "../../types.js" {
 
   interface Labels {
     // TODO v4: change Fullscreen to lowercase
+    /** `Enter Fullscreen` button title */
     "Enter Fullscreen"?: string;
+    /** `Exit Fullscreen` button title */
     "Exit Fullscreen"?: string;
   }
 

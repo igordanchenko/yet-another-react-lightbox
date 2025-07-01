@@ -57,7 +57,11 @@ declare module "../../types.js" {
   }
 
   interface Labels {
+    /** Thumbnails ARIA label */
+    Thumbnails?: string;
+    /** `Show thumbnails` button title */
     "Show thumbnails"?: string;
+    /** `Hide thumbnails` button title */
     "Hide thumbnails"?: string;
   }
 

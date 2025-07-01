@@ -26,7 +26,13 @@ export function CounterComponent({ counter }: ComponentProps) {
   if (slides.length === 0) return null;
 
   return (
-    <div className={clsx(cssClass("counter"), className || legacyClassName)} {...legacyRest} {...rest}>
+    <div
+      className={clsx(cssClass("counter"), className || legacyClassName)}
+      {...legacyRest}
+      {...rest}
+      // slides already provide the "k of N" label, so there is no need to override the `aria-hidden` attribute here
+      aria-hidden
+    >
       {currentIndex + 1} {separator} {slides.length}
     </div>
   );

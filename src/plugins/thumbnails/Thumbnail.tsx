@@ -12,9 +12,11 @@ import {
   makeComposePrefix,
   RenderThumbnailProps,
   Slide,
+  translateSlideCounter,
   useDocumentContext,
   useEventCallback,
   useLightboxProps,
+  useLightboxState,
 } from "../../index.js";
 import { cssThumbnailPrefix } from "./utils.js";
 import { useThumbnailsProps } from "./props.js";
@@ -75,20 +77,22 @@ export type FadeSettings = {
 
 export type ThumbnailProps = {
   slide: Slide | null;
+  index: number;
   onClick: () => void;
-  active: boolean;
   fadeIn?: FadeSettings;
   fadeOut?: FadeSettings;
   placeholder: boolean;
   onLoseFocus: () => void;
 };
 
-export function Thumbnail({ slide, onClick, active, fadeIn, fadeOut, placeholder, onLoseFocus }: ThumbnailProps) {
+export function Thumbnail({ slide, index, onClick, fadeIn, fadeOut, placeholder, onLoseFocus }: ThumbnailProps) {
   const ref = React.useRef<HTMLButtonElement>(null);
-  const { render, styles } = useLightboxProps();
+  const { render, styles, labels } = useLightboxProps();
+  const { slides, globalIndex } = useLightboxState();
   const { getOwnerDocument } = useDocumentContext();
   const { width, height, imageFit } = useThumbnailsProps();
   const rect = { width, height };
+  const active = index === globalIndex;
 
   const onLoseFocusCallback = useEventCallback(onLoseFocus);
 
@@ -126,6 +130,8 @@ export function Thumbnail({ slide, onClick, active, fadeIn, fadeOut, placeholder
         ...styles.thumbnail,
       }}
       onClick={onClick}
+      aria-current={active ? true : undefined}
+      aria-label={translateSlideCounter(labels, slides, index)}
     >
       {slide && renderThumbnail({ slide, render, rect, imageFit })}
     </button>
