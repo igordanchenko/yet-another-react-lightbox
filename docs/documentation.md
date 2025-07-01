@@ -560,10 +560,3 @@ return (
   />
 );
 ```
-
-## Previous Versions
-
-Are you looking for documentation for one of the previous versions?
-
-- [yet-another-react-lightbox v2.x](https://v2.yet-another-react-lightbox.com/documentation)
-- [yet-another-react-lightbox v1.x](https://v1.yet-another-react-lightbox.com/documentation)
