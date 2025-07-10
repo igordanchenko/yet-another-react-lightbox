@@ -20,6 +20,7 @@ export type LightboxExternalProps = DeepPartial<
 
 /** Lightbox properties */
 export interface LightboxProps {
+  // TODO v4: consider https://github.com/igordanchenko/yet-another-react-lightbox/issues/374
   /** if `true`, the lightbox is open */
   open: boolean;
   /** a callback to close the lightbox */
