@@ -560,3 +560,14 @@ return (
   />
 );
 ```
+
+## RTL
+
+The library supports RTL out of the box. To enable RTL mode, ensure the `<html>`
+tag has the `dir="rtl"` attribute.
+
+```html
+<html lang="fa" dir="rtl">
+  <!-- ... -->
+</html>
+```
