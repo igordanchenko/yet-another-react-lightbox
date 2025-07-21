@@ -30,10 +30,17 @@ export const ZoomButton = React.forwardRef<HTMLButtonElement, ZoomButtonProps>(f
   const wasEnabled = React.useRef(false);
   const wasFocused = React.useRef(false);
 
-  const { zoom, maxZoom, zoomIn: zoomInCallback, zoomOut: zoomOutCallback, disabled: zoomDisabled } = useZoom();
+  const {
+    zoom,
+    minZoom,
+    maxZoom,
+    zoomIn: zoomInCallback,
+    zoomOut: zoomOutCallback,
+    disabled: zoomDisabled,
+  } = useZoom();
   const { render } = useLightboxProps();
 
-  const disabled = zoomDisabled || (zoomIn ? zoom >= maxZoom : zoom <= 1);
+  const disabled = zoomDisabled || (zoomIn ? zoom >= maxZoom : zoom <= minZoom);
 
   React.useEffect(() => {
     if (disabled && wasEnabled.current && wasFocused.current) {

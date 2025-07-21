@@ -107,6 +107,7 @@ Zoom plugin adds the following `Lightbox` properties.
       <td>
         &#123;<br />
         &nbsp;&nbsp;ref?: React.ForwardedRef&#8203;&lt;ZoomRef&gt;;<br />
+        &nbsp;&nbsp;minZoom?: number;<br />
         &nbsp;&nbsp;maxZoomPixelRatio?: number;<br />
         &nbsp;&nbsp;zoomInMultiplier?: number;<br />
         &nbsp;&nbsp;doubleTapDelay?: number;<br />
@@ -122,6 +123,7 @@ Zoom plugin adds the following `Lightbox` properties.
         <p>Zoom plugin settings:</p>
         <ul>
           <li>`ref` - Zoom plugin ref. See [Zoom Ref](#ZoomRef) for details.</li>
+          <li>`minZoom` -  override minimum zoom level (default: 1.0)</li>
           <li>`maxZoomPixelRatio` - ratio of image pixels to physical pixels at maximum zoom level</li>
           <li>`zoomInMultiplier` - zoom-in multiplier</li>
           <li>`doubleTapDelay` - double-tap maximum time delay (deprecated)</li>
@@ -133,9 +135,9 @@ Zoom plugin adds the following `Lightbox` properties.
           <li>`scrollToZoom` - if `true`, enables image zoom via scroll gestures for mouse and trackpad users</li>
         </ul>
         <p>
-          Default: <span class="font-mono">&#123; maxZoomPixelRatio: 1, zoomInMultiplier: 2, doubleTapDelay: 300, doubleClickDelay: 500,
-          doubleClickMaxStops: 2, keyboardMoveDistance: 50, wheelZoomDistanceFactor: 100, pinchZoomDistanceFactor:
-          100, scrollToZoom: false &#125;</span>
+          Default: <span class="font-mono">&#123; minZoom: 1, maxZoomPixelRatio: 1, zoomInMultiplier: 2, 
+          doubleTapDelay: 300, doubleClickDelay: 500, doubleClickMaxStops: 2, keyboardMoveDistance: 50, 
+          wheelZoomDistanceFactor: 100, pinchZoomDistanceFactor: 100, scrollToZoom: false &#125;</span>
         </p>
       </td>
     </tr>

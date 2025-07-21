@@ -9,6 +9,8 @@ declare module "../../types.js" {
     zoom?: {
       /** Zoom plugin ref */
       ref?: React.ForwardedRef<ZoomRef>;
+      /** override minimum zoom level (default: 1.0) */
+      minZoom?: number;
       /** ratio of image pixels to physical pixels at maximum zoom level */
       maxZoomPixelRatio?: number;
       /** zoom-in multiplier */
@@ -81,6 +83,8 @@ declare module "../../types.js" {
   interface ZoomRef {
     /** current zoom level */
     zoom: number;
+    /** minimum zoom level */
+    minZoom: number;
     /** maximum zoom level */
     maxZoom: number;
     /** horizontal offset */
