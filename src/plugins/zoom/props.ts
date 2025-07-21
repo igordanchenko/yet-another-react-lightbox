@@ -1,6 +1,7 @@
 import { LightboxProps } from "../../index.js";
 
 export const defaultZoomProps = {
+  minZoom: 1,
   maxZoomPixelRatio: 1,
   zoomInMultiplier: 2,
   doubleTapDelay: 300,
@@ -12,7 +13,11 @@ export const defaultZoomProps = {
   scrollToZoom: false,
 };
 
-export const resolveZoomProps = (zoom: LightboxProps["zoom"]) => ({
-  ...defaultZoomProps,
-  ...zoom,
-});
+function validateMinZoom(minZoom: number) {
+  return Math.min(Math.max(minZoom, Number.EPSILON), 1);
+}
+
+export function resolveZoomProps(zoom: LightboxProps["zoom"]) {
+  const { minZoom, ...rest } = { ...defaultZoomProps, ...zoom };
+  return { minZoom: validateMinZoom(minZoom), ...rest };
+}

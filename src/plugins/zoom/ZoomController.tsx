@@ -20,6 +20,7 @@ export function ZoomContextProvider({ children }: ComponentProps) {
   const [zoomWrapper, setZoomWrapper] = React.useState<ActiveZoomWrapper>();
 
   const { slideRect } = useController();
+  const { ref, minZoom } = useZoomProps();
   const { imageRect, maxZoom } = useZoomImageRect(slideRect, zoomWrapper?.imageDimensions);
 
   const { zoom, offsetX, offsetY, disabled, changeZoom, changeOffsets, zoomIn, zoomOut } = useZoomState(
@@ -30,14 +31,24 @@ export function ZoomContextProvider({ children }: ComponentProps) {
 
   useZoomCallback(zoom, disabled);
 
-  useZoomSensors(zoom, maxZoom, disabled, changeZoom, changeOffsets, zoomWrapper?.zoomWrapperRef);
-
-  const zoomRef = React.useMemo(
-    () => ({ zoom, maxZoom, offsetX, offsetY, disabled, zoomIn, zoomOut, changeZoom }),
-    [zoom, maxZoom, offsetX, offsetY, disabled, zoomIn, zoomOut, changeZoom],
+  useZoomSensors(
+    zoom,
+    minZoom,
+    maxZoom,
+    disabled,
+    zoomIn,
+    zoomOut,
+    changeZoom,
+    changeOffsets,
+    zoomWrapper?.zoomWrapperRef,
   );
 
-  React.useImperativeHandle(useZoomProps().ref, () => zoomRef, [zoomRef]);
+  const zoomRef = React.useMemo(
+    () => ({ zoom, minZoom, maxZoom, offsetX, offsetY, disabled, zoomIn, zoomOut, changeZoom }),
+    [zoom, minZoom, maxZoom, offsetX, offsetY, disabled, zoomIn, zoomOut, changeZoom],
+  );
+
+  React.useImperativeHandle(ref, () => zoomRef, [zoomRef]);
 
   const context = React.useMemo(() => ({ ...zoomRef, setZoomWrapper }), [zoomRef, setZoomWrapper]);
 

@@ -25,7 +25,7 @@ export function useZoomState(
 
   const { currentSlide, globalIndex } = useLightboxState();
   const { containerRect, slideRect } = useController();
-  const { zoomInMultiplier } = useZoomProps();
+  const { minZoom, zoomInMultiplier } = useZoomProps();
 
   const currentSource = currentSlide && isImageSlide(currentSlide) ? currentSlide.src : undefined;
   const disabled = !currentSource || !zoomWrapperRef?.current;
@@ -54,7 +54,10 @@ export function useZoomState(
 
   const changeZoom = React.useCallback(
     (targetZoom: number, rapid?: boolean, dx?: number, dy?: number) => {
-      const newZoom = round(Math.min(Math.max(targetZoom + 0.001 < maxZoom ? targetZoom : maxZoom, 1), maxZoom), 5);
+      const newZoom = round(
+        Math.min(Math.max(targetZoom + 0.001 < maxZoom ? targetZoom : maxZoom, minZoom), maxZoom),
+        5,
+      );
 
       if (newZoom === zoom) return;
 
@@ -66,7 +69,7 @@ export function useZoomState(
 
       setZoom(newZoom);
     },
-    [zoom, maxZoom, changeOffsets, animate],
+    [zoom, minZoom, maxZoom, changeOffsets, animate],
   );
 
   const handleControllerRectChange = useEventCallback(() => {
@@ -81,9 +84,15 @@ export function useZoomState(
 
   useLayoutEffect(handleControllerRectChange, [containerRect.width, containerRect.height, handleControllerRectChange]);
 
-  const zoomIn = React.useCallback(() => changeZoom(zoom * zoomInMultiplier), [zoom, zoomInMultiplier, changeZoom]);
+  const zoomIn = React.useCallback(() => {
+    const targetZoom = zoom * zoomInMultiplier;
+    changeZoom(zoom < 1 && targetZoom > 1 ? 1 : targetZoom);
+  }, [zoom, zoomInMultiplier, changeZoom]);
 
-  const zoomOut = React.useCallback(() => changeZoom(zoom / zoomInMultiplier), [zoom, zoomInMultiplier, changeZoom]);
+  const zoomOut = React.useCallback(() => {
+    const targetZoom = zoom / zoomInMultiplier;
+    changeZoom(zoom > 1 && targetZoom < 1 ? 1 : targetZoom);
+  }, [zoom, zoomInMultiplier, changeZoom]);
 
   return { zoom, offsetX, offsetY, disabled, changeOffsets, changeZoom, zoomIn, zoomOut };
 }

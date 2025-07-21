@@ -23,8 +23,11 @@ function scaleZoom(value: number, delta: number, factor = 100, clamp = 2) {
 
 export function useZoomSensors(
   zoom: number,
+  minZoom: number,
   maxZoom: number,
   disabled: boolean,
+  zoomIn: ReturnType<typeof useZoomState>["zoomIn"],
+  zoomOut: ReturnType<typeof useZoomState>["zoomOut"],
   changeZoom: ReturnType<typeof useZoomState>["changeZoom"],
   changeOffsets: ReturnType<typeof useZoomState>["changeOffsets"],
   zoomWrapperRef?: React.RefObject<HTMLDivElement | null>,
@@ -86,17 +89,15 @@ export function useZoomSensors(
       }
     }
 
-    const handleChangeZoom = (zoomValue: number) => {
-      preventDefault();
-      changeZoom(zoomValue);
-    };
-
     if (key === "+" || (meta && key === "=")) {
-      handleChangeZoom(zoom * zoomInMultiplier);
+      preventDefault();
+      zoomIn();
     } else if (key === "-" || (meta && key === "_")) {
-      handleChangeZoom(zoom / zoomInMultiplier);
+      preventDefault();
+      zoomOut();
     } else if (meta && key === "0") {
-      handleChangeZoom(1);
+      preventDefault();
+      changeZoom(1);
     }
   });
 
@@ -156,11 +157,17 @@ export function useZoomSensors(
       timeStamp - lastPointerDown.current < (event.pointerType === "touch" ? doubleTapDelay : doubleClickDelay)
     ) {
       lastPointerDown.current = 0;
-      changeZoom(
-        zoom !== maxZoom ? zoom * Math.max(maxZoom ** (1 / doubleClickMaxStops), zoomInMultiplier) : 1,
-        false,
-        ...translateCoordinates(event),
-      );
+
+      const targetZoom =
+        zoom >= 1
+          ? zoom !== maxZoom
+            ? zoom * Math.max(maxZoom ** (1 / doubleClickMaxStops), zoomInMultiplier)
+            : 1
+          : zoom !== minZoom
+            ? zoom / Math.max(minZoom ** (-1 / doubleClickMaxStops), zoomInMultiplier)
+            : 1;
+
+      changeZoom(targetZoom, false, ...translateCoordinates(event));
     } else {
       lastPointerDown.current = timeStamp;
     }
