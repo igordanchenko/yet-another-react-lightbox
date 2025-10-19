@@ -24,7 +24,7 @@ import {
   useRTL,
   useSensors,
 } from "../../index.js";
-import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
+import { calculateThumbnailsRange, cssPrefix, cssThumbnailPrefix } from "./utils.js";
 import { Thumbnail } from "./Thumbnail.js";
 import { defaultThumbnailsProps, useThumbnailsProps } from "./props.js";
 
@@ -110,11 +110,15 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
   const items: { key: React.Key; index: number; slide: Slide | null }[] = [];
 
   if (hasSlides(slides)) {
-    for (
-      let index = globalIndex - preload - Math.abs(offset);
-      index <= globalIndex + preload + Math.abs(offset);
-      index += 1
-    ) {
+    const { rangeStart, rangeEnd } = calculateThumbnailsRange(
+      globalIndex,
+      preload,
+      offset,
+      slides.length,
+      carousel.finite,
+    );
+
+    for (let index = rangeStart; index <= rangeEnd; index += 1) {
       const placeholder =
         (carousel.finite && (index < 0 || index > slides.length - 1)) ||
         (offset < 0 && index < globalIndex - preload) ||

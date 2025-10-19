@@ -139,10 +139,10 @@ describe("Thumbnails", () => {
     for (const [slides, preload, finite, expected] of [
       ...generateTestCases(false, [
         [0, 1, 1, 1],
-        [0, 1, 3, 3, 3],
-        [0, 1, 3, 3, 5, 5, 5],
-        [0, 1, 3, 3, 5, 5, 7, 7, 7],
-        [0, 1, 3, 3, 5, 5, 7, 7, 9, 9, 9],
+        [0, 1, 2, 3, 3],
+        [0, 1, 2, 3, 4, 5, 5],
+        [0, 1, 2, 3, 4, 5, 6, 7, 7],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9],
       ]),
       ...generateTestCases(true, [
         [0, 1, 1, 1],
