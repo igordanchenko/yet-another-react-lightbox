@@ -15,7 +15,15 @@ function listPlugins() {
     );
 }
 
-const config = {
+export default [
+  [
+    typescript({
+      include: ["src/**/*"],
+      compilerOptions: { removeComments: true },
+    }),
+  ],
+  [dts()],
+].map((plugins) => ({
   input: {
     index: "src/index.ts",
     types: "src/types.ts",
@@ -34,20 +42,5 @@ const config = {
   external: ["react", "react-dom"],
   preserveEntrySignatures: "allow-extension",
   treeshake: false,
-};
-
-export default [
-  {
-    ...config,
-    plugins: [
-      typescript({
-        include: ["src/**/*"],
-        compilerOptions: { removeComments: true },
-      }),
-    ],
-  },
-  {
-    ...config,
-    plugins: [dts()],
-  },
-];
+  plugins,
+}));
