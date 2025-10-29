@@ -5,9 +5,10 @@ import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import eslintPluginJsxA11y from "eslint-plugin-jsx-a11y";
 import eslintConfigPrettier from "eslint-config-prettier";
+import { defineConfig, globalIgnores } from "eslint/config";
 
-export default tseslint.config(
-  { ignores: ["coverage", "**/dist"] },
+export default defineConfig(
+  globalIgnores(["coverage", "**/dist"]),
   eslint.configs.recommended,
   tseslint.configs.recommended,
   eslintPluginReact.configs.flat.recommended,
