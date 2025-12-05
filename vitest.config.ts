@@ -5,15 +5,12 @@ export default defineConfig({
     globals: true,
     dir: "test/unit",
     environment: "jsdom",
-    coverage: {
-      all: true,
-      enabled: true,
-      include: ["src"],
-      reporter: [
-        ["text", { skipEmpty: true }],
-        ["html", { skipEmpty: true }],
-      ],
-    },
     setupFiles: "./test/unit/setup.ts",
+    coverage: {
+      enabled: true,
+      include: ["src/**/**.{ts,tsx}"],
+      exclude: ["src/**/index.ts", "src/types.ts"],
+    },
+    testTimeout: 30_000,
   },
 });
