@@ -141,7 +141,7 @@
   "homepage": "https://yet-another-react-lightbox.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/igordanchenko/yet-another-react-lightbox.git"
+    "url": "git+https://github.com/igordanchenko/yet-another-react-lightbox.git"
   },
   "bugs": {
     "url": "https://github.com/igordanchenko/yet-another-react-lightbox/issues"
