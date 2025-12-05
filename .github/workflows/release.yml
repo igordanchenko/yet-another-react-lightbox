@@ -42,11 +42,13 @@ jobs:
       - name: Build, Test, Lint
         run: npm run ci
 
+      - name: Verify the integrity of installed dependencies
+        run: npm audit signatures
+
       - name: Cleanup
         run: npm pkg delete scripts devDependencies
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
