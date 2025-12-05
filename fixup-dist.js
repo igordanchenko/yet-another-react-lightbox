@@ -46,9 +46,11 @@ function editFile(file, callback) {
  * @param {string} file - file name
  */
 function fixupMainBundle(file) {
+  if (/"use client";/.test(file)) return;
+
   editFile(file, (data) => {
     const regex = /import.*\r?\n/g;
-    return ["'use client';", ...data.match(regex).map((line) => line.trim()), data.replaceAll(regex, "").trim()].join(
+    return ['"use client";', ...data.match(regex).map((line) => line.trim()), data.replaceAll(regex, "").trim()].join(
       os.EOL,
     );
   });
