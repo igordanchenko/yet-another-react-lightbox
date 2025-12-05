@@ -4,6 +4,9 @@ on:
   push:
     branches: [main, next]
 
+concurrency:
+  group: release
+
 jobs:
   release:
     name: Release
@@ -21,18 +24,20 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
 
       - name: Install dependencies
-        run: npx ci
+        run: npm ci
 
       - name: Install semantic-release extra plugins
-        run: npm install --save-dev @semantic-release/changelog @semantic-release/github
+        run: npm i -D @semantic-release/changelog @semantic-release/github
 
       - name: Build, Test, Lint
         run: npm run ci
