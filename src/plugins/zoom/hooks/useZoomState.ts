@@ -55,11 +55,9 @@ export function useZoomState(
   const changeZoom = React.useCallback(
     (targetZoom: number, rapid?: boolean, dx?: number, dy?: number) => {
       const newZoom = round(
-        Math.min(Math.max(targetZoom + 0.001 < maxZoom ? targetZoom : maxZoom, minZoom), maxZoom),
+        targetZoom + 0.01 < maxZoom ? (targetZoom - 0.01 > minZoom ? targetZoom : minZoom) : maxZoom,
         5,
       );
-
-      if (newZoom === zoom) return;
 
       if (!rapid) {
         animate();
