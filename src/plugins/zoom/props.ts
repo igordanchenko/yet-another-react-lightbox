@@ -10,6 +10,7 @@ export const defaultZoomProps = {
   keyboardMoveDistance: 50,
   wheelZoomDistanceFactor: 100,
   pinchZoomDistanceFactor: 100,
+  pinchZoomV4: false,
   scrollToZoom: false,
 };
 

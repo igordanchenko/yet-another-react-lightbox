@@ -25,8 +25,10 @@ declare module "../../types.js" {
       keyboardMoveDistance?: number;
       /** wheel zoom distance factor */
       wheelZoomDistanceFactor?: number;
-      /** pinch zoom distance factor */
+      /** @deprecated - pinch zoom distance factor */
       pinchZoomDistanceFactor?: number;
+      /** if `true`, enables the experimental pinch zoom implementation slated for v4 */
+      pinchZoomV4?: boolean;
       /** if `true`, enables image zoom via scroll gestures for mouse and trackpad users */
       scrollToZoom?: boolean;
     };

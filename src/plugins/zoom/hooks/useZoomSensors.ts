@@ -14,7 +14,7 @@ import { useZoomState } from "./useZoomState.js";
 import { usePointerEvents } from "../../../hooks/usePointerEvents.js";
 
 function distance(pointerA: React.MouseEvent, pointerB: React.MouseEvent) {
-  return ((pointerA.clientX - pointerB.clientX) ** 2 + (pointerA.clientY - pointerB.clientY) ** 2) ** 0.5;
+  return Math.hypot(pointerA.clientX - pointerB.clientX, pointerA.clientY - pointerB.clientY);
 }
 
 function scaleZoom(value: number, delta: number, factor = 100, clamp = 2) {
@@ -34,7 +34,11 @@ export function useZoomSensors(
 ) {
   const activePointers = React.useRef<React.PointerEvent[]>([]);
   const lastPointerDown = React.useRef(0);
-  const pinchZoomDistance = React.useRef<number>(undefined);
+  const pinchZoom = React.useRef<{
+    previousDistance: number;
+    initialDistance: number;
+    initialZoom: number;
+  }>(undefined);
 
   const { globalIndex } = useLightboxState();
   const { getOwnerWindow } = useDocumentContext();
@@ -48,6 +52,7 @@ export function useZoomSensors(
     doubleClickDelay,
     doubleClickMaxStops,
     pinchZoomDistanceFactor,
+    pinchZoomV4,
   } = useZoomProps();
 
   const translateCoordinates = React.useCallback(
@@ -175,7 +180,12 @@ export function useZoomSensors(
     replacePointer(event);
 
     if (pointers.length === 2) {
-      pinchZoomDistance.current = distance(pointers[0], pointers[1]);
+      const initialDistance = distance(pointers[0], pointers[1]);
+      pinchZoom.current = {
+        previousDistance: initialDistance,
+        initialDistance: Math.max(initialDistance, 1), // prevent potential division by zero
+        initialZoom: zoom,
+      };
     }
   });
 
@@ -184,25 +194,27 @@ export function useZoomSensors(
 
     const activePointer = pointers.find((p) => p.pointerId === event.pointerId);
 
-    if (pointers.length === 2 && pinchZoomDistance.current) {
+    if (pointers.length === 2 && pinchZoom.current) {
       event.stopPropagation();
 
       replacePointer(event);
 
       const currentDistance = distance(pointers[0], pointers[1]);
-      const delta = currentDistance - pinchZoomDistance.current;
 
-      if (Math.abs(delta) > 0) {
-        changeZoom(
-          scaleZoom(zoom, delta, pinchZoomDistanceFactor),
-          true,
-          ...pointers
-            .map((x) => translateCoordinates(x))
-            .reduce((acc, coordinate) => coordinate.map((x, i) => acc[i] + x / 2)),
-        );
+      // TODO v4: remove `pinchZoomV4` flag and make this the default behavior
+      const targetZoom = pinchZoomV4
+        ? (pinchZoom.current.initialZoom / pinchZoom.current.initialDistance) * currentDistance
+        : scaleZoom(zoom, currentDistance - pinchZoom.current.previousDistance, pinchZoomDistanceFactor);
 
-        pinchZoomDistance.current = currentDistance;
-      }
+      changeZoom(
+        targetZoom,
+        true,
+        ...pointers
+          .map((x) => translateCoordinates(x))
+          .reduce((acc, coordinate) => coordinate.map((x, i) => acc[i] + x / 2)),
+      );
+
+      pinchZoom.current.previousDistance = currentDistance;
 
       return;
     }
@@ -225,7 +237,7 @@ export function useZoomSensors(
       const pointers = activePointers.current;
 
       if (pointers.length === 2 && pointers.find((p) => p.pointerId === event.pointerId)) {
-        pinchZoomDistance.current = undefined;
+        pinchZoom.current = undefined;
       }
 
       clearPointer(event);
@@ -238,7 +250,7 @@ export function useZoomSensors(
     pointers.splice(0, pointers.length);
 
     lastPointerDown.current = 0;
-    pinchZoomDistance.current = undefined;
+    pinchZoom.current = undefined;
   }, []);
 
   usePointerEvents(subscribeSensors, onPointerDown, onPointerMove, onPointerUp, disabled);

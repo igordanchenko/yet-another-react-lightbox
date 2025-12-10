@@ -116,6 +116,7 @@ Zoom plugin adds the following `Lightbox` properties.
         &nbsp;&nbsp;keyboardMoveDistance?: number;<br />
         &nbsp;&nbsp;wheelZoomDistanceFactor?: number;<br />
         &nbsp;&nbsp;pinchZoomDistanceFactor?: number;<br />
+        &nbsp;&nbsp;pinchZoomV4?: boolean;<br />
         &nbsp;&nbsp;scrollToZoom?: boolean;<br />
         &#125;
       </td>
@@ -131,7 +132,8 @@ Zoom plugin adds the following `Lightbox` properties.
           <li>`doubleClickMaxStops` - maximum number of zoom-in stops via double-click or double-tap</li>
           <li>`keyboardMoveDistance` - keyboard move distance</li>
           <li>`wheelZoomDistanceFactor` - wheel zoom distance factor</li>
-          <li>`pinchZoomDistanceFactor` - pinch zoom distance factor</li>
+          <li>`pinchZoomDistanceFactor` - pinch zoom distance factor (deprecated)</li>
+          <li>`pinchZoomV4` - if `true`, enables the experimental pinch zoom implementation slated for v4</li>
           <li>`scrollToZoom` - if `true`, enables image zoom via scroll gestures for mouse and trackpad users</li>
         </ul>
         <p>
