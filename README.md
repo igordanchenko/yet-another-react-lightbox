@@ -156,6 +156,21 @@ The following plugins are bundled in the package:
 - [Zoom](https://yet-another-react-lightbox.com/plugins/zoom) - adds image zoom
   feature
 
+## Sponsors
+
+This project is supported by the following companies, organizations and
+individuals who help make its continued development and maintenance possible.
+
+<p align="center">
+  <a target="_blank" rel="noreferrer noopener" href="https://cdn.jsdelivr.net/gh/igordanchenko/sponsors/sponsors.svg">
+    <img alt="Sponsors" src="https://cdn.jsdelivr.net/gh/igordanchenko/sponsors/sponsors.svg"/>
+  </a>
+</p>
+
+Support this project by becoming a
+[sponsor](https://github.com/sponsors/igordanchenko). Both recurring and
+one-time contributions are very much appreciated.
+
 ## License
 
 MIT © 2022 [Igor Danchenko](https://github.com/igordanchenko)

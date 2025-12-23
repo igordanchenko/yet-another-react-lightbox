@@ -139,12 +139,11 @@
     "*.css"
   ],
   "homepage": "https://yet-another-react-lightbox.com",
+  "funding": "https://github.com/sponsors/igordanchenko",
+  "bugs": "https://github.com/igordanchenko/yet-another-react-lightbox/issues",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/igordanchenko/yet-another-react-lightbox.git"
-  },
-  "bugs": {
-    "url": "https://github.com/igordanchenko/yet-another-react-lightbox/issues"
   },
   "engines": {
     "node": ">=14"
