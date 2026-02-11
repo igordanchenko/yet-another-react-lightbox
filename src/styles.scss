@@ -94,7 +94,6 @@
       object-fit: contain;
       touch-action: common.globalVar(controller_touch_action, none);
       user-select: none;
-      -webkit-user-select: none;
       -webkit-touch-callout: none;
 
       &_cover {
@@ -111,7 +110,8 @@
     // workaround occasional image flickering in desktop Safari
     @media screen and (min-width: 800px) {
       &_wrapper:not(&_wrapper_interactive) &_image {
-        // noinspection CssUnknownProperty
+        // TODO: migrate to unprefixed
+        // Safari supports these unprefixed since Safari 15.4 (March 2022)
         -webkit-transform: translateZ(0);
         -webkit-backface-visibility: hidden;
         -webkit-transform-style: preserve-3d;
