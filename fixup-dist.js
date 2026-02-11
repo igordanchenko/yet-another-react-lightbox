@@ -69,15 +69,6 @@ function cleanupSideEffectImports(file) {
 }
 
 /**
- * Add type definitions for CSS files.
- *
- * @param {string} file - file name
- */
-function fixupCssDefinitions(file) {
-  writeFile(`${file}.d.ts`, ["declare const styles: unknown;", "export default styles;"].join(os.EOL));
-}
-
-/**
  * Fixup plugin's imports.
  *
  * @param {string} file - file name
@@ -127,10 +118,6 @@ function fixup(watchMode) {
 
     globSync(`${ROOT}/**/*.{js,d\\.ts}`).forEach((file) => {
       cleanupSideEffectImports(file);
-    });
-
-    globSync(`${ROOT}/**/*.css`).forEach((file) => {
-      fixupCssDefinitions(file);
     });
 
     globSync(`${ROOT}/plugins/**/index.d.ts`).forEach((file) => {
