@@ -1,6 +1,6 @@
 # Zoom Plugin
 
-Zoom plugin adds image zoom feature to the lightbox.
+The Zoom plugin adds an image zoom feature to the lightbox.
 
 The plugin supports the following input devices and gestures:
 
@@ -98,7 +98,7 @@ and provide a specific use case.
 
 ## Documentation
 
-Zoom plugin adds the following `Lightbox` properties.
+The Zoom plugin adds the following `Lightbox` properties.
 
 <table class="docs">
   <tbody>
@@ -124,7 +124,7 @@ Zoom plugin adds the following `Lightbox` properties.
         <p>Zoom plugin settings:</p>
         <ul>
           <li>`ref` - Zoom plugin ref. See [Zoom Ref](#ZoomRef) for details.</li>
-          <li>`minZoom` -  override minimum zoom level (default: 1.0)</li>
+          <li>`minZoom` - override minimum zoom level (default: 1.0)</li>
           <li>`maxZoomPixelRatio` - ratio of image pixels to physical pixels at maximum zoom level</li>
           <li>`zoomInMultiplier` - zoom-in multiplier</li>
           <li>`doubleTapDelay` - double-tap maximum time delay (deprecated)</li>
@@ -194,7 +194,7 @@ Zoom plugin adds the following `Lightbox` properties.
 
 ## Zoom Ref
 
-Zoom plugin provides a ref object to control the plugin features externally.
+The Zoom plugin provides a ref object to control the plugin features externally.
 
 ```jsx
 // Zoom ref usage example

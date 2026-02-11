@@ -18,8 +18,8 @@ The plugin adds the following `Slide` properties.
         boolean | string | &#123; url?: string; text?: string; title?: string &#125;
       </td>
       <td>
-        <p>Sharing props. By default, the plugin uses `slide.src` as the sharing url.</p>
-        <p>Use string value to specify custom sharing url.</p>
+        <p>Sharing props. By default, the plugin uses `slide.src` as the sharing URL.</p>
+        <p>Use string value to specify custom sharing URL.</p>
         <p>
           Use object value of the following shape to specify custom props
           (see [Navigator.share()](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share) for details):

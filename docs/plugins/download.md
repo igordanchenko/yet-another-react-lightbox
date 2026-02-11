@@ -1,6 +1,6 @@
 # Download Plugin
 
-Download plugin adds a download button to the lightbox.
+The Download plugin adds a download button to the lightbox.
 
 ## Documentation
 
@@ -12,11 +12,11 @@ The plugin adds the following `Slide` properties.
       <td>download</td>
       <td>boolean | string | &#123; url: string; filename: string &#125;</td>
       <td>
-        <p>Download url or download props. By default, the plugin uses `slide.src` as the download url.</p>
-        <p>Use string value to specify custom download url.</p>
-        <p>Use object value of the following shape to specify custom download url and file name override.</p>
+        <p>Download URL or download props. By default, the plugin uses `slide.src` as the download URL.</p>
+        <p>Use string value to specify custom download URL.</p>
+        <p>Use object value of the following shape to specify custom download URL and file name override.</p>
         <ul>
-          <li>`url` - custom download url</li>
+          <li>`url` - custom download URL</li>
           <li>`filename` - download file name override</li>
         </ul>
         <p>Use `false` to indicate non-downloadable slides when using custom `download` function.</p>
@@ -114,8 +114,8 @@ Depending on your setup, you may run into
 when trying to download cross-origin images in Chrome.
 
 To work around this issue, you can provide the `download` slide prop that is
-different from the image url that you render in the lightbox (for example by
-appending some unique query parameter to the url):
+different from the image URL that you render in the lightbox (for example by
+appending some unique query parameter to the URL):
 
 ```jsx
 <Lightbox

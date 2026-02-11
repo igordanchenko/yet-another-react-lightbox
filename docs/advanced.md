@@ -135,7 +135,7 @@ return (
 
 ## Augmentation
 
-Lightbox props can be modified with plugin's `augment` method. All plugins'
+Lightbox props can be modified with the plugin's `augment` method. All plugins'
 augmentations are applied before the lightbox starts rendering.
 
 For example, you can add a toolbar button using the following augmentation:
@@ -179,7 +179,7 @@ added to the lightbox with a plugin).
 ### useLightboxState
 
 The `useLightboxState` hook returns the current state of the lightbox (current
-slide, current index, etc.)
+slide, current index, etc.).
 
 <table class="docs">
   <tbody>
@@ -325,7 +325,7 @@ function MyButton() {
       label="My button"
       icon={MyIcon}
       disabled={!currentSlide}
-      onClic={() => {
+      onClick={() => {
         // ...
       }}
     />

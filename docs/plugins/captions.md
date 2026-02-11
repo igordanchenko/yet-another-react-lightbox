@@ -1,6 +1,6 @@
 # Captions Plugin
 
-Captions plugin allows you to add titles and descriptions to your lightbox
+The Captions plugin allows you to add titles and descriptions to your lightbox
 slides.
 
 The plugin comes with an additional CSS stylesheet.
@@ -11,7 +11,7 @@ import "yet-another-react-lightbox/plugins/captions.css";
 
 ## Documentation
 
-Captions plugin adds the following `Lightbox` properties:
+The Captions plugin adds the following `Lightbox` properties:
 
 <table class="docs">
   <tbody>
@@ -58,7 +58,7 @@ and the following `Slide` properties:
   </tbody>
 </table>
 
-# Captions Ref
+## Captions Ref
 
 The Captions plugin provides a ref object to control the plugin features
 externally.
@@ -101,7 +101,7 @@ return (
     <tr>
       <td>hide</td>
       <td>() => void</td>
-      <td>Hide captions</td>
+      <td>Hide captions.</td>
     </tr>
   </tbody>
 </table>

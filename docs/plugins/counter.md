@@ -1,6 +1,6 @@
 # Counter Plugin
 
-Counter plugin adds slides counter to the lightbox.
+The Counter plugin adds a slides counter to the lightbox.
 
 The plugin comes with an additional CSS stylesheet.
 
@@ -10,7 +10,7 @@ import "yet-another-react-lightbox/plugins/counter.css";
 
 ## Documentation
 
-Counter plugin adds the following `Lightbox` properties:
+The Counter plugin adds the following `Lightbox` properties:
 
 <table class="docs">
   <tbody>

@@ -9,14 +9,14 @@ the collection of StackBlitz [demos](/examples).
 [Yet Another React Lightbox](/) provides all components and types as named
 exports. [Lightbox](#Lightbox) is exported as both default and named export.
 
-The below documentation covers [Yet Another React Lightbox](/) API. For advanced
-features, please see the [Advanced API](/advanced) documentation.
+The documentation below covers the [Yet Another React Lightbox](/) API. For
+advanced features, please see the [Advanced API](/advanced) documentation.
 
 Parameters marked with an asterisk (<span class="required"/>) are required.
 
 ## Styles
 
-[Yet Another React Lightbox](/) comes with CSS stylesheet that needs to be
+[Yet Another React Lightbox](/) comes with a CSS stylesheet that needs to be
 imported once in your project. All examples across this site include CSS import,
 but you can omit the import statement if you already imported lightbox styles in
 your application.
@@ -45,8 +45,8 @@ import "yet-another-react-lightbox/styles.css";
       <td>
         <p>Slide index.</p>
         <p>
-          The lightbox reads this property when it opens (in this case the `index` prop determines the starting slide
-          index) and when either `slides` or `index` props change (in this case the `index` prop determines the
+          The lightbox reads this property when it opens (in this case, the `index` prop determines the starting slide
+          index) and when either `slides` or `index` props change (in this case, the `index` prop determines the
           current slide index). In most cases, you do not need to provide this prop at all, as the lightbox maintains
           its state internally. However, you may need to provide the `index` prop when you modify or completely
           replace the `slides` array. To keep track of the current slide index, you can use the `on.view` callback 
@@ -64,7 +64,7 @@ import "yet-another-react-lightbox/styles.css";
           Please note that updating the `slides` array (or just changing the array reference) forces the lightbox
           to update its state based on the current `slides` and `index` values. You can safely use a non-stable array
           reference (i.e., `slides={[{ ... }]}` or `slides={items.map((item) => ({ ... }))}`) as long as the component
-          holding the lightbox does not re-rerender while the lightbox is open. However, if your component may
+          holding the lightbox does not re-render while the lightbox is open. However, if your component may
           re-render, be sure to either provide the `slides` prop as a stable array reference (i.e., `const` in static
           scope, or wrapped with `React.useState` or `React.useMemo`), or specify the current slide index in the
           `index` prop (see [Tracking Slide Index](#TrackingSlideIndex) example).
@@ -302,7 +302,7 @@ import "yet-another-react-lightbox/styles.css";
 ## Slide
 
 Image slides are supported by default. Additional slide types can be added via
-[plugins](/plugins) or custom [render](#Render) function. Please see
+[plugins](/plugins) or a custom [render](#Render) function. Please see the
 [Custom Slides](/examples/custom-slides) example for details.
 
 <table class="docs">
@@ -476,7 +476,7 @@ Custom render functions can be passed via `render` prop.
     <tr>
       <td>buttonNext</td>
       <td>() => React.ReactNode</td>
-      <td>Render custom Prev button. Return `null` if you want to hide the button.</td>
+      <td>Render custom Next button. Return `null` if you want to hide the button.</td>
     </tr>
     <tr>
       <td>buttonClose</td>

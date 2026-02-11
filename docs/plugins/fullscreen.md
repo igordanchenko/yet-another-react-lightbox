@@ -1,12 +1,12 @@
 # Fullscreen Plugin
 
-Fullscreen plugin adds support for fullscreen lightbox mode utilizing the
+The Fullscreen plugin adds support for fullscreen lightbox mode utilizing the
 browser's
 [Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API).
 Please note that fullscreen mode is not supported in some modern browsers (i.e.,
-Safari on iPhone) or within iframes. Fullscreen plugin detects the availability
-of fullscreen mode and doesn't display the fullscreen button in browsers that do
-not support fullscreen mode.
+Safari on iPhone) or within iframes. The Fullscreen plugin detects the
+availability of fullscreen mode and does not display the fullscreen button in
+browsers that do not support fullscreen mode.
 
 ## Documentation
 

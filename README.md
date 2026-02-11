@@ -1,6 +1,6 @@
 # Yet Another React Lightbox
 
-Modern React lightbox component. Performant, easy to use, customizable and
+Modern React lightbox component. Performant, easy to use, customizable, and
 extendable.
 
 ## Overview
@@ -9,8 +9,8 @@ extendable.
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/yet-another-react-lightbox.svg?color=blue)](https://bundlephobia.com/package/yet-another-react-lightbox)
 [![License MIT](https://img.shields.io/npm/l/yet-another-react-lightbox.svg?color=blue)](https://github.com/igordanchenko/yet-another-react-lightbox/blob/main/LICENSE)
 
-- **Built for React:** works with React 19, 18, 17 and 16.8.0+
-- **UX:** supports keyboard, mouse, touchpad and touchscreen navigation
+- **Built for React:** works with React 19, 18, 17, and 16.8.0+
+- **UX:** supports keyboard, mouse, touchpad, and touchscreen navigation
 - **Preloading:** never displays partially downloaded images
 - **Performance:** preloads limited number of images without compromising
   performance or UX
@@ -21,7 +21,7 @@ extendable.
 - **Customization:** customize any UI element or add your own custom slides
 - **No bloat:** never bundle rarely used features; add optional features via
   plugins
-- **TypeScript:** type definitions come built-in in the package
+- **TypeScript:** type definitions come built-in with the package
 - **RTL:** compatible with RTL layout
 
 ![Yet Another React Lightbox | Example](https://images.yet-another-react-lightbox.com/example.jpg)
@@ -158,7 +158,7 @@ The following plugins are bundled in the package:
 
 ## Sponsors
 
-This project is supported by the following companies, organizations and
+This project is supported by the following companies, organizations, and
 individuals who help make its continued development and maintenance possible.
 
 <p align="center">

@@ -81,7 +81,7 @@ Image carousel with `imageFit: "cover"`:
 
 <InlinePluginCoverExample />
 
-Image carousel with Fullscreen, Slideshow, Thumbnails and Zoom plugins:
+Image carousel with Fullscreen, Slideshow, Thumbnails, and Zoom plugins:
 
 <InlinePluginAdvancedExample />
 

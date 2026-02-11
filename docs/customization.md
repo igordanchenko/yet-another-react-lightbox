@@ -1,7 +1,7 @@
 # Customization
 
 [Yet Another React Lightbox](/) allows you to customize pretty much any aspect
-of its visual appearance. Custom icons can be rendered via
+of its visual appearance. Custom icons can be rendered via the
 [render](/documentation#Render) prop. The color palette can be customized
 through CSS variables. The existing styles can be modified by targeting
 customization slots.
@@ -184,7 +184,7 @@ Close button.
     ],
   }}
   // ...
-</>
+/>
 ```
 
 If you have included any plugins that provide their own toolbar buttons, those
@@ -206,7 +206,7 @@ buttons, you can reference them using corresponding plugin name.
   }}
   plugins={[Download, Slideshow]}
   // ...
-</>
+/>
 ```
 
 If you need to access information about the current slide when your button is

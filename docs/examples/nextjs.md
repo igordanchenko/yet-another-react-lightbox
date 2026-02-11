@@ -16,7 +16,7 @@ responsiveness of your application. To implement this approach in a Next.js
 project, you can extract the lightbox-related code and CSS stylesheets into a
 separate component and load it dynamically with the `next/dynamic` import.
 
-The below example demonstrates the use of `next/dynamic` import.
+The example below demonstrates the use of `next/dynamic` import.
 
 ### Sandbox
 
@@ -26,7 +26,7 @@ The below example demonstrates the use of `next/dynamic` import.
 
 The `next/image` component provides a more efficient way to handle images in
 your Next.js project. You can replace the standard `<img>` element with
-`next/image` via a custom `render.slide` function. The below example makes use
+`next/image` via a custom `render.slide` function. The example below makes use
 of `placeholder="blur"` instead of showing a spinner.
 
 ```jsx
@@ -156,9 +156,9 @@ return (
 
 ## With Zoom Plugin
 
-Zoom plugin doesn't work well with the Next.js image component. You can use the
-following approach to take advantage of Next.js image optimization when using
-Zoom plugin.
+The Zoom plugin doesn't work well with the Next.js image component. You can use
+the following approach to take advantage of the Next.js image optimization when
+using Zoom plugin.
 
 ```jsx
 import Lightbox from "yet-another-react-lightbox";

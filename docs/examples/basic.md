@@ -1,6 +1,6 @@
 # Basic Examples
 
-Here are some basic example demonstrating [Yet Another React Lightbox](/)
+Here are some basic examples demonstrating [Yet Another React Lightbox](/)
 features.
 
 ## Live Demo
@@ -8,7 +8,7 @@ features.
 Full-blown example with most of the plugins enabled
 ([Captions](/plugins/captions), [Fullscreen](/plugins/fullscreen),
 [Slideshow](/plugins/slideshow), [Thumbnails](/plugins/thumbnails),
-[Video](/plugins/video) and [Zoom](/plugins/zoom)).
+[Video](/plugins/video), and [Zoom](/plugins/zoom)).
 
 <AdvancedExample />
 

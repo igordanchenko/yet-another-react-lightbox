@@ -1,6 +1,6 @@
 # Slideshow Plugin
 
-Slideshow plugin adds slideshow autoplay feature to the lightbox.
+The Slideshow plugin adds a slideshow autoplay feature to the lightbox.
 
 ## Documentation
 

@@ -1,6 +1,6 @@
 # Video Plugin
 
-Video plugin adds support for video slides via HTML &lt;video&gt; player.
+The Video plugin adds support for video slides via HTML &lt;video&gt; player.
 
 ## Documentation
 
