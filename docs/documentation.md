@@ -117,7 +117,7 @@ import "yet-another-react-lightbox/styles.css";
         &nbsp;&nbsp;padding?: {"`${number}px` | `${number}%` | number"};<br />
         &nbsp;&nbsp;spacing?: {"`${number}px` | `${number}%` | number"};<br />
         &nbsp;&nbsp;imageFit?: "contain" | "cover"<br />
-        &nbsp;&nbsp;imageProps?: React.ImgHTMLAttributes&#8203;&lt;HTMLImageElement&gt;<br />
+        &nbsp;&nbsp;imageProps?: ComponentProps&lt;"img"&gt; | ((slide: Slide) => ComponentProps&lt;"img"&gt;)<br />
         &#125;
       </td>
       <td>
