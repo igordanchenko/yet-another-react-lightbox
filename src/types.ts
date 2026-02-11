@@ -180,13 +180,15 @@ export interface CarouselSettings {
   /** `object-fit` setting for image slides */
   imageFit: ImageFit;
   /** custom image attributes */
-  imageProps: Omit<
-    React.ImgHTMLAttributes<HTMLImageElement>,
-    "src" | "alt" | "sizes" | "srcSet" | "onLoad" | "onError" | "onClick"
-  >;
+  imageProps: ImageProps | ((slide: Slide) => ImageProps);
 }
 
 export type LengthOrPercentage = `${number}px` | `${number}%` | number;
+
+export type ImageProps = Omit<
+  React.ImgHTMLAttributes<HTMLImageElement>,
+  "src" | "alt" | "sizes" | "srcSet" | "onLoad" | "onError" | "onClick"
+>;
 
 /** Animation settings */
 export interface AnimationSettings {

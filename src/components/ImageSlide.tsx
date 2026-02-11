@@ -131,7 +131,11 @@ export function ImageSlide({
   const sizes =
     srcSet && rect && hasWindow() ? `${Math.round(Math.min(estimateActualWidth(), rect.width))}px` : undefined;
 
-  const { style: imagePropsStyle, className: imagePropsClassName, ...restImageProps } = imageProps || {};
+  const {
+    style: imagePropsStyle,
+    className: imagePropsClassName,
+    ...restImageProps
+  } = (typeof imageProps === "function" ? imageProps(image) : imageProps) || {};
 
   return (
     <>
