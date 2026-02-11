@@ -208,7 +208,7 @@
     "husky": "^9",
     "jsdom": "^28",
     "lint-staged": "^16",
-    "npm-run-all": "^4",
+    "npm-run-all2": "^8",
     "postcss": "^8",
     "postcss-cli": "^11",
     "prettier": "^3",
