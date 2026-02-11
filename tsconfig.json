@@ -10,5 +10,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["vitest/globals"]
-  }
+  },
+  "exclude": ["dev", "dist"]
 }
