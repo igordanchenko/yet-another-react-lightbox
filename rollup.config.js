@@ -18,6 +18,7 @@ function listPlugins() {
 export default [
   [
     typescript({
+      noEmitOnError: true,
       include: ["src/**/*"],
       compilerOptions: { removeComments: true },
     }),
