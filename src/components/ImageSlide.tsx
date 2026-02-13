@@ -121,7 +121,8 @@ export function ImageSlide({
         };
 
   const srcSet = image.srcSet
-    ?.sort((a, b) => a.width - b.width)
+    ?.slice()
+    .sort((a, b) => a.width - b.width)
     .map((item) => `${item.src} ${item.width}w`)
     .join(", ");
 
