@@ -38,7 +38,7 @@ declare module "../../types.js" {
     /** disables the capability of remote playback */
     disableRemotePlayback?: boolean;
     /** an array of video files */
-    sources: {
+    sources: readonly {
       /** video source URL */
       src: string;
       /** video source type (e.g., `video/mp4`) */

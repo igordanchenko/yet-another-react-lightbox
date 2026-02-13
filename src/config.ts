@@ -30,7 +30,7 @@ function traverse(nodes: Node[], target: string, apply: (node: Node) => Node[] |
 
 export function withPlugins(
   root: Node[],
-  plugins: Plugin[] = [],
+  plugins: readonly Plugin[] = [],
   augmentations: Augmentation[] = [],
 ): { config: Node[]; augmentation: Augmentation } {
   let config = root;

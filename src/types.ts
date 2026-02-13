@@ -28,13 +28,13 @@ export interface LightboxProps {
   /** starting slide index */
   index: number;
   /** slides to display in the lightbox */
-  slides: Slide[];
+  slides: readonly Slide[];
   /** custom render functions */
   render: Render;
   /** custom UI labels / translations */
   labels: Labels;
   /** enabled plugins */
-  plugins: Plugin[];
+  plugins: readonly Plugin[];
   /** toolbar settings */
   toolbar: ToolbarSettings;
   /** carousel settings */
@@ -87,7 +87,7 @@ export interface SlideImage extends GenericSlide {
   /** `object-fit` setting */
   imageFit?: ImageFit;
   /** alternative images to be passed to the 'srcSet' */
-  srcSet?: ImageSource[];
+  srcSet?: readonly ImageSource[];
 }
 
 /** Image source */
@@ -281,14 +281,14 @@ export type LightboxStateSwipeAction = {
 /** Lightbox state update action */
 export type LightboxStateUpdateAction = {
   type: "update";
-  slides: Slide[];
+  slides: readonly Slide[];
   index: number;
 };
 
 /** Lightbox state */
 export interface LightboxState {
   /** lightbox slides */
-  slides: Slide[];
+  slides: readonly Slide[];
   /** current slide index */
   currentIndex: number;
   /** current slide index in the (-∞, +∞) range */
@@ -414,7 +414,7 @@ export type Label = keyof Labels;
 /** Toolbar settings */
 export interface ToolbarSettings {
   /** buttons to render in the toolbar */
-  buttons: (ToolbarButtonKey | React.ReactNode)[];
+  buttons: readonly (ToolbarButtonKey | React.ReactNode)[];
 }
 
 export type ToolbarButtonKey = keyof ToolbarButtonKeys;
@@ -469,7 +469,7 @@ export type DeepPartial<T extends object, K extends keyof T = keyof T, E extends
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DeepPartialValue<T, E extends string = never> = T extends any[]
+export type DeepPartialValue<T, E extends string = never> = T extends readonly any[]
   ? T
   : // eslint-disable-next-line @typescript-eslint/no-explicit-any
     T extends (...props: any[]) => any

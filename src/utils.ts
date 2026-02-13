@@ -43,7 +43,7 @@ export function label(labels: Labels | undefined, defaultLabel: Label) {
   return translateLabel(labels, defaultLabel);
 }
 
-export function translateSlideCounter(labels: Labels | undefined, slides: Slide[], index: number) {
+export function translateSlideCounter(labels: Labels | undefined, slides: readonly Slide[], index: number) {
   return translateLabel(labels, "{index} of {total}")
     .replace(/\{index}/g, `${getSlideIndex(index, slides.length) + 1}`)
     .replace(/\{total}/g, `${slides.length}`);
@@ -120,7 +120,7 @@ export function getSlideIndex(index: number, slidesCount: number) {
   return slidesCount > 0 ? ((index % slidesCount) + slidesCount) % slidesCount : 0;
 }
 
-export function hasSlides(slides: Slide[]): slides is [Slide, ...Slide[]] {
+export function hasSlides(slides: readonly Slide[]): slides is [Slide, ...Slide[]] {
   return slides.length > 0;
 }
 
@@ -128,7 +128,7 @@ export function getSlide(slides: [Slide, ...Slide[]], index: number) {
   return slides[getSlideIndex(index, slides.length)];
 }
 
-export function getSlideIfPresent(slides: Slide[], index: number) {
+export function getSlideIfPresent(slides: readonly Slide[], index: number) {
   return hasSlides(slides) ? getSlide(slides, index) : undefined;
 }
 
@@ -162,7 +162,7 @@ export function stopNavigationEventsPropagation() {
   return { onPointerDown: stopPropagation, onKeyDown: stopPropagation, onWheel: stopPropagation };
 }
 
-export function calculatePreload(carousel: CarouselSettings, slides: Slide[], minimum = 0) {
+export function calculatePreload(carousel: CarouselSettings, slides: readonly Slide[], minimum = 0) {
   return Math.min(
     carousel.preload,
     Math.max(carousel.finite ? slides.length - 1 : Math.floor(slides.length / 2), minimum),
