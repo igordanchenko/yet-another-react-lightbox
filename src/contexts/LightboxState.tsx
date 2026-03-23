@@ -70,9 +70,14 @@ export function LightboxStateProvider({ slides, index, children }: LightboxState
     currentSlide: getSlideIfPresent(slides, index),
   });
 
-  React.useEffect(() => {
+  const [prevSlides, setPrevSlides] = React.useState(slides);
+  const [prevIndex, setPrevIndex] = React.useState(index);
+
+  if (slides !== prevSlides || index !== prevIndex) {
+    setPrevSlides(slides);
+    setPrevIndex(index);
     dispatch({ type: "update", slides, index });
-  }, [slides, index]);
+  }
 
   const context = React.useMemo(() => ({ ...state, state, dispatch }), [state, dispatch]);
 
