@@ -16,4 +16,9 @@
   padding: localVar(padding, common.globalVar(button_padding, common.$icon-button-padding));
   line-height: localVar(line_height, common.globalVar(icon_size, common.$icon-size));
   user-select: localVar(user_select, none);
+
+  [dir="rtl"] & {
+    left: localVar(rtl_left, unset);
+    right: localVar(rtl_right, 0);
+  }
 }
