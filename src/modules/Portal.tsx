@@ -28,7 +28,16 @@ function setAttribute(element: Element, attribute: string, value: string) {
   };
 }
 
-export function Portal({ children, animation, styles, className, on, portal, close, labels }: ComponentProps) {
+export function Portal({
+  portal: { root, container: { className: containerClassName, style: containerStyle, ...containerRest } = {} },
+  animation,
+  styles,
+  className,
+  on,
+  close,
+  labels,
+  children,
+}: ComponentProps) {
   const [mounted, setMounted] = React.useState(false);
   const [visible, setVisible] = React.useState(false);
 
@@ -113,6 +122,7 @@ export function Portal({ children, animation, styles, className, on, portal, clo
           ref={handleRef}
           className={clsx(
             className,
+            containerClassName,
             cssClass(cssPrefix()),
             cssClass(CLASS_NO_SCROLL_PADDING),
             visible && cssClass(cssPrefix("open")),
@@ -128,16 +138,18 @@ export function Portal({ children, animation, styles, className, on, portal, clo
               ? { [cssVar("fade_animation_timing_function")]: animation.easing.fade }
               : null),
             ...styles.root,
+            ...containerStyle,
           }}
           onFocus={(event) => {
             if (!restoreFocus.current) {
               restoreFocus.current = event.relatedTarget;
             }
           }}
+          {...containerRest}
         >
           {children}
         </LightboxRoot>,
-        portal.root || document.body,
+        root || document.body,
       )
     : null;
 }

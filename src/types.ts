@@ -256,6 +256,8 @@ export interface ControllerRef {
 export interface PortalSettings {
   /** portal mount point */
   root?: DocumentFragment | Element | null;
+  /** HTML attributes for the portal container */
+  container?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 /** NoScroll module settings */

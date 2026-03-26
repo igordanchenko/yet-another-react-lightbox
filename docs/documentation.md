@@ -207,12 +207,14 @@ import "yet-another-react-lightbox/styles.css";
       <td>
         &#123;<br />
         &nbsp;&nbsp;root?: DocumentFragment | Element | null;<br />
+        &nbsp;&nbsp;container?: React.HTMLAttributes&lt;HTMLDivElement&gt;;<br />
         &#125;
       </td>
       <td>
         <p>Portal settings.</p>
         <ul>
           <li>`root` - custom portal mount point. By default, the portal is mounted as a child of the document body.</li>
+          <li>`container` - HTML attributes for the portal container element (e.g., `{ dir: "rtl" }`).</li>
         </ul>
       </td>
     </tr>
@@ -563,11 +565,26 @@ return (
 
 ## RTL
 
-The library supports RTL out of the box. To enable RTL mode, ensure the `<html>`
-tag has the `dir="rtl"` attribute.
+The lightbox automatically detects the reading direction from its root element
+using the computed CSS `direction` property. This means it inherits `dir` from
+any ancestor, including the `<html>` tag.
 
 ```html
 <html lang="fa" dir="rtl">
   <!-- ... -->
 </html>
+```
+
+You can also set the direction per-instance.
+
+For the default portal-based lightbox, use the `portal.container` prop:
+
+```tsx
+<Lightbox portal={{ container: { dir: "rtl" } }} />
+```
+
+For the carousel mode with `Inline` plugin, pass `dir` via the `inline` prop:
+
+```tsx
+<Lightbox plugins={[Inline]} inline={{ dir: "rtl" }} />
 ```
