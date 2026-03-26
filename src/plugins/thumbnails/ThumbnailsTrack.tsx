@@ -3,25 +3,21 @@ import * as React from "react";
 import {
   ACTION_NEXT,
   ACTION_PREV,
-  ACTION_SWIPE,
   calculatePreload,
-  CLASS_FLEX_CENTER,
-  cleanup,
   clsx,
   cssClass,
   cssVar,
-  getSlide,
+  getSlideIndex,
   getSlideKey,
   hasSlides,
   Slide,
   translateLabel,
-  useAnimation,
   useEventCallback,
   useEvents,
   useKeyboardNavigation,
+  useLayoutEffect,
   useLightboxProps,
   useLightboxState,
-  useRTL,
   useSensors,
 } from "../../index.js";
 import { cssPrefix, cssThumbnailPrefix } from "./utils.js";
@@ -30,10 +26,6 @@ import { defaultThumbnailsProps, useThumbnailsProps } from "./props.js";
 
 function isHorizontal(position: ReturnType<typeof useThumbnailsProps>["position"]) {
   return ["top", "bottom"].includes(position);
-}
-
-function boxSize(thumbnails: ReturnType<typeof useThumbnailsProps>, dimension: number) {
-  return dimension + 2 * (thumbnails.border + thumbnails.padding) + thumbnails.gap;
 }
 
 function getThumbnailKey(slide?: Slide | null) {
@@ -50,18 +42,45 @@ function getThumbnailKey(slide?: Slide | null) {
   );
 }
 
+function getShortestCarouselNavigation(
+  globalIndex: number,
+  targetSlideIndex: number,
+  slideCount: number,
+): { type: typeof ACTION_NEXT | typeof ACTION_PREV; count: number } | null {
+  const currentSlideIndex = getSlideIndex(globalIndex, slideCount);
+  if (currentSlideIndex === targetSlideIndex) return null;
+  const stepsForward = (targetSlideIndex - currentSlideIndex + slideCount) % slideCount;
+  const stepsBackward = (currentSlideIndex - targetSlideIndex + slideCount) % slideCount;
+  if (stepsForward <= stepsBackward) {
+    return { type: ACTION_NEXT, count: stepsForward };
+  }
+  return { type: ACTION_PREV, count: stepsBackward };
+}
+
+function scrollThumbnailIntoViewIfNeeded(element: HTMLElement | null | undefined) {
+  const method = element?.scrollIntoView;
+  if (typeof method !== "function") return;
+  try {
+    method.call(element, { block: "nearest", inline: "nearest", behavior: "auto" });
+  } catch {
+    try {
+      method.call(element, false);
+    } catch {
+      method.call(element);
+    }
+  }
+}
+
 export type ThumbnailsTrackProps = {
   visible: boolean;
-  containerRef: React.RefObject<HTMLDivElement | null>;
 };
 
-export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps) {
+export function ThumbnailsTrack({ visible }: ThumbnailsTrackProps) {
   const track = React.useRef<HTMLDivElement>(null);
 
-  const isRTL = useRTL();
-  const { publish, subscribe } = useEvents();
+  const { publish } = useEvents();
   const { carousel, styles, labels } = useLightboxProps();
-  const { slides, globalIndex, animation } = useLightboxState();
+  const { slides, globalIndex } = useLightboxState();
   const { registerSensors, subscribeSensors } = useSensors();
 
   useKeyboardNavigation(subscribeSensors);
@@ -70,79 +89,66 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
   const { position, width, height, border, borderStyle, borderColor, borderRadius, padding, gap, vignette } =
     thumbnails;
 
-  const offset = (animation?.duration !== undefined && animation?.increment) || 0;
-  const animationDuration = animation?.duration || 0;
-
-  const { prepareAnimation } = useAnimation<number>(track, (snapshot) => ({
-    keyframes: isHorizontal(position)
-      ? [
-          {
-            transform: `translateX(${(isRTL ? -1 : 1) * boxSize(thumbnails, width) * offset + snapshot}px)`,
-          },
-          { transform: "translateX(0)" },
-        ]
-      : [
-          {
-            transform: `translateY(${boxSize(thumbnails, height) * offset + snapshot}px)`,
-          },
-          { transform: "translateY(0)" },
-        ],
-    duration: animationDuration,
-    easing: animation?.easing,
-  }));
-
-  const handleControllerSwipe = useEventCallback(() => {
-    let animationOffset = 0;
-    if (containerRef.current && track.current) {
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const trackRect = track.current.getBoundingClientRect();
-      animationOffset = isHorizontal(position)
-        ? trackRect.left - containerRect.left - (containerRect.width - trackRect.width) / 2
-        : trackRect.top - containerRect.top - (containerRect.height - trackRect.height) / 2;
+  const handleStripWheel = useEventCallback((event: React.WheelEvent) => {
+    const horizontalStrip = isHorizontal(position);
+    if (horizontalStrip) {
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+    } else if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+      return;
     }
-
-    prepareAnimation(animationOffset);
+    event.stopPropagation();
   });
 
-  React.useEffect(() => cleanup(subscribe(ACTION_SWIPE, handleControllerSwipe)), [subscribe, handleControllerSwipe]);
+  const stopStripPointerBubble = useEventCallback((event: React.PointerEvent) => {
+    event.stopPropagation();
+  });
 
   const preload = calculatePreload(carousel, slides);
-  const items: { key: React.Key; index: number; slide: Slide | null }[] = [];
 
-  if (hasSlides(slides)) {
-    for (
-      let index = globalIndex - preload - Math.abs(offset);
-      index <= globalIndex + preload + Math.abs(offset);
-      index += 1
-    ) {
-      const placeholder =
-        (carousel.finite && (index < 0 || index > slides.length - 1)) ||
-        (offset < 0 && index < globalIndex - preload) ||
-        (offset > 0 && index > globalIndex + preload);
-      const slide = !placeholder ? getSlide(slides, index) : null;
+  const items = React.useMemo(() => {
+    const list: { key: React.Key; index: number; slide: Slide | null }[] = [];
+    if (!hasSlides(slides)) {
+      return list;
+    }
+    for (let index = 0; index < slides.length; index += 1) {
+      const slide = slides[index];
       const key = [`${index}`, getThumbnailKey(slide)].filter(Boolean).join("|");
-
-      items.push({ key, index, slide });
+      list.push({ key, index, slide });
     }
-  }
+    return list;
+  }, [slides]);
 
-  const handleClick = (slideIndex: number) => () => {
-    if (slideIndex > globalIndex) {
-      publish(ACTION_NEXT, { count: slideIndex - globalIndex });
-    } else if (slideIndex < globalIndex) {
-      publish(ACTION_PREV, { count: globalIndex - slideIndex });
+  const slidesLength = hasSlides(slides) ? slides.length : 0;
+  const activeSlideIndex = slidesLength > 0 ? getSlideIndex(globalIndex, slidesLength) : null;
+
+  const scrollViewportMaxPx = React.useMemo(() => {
+    if (slidesLength === 0) return 0;
+    const visibleSlots = Math.min(slidesLength, 2 * preload + 1);
+    const dim = isHorizontal(position) ? width : height;
+    return visibleSlots * (dim + 2 * (border + padding) + gap) - gap;
+  }, [slidesLength, preload, position, width, height, border, padding, gap]);
+
+  const handleThumbnailClick = useEventCallback((clickedSlideIndex: number) => {
+    if (slidesLength === 0) return;
+    const nav = getShortestCarouselNavigation(globalIndex, clickedSlideIndex, slidesLength);
+    if (nav) {
+      publish(nav.type, { count: nav.count });
     }
-  };
+  });
 
-  return (
-    <div
-      className={clsx(cssClass(cssPrefix("container")), cssClass(CLASS_FLEX_CENTER))}
-      style={{
+  useLayoutEffect(() => {
+    if (!visible || activeSlideIndex === null) {
+      return;
+    }
+    scrollThumbnailIntoViewIfNeeded(track.current?.querySelector<HTMLElement>('[aria-current="true"]'));
+  }, [visible, activeSlideIndex]);
+
+  const containerStyle = React.useMemo(
+    () =>
+      ({
         ...(!visible ? { display: "none" } : null),
-        ...(width !== defaultThumbnailsProps.width ? { [cssVar(cssThumbnailPrefix("width"))]: `${width}px` } : null),
-        ...(height !== defaultThumbnailsProps.height
-          ? { [cssVar(cssThumbnailPrefix("height"))]: `${height}px` }
-          : null),
+        [cssVar(cssThumbnailPrefix("width"))]: `${width}px`,
+        [cssVar(cssThumbnailPrefix("height"))]: `${height}px`,
         ...(border !== defaultThumbnailsProps.border
           ? { [cssVar(cssThumbnailPrefix("border"))]: `${border}px` }
           : null),
@@ -156,56 +162,53 @@ export function ThumbnailsTrack({ visible, containerRef }: ThumbnailsTrackProps)
           : null),
         ...(gap !== defaultThumbnailsProps.gap ? { [cssVar(cssThumbnailPrefix("gap"))]: `${gap}px` } : null),
         ...styles.thumbnailsContainer,
-      }}
+      }) as React.CSSProperties,
+    [visible, width, height, border, borderStyle, borderColor, borderRadius, padding, gap, styles.thumbnailsContainer],
+  );
+
+  const scrollViewportStyle = React.useMemo(() => {
+    const user = styles.thumbnailsScrollViewport;
+    const capVar =
+      scrollViewportMaxPx > 0 ? { [cssVar("thumbnails_scroll_viewport_max")]: `${scrollViewportMaxPx}px` } : undefined;
+    if (!user && !capVar) return undefined;
+    return { ...user, ...capVar } as React.CSSProperties;
+  }, [scrollViewportMaxPx, styles.thumbnailsScrollViewport]);
+
+  return (
+    <div
+      className={clsx(cssClass(cssPrefix("container")), cssClass(cssPrefix("container_scrollable")))}
+      style={containerStyle}
     >
-      <nav
-        ref={track}
-        style={styles.thumbnailsTrack}
-        className={clsx(cssClass(cssPrefix("track")), cssClass(CLASS_FLEX_CENTER))}
-        aria-label={translateLabel(labels, "Thumbnails")}
-        tabIndex={-1}
-        {...registerSensors}
+      <div
+        className={cssClass(cssPrefix("scroll_viewport"))}
+        style={scrollViewportStyle}
+        onWheel={handleStripWheel}
+        onPointerDown={stopStripPointerBubble}
+        onPointerMove={stopStripPointerBubble}
+        onPointerUp={stopStripPointerBubble}
+        onPointerCancel={stopStripPointerBubble}
       >
-        {items.map(({ key, index, slide }) => {
-          const fadeAnimationDuration = animationDuration / Math.abs(offset || 1);
-
-          const fadeIn =
-            (offset > 0 && index > globalIndex + preload - offset && index <= globalIndex + preload) ||
-            (offset < 0 && index < globalIndex - preload - offset && index >= globalIndex - preload)
-              ? {
-                  duration: fadeAnimationDuration,
-                  delay:
-                    ((offset > 0 ? index - (globalIndex + preload - offset) : globalIndex - preload - offset - index) -
-                      1) *
-                    fadeAnimationDuration,
-                }
-              : undefined;
-
-          const fadeOut =
-            (offset > 0 && index < globalIndex - preload) || (offset < 0 && index > globalIndex + preload)
-              ? {
-                  duration: fadeAnimationDuration,
-                  delay:
-                    (offset > 0
-                      ? offset - (globalIndex - preload - index)
-                      : -offset - (index - (globalIndex + preload))) * fadeAnimationDuration,
-                }
-              : undefined;
-
-          return (
+        <nav
+          ref={track}
+          style={styles.thumbnailsTrack}
+          className={cssClass(cssPrefix("track"))}
+          aria-label={translateLabel(labels, "Thumbnails")}
+          tabIndex={-1}
+          {...registerSensors}
+        >
+          {items.map(({ key, index, slide }) => (
             <Thumbnail
               key={key}
               index={index}
               slide={slide}
-              fadeIn={fadeIn}
-              fadeOut={fadeOut}
               placeholder={!slide}
-              onClick={handleClick(index)}
+              onClick={slide ? () => handleThumbnailClick(index) : undefined}
               onLoseFocus={() => track.current?.focus()}
+              active={activeSlideIndex !== null ? activeSlideIndex === index : undefined}
             />
-          );
-        })}
-      </nav>
+          ))}
+        </nav>
+      </div>
       {vignette && <div className={cssClass(cssPrefix("vignette"))} />}
     </div>
   );

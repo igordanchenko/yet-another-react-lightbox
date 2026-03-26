@@ -1,7 +1,8 @@
 import * as React from "react";
 import { act, render, screen } from "@testing-library/react";
+import { vi } from "vitest";
 
-import { clickButton, expectCurrentImageToBe, expectToContainButton, lightbox } from "../test-utils.js";
+import { clickButton, expectCurrentImageToBe, expectToContainButton, lightbox, querySelector } from "../test-utils.js";
 import { Fullscreen, Thumbnails, Video } from "../../../src/plugins/index.js";
 import { LightboxExternalProps } from "../../../src/index.js";
 
@@ -128,39 +129,60 @@ describe("Thumbnails", () => {
     clickThumbnail("custom");
   });
 
-  it("renders correct number of thumbnails", () => {
+  it("renders one thumbnail per slide regardless of preload and finite mode", () => {
     const { rerender } = renderLightbox();
 
-    const generateTestCases = (finite: boolean, testCases: number[][]) =>
-      testCases.flatMap((expectedThumbnails, preload) =>
-        expectedThumbnails.map((expected, slides) => [slides, preload, finite, expected] as const),
-      );
+    for (const finite of [false, true]) {
+      for (const preload of [0, 1, 2, 3]) {
+        for (const slidesCount of [0, 1, 2, 3, 5, 7, 9]) {
+          rerender(
+            lightbox({
+              plugins: [Thumbnails],
+              carousel: { preload, finite },
+              slides: Array.from({ length: slidesCount }).map((_, index) => ({ src: `img${index}` })),
+            }),
+          );
 
-    for (const [slides, preload, finite, expected] of [
-      ...generateTestCases(false, [
-        [0, 1, 1, 1],
-        [0, 1, 3, 3, 3],
-        [0, 1, 3, 3, 5, 5, 5],
-        [0, 1, 3, 3, 5, 5, 7, 7, 7],
-        [0, 1, 3, 3, 5, 5, 7, 7, 9, 9, 9],
-      ]),
-      ...generateTestCases(true, [
-        [0, 1, 1, 1],
-        [0, 1, 2, 2, 2],
-        [0, 1, 2, 3, 3, 3],
-        [0, 1, 2, 3, 4, 4, 4],
-        [0, 1, 2, 3, 4, 5, 5, 5],
-      ]),
-    ] as const) {
-      rerender(
-        lightbox({
-          plugins: [Thumbnails],
-          carousel: { preload, finite },
-          slides: Array.from({ length: slides }).map((_, index) => ({ src: `img${index}` })),
-        }),
-      );
-
-      expect(queryThumbnails().length, JSON.stringify({ slides, preload, finite, expected })).toBe(expected);
+          expect(queryThumbnails().length, JSON.stringify({ slidesCount, preload, finite })).toBe(slidesCount);
+        }
+      }
     }
+  });
+
+  it("uses a scroll viewport with max-size CSS variable", () => {
+    renderLightbox();
+    expect(querySelector(".yarl__thumbnails_container_scrollable")).toBeInTheDocument();
+    const viewport = querySelector(".yarl__thumbnails_scroll_viewport");
+    expect(viewport).toBeInTheDocument();
+    expect(viewport?.getAttribute("style")).toContain("--yarl__thumbnails_scroll_viewport_max");
+  });
+
+  it("merges styles.thumbnailsScrollViewport on the scroll viewport", () => {
+    renderLightbox({
+      styles: { thumbnailsScrollViewport: { outline: "2px solid red" } },
+    });
+    const viewport = querySelector(".yarl__thumbnails_scroll_viewport") as HTMLElement;
+    expect(viewport).toBeInTheDocument();
+    expect(viewport.style.outline).toBe("2px solid red");
+    expect(viewport.getAttribute("style")).toContain("--yarl__thumbnails_scroll_viewport_max");
+  });
+
+  it("calls scrollIntoView when the active thumbnail index changes", () => {
+    const scrollIntoView = vi.spyOn(HTMLElement.prototype, "scrollIntoView");
+    renderLightbox();
+    scrollIntoView.mockClear();
+    clickButton("Next");
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: "nearest", inline: "nearest", behavior: "auto" });
+    scrollIntoView.mockRestore();
+  });
+
+  it("supports thumbnails navigation with preload 0", () => {
+    renderLightbox({ carousel: { preload: 0 } });
+    expectCurrentImageToBe("image1");
+    clickThumbnail("image2");
+    expectCurrentImageToBe("image2");
+    clickThumbnail("image1");
+    expectCurrentImageToBe("image1");
   });
 });

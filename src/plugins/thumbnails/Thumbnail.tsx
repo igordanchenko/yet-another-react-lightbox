@@ -78,21 +78,31 @@ export type FadeSettings = {
 export type ThumbnailProps = {
   slide: Slide | null;
   index: number;
-  onClick: () => void;
+  onClick?: () => void;
   fadeIn?: FadeSettings;
   fadeOut?: FadeSettings;
   placeholder: boolean;
   onLoseFocus: () => void;
+  active?: boolean;
 };
 
-export function Thumbnail({ slide, index, onClick, fadeIn, fadeOut, placeholder, onLoseFocus }: ThumbnailProps) {
+export function Thumbnail({
+  slide,
+  index,
+  onClick,
+  fadeIn,
+  fadeOut,
+  placeholder,
+  onLoseFocus,
+  active: activeProp,
+}: ThumbnailProps) {
   const ref = React.useRef<HTMLButtonElement>(null);
   const { render, styles, labels } = useLightboxProps();
   const { slides, globalIndex } = useLightboxState();
   const { getOwnerDocument } = useDocumentContext();
   const { width, height, imageFit } = useThumbnailsProps();
   const rect = { width, height };
-  const active = index === globalIndex;
+  const active = activeProp ?? index === globalIndex;
 
   const onLoseFocusCallback = useEventCallback(onLoseFocus);
 

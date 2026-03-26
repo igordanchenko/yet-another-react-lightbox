@@ -5,6 +5,20 @@ slides are supported out of the box. You can specify a thumbnail image for
 custom slide types or override the default thumbnail by adding a `thumbnail`
 slide prop to your slides.
 
+The thumbnail strip scrolls like a normal overflow area. With `position` set to
+`top` or `bottom`, it scrolls horizontally; with `start` or `end`, it scrolls
+vertically. There is one thumbnail per slide, so you can scroll or drag through
+the entire list. The strip stays centered; on wide layouts the visible width or
+height is capped (about `2 * carousel.preload + 1` thumbnail slots) so the bar
+does not stretch across the whole viewport.
+
+When you change slides, the active thumbnail scrolls into view. Clicking a
+thumbnail jumps to that slide. If the carousel loops, navigation uses the
+shorter path around the loop instead of stepping through every slide in between.
+
+To tweak the scrollable region, use `styles.thumbnailsScrollViewport` or the
+`--yarl__thumbnails_scroll_viewport_max` CSS variable.
+
 The plugin comes with an additional CSS stylesheet.
 
 ```jsx

@@ -38,6 +38,60 @@ $thumbnail-focus-box-shadow:
     -webkit-touch-callout: none;
   }
 
+  &_top &_container_scrollable,
+  &_bottom &_container_scrollable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  &_top &_scroll_viewport,
+  &_bottom &_scroll_viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: var(--yarl__thumbnails_scroll_viewport_max, none);
+    width: 100%;
+    min-width: 0;
+    contain: layout;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+  }
+
+  &_start &_container_scrollable,
+  &_end &_container_scrollable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-height: 100%;
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  &_start &_scroll_viewport,
+  &_end &_scroll_viewport {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: var(--yarl__thumbnails_scroll_viewport_max, none);
+    width: 100%;
+    min-height: 0;
+    contain: layout;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+  }
+
+  &_scroll_viewport &_track {
+    justify-content: flex-start;
+    touch-action: inherit;
+  }
+
+  &_scroll_viewport &_thumbnail {
+    touch-action: inherit;
+  }
+
   &_vignette {
     position: absolute;
     pointer-events: none;
@@ -83,12 +137,15 @@ $thumbnail-focus-box-shadow:
   }
 
   &_track {
+    display: flex;
     outline: none;
     gap: localVar(thumbnail_gap, 16px);
   }
 
   &_thumbnail {
     flex: 0 0 auto;
+    min-width: localVar(thumbnail_width, 120px);
+    min-height: localVar(thumbnail_height, 80px);
     cursor: pointer;
     appearance: none;
     background: localVar(thumbnail_background, common.$color-black);

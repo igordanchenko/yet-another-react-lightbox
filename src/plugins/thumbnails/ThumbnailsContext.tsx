@@ -14,7 +14,6 @@ export function ThumbnailsContextProvider({ children, ...props }: ComponentProps
   const { ref, position, hidden } = resolveThumbnailsProps(props.thumbnails);
 
   const [visible, setVisible] = React.useState(!hidden);
-  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const context = React.useMemo(
     () => ({
@@ -30,10 +29,10 @@ export function ThumbnailsContextProvider({ children, ...props }: ComponentProps
   return (
     <LightboxPropsProvider {...props}>
       <ThumbnailsContext.Provider value={context}>
-        <div ref={containerRef} className={clsx(cssClass(cssPrefix()), cssClass(cssPrefix(`${position}`)))}>
-          {["start", "top"].includes(position) && <ThumbnailsTrack containerRef={containerRef} visible={visible} />}
+        <div className={clsx(cssClass(cssPrefix()), cssClass(cssPrefix(`${position}`)))}>
+          {["start", "top"].includes(position) && <ThumbnailsTrack visible={visible} />}
           <div className={cssClass(cssPrefix("wrapper"))}>{children}</div>
-          {["end", "bottom"].includes(position) && <ThumbnailsTrack containerRef={containerRef} visible={visible} />}
+          {["end", "bottom"].includes(position) && <ThumbnailsTrack visible={visible} />}
         </div>
       </ThumbnailsContext.Provider>
     </LightboxPropsProvider>

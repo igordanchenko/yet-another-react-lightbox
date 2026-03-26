@@ -229,6 +229,7 @@ export default function App() {
           thumbnail: { borderColor: "#eee" },
           thumbnailsTrack: { borderColor: "#eee" },
           thumbnailsContainer: { borderColor: "#eee" },
+          thumbnailsScrollViewport: { outline: "none" },
         }}
         labels={{
           Previous: "Custom Previous",

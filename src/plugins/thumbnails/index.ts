@@ -81,6 +81,8 @@ declare module "../../types.js" {
     thumbnailsTrack: "thumbnailsTrack";
     /** thumbnails container customization slot */
     thumbnailsContainer: "thumbnailsContainer";
+    /** scroll viewport */
+    thumbnailsScrollViewport: "thumbnailsScrollViewport";
   }
 
   // noinspection JSUnusedGlobalSymbols

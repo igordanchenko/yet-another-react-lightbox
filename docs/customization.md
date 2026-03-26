@@ -80,6 +80,10 @@ via corresponding CSS class.
       <td>thumbnailsContainer</td>
       <td>yarl__thumbnails_container</td>
     </tr>
+    <tr>
+      <td>thumbnailsScrollViewport</td>
+      <td>yarl__thumbnails_scroll_viewport</td>
+    </tr>
   </tbody>
 </table>
 
