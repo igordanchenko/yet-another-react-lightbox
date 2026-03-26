@@ -52,6 +52,10 @@
       "types": "./dist/plugins/thumbnails/index.d.ts",
       "default": "./dist/plugins/thumbnails/index.js"
     },
+    "./plugins/filmstrip": {
+      "types": "./dist/plugins/filmstrip/index.d.ts",
+      "default": "./dist/plugins/filmstrip/index.js"
+    },
     "./plugins/video": {
       "types": "./dist/plugins/video/index.d.ts",
       "default": "./dist/plugins/video/index.js"
@@ -63,7 +67,8 @@
     "./styles.css": "./dist/styles.css",
     "./plugins/captions.css": "./dist/plugins/captions/captions.css",
     "./plugins/counter.css": "./dist/plugins/counter/counter.css",
-    "./plugins/thumbnails.css": "./dist/plugins/thumbnails/thumbnails.css"
+    "./plugins/thumbnails.css": "./dist/plugins/thumbnails/thumbnails.css",
+    "./plugins/filmstrip.css": "./dist/plugins/filmstrip/filmstrip.css"
   },
   "typesVersions": {
     "*": {
@@ -99,6 +104,9 @@
       ],
       "plugins/thumbnails": [
         "dist/plugins/thumbnails/index.d.ts"
+      ],
+      "plugins/filmstrip": [
+        "dist/plugins/filmstrip/index.d.ts"
       ],
       "plugins/video": [
         "dist/plugins/video/index.d.ts"

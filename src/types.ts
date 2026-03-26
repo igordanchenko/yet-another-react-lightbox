@@ -2,6 +2,7 @@ import * as React from "react";
 
 import {
   ACTION_CLOSE,
+  ACTION_GO_TO,
   ACTION_NEXT,
   ACTION_PREV,
   ACTION_SWIPE,
@@ -287,6 +288,12 @@ export type LightboxStateUpdateAction = {
   index: number;
 };
 
+/** Lightbox state instant go-to action */
+export type LightboxStateGoToAction = {
+  type: "goTo";
+  index: number;
+};
+
 /** Lightbox state */
 export interface LightboxState {
   /** lightbox slides */
@@ -429,6 +436,7 @@ export interface EventTypes {
   [ACTION_PREV]: NavigationAction | void;
   [ACTION_NEXT]: NavigationAction | void;
   [ACTION_SWIPE]: LightboxStateSwipeAction;
+  [ACTION_GO_TO]: { index: number };
   [ACTION_CLOSE]: void;
 
   [ACTIVE_SLIDE_LOADING]: void;

@@ -80,6 +80,22 @@ via corresponding CSS class.
       <td>thumbnailsContainer</td>
       <td>yarl__thumbnails_container</td>
     </tr>
+    <tr>
+      <td>filmstripContainer</td>
+      <td>yarl__filmstrip_container</td>
+    </tr>
+    <tr>
+      <td>filmstripTrack</td>
+      <td>yarl__filmstrip_track</td>
+    </tr>
+    <tr>
+      <td>filmstripThumbnail</td>
+      <td>yarl__filmstrip_thumbnail</td>
+    </tr>
+    <tr>
+      <td>filmstripScrollViewport</td>
+      <td>yarl__filmstrip_scroll_viewport</td>
+    </tr>
   </tbody>
 </table>
 
