@@ -140,6 +140,27 @@ describe("RTL", () => {
     testRTLKeyboardNavigation();
   });
 
+  describe("dynamic dir attribute change", () => {
+    it("updates keyboard navigation when dir changes from ltr to rtl", () => {
+      const spy = mockComputedStyleRTL();
+
+      const { rerender } = renderInlineLightbox({ inline: { dir: "ltr" }, index: 1 });
+
+      // LTR: ArrowRight goes next
+      pressArrowRight();
+      expectCurrentImageToBe("image3");
+
+      // switch to RTL
+      rerender(lightbox({ slides, carousel: { finite: true }, plugins: [Inline], inline: { dir: "rtl" }, index: 1 }));
+
+      // RTL: ArrowLeft goes next
+      pressArrowLeft();
+      expectCurrentImageToBe("image3");
+
+      spy.mockRestore();
+    });
+  });
+
   describe("portal container dir attribute", () => {
     beforeEach(() => {
       renderLightbox({ portal: { container: { dir: "rtl" } }, index: 1 });
