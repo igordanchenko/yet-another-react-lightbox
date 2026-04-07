@@ -20,7 +20,12 @@ export default [
     typescript({
       noEmitOnError: true,
       include: ["src/**/*"],
-      compilerOptions: { removeComments: true },
+      compilerOptions: {
+        removeComments: true,
+        // Option 'moduleResolution=node10' is deprecated and will stop functioning in TypeScript 7.0
+        // Remove this after migration off "moduleResolution": "node"
+        ignoreDeprecations: "6.0",
+      },
     }),
   ],
   [dts()],
