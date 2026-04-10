@@ -12,6 +12,7 @@ export const defaultZoomProps = {
   pinchZoomDistanceFactor: 100,
   pinchZoomV4: false,
   scrollToZoom: false,
+  maxZoom: 8,
 };
 
 function validateMinZoom(minZoom: number) {

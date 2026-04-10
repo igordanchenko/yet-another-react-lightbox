@@ -27,8 +27,9 @@ export function useZoomState(
   const { containerRect, slideRect } = useController();
   const { minZoom, zoomInMultiplier } = useZoomProps();
 
+  // TODO v4: use `slide.key` to reset zoom on reactive slide replacement for custom slide types
   const currentSource = currentSlide && isImageSlide(currentSlide) ? currentSlide.src : undefined;
-  const disabled = !currentSource || !zoomWrapperRef?.current;
+  const disabled = !zoomWrapperRef?.current;
 
   useLayoutEffect(() => {
     setZoom(1);

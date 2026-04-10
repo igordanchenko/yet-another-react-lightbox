@@ -115,6 +115,8 @@ export default function App() {
           wheelZoomDistanceFactor: 100,
           pinchZoomDistanceFactor: 100,
           scrollToZoom: false,
+          supports: ["video"],
+          maxZoom: (slide) => (slide.type === "video" ? 4 : undefined),
         }}
         toolbar={{
           buttons: [
