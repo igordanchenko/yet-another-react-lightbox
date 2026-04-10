@@ -3,10 +3,17 @@ import {
   isImageFitCover,
   isImageSlide,
   round,
+  Slide,
   useLightboxProps,
   useLightboxState,
 } from "../../../index.js";
+import { defaultZoomProps } from "../props.js";
 import { useZoomProps } from "./useZoomProps.js";
+
+function resolveMaxZoom(maxZoom: number | ((slide: Slide) => number | undefined), slide: Slide) {
+  const resolved = typeof maxZoom === "function" ? (maxZoom(slide) ?? defaultZoomProps.maxZoom) : maxZoom;
+  return Math.max(resolved, 1);
+}
 
 export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: ContainerRect) {
   let imageRect: ContainerRect = { width: 0, height: 0 };
@@ -14,7 +21,7 @@ export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: Con
 
   const { currentSlide } = useLightboxState();
   const { imageFit } = useLightboxProps().carousel;
-  const { maxZoomPixelRatio } = useZoomProps();
+  const { maxZoomPixelRatio, maxZoom: maxZoomInProps } = useZoomProps();
 
   if (slideRect && currentSlide) {
     const slide = { ...currentSlide, ...imageDimensions };
@@ -48,10 +55,24 @@ export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: Con
               height: Math.round(Math.min(slideRect.height, (slideRect.width / width) * height, height)),
             };
       }
+    } else if (slideRect.width > 0 && slideRect.height > 0) {
+      if (imageDimensions && imageDimensions.width > 0 && imageDimensions.height > 0) {
+        imageRect = {
+          width: Math.min(slideRect.width, imageDimensions.width),
+          height: Math.min(slideRect.height, imageDimensions.height),
+        };
+      } else {
+        imageRect = { width: slideRect.width, height: slideRect.height };
+      }
     }
   }
 
-  const maxZoom = imageRect.width ? Math.max(round(maxImageRect.width / imageRect.width, 5), 1) : 1;
+  const maxZoom =
+    currentSlide && imageRect.width
+      ? isImageSlide(currentSlide)
+        ? Math.max(round(maxImageRect.width / imageRect.width, 5), 1)
+        : resolveMaxZoom(maxZoomInProps, currentSlide)
+      : 1;
 
   return { imageRect, maxZoom };
 }

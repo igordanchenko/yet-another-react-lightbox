@@ -31,6 +31,10 @@ declare module "../../types.js" {
       pinchZoomV4?: boolean;
       /** if `true`, enables image zoom via scroll gestures for mouse and trackpad users */
       scrollToZoom?: boolean;
+      /** custom slide types that support zoom */
+      supports?: readonly SlideTypeKey[];
+      /** maximum zoom level for custom slide types; when a function, return `undefined` to use the default (default: 8) */
+      maxZoom?: number | ((slide: Slide) => number | undefined);
     };
   }
 

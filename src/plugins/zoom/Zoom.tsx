@@ -16,7 +16,11 @@ export const Zoom: Plugin = ({ augment, addModule }) => {
       render: {
         ...render,
         slide: (props) =>
-          isImageSlide(props.slide) ? <ZoomWrapper render={render} {...props} /> : render.slide?.(props),
+          isImageSlide(props.slide) || (props.slide.type != null && zoom.supports?.includes(props.slide.type)) ? (
+            <ZoomWrapper render={render} {...props} />
+          ) : (
+            render.slide?.(props)
+          ),
       },
       controller: { ...controller, preventDefaultWheelY: zoom.scrollToZoom },
       ...restProps,
