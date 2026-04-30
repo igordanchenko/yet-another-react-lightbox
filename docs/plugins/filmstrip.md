@@ -62,7 +62,7 @@ The Filmstrip plugin adds the following `Lightbox` properties:
           </li>
         </ul>
         <p>
-          Only a window of previews is mounted; keep these sizing props aligned with your CSS. Defaults:
+          Defaults:
           <span class="font-mono">
             &#123; position: "bottom", width: 120, height: 80, border: 1, borderRadius: 4, padding: 4, gap: 16,
             imageFit: "contain", vignette: true, hidden: false, showToggle: false, hideScrollbar: false &#125;
@@ -110,7 +110,7 @@ The Filmstrip plugin adds the following `Lightbox` properties:
         &nbsp;&nbsp;filmstripScrollViewport?: React.CSSProperties;<br />
         &#125;
       </td>
-      <td>Inline styles for container, track, thumbnail buttons, scroll viewport. Also sets CSS variables (e.g. `--yarl__filmstrip_thumbnail_width`).</td>
+      <td>Inline styles for container, track, thumbnail buttons, scroll viewport.</td>
     </tr>
   </tbody>
 </table>
