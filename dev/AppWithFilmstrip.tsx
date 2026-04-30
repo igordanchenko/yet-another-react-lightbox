@@ -41,6 +41,7 @@ const EXAMPLES: Example[] = [
   {
     id: "single-slide-default-viewport",
     title: "Single slide, default filmstrip viewport",
+    carousel: { preload: 2 },
     slides: slides.slice(0, 1),
   },
   {
