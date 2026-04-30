@@ -1,6 +1,7 @@
 # Zoom Plugin
 
-The Zoom plugin adds an image zoom feature to the lightbox.
+The Zoom plugin adds a zoom feature to the lightbox. Zoom is supported for image
+slides by default and can be enabled for custom slide types.
 
 The plugin supports the following input devices and gestures:
 
@@ -87,15 +88,6 @@ The plugin supports the following input devices and gestures:
   </tbody>
 </table>
 
-## Requirements
-
-The plugin currently supports only image slides. Custom render functions are
-also supported as long as the slide provides `width` and `height` attributes.
-
-If you need support for custom slide types, please open a
-[discussion](https://github.com/igordanchenko/yet-another-react-lightbox/discussions)
-and provide a specific use case.
-
 ## Documentation
 
 The Zoom plugin adds the following `Lightbox` properties.
@@ -118,6 +110,8 @@ The Zoom plugin adds the following `Lightbox` properties.
         &nbsp;&nbsp;pinchZoomDistanceFactor?: number;<br />
         &nbsp;&nbsp;pinchZoomV4?: boolean;<br />
         &nbsp;&nbsp;scrollToZoom?: boolean;<br />
+        &nbsp;&nbsp;supports?: readonly SlideTypeKey[];<br />
+        &nbsp;&nbsp;maxZoom?: number | ((slide: Slide) =&gt; number | undefined);<br />
         &#125;
       </td>
       <td>
@@ -135,11 +129,14 @@ The Zoom plugin adds the following `Lightbox` properties.
           <li>`pinchZoomDistanceFactor` - pinch zoom distance factor (deprecated)</li>
           <li>`pinchZoomV4` - if `true`, enables the experimental pinch zoom implementation slated for v4</li>
           <li>`scrollToZoom` - if `true`, enables image zoom via scroll gestures for mouse and trackpad users</li>
+          <li>`supports` - custom slide types that support zoom (e.g., `["custom-slide"]`)</li>
+          <li>`maxZoom` - maximum zoom level for custom slide types; when a function, return `undefined` to use the default (default: 8)</li>
         </ul>
         <p>
           Default: <span class="font-mono">&#123; minZoom: 1, maxZoomPixelRatio: 1, zoomInMultiplier: 2, 
           doubleTapDelay: 300, doubleClickDelay: 500, doubleClickMaxStops: 2, keyboardMoveDistance: 50, 
-          wheelZoomDistanceFactor: 100, pinchZoomDistanceFactor: 100, scrollToZoom: false &#125;</span>
+          wheelZoomDistanceFactor: 100, pinchZoomDistanceFactor: 100, scrollToZoom: false,
+          maxZoom: 8 &#125;</span>
         </p>
       </td>
     </tr>
@@ -191,6 +188,46 @@ The Zoom plugin adds the following `Lightbox` properties.
     </tr>
   </tbody>
 </table>
+
+## Custom Slide Types
+
+By default, the Zoom plugin supports only image slides. You can enable zoom for
+custom slide types using the `supports` and `maxZoom` properties.
+
+```jsx
+<Lightbox
+  slides={slides}
+  plugins={[Zoom]}
+  zoom={{
+    // enable zoom for custom slide types
+    supports: ["custom-slide"],
+    // maximum zoom level for custom slide types (default: 8)
+    maxZoom: 4,
+    // or use a function for per-slide max zoom
+    // maxZoom: (slide) => (slide.type === "custom-slide" ? 4 : 8),
+  }}
+  render={{
+    slide: ({ slide, zoom, maxZoom }) => {
+      if (slide.type === "custom-slide") {
+        return <MyCustomSlide slide={slide} zoom={zoom} maxZoom={maxZoom} />;
+      }
+    },
+  }}
+/>
+```
+
+Custom slide types must provide a `render.slide` function that renders the slide
+content. The Zoom plugin wraps the rendered content with a zoom container that
+handles all zoom gestures, transformations, and offset clamping automatically.
+
+For image slides, the maximum zoom level is calculated from the image dimensions
+and `maxZoomPixelRatio`. Custom render functions for image slides are also
+supported as long as the slide provides `width` and `height` attributes. For
+custom slide types, use `maxZoom` to set the maximum zoom level (default: 8).
+When `maxZoom` is a function, return `undefined` to use the default value.
+
+TypeScript users must augment the `SlideTypes` interface to register custom
+slide types. See [Custom Slides](/advanced#CustomSlides) for details.
 
 ## Zoom Ref
 
