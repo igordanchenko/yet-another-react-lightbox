@@ -21,6 +21,12 @@
     z-index: common.globalVar(portal_zindex, 9999);
     transition: opacity common.globalVar(fade_animation_duration, 250ms) common.globalVar(fade_animation_timing_function, ease);
 
+    // Some modal libraries (e.g., Radix UI, Chakra UI) set `pointer-events: none` on <body>
+    // while their dialog is open, as part of their outside-click handling. The lightbox
+    // portals to <body>, so without this override, the lightbox UI inherits `none` and
+    // becomes non-interactive when opened from inside such a dialog.
+    pointer-events: auto;
+
     &_open {
       opacity: 1;
     }
