@@ -149,7 +149,7 @@ export function Portal({
         >
           {children}
         </LightboxRoot>,
-        root || document.body,
+        (typeof root === "function" ? root() : root) || document.body,
       )
     : null;
 }

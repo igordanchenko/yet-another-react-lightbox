@@ -255,7 +255,7 @@ export interface ControllerRef {
 /** Portal settings */
 export interface PortalSettings {
   /** portal mount point */
-  root?: DocumentFragment | Element | null;
+  root?: (() => DocumentFragment | Element | null) | DocumentFragment | Element | null;
   /** HTML attributes for the portal container */
   container?: React.HTMLAttributes<HTMLDivElement>;
 }

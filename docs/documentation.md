@@ -206,14 +206,18 @@ import "yet-another-react-lightbox/styles.css";
       <td>portal</td>
       <td>
         &#123;<br />
-        &nbsp;&nbsp;root?: DocumentFragment | Element | null;<br />
+        &nbsp;&nbsp;root?: (() =&gt; DocumentFragment | Element | null) | DocumentFragment | Element | null;<br />
         &nbsp;&nbsp;container?: React.HTMLAttributes&lt;HTMLDivElement&gt;;<br />
         &#125;
       </td>
       <td>
         <p>Portal settings.</p>
         <ul>
-          <li>`root` - custom portal mount point. By default, the portal is mounted as a child of the document body.</li>
+          <li>
+            `root` - custom portal mount point. By default, the portal is mounted as a child of the document body.
+            Can also be a function that returns the mount point - useful when targeting an element managed by a React
+            ref (e.g. `root: () => portalRootRef.current`).
+          </li>
           <li>`container` - HTML attributes for the portal container element (e.g., `{ dir: "rtl" }`).</li>
         </ul>
       </td>
