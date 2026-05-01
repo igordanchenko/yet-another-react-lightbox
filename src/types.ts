@@ -228,6 +228,8 @@ export interface ControllerSettings {
   closeOnPullDown: boolean;
   /** if `true`, close the lightbox when the backdrop is clicked */
   closeOnBackdropClick: boolean;
+  /** if `true`, close the lightbox on Escape key press (default: `true`) */
+  closeOnEscape: boolean;
   /** if `true`, prevent default for horizontal wheel scroll events (for internal use only) */
   preventDefaultWheelX: boolean;
   /** if `true`, prevent default for vertical wheel scroll events (for internal use only) */

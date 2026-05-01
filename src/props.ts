@@ -35,6 +35,7 @@ export const LightboxDefaultProps: LightboxProps = {
     closeOnPullUp: false,
     closeOnPullDown: false,
     closeOnBackdropClick: false,
+    closeOnEscape: true,
     preventDefaultWheelX: true,
     preventDefaultWheelY: false,
     disableSwipeNavigation: false,

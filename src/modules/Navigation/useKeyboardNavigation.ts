@@ -16,7 +16,7 @@ import { useNavigationState } from "./useNavigationState.js";
 export function useKeyboardNavigation<T extends Element>(subscribeSensors: UseSensors<T>["subscribeSensors"]) {
   const isRTL = useRTL();
   const { publish } = useEvents();
-  const { animation } = useLightboxProps();
+  const { animation, controller } = useLightboxProps();
   const { prevDisabled, nextDisabled } = useNavigationState();
 
   const throttle = (animation.navigation ?? animation.swipe) / 2;
@@ -27,6 +27,7 @@ export function useKeyboardNavigation<T extends Element>(subscribeSensors: UseSe
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     switch (event.key) {
       case VK_ESCAPE:
+        if (!controller.closeOnEscape) return;
         publish(ACTION_CLOSE);
         break;
       case VK_ARROW_LEFT:
