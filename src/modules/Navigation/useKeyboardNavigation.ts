@@ -36,7 +36,12 @@ export function useKeyboardNavigation<T extends Element>(subscribeSensors: UseSe
         if (!(isRTL ? prevDisabled : nextDisabled)) (isRTL ? prev : next)();
         break;
       default:
+        return;
     }
+    // Prevent parent modals (e.g. Radix UI, MUI) from also acting on this keystroke —
+    // without this, pressing Escape inside the lightbox would close both the lightbox
+    // and the surrounding dialog.
+    event.stopPropagation();
   });
 
   React.useEffect(() => subscribeSensors(EVENT_ON_KEY_DOWN, handleKeyDown), [subscribeSensors, handleKeyDown]);
