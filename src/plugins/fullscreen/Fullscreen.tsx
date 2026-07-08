@@ -4,6 +4,7 @@ import {
   addToolbarButton,
   createModule,
   MODULE_CONTROLLER,
+  PLUGIN_FILMSTRIP,
   PLUGIN_FULLSCREEN,
   PLUGIN_THUMBNAILS,
   PluginProps,
@@ -21,7 +22,7 @@ export function Fullscreen({ augment, contains, addParent }: PluginProps) {
   }));
 
   addParent(
-    contains(PLUGIN_THUMBNAILS) ? PLUGIN_THUMBNAILS : MODULE_CONTROLLER,
+    contains(PLUGIN_THUMBNAILS) ? PLUGIN_THUMBNAILS : contains(PLUGIN_FILMSTRIP) ? PLUGIN_FILMSTRIP : MODULE_CONTROLLER,
     createModule(PLUGIN_FULLSCREEN, FullscreenContextProvider),
   );
 }

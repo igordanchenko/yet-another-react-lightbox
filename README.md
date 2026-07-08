@@ -151,6 +151,8 @@ The following plugins are bundled in the package:
   slideshow button
 - [Thumbnails](https://yet-another-react-lightbox.com/plugins/thumbnails) - adds
   thumbnails track
+- [Filmstrip](https://yet-another-react-lightbox.com/plugins/filmstrip) - adds a
+  scrollable virtualized thumbnail rail
 - [Video](https://yet-another-react-lightbox.com/plugins/video) - adds support
   for video slides
 - [Zoom](https://yet-another-react-lightbox.com/plugins/zoom) - adds image zoom
