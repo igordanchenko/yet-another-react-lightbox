@@ -1,13 +1,23 @@
-# Yet Another React Lightbox
+<p align="center">
+  <img alt="" src=".github/logo.webp" width="180" height="180" />
+</p>
+
+<h1 align="center">
+  Yet Another React Lightbox
+</h1>
+
+<div align="center">
+
+[![NPM Version](https://img.shields.io/npm/v/yet-another-react-lightbox.svg?color=blue)](https://www.npmjs.com/package/yet-another-react-lightbox)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/yet-another-react-lightbox.svg?color=blue)](https://bundlephobia.com/package/yet-another-react-lightbox)
+[![License MIT](https://img.shields.io/npm/l/yet-another-react-lightbox.svg?color=blue)](https://github.com/igordanchenko/yet-another-react-lightbox/blob/main/LICENSE)
+
+</div>
 
 Modern React lightbox component. Performant, easy to use, customizable, and
 extendable.
 
 ## Overview
-
-[![NPM Version](https://img.shields.io/npm/v/yet-another-react-lightbox.svg?color=blue)](https://www.npmjs.com/package/yet-another-react-lightbox)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/yet-another-react-lightbox.svg?color=blue)](https://bundlephobia.com/package/yet-another-react-lightbox)
-[![License MIT](https://img.shields.io/npm/l/yet-another-react-lightbox.svg?color=blue)](https://github.com/igordanchenko/yet-another-react-lightbox/blob/main/LICENSE)
 
 - **Built for React:** works with React 19, 18, 17, and 16.8.0+
 - **UX:** supports keyboard, mouse, touchpad, and touchscreen navigation
