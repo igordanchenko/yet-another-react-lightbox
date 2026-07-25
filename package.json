@@ -138,7 +138,8 @@
     "dev": "vite --config dev/vite.config.ts",
     "dev:build": "vite build --config dev/vite.config.ts",
     "dev:preview": "vite preview --config dev/vite.config.ts",
-    "ci": "npm-run-all build test lint"
+    "size": "size-limit",
+    "ci": "npm-run-all build test lint size"
   },
   "peerDependencies": {
     "@types/react": "^16 || ^17 || ^18 || ^19",
@@ -159,6 +160,7 @@
     "@commitlint/config-conventional": "21.2.0",
     "@eslint/js": "9.39.5",
     "@rollup/plugin-typescript": "12.3.0",
+    "@size-limit/preset-small-lib": "12.1.0",
     "@testing-library/jest-dom": "7.0.0",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.6.1",
@@ -192,6 +194,7 @@
     "rollup": "4.62.2",
     "rollup-plugin-dts": "6.4.1",
     "sass": "1.102.0",
+    "size-limit": "12.1.0",
     "tslib": "2.8.1",
     "typescript": "6.0.3",
     "typescript-eslint": "8.65.0",

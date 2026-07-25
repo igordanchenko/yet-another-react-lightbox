@@ -47,6 +47,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Size
+        run: npm run size
+
   ci:
     name: CI
     if: always()

@@ -1,0 +1,11 @@
+[
+  {
+    "path": "dist/index.js",
+    "limit": "12 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime"]
+  },
+  {
+    "path": "dist/styles.css",
+    "limit": "2 kB"
+  }
+]
