@@ -4,19 +4,23 @@ on:
   push:
     branches: [main, next]
   pull_request:
-    branches: [main, next]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  build:
-    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+  test:
+    name: Node.js ${{ matrix.node }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
 
-    permissions:
-      contents: read
-
     strategy:
+      fail-fast: false
       matrix:
         node: [20, 22, 24]
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -34,5 +38,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build, Test, Lint
-        run: npm run ci
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test
+
+      - name: Lint
+        run: npm run lint
+
+  ci:
+    name: CI
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify matrix succeeded
+        if: needs.test.result != 'success'
+        run: exit 1

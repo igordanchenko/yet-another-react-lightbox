@@ -5,13 +5,16 @@ on:
     branches: [main]
     paths: [README.md, docs/**]
 
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+
 jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
-    if: github.repository == 'igordanchenko/yet-another-react-lightbox'
 
     steps:
       - name: Publish

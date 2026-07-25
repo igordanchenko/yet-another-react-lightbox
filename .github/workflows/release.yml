@@ -4,8 +4,15 @@ on:
   push:
     branches: [main, next]
 
+permissions:
+  contents: write
+  id-token: write
+  issues: write
+  discussions: write
+  pull-requests: write
+
 concurrency:
-  group: release
+  group: ${{ github.workflow }}
 
 jobs:
   release:
@@ -13,42 +20,36 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    if: github.repository == 'igordanchenko/yet-another-react-lightbox'
-
-    permissions:
-      contents: write
-      id-token: write
-      issues: write
-      discussions: write
-      pull-requests: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          package-manager-cache: false
-          registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install semantic-release extra plugins
-        run: npm i -D @semantic-release/changelog @semantic-release/github
+      - name: Build
+        run: npm run build
 
-      - name: Build, Test, Lint
-        run: npm run ci
+      - name: Test
+        run: npm run test
 
-      - name: Verify the integrity of installed dependencies
+      - name: Lint
+        run: npm run lint
+
+      - name: Audit signatures
         run: npm audit signatures
 
-      - name: Cleanup
-        run: npm pkg delete scripts devDependencies
+      - name: Prune package.json
+        uses: igordanchenko/actions/prune-package-json@d460545dc978b327e8d2b2cfe0acb86075a660c1 # v1.3.2
 
       - name: Release
+        uses: igordanchenko/actions/semantic-release@d460545dc978b327e8d2b2cfe0acb86075a660c1 # v1.3.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
