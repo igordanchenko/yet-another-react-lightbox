@@ -175,7 +175,7 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "5.2.0",
+    "eslint-plugin-react-hooks": "7.1.1",
     "fs-extra": "11.4.0",
     "glob": "13.0.6",
     "globals": "17.7.0",
