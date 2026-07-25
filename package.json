@@ -157,7 +157,7 @@
   "devDependencies": {
     "@commitlint/cli": "21.2.1",
     "@commitlint/config-conventional": "21.2.0",
-    "@eslint/js": "9.39.5",
+    "@eslint/js": "10.0.1",
     "@rollup/plugin-typescript": "12.3.0",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
@@ -171,7 +171,7 @@
     "chokidar": "5.0.0",
     "commitlint-pre-push": "1.0.0",
     "cssnano": "8.0.2",
-    "eslint": "9.39.5",
+    "eslint": "10.7.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-react": "7.37.5",
