@@ -1,0 +1,5 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>igordanchenko/renovate:lib"],
+  "ignorePaths": ["**/node_modules/**", "test/types/package.json"]
+}
