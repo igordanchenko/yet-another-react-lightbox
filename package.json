@@ -2,6 +2,10 @@
   "name": "yet-another-react-lightbox",
   "version": "0.0.0-semantic-release",
   "description": "Modern React lightbox component",
+  "homepage": "https://yet-another-react-lightbox.com",
+  "repository": "github:igordanchenko/yet-another-react-lightbox",
+  "bugs": "https://github.com/igordanchenko/yet-another-react-lightbox/issues",
+  "funding": "https://github.com/sponsors/igordanchenko",
   "author": "Igor Danchenko",
   "license": "MIT",
   "type": "module",
@@ -114,13 +118,6 @@
   "sideEffects": [
     "*.css"
   ],
-  "homepage": "https://yet-another-react-lightbox.com",
-  "funding": "https://github.com/sponsors/igordanchenko",
-  "bugs": "https://github.com/igordanchenko/yet-another-react-lightbox/issues",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/igordanchenko/yet-another-react-lightbox.git"
-  },
   "engines": {
     "node": ">=14"
   },
