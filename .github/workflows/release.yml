@@ -50,12 +50,12 @@ jobs:
         run: npm audit signatures
 
       - name: Record bundle size
-        uses: igordanchenko/actions/bundle-size@d460545dc978b327e8d2b2cfe0acb86075a660c1 # v1.3.2
+        uses: igordanchenko/actions/bundle-size@6007abe989a1243da59096371e23ce02e4566f76 # v1.3.3
 
       - name: Prune package.json
-        uses: igordanchenko/actions/prune-package-json@d460545dc978b327e8d2b2cfe0acb86075a660c1 # v1.3.2
+        uses: igordanchenko/actions/prune-package-json@6007abe989a1243da59096371e23ce02e4566f76 # v1.3.3
 
       - name: Release
-        uses: igordanchenko/actions/semantic-release@d460545dc978b327e8d2b2cfe0acb86075a660c1 # v1.3.2
+        uses: igordanchenko/actions/semantic-release@6007abe989a1243da59096371e23ce02e4566f76 # v1.3.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
