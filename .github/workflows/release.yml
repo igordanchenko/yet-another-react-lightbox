@@ -5,10 +5,9 @@ on:
     branches: [main, next]
 
 permissions:
+  issues: write
   contents: write
   id-token: write
-  issues: write
-  discussions: write
   pull-requests: write
 
 concurrency:
