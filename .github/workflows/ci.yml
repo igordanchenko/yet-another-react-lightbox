@@ -50,6 +50,9 @@ jobs:
       - name: Size
         run: npm run size
 
+      - name: Audit signatures
+        run: npm audit signatures
+
   ci:
     name: CI
     if: always()
