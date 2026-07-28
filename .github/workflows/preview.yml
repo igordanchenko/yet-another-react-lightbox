@@ -50,4 +50,4 @@ jobs:
         uses: igordanchenko/actions/prune-package-json@6007abe989a1243da59096371e23ce02e4566f76 # v1.3.3
 
       - name: Publish preview
-        run: npx pkg-pr-new publish --no-template
+        run: npx --yes -- pkg-pr-new publish --no-template
