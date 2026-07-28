@@ -17,7 +17,7 @@ jobs:
   action:
     name: Lock
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
       - uses: dessant/lock-threads@89ae32b08ed1a541efecbab17912962a5e38981c # v6.0.2
@@ -25,6 +25,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pr-lock-reason: ""
           issue-lock-reason: ""
-          pr-inactive-days: "90"
-          issue-inactive-days: "90"
-          discussion-inactive-days: "90"
+          pr-inactive-days: "180"
+          issue-inactive-days: "180"
+          discussion-inactive-days: "180"
