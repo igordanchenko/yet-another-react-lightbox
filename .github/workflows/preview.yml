@@ -46,9 +46,6 @@ jobs:
       - name: Audit signatures
         run: npm audit signatures
 
-      - name: Record bundle size
-        uses: igordanchenko/actions/bundle-size@6007abe989a1243da59096371e23ce02e4566f76 # v1.3.3
-
       - name: Prune package.json
         uses: igordanchenko/actions/prune-package-json@6007abe989a1243da59096371e23ce02e4566f76 # v1.3.3
 
