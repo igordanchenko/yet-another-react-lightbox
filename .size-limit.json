@@ -5,7 +5,74 @@
     "ignore": ["react", "react-dom", "react/jsx-runtime"]
   },
   {
+    "path": "dist/plugins/index.js",
+    "limit": "13.5 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/captions/index.js",
+    "limit": "1.75 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/counter/index.js",
+    "limit": "0.75 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/download/index.js",
+    "limit": "1.6 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/fullscreen/index.js",
+    "limit": "1.75 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/inline/index.js",
+    "limit": "0.8 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/share/index.js",
+    "limit": "1 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/slideshow/index.js",
+    "limit": "1.5 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/thumbnails/index.js",
+    "limit": "3.5 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/video/index.js",
+    "limit": "2 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
+    "path": "dist/plugins/zoom/index.js",
+    "limit": "5.5 kB",
+    "ignore": ["react", "react-dom", "react/jsx-runtime", "../../index.js", "../../types.js"]
+  },
+  {
     "path": "dist/styles.css",
-    "limit": "2 kB"
+    "limit": "1.4 kB"
+  },
+  {
+    "path": "dist/plugins/captions/captions.css",
+    "limit": "0.35 kB"
+  },
+  {
+    "path": "dist/plugins/counter/counter.css",
+    "limit": "0.3 kB"
+  },
+  {
+    "path": "dist/plugins/thumbnails/thumbnails.css",
+    "limit": "0.9 kB"
   }
 ]
