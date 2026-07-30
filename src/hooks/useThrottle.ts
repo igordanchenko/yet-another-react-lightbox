@@ -9,14 +9,14 @@ export function useThrottle(callback: (...args: unknown[]) => void, delay: numbe
 
   const executeCallback = useEventCallback((...args: unknown[]) => {
     lastCallbackTime.current = Date.now();
-    callback(args);
+    callback(...args);
   });
 
   return React.useCallback(
     (...args: unknown[]) => {
       delayCallback(
         () => {
-          executeCallback(args);
+          executeCallback(...args);
         },
         delay - (Date.now() - lastCallbackTime.current),
       );
