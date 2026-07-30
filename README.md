@@ -1,13 +1,19 @@
+<div align="center">
+
+<img alt="" src=".github/assets/logo.webp" width="180" height="180" />
+
 # Yet Another React Lightbox
-
-Modern React lightbox component. Performant, easy to use, customizable, and
-extendable.
-
-## Overview
 
 [![NPM Version](https://img.shields.io/npm/v/yet-another-react-lightbox.svg?color=blue)](https://www.npmjs.com/package/yet-another-react-lightbox)
 [![Bundle Size](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.npmjs.org%2Fyet-another-react-lightbox%2Flatest&query=%24.bundleSize&label=bundle%20size&color=blue&cacheSeconds=3600)](https://github.com/igordanchenko/yet-another-react-lightbox/blob/main/.size-limit.json)
 [![License MIT](https://img.shields.io/npm/l/yet-another-react-lightbox.svg?color=blue)](https://github.com/igordanchenko/yet-another-react-lightbox/blob/main/LICENSE)
+
+Modern React lightbox component. Performant, easy to use, customizable, and
+extendable.
+
+</div>
+
+## Overview
 
 - **Built for React:** works with React 19, 18, 17, and 16.8.0+
 - **UX:** supports keyboard, mouse, touchpad, and touchscreen navigation
