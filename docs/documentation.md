@@ -200,12 +200,9 @@ import "yet-another-react-lightbox/styles.css";
           <li>`disableSwipeNavigation` - if `true`, disable slide change on pointer swipe / drag</li>
         </ul>
         <p>
-          Default value:
-          <span class="font-mono">
-            &#123; ref: null, focus: true, aria: false, touchAction: "none", closeOnPullUp: false,
-            closeOnPullDown: false, closeOnBackdropClick: false, closeOnEscape: true,
-            disableSwipeNavigation: false &#125;
-          </span>
+          Default value: <span class="font-mono">&#123; ref: null, focus: true, aria: false, touchAction: "none",
+          closeOnPullUp: false, closeOnPullDown: false, closeOnBackdropClick: false, closeOnEscape: true,
+          disableSwipeNavigation: false &#125;</span>
         </p>
       </td>
     </tr>
