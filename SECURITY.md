@@ -1,15 +1,22 @@
 # Security Policy
 
+Thank you for helping keep `yet-another-react-lightbox` and its users safe.
+
 ## Supported Versions
 
-At any point in time, only the current major release branch (i.e., '1.x') will
-be receiving security updates.
+At any given time, only the current major release branch receives security
+updates.
 
 ## Reporting a Vulnerability
 
-If you believe you discovered an issue that may have security implications,
-please feel free to open a bug report under the project
-[Issues](https://github.com/igordanchenko/yet-another-react-lightbox/issues). If
-you believe the nature of your findings is sensitive, please e-mail us at
-contact@yet-another-react-lightbox.com instead. You can expect a response from
-us within 1-7 days.
+**Do not open public GitHub issues for security vulnerabilities.**
+
+Please report vulnerabilities privately via GitHub's
+[private vulnerability reporting](https://github.com/igordanchenko/yet-another-react-lightbox/security/advisories/new).
+This creates a private advisory visible only to the maintainers.
+
+If you cannot use GitHub's private reporting for any reason, email
+onetime_metro.5a@icloud.com with the subject line
+`[yet-another-react-lightbox] security report`.
+
+You can expect a response within 7 days of your report.
