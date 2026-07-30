@@ -1,6 +1,6 @@
-# CHANGELOG
+# Changelog
 
-The changelog is automatically updated using
-[semantic-release](https://github.com/semantic-release/semantic-release). You
-can see it on the
-[releases page](https://github.com/igordanchenko/yet-another-react-lightbox/releases).
+Release notes are published on the
+[GitHub Releases](https://github.com/igordanchenko/yet-another-react-lightbox/releases)
+page and are generated automatically with
+[semantic-release](https://github.com/semantic-release/semantic-release).
