@@ -2,10 +2,10 @@ blank_issues_enabled: false
 contact_links:
   - name: Question
     url: https://github.com/igordanchenko/yet-another-react-lightbox/discussions/categories/q-a
-    about: Please post questions under the Q&A category in Discussions
-  - name: Suggestion
+    about: Ask usage questions in the Q&A category
+  - name: Idea
     url: https://github.com/igordanchenko/yet-another-react-lightbox/discussions/categories/ideas
-    about: Please post suggestions or ideas under the Ideas category in Discussions
-  - name: General
+    about: Share suggestions or ideas in the Ideas category
+  - name: General discussion
     url: https://github.com/igordanchenko/yet-another-react-lightbox/discussions/categories/general
-    about: Please post general discussions under the General category in Discussions
+    about: Start a General discussion for anything else
