@@ -182,7 +182,7 @@
     "glob": "13.0.6",
     "globals": "17.7.0",
     "husky": "9.1.7",
-    "jsdom": "29.1.1",
+    "jsdom": "30.0.1",
     "lint-staged": "17.2.0",
     "npm-run-all2": "9.0.2",
     "postcss": "8.5.23",
