@@ -2,6 +2,7 @@ import * as React from "react";
 
 import {
   ACTION_CLOSE,
+  ACTION_GO_TO,
   ACTION_NEXT,
   ACTION_PREV,
   ACTION_SWIPE,
@@ -350,6 +351,7 @@ export function Controller({ children, ...props }: ComponentProps) {
         subscribe(ACTION_PREV, (action) => swipe({ direction: ACTION_PREV, ...action })),
         subscribe(ACTION_NEXT, (action) => swipe({ direction: ACTION_NEXT, ...action })),
         subscribe(ACTION_SWIPE, (action) => dispatch(action)),
+        subscribe(ACTION_GO_TO, (action) => dispatch({ type: "goTo", index: action.index })),
       ),
     [subscribe, swipe, dispatch],
   );

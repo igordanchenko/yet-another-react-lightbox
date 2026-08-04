@@ -14,6 +14,7 @@ export const PLUGIN_INLINE = "inline";
 export const PLUGIN_SHARE = "share";
 export const PLUGIN_SLIDESHOW = "slideshow";
 export const PLUGIN_THUMBNAILS = "thumbnails";
+export const PLUGIN_FILMSTRIP = "filmstrip";
 export const PLUGIN_ZOOM = "zoom";
 
 export const SLIDE_STATUS_LOADING = "loading";
@@ -47,6 +48,7 @@ export const ACTION_PREV = "prev";
 export const ACTION_NEXT = "next";
 export const ACTION_SWIPE = "swipe";
 export const ACTION_CLOSE = "close";
+export const ACTION_GO_TO = "goTo";
 
 export const EVENT_ON_POINTER_DOWN = "onPointerDown";
 export const EVENT_ON_POINTER_MOVE = "onPointerMove";

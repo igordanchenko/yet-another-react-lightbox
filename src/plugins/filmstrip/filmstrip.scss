@@ -1,0 +1,223 @@
+@use "../../common";
+
+$vignette-size: 12%;
+$thumbnail-focus-box-shadow:
+  common.$color-black 0 0 0 2px,
+  common.$color-button 0 0 0 4px;
+
+@function localVar($key, $default) {
+  @return common.globalVar(filmstrip_ + $key, $default);
+}
+
+.yarl__filmstrip {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+
+  &_top,
+  &_bottom {
+    flex-direction: column;
+  }
+
+  &_start &_track,
+  &_end &_track {
+    flex-direction: column;
+  }
+
+  &_wrapper {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    position: relative;
+  }
+
+  &_container {
+    flex: 0 0 auto;
+    background-color: localVar(container_background_color, common.$color-backdrop);
+    padding: localVar(container_padding, 16px);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  &_top &_container_scrollable,
+  &_bottom &_container_scrollable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  &_top &_scroll_viewport,
+  &_bottom &_scroll_viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: min(var(--yarl__filmstrip_scroll_viewport_max, 3000px), 100%);
+    width: 100%;
+    min-width: 0;
+    contain: layout;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+    overscroll-behavior: contain;
+    direction: ltr;
+  }
+
+  &_start &_container_scrollable,
+  &_end &_container_scrollable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-height: 100%;
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  &_start &_scroll_viewport,
+  &_end &_scroll_viewport {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: min(var(--yarl__filmstrip_scroll_viewport_max, 3000px), 100%);
+    width: 100%;
+    min-height: 0;
+    contain: layout;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    overscroll-behavior: contain;
+    direction: ltr;
+  }
+
+  &_scroll_viewport_hide_scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &_scroll_viewport &_track {
+    display: block;
+    position: relative;
+    touch-action: inherit;
+    flex-shrink: 0;
+    gap: 0;
+  }
+
+  &_top &_scroll_viewport &_track,
+  &_bottom &_scroll_viewport &_track {
+    margin-inline: auto;
+  }
+
+  &_start &_scroll_viewport &_track,
+  &_end &_scroll_viewport &_track {
+    margin-block: auto;
+  }
+
+  &_thumbnail {
+    flex: 0 0 auto;
+    min-width: localVar(thumbnail_width, 120px);
+    min-height: localVar(thumbnail_height, 80px);
+    cursor: pointer;
+    appearance: none;
+    background: localVar(thumbnail_background, common.$color-black);
+    border-width: localVar(thumbnail_border, 1px);
+    border-style: localVar(thumbnail_border_style, solid);
+    border-color: localVar(thumbnail_border_color, common.$color-button);
+    border-radius: localVar(thumbnail_border_radius, 4px);
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+    padding: localVar(thumbnail_padding, 4px);
+    outline: none;
+
+    width: localVar(thumbnail_width, 120px);
+    height: localVar(thumbnail_height, 80px);
+    box-sizing: content-box;
+
+    &_active {
+      border-color: localVar(thumbnail_active_border_color, common.$color-button-active);
+    }
+
+    &:focus {
+      box-shadow: localVar(thumbnail_focus_box_shadow, $thumbnail-focus-box-shadow);
+    }
+
+    &:focus:not(:focus-visible) {
+      box-shadow: unset;
+    }
+
+    &:focus-visible {
+      box-shadow: localVar(thumbnail_focus_box_shadow, $thumbnail-focus-box-shadow);
+    }
+  }
+
+  &_scroll_viewport &_thumbnail {
+    touch-action: inherit;
+  }
+
+  &_thumbnail_icon {
+    color: localVar(thumbnail_icon_color, common.$color-button);
+    filter: localVar(thumbnail_icon_filter, common.$filter-drop-shadow);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: localVar(thumbnail_icon_size, common.$icon-size);
+    height: localVar(thumbnail_icon_size, common.$icon-size);
+  }
+
+  &_vignette {
+    position: absolute;
+    pointer-events: none;
+    --yarl__filmstrip_vignette_size: 12%;
+  }
+
+  @media (min-width: 1200px) {
+    &_vignette {
+      --yarl__filmstrip_vignette_size: 8%;
+    }
+  }
+
+  @media (min-width: 2000px) {
+    &_vignette {
+      --yarl__filmstrip_vignette_size: 5%;
+    }
+  }
+
+  &_top &_vignette,
+  &_bottom &_vignette {
+    height: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(
+      to right,
+      common.$color-backdrop 0px,
+      transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)),
+      common.$color-backdrop 100%
+    );
+  }
+
+  &_start &_vignette,
+  &_end &_vignette {
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      common.$color-backdrop 0px,
+      transparent localVar(vignette_size, $vignette-size) calc(100% - localVar(vignette_size, $vignette-size)),
+      common.$color-backdrop 100%
+    );
+  }
+
+  &_track {
+    display: flex;
+    outline: none;
+    gap: localVar(thumbnail_gap, 16px);
+  }
+}

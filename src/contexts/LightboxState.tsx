@@ -1,10 +1,16 @@
 import * as React from "react";
 
-import { LightboxProps, LightboxState, LightboxStateSwipeAction, LightboxStateUpdateAction } from "../types.js";
+import {
+  LightboxProps,
+  LightboxState,
+  LightboxStateGoToAction,
+  LightboxStateSwipeAction,
+  LightboxStateUpdateAction,
+} from "../types.js";
 import { getSlideIfPresent, getSlideIndex, makeUseContext } from "../utils.js";
 import { UNKNOWN_ACTION_TYPE } from "../consts.js";
 
-export type LightboxStateAction = LightboxStateSwipeAction | LightboxStateUpdateAction;
+export type LightboxStateAction = LightboxStateSwipeAction | LightboxStateUpdateAction | LightboxStateGoToAction;
 
 export type LightboxStateContextType = LightboxState & {
   /** @deprecated - use `useLightboxState` props directly */
@@ -55,6 +61,24 @@ function reducer(state: LightboxState, action: LightboxStateAction): LightboxSta
         };
       }
       return state;
+    case "goTo": {
+      const { slides } = state;
+      const n = slides.length;
+      if (n === 0) {
+        return state;
+      }
+      let t = action.index % n;
+      if (t < 0) {
+        t += n;
+      }
+      return {
+        slides,
+        currentIndex: t,
+        globalIndex: t,
+        currentSlide: getSlideIfPresent(slides, t),
+        animation: undefined,
+      };
+    }
     default:
       throw new Error(UNKNOWN_ACTION_TYPE);
   }

@@ -27,6 +27,7 @@ export type ImageSlideProps = Partial<Pick<CarouselSettings, "imageFit" | "image
   onLoad?: (image: HTMLImageElement) => void;
   onError?: () => void;
   style?: React.CSSProperties;
+  loading?: React.ImgHTMLAttributes<HTMLImageElement>["loading"];
 };
 
 export function ImageSlide({
@@ -40,6 +41,7 @@ export function ImageSlide({
   onLoad,
   onError,
   style,
+  loading,
 }: ImageSlideProps) {
   const [status, setStatus] = React.useState<SlideStatus>(SLIDE_STATUS_LOADING);
 
@@ -159,6 +161,7 @@ export function ImageSlide({
         sizes={sizes}
         srcSet={srcSet}
         src={image.src}
+        {...(loading !== undefined ? { loading } : null)}
       />
 
       {status !== SLIDE_STATUS_COMPLETE && (
