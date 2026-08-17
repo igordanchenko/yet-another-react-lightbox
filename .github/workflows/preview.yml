@@ -48,7 +48,7 @@ jobs:
         run: npm audit signatures
 
       - name: Prune package.json
-        uses: igordanchenko/actions/prune-package-json@6007abe989a1243da59096371e23ce02e4566f76 # v1.3.3
+        uses: igordanchenko/actions/prune-package-json@70afc5be4de156d0dd40c8ae40fec49e8ff84fc1 # v1.3.4
 
       - name: Publish preview
         run: npx --yes -- pkg-pr-new publish --no-template
