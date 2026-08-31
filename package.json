@@ -172,7 +172,7 @@
     "autoprefixer": "10.5.4",
     "chokidar": "5.0.0",
     "commitlint-pre-push": "1.0.2",
-    "cssnano": "8.0.10",
+    "cssnano": "9.0.1",
     "eslint": "9.39.5",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-jsx-a11y": "6.10.2",
