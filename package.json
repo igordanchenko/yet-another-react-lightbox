@@ -167,8 +167,8 @@
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.7",
     "@vitejs/plugin-react": "6.1.1",
-    "@vitest/coverage-v8": "4.1.11",
-    "@vitest/ui": "4.1.11",
+    "@vitest/coverage-v8": "5.0.0",
+    "@vitest/ui": "5.0.0",
     "autoprefixer": "10.5.5",
     "chokidar": "5.0.0",
     "commitlint-pre-push": "1.0.2",
@@ -199,7 +199,7 @@
     "typescript": "6.0.3",
     "typescript-eslint": "8.69.0",
     "vite": "8.2.2",
-    "vitest": "4.1.11"
+    "vitest": "5.0.0"
   },
   "keywords": [
     "react",
