@@ -61,18 +61,22 @@
   },
   {
     "path": "dist/styles.css",
-    "limit": "1.4 kB"
+    "limit": "1.4 kB",
+    "rolldown": false
   },
   {
     "path": "dist/plugins/captions/captions.css",
-    "limit": "0.35 kB"
+    "limit": "0.35 kB",
+    "rolldown": false
   },
   {
     "path": "dist/plugins/counter/counter.css",
-    "limit": "0.3 kB"
+    "limit": "0.3 kB",
+    "rolldown": false
   },
   {
     "path": "dist/plugins/thumbnails/thumbnails.css",
-    "limit": "0.9 kB"
+    "limit": "0.9 kB",
+    "rolldown": false
   }
 ]
