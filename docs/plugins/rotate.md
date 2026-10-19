@@ -1,13 +1,12 @@
 # Rotate Plugin
 
-The Rotate plugin adds a toolbar button that rotates the current image 90
+The Rotate plugin adds a button to the toolbar that rotates the current image 90
 degrees clockwise. Rotation resets when navigating to another slide or closing
 the lightbox. Non-image slides cannot be rotated.
 
-Rotated images fit within the slide area and work with the Zoom plugin, in
-either plugin order. Rotating an image resets zoom and pan so the new
-orientation fits the viewport. Original image files and download URLs are
-unchanged.
+Rotated images fit within the slide area and work with the Zoom plugin. 
+Rotating an image resets zoom and pan so the new orientation fits the viewport.
+Original image files and download URLs are unchanged.
 
 ## Example
 
@@ -24,8 +23,8 @@ The plugin is also available as a named export from
 
 ## Documentation
 
-- `render.iconRotate` renders a custom Rotate icon.
-- `render.buttonRotate` renders a custom button and receives
+- `render.iconRotate` renders a Rotate icon.
+- `render.buttonRotate` renders a button and receives
   `{ rotation, disabled, rotate }`. `rotation` is the clockwise rotation applied
   by the plugin, from 0 to 270 degrees; `rotate()` advances it by 90 degrees.
 - `labels["Rotate clockwise"]` overrides the accessible button label and
