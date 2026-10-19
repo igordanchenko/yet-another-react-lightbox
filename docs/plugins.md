@@ -10,6 +10,7 @@ The following plugins are bundled in the package:
 - [Download](/plugins/download) - adds download button
 - [Fullscreen](/plugins/fullscreen) - adds support for fullscreen mode
 - [Inline](/plugins/inline) - transforms the lightbox into an image carousel
+- [Rotate](/plugins/rotate) - adds image rotation controls
 - [Share](/plugins/share) - adds sharing button
 - [Slideshow](/plugins/slideshow) - adds slideshow button
 - [Thumbnails](/plugins/thumbnails) - adds thumbnails track

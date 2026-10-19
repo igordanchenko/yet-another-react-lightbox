@@ -84,6 +84,8 @@ export interface SlideImage extends GenericSlide {
   width?: number;
   /** image height in pixels */
   height?: number;
+  /** clockwise image rotation in degrees (multiples of 90) */
+  rotation?: number;
   /** `object-fit` setting */
   imageFit?: ImageFit;
   /** alternative images to be passed to the 'srcSet' */

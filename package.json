@@ -44,6 +44,10 @@
       "types": "./dist/plugins/inline/index.d.ts",
       "default": "./dist/plugins/inline/index.js"
     },
+    "./plugins/rotate": {
+      "types": "./dist/plugins/rotate/index.d.ts",
+      "default": "./dist/plugins/rotate/index.js"
+    },
     "./plugins/share": {
       "types": "./dist/plugins/share/index.d.ts",
       "default": "./dist/plugins/share/index.js"
@@ -94,6 +98,9 @@
       ],
       "plugins/inline": [
         "dist/plugins/inline/index.d.ts"
+      ],
+      "plugins/rotate": [
+        "dist/plugins/rotate/index.d.ts"
       ],
       "plugins/share": [
         "dist/plugins/share/index.d.ts"
