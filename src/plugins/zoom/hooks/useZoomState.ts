@@ -8,6 +8,7 @@ import {
   useEventCallback,
   useLayoutEffect,
   useLightboxState,
+  useSlideRotation,
 } from "../../../index.js";
 import { useZoomProps } from "./useZoomProps.js";
 import { useZoomAnimation } from "./useZoomAnimation.js";
@@ -29,13 +30,14 @@ export function useZoomState(
 
   // TODO v4: use `slide.key` to reset zoom on reactive slide replacement for custom slide types
   const currentSource = currentSlide && isImageSlide(currentSlide) ? currentSlide.src : undefined;
+  const rotation = useSlideRotation(currentSlide);
   const disabled = !zoomWrapperRef?.current;
 
   useLayoutEffect(() => {
     setZoom(1);
     setOffsetX(0);
     setOffsetY(0);
-  }, [globalIndex, currentSource]);
+  }, [globalIndex, currentSource, rotation]);
 
   const changeOffsets = React.useCallback(
     (dx?: number, dy?: number, targetZoom?: number) => {

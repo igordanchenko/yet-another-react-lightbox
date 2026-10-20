@@ -112,6 +112,11 @@ export function computeSlideRect(containerRect: ContainerRect, padding: LengthOr
   };
 }
 
+/** normalize rotation to a quarter turn in the [0, 360) range (non-finite values resolve to 0) */
+export function normalizeRotation(rotation: number) {
+  return Number.isFinite(rotation) ? (((Math.round(rotation / 90) * 90) % 360) + 360) % 360 : 0;
+}
+
 export function devicePixelRatio() {
   return (hasWindow() ? window?.devicePixelRatio : undefined) || 1;
 }

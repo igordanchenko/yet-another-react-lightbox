@@ -151,6 +151,8 @@ The following plugins are bundled in the package:
   support for fullscreen mode
 - [Inline](https://yet-another-react-lightbox.com/plugins/inline) - transforms
   the lightbox into an image carousel
+- [Rotate](https://yet-another-react-lightbox.com/plugins/rotate) - adds image
+  rotation control
 - [Share](https://yet-another-react-lightbox.com/plugins/share) - adds sharing
   button
 - [Slideshow](https://yet-another-react-lightbox.com/plugins/slideshow) - adds

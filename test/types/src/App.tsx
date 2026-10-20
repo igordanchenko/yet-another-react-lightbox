@@ -6,8 +6,11 @@ import {
   ImageSlide,
   isImageSlide,
   Lightbox,
+  RenderThumbnailProps,
+  RotateRef,
   SlideshowRef,
   ThumbnailsRef,
+  useSlideRotation,
   ZoomRef,
 } from "yet-another-react-lightbox";
 import Captions from "yet-another-react-lightbox/plugins/captions";
@@ -15,6 +18,7 @@ import Counter from "yet-another-react-lightbox/plugins/counter";
 import Download from "yet-another-react-lightbox/plugins/download";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Inline from "yet-another-react-lightbox/plugins/inline";
+import Rotate from "yet-another-react-lightbox/plugins/rotate";
 import Share from "yet-another-react-lightbox/plugins/share";
 import Slideshow from "yet-another-react-lightbox/plugins/slideshow";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
@@ -31,6 +35,7 @@ const slides = [
     src: "https://images.yet-another-react-lightbox.com/image01.jpg",
     title: "Title",
     description: "Description",
+    rotation: 90,
     download: {
       url: "https://images.yet-another-react-lightbox.com/image01.jpg",
       filename: "image01.jpg",
@@ -43,6 +48,14 @@ const slides = [
   },
 ];
 
+function Thumbnail({ slide, rect, render, imageFit }: RenderThumbnailProps) {
+  const rotation = useSlideRotation(slide);
+
+  return isImageSlide(slide) ? (
+    <ImageSlide slide={slide} rect={rect} render={render} imageFit={imageFit} rotation={rotation} />
+  ) : null;
+}
+
 function log(...values: unknown[]) {
   // eslint-disable-next-line no-console
   console.log(...values);
@@ -53,6 +66,7 @@ export default function App() {
 
   const captionsRef = React.useRef<CaptionsRef>(null);
   const fullscreenRef = React.useRef<FullscreenRef>(null);
+  const rotateRef = React.useRef<RotateRef>(null);
   const slideshowRef = React.useRef<SlideshowRef>(null);
   const thumbnailsRef = React.useRef<ThumbnailsRef>(null);
   const zoomRef = React.useRef<ZoomRef>(null);
@@ -63,7 +77,7 @@ export default function App() {
         open={open}
         close={() => setOpen(false)}
         slides={slides}
-        plugins={[Captions, Counter, Download, Fullscreen, Share, Slideshow, Thumbnails, Video, Zoom]}
+        plugins={[Captions, Counter, Download, Fullscreen, Rotate, Share, Slideshow, Thumbnails, Video, Zoom]}
         captions={{
           ref: captionsRef,
           hidden: true,
@@ -78,6 +92,7 @@ export default function App() {
           },
         }}
         fullscreen={{ ref: fullscreenRef }}
+        rotate={{ ref: rotateRef, buttons: "both" }}
         share={{
           share: ({ slide }) => {
             log("share", slide);
@@ -123,6 +138,7 @@ export default function App() {
             <button key="custom" type="button" className="yarl__button">
               Custom
             </button>,
+            "rotate",
             "close",
           ],
         }}
@@ -164,6 +180,18 @@ export default function App() {
           ),
           iconEnterFullscreen: () => null,
           iconExitFullscreen: () => null,
+          buttonRotate: ({ rotation, disabled, rotateClockwise, rotateCounterClockwise }) => (
+            <>
+              <button type="button" className="yarl__button" disabled={disabled} onClick={rotateCounterClockwise}>
+                Rotate counterclockwise
+              </button>
+              <button type="button" className="yarl__button" disabled={disabled} onClick={rotateClockwise}>
+                Rotate clockwise ({rotation})
+              </button>
+            </>
+          ),
+          iconRotateClockwise: () => null,
+          iconRotateCounterClockwise: () => null,
           buttonShare: () => (
             <button type="button" className="yarl__button">
               Share
@@ -182,10 +210,7 @@ export default function App() {
           ),
           iconSlideshowPlay: () => null,
           iconSlideshowPause: () => null,
-          thumbnail: ({ slide, rect, render, imageFit }) =>
-            isImageSlide(slide) ? (
-              <ImageSlide slide={slide} rect={rect} render={render} imageFit={imageFit} />
-            ) : undefined,
+          thumbnail: (props) => <Thumbnail {...props} />,
           iconThumbnailsVisible: () => null,
           iconThumbnailsHidden: () => null,
           buttonThumbnails: ({ visible, show, hide }) => (
@@ -205,6 +230,12 @@ export default function App() {
             const fullscreen = fullscreenRef.current!;
             (fullscreen.fullscreen ? fullscreen.exit : fullscreen.enter)?.();
 
+            const rotate = rotateRef.current!;
+            if (!rotate.disabled && rotate.rotation !== 0) {
+              rotate.rotateClockwise();
+              rotate.rotateCounterClockwise();
+            }
+
             const slideshow = slideshowRef.current!;
             (slideshow.playing ? slideshow.pause : slideshow.play)?.();
 
@@ -218,6 +249,7 @@ export default function App() {
             }
           },
           download: ({ index }) => log("download", index),
+          rotate: ({ index, rotation }) => log("rotate", index, rotation),
           share: ({ index }) => log("share", index),
           slideshowStart: () => {},
           slideshowStop: () => {},
@@ -244,6 +276,8 @@ export default function App() {
           "Zoom out": "Custom Zoom Out",
           "Enter Fullscreen": "Custom Enter Fullscreen",
           "Exit Fullscreen": "Custom Exit Fullscreen",
+          "Rotate clockwise": "Custom Rotate Clockwise",
+          "Rotate counterclockwise": "Custom Rotate Counterclockwise",
           "Show captions": "Custom Show Captions",
           "Hide captions": "Custom Hide Captions",
           "Show thumbnails": "Custom Show thumbnails",
