@@ -24,6 +24,7 @@ export type ResponsiveImageProps = Omit<ImageSlideProps, "slide" | "rect"> &
   Required<Pick<ImageSlideProps, "rect">> & {
     slide: ResponsiveImageSlide;
     interactive: boolean;
+    zoom?: number;
   };
 
 type ResponsiveImageState = {
@@ -59,14 +60,20 @@ function reducer(
 export function ResponsiveImage(props: ResponsiveImageProps) {
   const [{ current, preload }, dispatch] = React.useReducer(reducer, {});
 
-  const { slide: image, rect, imageFit, render, interactive } = props;
+  const { slide: image, rect, rotation = 0, imageFit, render, interactive, zoom = 1 } = props;
+  const rotated = rotation % 180 !== 0;
+  // noinspection JSSuspiciousNameCombination
+  const imageRect = rotated ? { width: rect.height, height: rect.width } : rect;
 
   const srcSet = image.srcSet.sort((a, b) => a.width - b.width);
   const width = image.width ?? srcSet[srcSet.length - 1].width;
   const height = image.height ?? srcSet[srcSet.length - 1].height;
   const cover = isImageFitCover(image, imageFit);
   const maxWidth = Math.max(...srcSet.map((x) => x.width));
-  const targetWidth = Math.min((cover ? Math.max : Math.min)(rect.width, width * (rect.height / height)), maxWidth);
+  const targetWidth = Math.min(
+    (cover ? Math.max : Math.min)(imageRect.width, width * (imageRect.height / height)) * zoom,
+    maxWidth,
+  );
   const pixelDensity = devicePixelRatio();
 
   const handleResize = useEventCallback(() => {
@@ -77,7 +84,7 @@ export function ResponsiveImage(props: ResponsiveImageProps) {
     }
   });
 
-  useLayoutEffect(handleResize, [rect.width, rect.height, pixelDensity, handleResize]);
+  useLayoutEffect(handleResize, [targetWidth, pixelDensity, handleResize]);
 
   const handlePreload = useEventCallback((currentPreload: string) =>
     dispatch({ type: "done", source: currentPreload }),
@@ -91,7 +98,9 @@ export function ResponsiveImage(props: ResponsiveImageProps) {
   if (!cover) {
     Object.assign(
       style,
-      rect.width / rect.height < width / height ? { width: "100%", height: "auto" } : { width: "auto", height: "100%" },
+      imageRect.width / imageRect.height < width / height
+        ? { width: rotated ? `${imageRect.width}px` : "100%", height: "auto" }
+        : { width: "auto", height: rotated ? `${imageRect.height}px` : "100%" },
     );
   }
 
