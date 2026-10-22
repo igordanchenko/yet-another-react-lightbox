@@ -217,3 +217,124 @@ return (
 ### Sandbox
 
 <StackBlitzLink href="edit/yet-another-react-lightbox-nextjs-zoom" file="app/page.tsx" />
+
+## With Rotate Plugin
+
+The `next/image` render function above doesn't apply image rotation, so it needs
+a few changes to work with the [Rotate](/plugins/rotate) plugin. The function
+below reads the slide rotation with the `useSlideRotation` hook, fits the image
+into the transposed slide rect (with width and height swapped) for quarter-turn
+rotations, and rotates the wrapper element. The `flexShrink: 0` style prevents
+the slide container from shrinking the unrotated image box when it is wider than
+the slide.
+
+```jsx
+import Image from "next/image";
+import {
+  isImageFitCover,
+  isImageSlide,
+  useLightboxProps,
+  useLightboxState,
+  useSlideRotation,
+} from "yet-another-react-lightbox";
+
+function isNextJsImage(slide) {
+  return (
+    isImageSlide(slide) &&
+    typeof slide.width === "number" &&
+    typeof slide.height === "number"
+  );
+}
+
+export default function NextJsImage({ slide, offset, rect }) {
+  const {
+    on: { click },
+    carousel: { imageFit },
+  } = useLightboxProps();
+
+  const { currentIndex } = useLightboxState();
+
+  const rotation = useSlideRotation(slide);
+
+  const cover = isImageSlide(slide) && isImageFitCover(slide, imageFit);
+
+  if (!isNextJsImage(slide)) return undefined;
+
+  // quarter-turn rotations fit the image into the transposed rect
+  const fitRect =
+    rotation % 180 !== 0 ? { width: rect.height, height: rect.width } : rect;
+
+  const width = !cover
+    ? Math.round(
+        Math.min(fitRect.width, (fitRect.height / slide.height) * slide.width),
+      )
+    : fitRect.width;
+
+  const height = !cover
+    ? Math.round(
+        Math.min(fitRect.height, (fitRect.width / slide.width) * slide.height),
+      )
+    : fitRect.height;
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        width,
+        height,
+        rotate: rotation ? `${rotation}deg` : undefined,
+        flexShrink: 0,
+      }}
+    >
+      <Image
+        fill
+        alt=""
+        src={slide}
+        loading="eager"
+        draggable={false}
+        placeholder={slide.blurDataURL ? "blur" : undefined}
+        style={{
+          objectFit: cover ? "cover" : "contain",
+          cursor: click ? "pointer" : undefined,
+        }}
+        sizes={`${Math.ceil((width / window.innerWidth) * 100)}vw`}
+        onClick={
+          offset === 0 ? () => click?.({ index: currentIndex }) : undefined
+        }
+      />
+    </div>
+  );
+}
+```
+
+The same function can be used as a custom `render.thumbnail` function to rotate
+thumbnails as well.
+
+```jsx
+import Lightbox from "yet-another-react-lightbox";
+import Rotate from "yet-another-react-lightbox/plugins/rotate";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+
+import NextJsImage from "@/components/NextJsImage";
+
+import image1 from "@/public/images/image01.jpg";
+import image2 from "@/public/images/image02.jpg";
+import image3 from "@/public/images/image03.jpg";
+
+// ...
+
+return (
+  <Lightbox
+    open={open}
+    close={() => setOpen(false)}
+    slides={[image1, image2, image3]}
+    render={{ slide: NextJsImage, thumbnail: NextJsImage }}
+    plugins={[Rotate, Thumbnails]}
+  />
+);
+```
+
+Alternatively, the approach described in [With Zoom Plugin](#WithZoomPlugin)
+uses the built-in image slide, which supports rotation out of the box.

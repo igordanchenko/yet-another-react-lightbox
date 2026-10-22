@@ -11,6 +11,7 @@ export const PLUGIN_COUNTER = "counter";
 export const PLUGIN_DOWNLOAD = "download";
 export const PLUGIN_FULLSCREEN = "fullscreen";
 export const PLUGIN_INLINE = "inline";
+export const PLUGIN_ROTATE = "rotate";
 export const PLUGIN_SHARE = "share";
 export const PLUGIN_SLIDESHOW = "slideshow";
 export const PLUGIN_THUMBNAILS = "thumbnails";
@@ -23,10 +24,7 @@ export const SLIDE_STATUS_COMPLETE = "complete";
 export const SLIDE_STATUS_PLACEHOLDER = "placeholder";
 
 export type SlideStatus =
-  | typeof SLIDE_STATUS_LOADING
-  | typeof SLIDE_STATUS_PLAYING
-  | typeof SLIDE_STATUS_ERROR
-  | typeof SLIDE_STATUS_COMPLETE;
+  typeof SLIDE_STATUS_LOADING | typeof SLIDE_STATUS_PLAYING | typeof SLIDE_STATUS_ERROR | typeof SLIDE_STATUS_COMPLETE;
 
 export const activeSlideStatus = (status: SlideStatus): `active-slide-${SlideStatus}` => `active-slide-${status}`;
 

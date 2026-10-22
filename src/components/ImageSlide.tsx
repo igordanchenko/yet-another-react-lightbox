@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { CarouselSettings, ContainerRect, Render, SlideImage } from "../types.js";
-import { clsx, cssClass, hasWindow, isImageFitCover, makeComposePrefix } from "../utils.js";
+import { clsx, cssClass, hasWindow, isImageFitCover, makeComposePrefix, normalizeRotation } from "../utils.js";
 import { useEventCallback } from "../hooks/index.js";
 import { useEvents, useTimeouts } from "../contexts/index.js";
 import { ErrorIcon, LoadingIcon } from "./Icons.js";
@@ -23,6 +23,8 @@ export type ImageSlideProps = Partial<Pick<CarouselSettings, "imageFit" | "image
   offset?: number;
   render?: Render;
   rect?: ContainerRect;
+  /** clockwise rotation in degrees (multiples of 90) */
+  rotation?: number;
   onClick?: () => void;
   onLoad?: (image: HTMLImageElement) => void;
   onError?: () => void;
@@ -34,6 +36,7 @@ export function ImageSlide({
   offset,
   render,
   rect,
+  rotation: rotationProp = 0,
   imageFit,
   imageProps,
   onClick,
@@ -97,6 +100,14 @@ export function ImageSlide({
 
   const cover = isImageFitCover(image, imageFit);
 
+  // quarter-turn rotations fit the image into the transposed slide rect
+  const rotation = normalizeRotation(rotationProp);
+  const rotated = rotation % 180 !== 0;
+  // noinspection JSSuspiciousNameCombination
+  const imageRect = rect && rotated ? { width: rect.height, height: rect.width } : rect;
+  const widthLimit = rotated && imageRect ? `${imageRect.width}px` : "100%";
+  const heightLimit = rotated && imageRect ? `${imageRect.height}px` : "100%";
+
   const nonInfinite = (value: number, fallback: number) => (Number.isFinite(value) ? value : fallback);
 
   const maxWidth = nonInfinite(
@@ -112,12 +123,12 @@ export function ImageSlide({
   const defaultStyle =
     maxWidth && maxHeight
       ? {
-          maxWidth: `min(${maxWidth}px, 100%)`,
-          maxHeight: `min(${maxHeight}px, 100%)`,
+          maxWidth: `min(${maxWidth}px, ${widthLimit})`,
+          maxHeight: `min(${maxHeight}px, ${heightLimit})`,
         }
       : {
-          maxWidth: "100%",
-          maxHeight: "100%",
+          maxWidth: widthLimit,
+          maxHeight: heightLimit,
         };
 
   const srcSet = image.srcSet
@@ -127,10 +138,14 @@ export function ImageSlide({
     .join(", ");
 
   const estimateActualWidth = () =>
-    rect && !cover && image.width && image.height ? (rect.height / image.height) * image.width : Number.MAX_VALUE;
+    imageRect && !cover && image.width && image.height
+      ? (imageRect.height / image.height) * image.width
+      : Number.MAX_VALUE;
 
   const sizes =
-    srcSet && rect && hasWindow() ? `${Math.round(Math.min(estimateActualWidth(), rect.width))}px` : undefined;
+    srcSet && imageRect && hasWindow()
+      ? `${Math.round(Math.min(estimateActualWidth(), imageRect.width))}px`
+      : undefined;
 
   const {
     style: imagePropsStyle,
@@ -153,7 +168,15 @@ export function ImageSlide({
           status !== SLIDE_STATUS_COMPLETE && cssClass(slideImagePrefix("loading")),
           imagePropsClassName,
         )}
-        style={{ ...defaultStyle, ...style, ...imagePropsStyle }}
+        style={{
+          ...defaultStyle,
+          ...(rotation ? { rotate: `${rotation}deg` } : null),
+          // transposed layout box may exceed the container, so prevent flex containers from shrinking it
+          ...(rotated ? { flexShrink: 0 } : null),
+          ...(rotated && cover && imageRect ? { width: imageRect.width, height: imageRect.height } : null),
+          ...style,
+          ...imagePropsStyle,
+        }}
         {...restImageProps}
         alt={image.alt ?? ""}
         sizes={sizes}
