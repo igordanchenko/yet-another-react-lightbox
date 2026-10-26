@@ -170,7 +170,7 @@
     "@vitest/coverage-v8": "5.0.5",
     "@vitest/ui": "5.0.5",
     "autoprefixer": "10.6.1",
-    "chokidar": "5.0.0",
+    "chokidar": "6.0.0",
     "commitlint-pre-push": "1.0.2",
     "cssnano": "9.9.0",
     "eslint": "9.39.5",
