@@ -166,6 +166,36 @@ describe("Rotate", () => {
     expect(ref.current!.rotation).toBe(0);
   });
 
+  it("accumulates back-to-back rotations before re-render", () => {
+    const ref = React.createRef<RotateRef>();
+    const rotate = vi.fn();
+
+    renderLightbox({ rotate: { ref }, on: { rotate } });
+
+    act(() => {
+      ref.current!.rotateClockwise();
+      ref.current!.rotateClockwise();
+    });
+    expectCurrentRotationToBe(180);
+    expect(rotate.mock.calls).toEqual([[{ index: 0, rotation: 90 }], [{ index: 0, rotation: 180 }]]);
+
+    act(() => {
+      ref.current!.rotateClockwise();
+      ref.current!.rotateCounterClockwise();
+    });
+    expectCurrentRotationToBe(180);
+
+    // rotation of another slide does not build on the previous slide's rotation
+    clickButton("Next");
+    act(() => {
+      ref.current!.rotateCounterClockwise();
+    });
+    expectCurrentRotationToBe(270);
+
+    clickButton("Previous");
+    expectCurrentRotationToBe(180);
+  });
+
   it("keeps rotate ref stable across re-renders", () => {
     const ref = React.createRef<RotateRef>();
     const rotate = vi.fn();

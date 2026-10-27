@@ -22,6 +22,8 @@ export const useRotate = makeUseContext("useRotate", "RotateContext", RotateCont
 export function RotateContextProvider({ children }: ComponentProps) {
   // keyed by slide key rather than slide index, so that rotation survives navigation and slides changes
   const [rotations, setRotations] = React.useState<ReadonlyMap<string, number>>(() => new Map());
+  // the latest rotation, which may not be committed yet when rotate callbacks are called back-to-back
+  const lastRotation = React.useRef<{ key: string; rotation: number }>(undefined);
 
   const { currentSlide, currentIndex } = useLightboxState();
   const { on } = useLightboxProps();
@@ -43,7 +45,9 @@ export function RotateContextProvider({ children }: ComponentProps) {
   const rotateBy = useEventCallback((delta: number) => {
     if (!currentKey) return;
 
-    const newRotation = normalizeRotation(rotation + delta);
+    const baseRotation = lastRotation.current?.key === currentKey ? lastRotation.current.rotation : rotation;
+    const newRotation = normalizeRotation(baseRotation + delta);
+    lastRotation.current = { key: currentKey, rotation: newRotation };
 
     setRotations((prev) => new Map(prev).set(currentKey, newRotation));
     on.rotate?.({ index: currentIndex, rotation: newRotation });
