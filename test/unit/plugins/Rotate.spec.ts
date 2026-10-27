@@ -11,7 +11,14 @@ import {
   querySelector,
 } from "../test-utils.js";
 import { Rotate, Thumbnails } from "../../../src/plugins/index.js";
-import { ImageSlide, isImageSlide, LightboxExternalProps, RotateRef, Slide } from "../../../src/index.js";
+import {
+  ContainerRect,
+  ImageSlide,
+  isImageSlide,
+  LightboxExternalProps,
+  RotateRef,
+  Slide,
+} from "../../../src/index.js";
 
 const slides: Slide[] = [{ src: "image1" }, { src: "image2" }, { src: "image3" }];
 
@@ -118,19 +125,25 @@ describe("Rotate", () => {
     [Number.POSITIVE_INFINITY, 0],
     [60, 90],
   ])("normalizes ImageSlide rotation prop %s to %s", (rotation, expected) => {
+    let slideRect: ContainerRect | undefined;
+
     render(
       lightbox({
         slides,
         render: {
-          slide: ({ slide, rect }) =>
-            isImageSlide(slide) ? React.createElement(ImageSlide, { slide, rect, rotation }) : undefined,
+          slide: ({ slide, rect }) => {
+            slideRect = rect;
+            return isImageSlide(slide) ? React.createElement(ImageSlide, { slide, rect, rotation }) : undefined;
+          },
         },
       }),
     );
 
     expectCurrentRotationToBe(expected);
     // quarter-turn rotations swap the size limits to pixel values of the transposed slide rect
-    expect(findCurrentSlide()?.querySelector("img")?.style.maxWidth).toBe(expected % 180 === 0 ? "100%" : "0px");
+    expect(findCurrentSlide()?.querySelector("img")?.style.maxWidth).toBe(
+      expected % 180 === 0 ? "100%" : `${slideRect?.height}px`,
+    );
   });
 
   it("ignores slide rotation without the plugin", () => {
