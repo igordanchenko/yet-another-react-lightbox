@@ -275,3 +275,11 @@ return (
   />
 );
 ```
+
+## Live Demo
+
+<RotatePluginExample />
+
+## Sandbox
+
+<StackBlitzLink href="edit/yet-another-react-lightbox-examples" file="src/examples/RotatePlugin.tsx" initialPath="/plugins/rotate" />
