@@ -200,6 +200,9 @@ rotations there as well, for example, with the CSS `rotate` property.
 
 ## Custom Slides
 
+The plugin currently supports image slides only. The rotate buttons are disabled
+for all other slide types, including video and custom slides.
+
 The plugin doesn't rotate content rendered by custom `render.slide` or
 `render.thumbnail` functions. If you render image slides with a custom render
 function, the function must apply the rotation itself. Otherwise, the rotate
