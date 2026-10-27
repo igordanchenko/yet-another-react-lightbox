@@ -4,13 +4,14 @@ import { vi } from "vitest";
 
 import {
   clickButton,
+  expectCurrentImageToBe,
   expectNotToContainButton,
   expectToContainButton,
   findCurrentSlide,
   lightbox,
   querySelector,
 } from "../test-utils.js";
-import { Rotate, Thumbnails } from "../../../src/plugins/index.js";
+import { Rotate, Thumbnails, Zoom } from "../../../src/plugins/index.js";
 import {
   ContainerRect,
   ImageSlide,
@@ -18,6 +19,7 @@ import {
   LightboxExternalProps,
   RotateRef,
   Slide,
+  ZoomRef,
 } from "../../../src/index.js";
 
 const slides: Slide[] = [{ src: "image1" }, { src: "image2" }, { src: "image3" }];
@@ -255,5 +257,139 @@ describe("Rotate", () => {
 
     const thumbnail = querySelector(".yarl__thumbnails_thumbnail_active img") as HTMLImageElement | null;
     expect(thumbnail?.style.rotate).toBe("90deg");
+  });
+
+  // captures the slide rect without replacing the default slide rendering
+  function captureSlideRect() {
+    const captured: { rect?: ContainerRect } = {};
+    const slide = ({ rect }: { rect: ContainerRect }) => {
+      captured.rect = rect;
+      return undefined;
+    };
+    return { captured, slide };
+  }
+
+  it("fits rotated cover images into the transposed slide rect", () => {
+    const { captured, slide } = captureSlideRect();
+
+    renderLightbox({ carousel: { imageFit: "cover" }, render: { slide } });
+
+    clickButton("Rotate clockwise");
+
+    const { width, height } = captured.rect!;
+    expect(height).toBeGreaterThan(0);
+
+    const style = findCurrentSlide()?.querySelector("img")?.style;
+    expect(style?.width).toBe(`${height}px`);
+    expect(style?.height).toBe(`${width}px`);
+  });
+
+  it("computes max zoom for the rotated image", () => {
+    const ref = React.createRef<ZoomRef>();
+    const { captured, slide } = captureSlideRect();
+
+    render(
+      lightbox({
+        slides: [{ src: "image1", width: 4000, height: 1000 }],
+        plugins: [Rotate, Zoom],
+        zoom: { ref },
+        render: { slide },
+      }),
+    );
+
+    // mirrors the contain-fit math in useZoomImageRect
+    const expectedMaxZoom = (width: number, height: number) => {
+      const rect = captured.rect!;
+      return width / Math.round(Math.min(rect.width, (rect.height / height) * width, width));
+    };
+
+    const maxZoom = ref.current!.maxZoom;
+    expect(maxZoom).toBeCloseTo(expectedMaxZoom(4000, 1000), 4);
+
+    clickButton("Rotate clockwise");
+
+    expect(ref.current!.maxZoom).toBeCloseTo(expectedMaxZoom(1000, 4000), 4);
+    expect(ref.current!.maxZoom).not.toBeCloseTo(maxZoom, 4);
+  });
+
+  it("resets zoom on rotation", () => {
+    const ref = React.createRef<ZoomRef>();
+
+    render(
+      lightbox({
+        slides: [{ src: "image1", width: 4000, height: 3000 }],
+        plugins: [Rotate, Zoom],
+        zoom: { ref },
+      }),
+    );
+
+    act(() => {
+      ref.current!.zoomIn();
+    });
+    expect(ref.current!.zoom).toBeGreaterThan(1);
+
+    clickButton("Rotate clockwise");
+    expect(ref.current!.zoom).toBe(1);
+  });
+
+  describe("with responsive images", () => {
+    // a portrait image in a landscape slide fits a wider box once rotated
+    const responsiveSlide = (rotation?: number) => ({
+      src: "image1",
+      width: 1000,
+      height: 4000,
+      rotation,
+      srcSet: [
+        { src: "image1-200", width: 200, height: 800 },
+        { src: "image1-400", width: 400, height: 1600 },
+        { src: "image1-1000", width: 1000, height: 4000 },
+      ],
+    });
+
+    function renderResponsiveLightbox(rotation?: number, ref?: React.Ref<ZoomRef>) {
+      const { captured, slide } = captureSlideRect();
+
+      render(
+        lightbox({
+          slides: [responsiveSlide(rotation)],
+          plugins: [Rotate, Zoom],
+          zoom: { ref },
+          render: { slide },
+        }),
+      );
+
+      return captured;
+    }
+
+    it("sizes unrotated images relative to the slide", () => {
+      renderResponsiveLightbox();
+
+      expectCurrentImageToBe("image1-200");
+      expect(findCurrentSlide()?.querySelector("img")?.style.height).toBe("100%");
+    });
+
+    it("sizes rotated images to the transposed slide rect", () => {
+      const captured = renderResponsiveLightbox(90);
+
+      expectCurrentImageToBe("image1-400");
+
+      const style = findCurrentSlide()?.querySelector("img")?.style;
+      expect(style?.width).toBe("auto");
+      expect(style?.height).toBe(`${captured.rect!.width}px`);
+      expect(style?.rotate).toBe("90deg");
+    });
+
+    it("selects a larger source when zooming rotated images", () => {
+      const ref = React.createRef<ZoomRef>();
+
+      renderResponsiveLightbox(90, ref);
+
+      act(() => {
+        ref.current!.zoomIn();
+      });
+
+      // the larger source is preloaded next to the current one
+      expect(findCurrentSlide()?.querySelector('img[src="image1-1000"]')).toBeInTheDocument();
+    });
   });
 });
