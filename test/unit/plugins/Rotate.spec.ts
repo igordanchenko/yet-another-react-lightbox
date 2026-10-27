@@ -284,6 +284,24 @@ describe("Rotate", () => {
     expect(style?.height).toBe(`${width}px`);
   });
 
+  it("sizes rotated contain images explicitly", () => {
+    const { captured, slide } = captureSlideRect();
+
+    renderLightbox({ slides: [{ src: "image1", width: 3840, height: 5760 }], render: { slide } });
+
+    // unrotated images keep their intrinsic size
+    const image = () => findCurrentSlide()?.querySelector("img");
+    expect(image()?.style.width).toBe("");
+
+    clickButton("Rotate clockwise");
+
+    // the image fits into the transposed slide rect regardless of which srcSet source is loaded
+    const { width, height } = captured.rect!;
+    const scale = Math.min(height / 3840, width / 5760);
+    expect(parseFloat(image()!.style.width)).toBeCloseTo(3840 * scale, 5);
+    expect(parseFloat(image()!.style.height)).toBeCloseTo(5760 * scale, 5);
+  });
+
   it("computes max zoom for the rotated image", () => {
     const ref = React.createRef<ZoomRef>();
     const { captured, slide } = captureSlideRect();

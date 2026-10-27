@@ -131,6 +131,19 @@ export function ImageSlide({
           maxHeight: heightLimit,
         };
 
+  // size rotated images explicitly, since the intrinsic size of a responsive image follows `sizes` only once the
+  // matching source loads, so the image would shrink and then expand after the first rotation
+  const fitScale =
+    imageRect && maxWidth && maxHeight ? Math.min(imageRect.width / maxWidth, imageRect.height / maxHeight, 1) : 0;
+  const rotatedSize =
+    rotated && imageRect
+      ? cover
+        ? { width: imageRect.width, height: imageRect.height }
+        : fitScale
+          ? { width: maxWidth * fitScale, height: maxHeight * fitScale }
+          : null
+      : null;
+
   const srcSet = image.srcSet
     ?.slice()
     .sort((a, b) => a.width - b.width)
@@ -173,7 +186,7 @@ export function ImageSlide({
           ...(rotation ? { rotate: `${rotation}deg` } : null),
           // transposed layout box may exceed the container, so prevent flex containers from shrinking it
           ...(rotated ? { flexShrink: 0 } : null),
-          ...(rotated && cover && imageRect ? { width: imageRect.width, height: imageRect.height } : null),
+          ...rotatedSize,
           ...style,
           ...imagePropsStyle,
         }}
