@@ -33,7 +33,8 @@ The plugin adds the following `Slide` properties.
           The value is rounded to the nearest multiple of 90, and values that
           are not finite numbers (e.g., `NaN`) are ignored. Once the user
           rotates an image, their choice takes precedence over subsequent
-          `rotation` changes until the lightbox closes.
+          `rotation` changes until the lightbox closes (with the
+          [Inline](/plugins/inline) plugin, until the lightbox unmounts).
         </p>
         <p>
           Image `width`, `height` and `srcSet` dimensions should describe the
@@ -152,8 +153,9 @@ return (
 
 ## Persisting Rotation
 
-The plugin keeps user rotations only while the lightbox is open. To persist
-them, save the new rotation in the `on.rotate` callback and pass it back via
+The plugin keeps user rotations only while the lightbox is open (with the
+[Inline](/plugins/inline) plugin, until the lightbox unmounts). To persist them,
+save the new rotation in the `on.rotate` callback and pass it back via
 `slide.rotation` the next time the lightbox opens.
 
 ```jsx
