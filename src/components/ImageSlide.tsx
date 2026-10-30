@@ -150,15 +150,17 @@ export function ImageSlide({
     .map((item) => `${item.src} ${item.width}w`)
     .join(", ");
 
-  const estimateActualWidth = () =>
-    imageRect && !cover && image.width && image.height
-      ? (imageRect.height / image.height) * image.width
-      : Number.MAX_VALUE;
+  const estimateActualWidth = () => {
+    if (!imageRect) return undefined;
+    if (!image.width || !image.height) return imageRect.width;
 
-  const sizes =
-    srcSet && imageRect && hasWindow()
-      ? `${Math.round(Math.min(estimateActualWidth(), imageRect.width))}px`
-      : undefined;
+    // contain fits the image inside the rect, while cover overflows it in one dimension
+    return (cover ? Math.max : Math.min)((imageRect.height / image.height) * image.width, imageRect.width);
+  };
+
+  const actualWidth = estimateActualWidth();
+
+  const sizes = srcSet && actualWidth !== undefined && hasWindow() ? `${Math.round(actualWidth)}px` : undefined;
 
   const {
     style: imagePropsStyle,
