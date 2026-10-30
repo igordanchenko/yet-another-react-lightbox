@@ -21,6 +21,8 @@ export function useZoomState(
   const [zoom, setZoom] = React.useState(1);
   const [offsetX, setOffsetX] = React.useState(0);
   const [offsetY, setOffsetY] = React.useState(0);
+  // the latest zoom and offsets, which may not be committed yet when state changes are requested back-to-back
+  const latest = React.useRef({ zoom, offsetX, offsetY });
 
   const animate = useZoomAnimation(zoom, offsetX, offsetY, zoomWrapperRef);
 
@@ -34,6 +36,7 @@ export function useZoomState(
   const disabled = !zoomWrapperRef?.current;
 
   useLayoutEffect(() => {
+    latest.current = { zoom: 1, offsetX: 0, offsetY: 0 };
     setZoom(1);
     setOffsetX(0);
     setOffsetY(0);
@@ -41,18 +44,21 @@ export function useZoomState(
 
   const changeOffsets = React.useCallback(
     (dx?: number, dy?: number, targetZoom?: number) => {
-      const newZoom = targetZoom || zoom;
+      const newZoom = targetZoom || latest.current.zoom;
 
-      const newOffsetX = offsetX - (dx || 0);
-      const newOffsetY = offsetY - (dy || 0);
+      const newOffsetX = latest.current.offsetX - (dx || 0);
+      const newOffsetY = latest.current.offsetY - (dy || 0);
 
       const maxOffsetX = (imageRect.width * newZoom - slideRect.width) / 2 / newZoom;
       const maxOffsetY = (imageRect.height * newZoom - slideRect.height) / 2 / newZoom;
 
-      setOffsetX(Math.min(Math.abs(newOffsetX), Math.max(maxOffsetX, 0)) * Math.sign(newOffsetX));
-      setOffsetY(Math.min(Math.abs(newOffsetY), Math.max(maxOffsetY, 0)) * Math.sign(newOffsetY));
+      latest.current.offsetX = Math.min(Math.abs(newOffsetX), Math.max(maxOffsetX, 0)) * Math.sign(newOffsetX);
+      latest.current.offsetY = Math.min(Math.abs(newOffsetY), Math.max(maxOffsetY, 0)) * Math.sign(newOffsetY);
+
+      setOffsetX(latest.current.offsetX);
+      setOffsetY(latest.current.offsetY);
     },
-    [zoom, offsetX, offsetY, slideRect, imageRect.width, imageRect.height],
+    [slideRect, imageRect.width, imageRect.height],
   );
 
   const changeZoom = React.useCallback(
@@ -66,16 +72,25 @@ export function useZoomState(
         animate();
       }
 
-      changeOffsets(dx ? dx * (1 / zoom - 1 / newZoom) : 0, dy ? dy * (1 / zoom - 1 / newZoom) : 0, newZoom);
+      const { zoom: currentZoom } = latest.current;
+      changeOffsets(
+        dx ? dx * (1 / currentZoom - 1 / newZoom) : 0,
+        dy ? dy * (1 / currentZoom - 1 / newZoom) : 0,
+        newZoom,
+      );
 
+      latest.current.zoom = newZoom;
       setZoom(newZoom);
     },
-    [zoom, minZoom, maxZoom, changeOffsets, animate],
+    [minZoom, maxZoom, changeOffsets, animate],
   );
 
+  const getZoom = React.useCallback(() => latest.current.zoom, []);
+
   const handleControllerRectChange = useEventCallback(() => {
-    if (zoom > 1) {
-      if (zoom > maxZoom) {
+    const currentZoom = getZoom();
+    if (currentZoom > 1) {
+      if (currentZoom > maxZoom) {
         changeZoom(maxZoom, true);
       }
 
@@ -86,14 +101,16 @@ export function useZoomState(
   useLayoutEffect(handleControllerRectChange, [containerRect.width, containerRect.height, handleControllerRectChange]);
 
   const zoomIn = React.useCallback(() => {
-    const targetZoom = zoom * zoomInMultiplier;
-    changeZoom(zoom < 1 && targetZoom > 1 ? 1 : targetZoom);
-  }, [zoom, zoomInMultiplier, changeZoom]);
+    const currentZoom = getZoom();
+    const targetZoom = currentZoom * zoomInMultiplier;
+    changeZoom(currentZoom < 1 && targetZoom > 1 ? 1 : targetZoom);
+  }, [zoomInMultiplier, getZoom, changeZoom]);
 
   const zoomOut = React.useCallback(() => {
-    const targetZoom = zoom / zoomInMultiplier;
-    changeZoom(zoom > 1 && targetZoom < 1 ? 1 : targetZoom);
-  }, [zoom, zoomInMultiplier, changeZoom]);
+    const currentZoom = getZoom();
+    const targetZoom = currentZoom / zoomInMultiplier;
+    changeZoom(currentZoom > 1 && targetZoom < 1 ? 1 : targetZoom);
+  }, [zoomInMultiplier, getZoom, changeZoom]);
 
-  return { zoom, offsetX, offsetY, disabled, changeOffsets, changeZoom, zoomIn, zoomOut };
+  return { zoom, offsetX, offsetY, disabled, getZoom, changeOffsets, changeZoom, zoomIn, zoomOut };
 }

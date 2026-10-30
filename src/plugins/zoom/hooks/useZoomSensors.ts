@@ -22,7 +22,7 @@ function scaleZoom(value: number, delta: number, factor = 100, clamp = 2) {
 }
 
 export function useZoomSensors(
-  zoom: number,
+  getZoom: ReturnType<typeof useZoomState>["getZoom"],
   minZoom: number,
   maxZoom: number,
   disabled: boolean,
@@ -69,6 +69,7 @@ export function useZoomSensors(
   );
 
   const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    const zoom = getZoom();
     const { key, metaKey, ctrlKey } = event;
     const meta = metaKey || ctrlKey;
 
@@ -107,6 +108,7 @@ export function useZoomSensors(
   });
 
   const onWheel = useEventCallback((event: React.WheelEvent) => {
+    const zoom = getZoom();
     if (event.ctrlKey || scrollToZoom) {
       if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
         event.stopPropagation();
@@ -141,6 +143,7 @@ export function useZoomSensors(
   );
 
   const onPointerDown = useEventCallback((event: React.PointerEvent) => {
+    const zoom = getZoom();
     const pointers = activePointers.current;
 
     if (
@@ -190,6 +193,7 @@ export function useZoomSensors(
   });
 
   const onPointerMove = useEventCallback((event: React.PointerEvent) => {
+    const zoom = getZoom();
     const pointers = activePointers.current;
 
     const activePointer = pointers.find((p) => p.pointerId === event.pointerId);

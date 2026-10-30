@@ -23,7 +23,7 @@ export function ZoomContextProvider({ children }: ComponentProps) {
   const { ref, minZoom } = useZoomProps();
   const { imageRect, maxZoom } = useZoomImageRect(slideRect, zoomWrapper?.imageDimensions);
 
-  const { zoom, offsetX, offsetY, disabled, changeZoom, changeOffsets, zoomIn, zoomOut } = useZoomState(
+  const { zoom, offsetX, offsetY, disabled, getZoom, changeZoom, changeOffsets, zoomIn, zoomOut } = useZoomState(
     imageRect,
     maxZoom,
     zoomWrapper?.zoomWrapperRef,
@@ -32,7 +32,7 @@ export function ZoomContextProvider({ children }: ComponentProps) {
   useZoomCallback(zoom, disabled);
 
   useZoomSensors(
-    zoom,
+    getZoom,
     minZoom,
     maxZoom,
     disabled,
