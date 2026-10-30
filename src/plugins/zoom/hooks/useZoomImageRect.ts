@@ -6,6 +6,7 @@ import {
   Slide,
   useLightboxProps,
   useLightboxState,
+  useSlideRotation,
 } from "../../../index.js";
 import { defaultZoomProps } from "../props.js";
 import { useZoomProps } from "./useZoomProps.js";
@@ -20,6 +21,7 @@ export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: Con
   let maxImageRect: ContainerRect = { width: 0, height: 0 };
 
   const { currentSlide } = useLightboxState();
+  const rotation = useSlideRotation(currentSlide);
   const { imageFit } = useLightboxProps().carousel;
   const { maxZoomPixelRatio, maxZoom: maxZoomInProps } = useZoomProps();
 
@@ -28,9 +30,18 @@ export function useZoomImageRect(slideRect: ContainerRect, imageDimensions?: Con
     if (isImageSlide(slide)) {
       const cover = isImageFitCover(slide, imageFit);
 
-      const width = Math.max(...(slide.srcSet?.map((x) => x.width) || []).concat(slide.width ? [slide.width] : []));
+      const sourceWidth = Math.max(
+        ...(slide.srcSet?.map((x) => x.width) || []).concat(slide.width ? [slide.width] : []),
+      );
 
-      const height = Math.max(...(slide.srcSet?.map((x) => x.height) || []).concat(slide.height ? [slide.height] : []));
+      const sourceHeight = Math.max(
+        ...(slide.srcSet?.map((x) => x.height) || []).concat(slide.height ? [slide.height] : []),
+      );
+
+      // quarter-turn rotations transpose the image
+      const rotated = rotation % 180 !== 0;
+      const width = rotated ? sourceHeight : sourceWidth;
+      const height = rotated ? sourceWidth : sourceHeight;
 
       if (width > 0 && height > 0 && slideRect.width > 0 && slideRect.height > 0) {
         maxImageRect = cover

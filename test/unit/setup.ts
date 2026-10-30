@@ -27,4 +27,12 @@ Object.defineProperties(window.HTMLElement.prototype, {
       return 0;
     },
   },
+  clientHeight: {
+    get() {
+      if (this instanceof Element && this.classList.contains("yarl__container")) {
+        return window.innerHeight;
+      }
+      return 0;
+    },
+  },
 });

@@ -2,7 +2,15 @@ import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
-import { cleanup, clsx, cssClass, cssVar, makeUseContext, translateLabel } from "../../../src/utils.js";
+import {
+  cleanup,
+  clsx,
+  cssClass,
+  cssVar,
+  makeUseContext,
+  normalizeRotation,
+  translateLabel,
+} from "../../../src/utils.js";
 import { Labels } from "../../../src/types.js";
 
 describe("utils", () => {
@@ -123,6 +131,23 @@ describe("utils", () => {
       expect(screen.queryByText("error")).toBeInTheDocument();
       expect(screen.queryByText("pass")).not.toBeInTheDocument();
       expect(screen.queryByText("fail")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("normalizeRotation", () => {
+    it.each([
+      [0, 0],
+      [90, 90],
+      [360, 0],
+      [450, 90],
+      [-90, 270],
+      [30, 0],
+      [60, 90],
+      [Number.NaN, 0],
+      [Number.POSITIVE_INFINITY, 0],
+      [Number.NEGATIVE_INFINITY, 0],
+    ])("normalizes %s to %s", (rotation, expected) => {
+      expect(normalizeRotation(rotation)).toBe(expected);
     });
   });
 });

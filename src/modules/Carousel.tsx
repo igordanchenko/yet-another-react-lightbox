@@ -19,7 +19,13 @@ import {
 } from "../utils.js";
 import { ImageSlide } from "../components/index.js";
 import { useController } from "./Controller/index.js";
-import { useA11yContext, useDocumentContext, useLightboxProps, useLightboxState } from "../contexts/index.js";
+import {
+  useA11yContext,
+  useDocumentContext,
+  useLightboxProps,
+  useLightboxState,
+  useSlideRotation,
+} from "../contexts/index.js";
 import { CLASS_FLEX_CENTER, CLASS_SLIDE, MODULE_CAROUSEL } from "../consts.js";
 
 function cssPrefix(value?: string) {
@@ -48,6 +54,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
     labels,
   } = useLightboxProps();
   const { getOwnerDocument } = useDocumentContext();
+  const rotation = useSlideRotation(slide);
 
   const offscreen = offset !== 0;
 
@@ -67,6 +74,7 @@ function CarouselSlide({ slide, offset }: CarouselSlideProps) {
           offset={offset}
           render={render}
           rect={slideRect}
+          rotation={rotation}
           imageFit={imageFit}
           imageProps={imageProps}
           onClick={!offscreen ? () => onClick?.({ index: currentIndex }) : undefined}

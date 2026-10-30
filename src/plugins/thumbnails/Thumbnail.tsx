@@ -17,6 +17,7 @@ import {
   useEventCallback,
   useLightboxProps,
   useLightboxState,
+  useSlideRotation,
 } from "../../index.js";
 import { cssThumbnailPrefix } from "./utils.js";
 import { useThumbnailsProps } from "./props.js";
@@ -31,13 +32,13 @@ const UnknownThumbnailIcon = createIcon(
   <path d="M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.5 12.5l2.5 3.01L14.5 11l4.5 6H5l3.5-4.5z" />,
 );
 
-function renderThumbnail({ slide, render, rect, imageFit }: RenderThumbnailProps) {
+function renderThumbnail({ slide, render, rect, imageFit, rotation }: RenderThumbnailProps & { rotation: number }) {
   const customThumbnail = render.thumbnail?.({ slide, render, rect, imageFit });
   if (customThumbnail) {
     return customThumbnail;
   }
 
-  const imageSlideProps = { render, rect, imageFit };
+  const imageSlideProps = { render, rect, imageFit, rotation };
 
   if (slide.thumbnail) {
     return <ImageSlide slide={{ src: slide.thumbnail }} {...imageSlideProps} />;
@@ -92,6 +93,7 @@ export function Thumbnail({ slide, index, onClick, fadeIn, fadeOut, placeholder,
   const { getOwnerDocument } = useDocumentContext();
   const { width, height, imageFit } = useThumbnailsProps();
   const rect = { width, height };
+  const rotation = useSlideRotation(slide ?? undefined);
   const active = index === globalIndex;
 
   const onLoseFocusCallback = useEventCallback(onLoseFocus);
@@ -133,7 +135,7 @@ export function Thumbnail({ slide, index, onClick, fadeIn, fadeOut, placeholder,
       aria-current={active ? true : undefined}
       aria-label={translateSlideCounter(labels, slides, index)}
     >
-      {slide && renderThumbnail({ slide, render, rect, imageFit })}
+      {slide && renderThumbnail({ slide, render, rect, imageFit, rotation })}
     </button>
   );
 }

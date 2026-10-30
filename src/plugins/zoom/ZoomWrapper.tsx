@@ -15,6 +15,7 @@ import {
   useLayoutEffect,
   useLightboxProps,
   useLightboxState,
+  useSlideRotation,
 } from "../../index.js";
 import { useZoom } from "./ZoomController.js";
 import { isResponsiveImageSlide, ResponsiveImage } from "./ResponsiveImage.js";
@@ -28,6 +29,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
   const zoomWrapperRef = React.useRef<HTMLDivElement>(null);
 
   const isImage = isImageSlide(slide);
+  const rotation = useSlideRotation(slide);
 
   const { zoom, maxZoom, offsetX, offsetY, setZoomWrapper } = useZoom();
   const interactive = zoom > 1;
@@ -87,6 +89,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
       slide,
       offset,
       rect,
+      rotation,
       render,
       imageFit: carousel.imageFit,
       imageProps: carousel.imageProps,
@@ -94,12 +97,7 @@ export function ZoomWrapper({ render, slide, offset, rect }: ZoomWrapperProps) {
     };
 
     rendered = isResponsiveImageSlide(slide) ? (
-      <ResponsiveImage
-        {...slideProps}
-        slide={slide}
-        interactive={interactive}
-        rect={offset === 0 ? { width: rect.width * zoom, height: rect.height * zoom } : rect}
-      />
+      <ResponsiveImage {...slideProps} slide={slide} interactive={interactive} zoom={offset === 0 ? zoom : 1} />
     ) : (
       <ImageSlide
         onLoad={(img) => setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })}
