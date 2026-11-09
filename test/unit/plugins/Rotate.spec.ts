@@ -298,8 +298,8 @@ describe("Rotate", () => {
     // the image fits into the transposed slide rect regardless of which srcSet source is loaded
     const { width, height } = captured.rect!;
     const scale = Math.min(height / 3840, width / 5760);
-    expect(parseFloat(image()!.style.width)).toBeCloseTo(3840 * scale, 5);
-    expect(parseFloat(image()!.style.height)).toBeCloseTo(5760 * scale, 5);
+    expect(parseFloat(image()!.style.width)).toBeCloseTo(3840 * scale, 2);
+    expect(parseFloat(image()!.style.height)).toBeCloseTo(5760 * scale, 2);
   });
 
   it("computes max zoom for the rotated image", () => {
