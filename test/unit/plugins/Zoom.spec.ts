@@ -46,6 +46,19 @@ describe("Zoom", () => {
     expectLightboxToBeOpen();
   });
 
+  it("does not mutate slide srcSet", () => {
+    const srcSet = Object.freeze([
+      Object.freeze({ src: "image3000", width: 3000, height: 2000 }),
+      Object.freeze({ src: "image300", width: 300, height: 200 }),
+      Object.freeze({ src: "image1200", width: 1200, height: 800 }),
+    ]);
+
+    render(lightbox({ slides: [{ ...srcSet[0], srcSet }], plugins: [Zoom] }));
+
+    expectLightboxToBeOpen();
+    expect(srcSet.map((x) => x.width)).toEqual([3000, 300, 1200]);
+  });
+
   it("supports custom slide types", () => {
     render(
       lightbox({

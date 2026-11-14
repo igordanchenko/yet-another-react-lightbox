@@ -13,7 +13,7 @@ import {
 } from "../../index.js";
 
 export type ResponsiveImageSlide = Omit<SlideImage, "srcSet"> & {
-  srcSet: [ImageSource, ...ImageSource[]];
+  srcSet: readonly [ImageSource, ...ImageSource[]];
 };
 
 export function isResponsiveImageSlide(slide: SlideImage): slide is ResponsiveImageSlide {
@@ -65,7 +65,7 @@ export function ResponsiveImage(props: ResponsiveImageProps) {
   // noinspection JSSuspiciousNameCombination
   const imageRect = rotated ? { width: rect.height, height: rect.width } : rect;
 
-  const srcSet = image.srcSet.sort((a, b) => a.width - b.width);
+  const srcSet = [...image.srcSet].sort((a, b) => a.width - b.width);
   const width = image.width ?? srcSet[srcSet.length - 1].width;
   const height = image.height ?? srcSet[srcSet.length - 1].height;
   const cover = isImageFitCover(image, imageFit);
