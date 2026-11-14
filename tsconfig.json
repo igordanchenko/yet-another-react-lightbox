@@ -6,10 +6,11 @@
     "jsx": "react",
     "lib": ["ES2020", "dom"],
     "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
     "isolatedModules": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["vitest/globals"]
   },
-  "exclude": ["dev", "dist"]
+  "exclude": ["dev", "dist", "test/types"]
 }
